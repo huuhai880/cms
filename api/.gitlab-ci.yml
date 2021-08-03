@@ -1,0 +1,135 @@
+variables:
+  TEST_DIR: "/home/scc"
+  PROD_DIR: "/home/scc"
+
+stages:
+  - build-dev
+  - deploy-dev
+  - build-prod
+  - deploy-prod
+
+#################PRODUCTION################
+scc_build_api_dev:
+  tags:
+    - 204-runner
+  stage: build-dev
+  only:
+      refs:
+        - dev
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(build).*/
+        - $CI_COMMIT_MESSAGE =~ /(build).*/
+  script:
+    - echo "Runing build api scc"
+    - |
+      if [[ ! -e "$TEST_DIR/api" ]]; then
+        mkdir -p "$TEST_DIR/api"
+      fi
+    - cp -rf ./app "$TEST_DIR/api/"
+    - |
+      if [[ ! -e "$TEST_DIR/api/storage/caches" ]]; then
+        mkdir -p "$TEST_DIR/api/storage/caches"
+      fi
+      if [[ ! -e "$TEST_DIR/api/storage/uploads" ]]; then
+        mkdir -p "$TEST_DIR/api/storage/uploads"
+      fi
+      if [[ ! -e "$TEST_DIR/api/storage/logs" ]]; then
+        mkdir -p "$TEST_DIR/api/storage/logs"
+      fi
+    - echo "Runing build api success"   
+
+scc_build_docker_api_dev:
+  tags:
+    - 204-runner
+  stage: build-dev  
+  only:
+      refs:
+        - dev
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(build).*/
+        - $CI_COMMIT_MESSAGE =~ /(build).*/
+  script:
+    - echo "Runing build image api"
+    - cp -f "$TEST_DIR/env/.env.api.dev" ".env"
+    - docker build -t img_scc_api_dev .
+    - echo "Build image api success"  
+
+scc_deploy_api_dev:
+  tags:
+    - 204-runner
+  stage: deploy-dev  
+  only:
+      refs:
+        - dev
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(build).*/
+        - $CI_COMMIT_MESSAGE =~ /(build).*/
+  script:
+    - echo "Runing deploy api"
+    - docker stop container_scc_api_dev || true && docker rm container_scc_api_dev || true 
+    - docker run -d -e TZ=Asia/Ho_Chi_Minh --restart always -v "$TEST_DIR/api/storage":/usr/src/api/storage -p 127.0.0.1:2503:3001 --name container_scc_api_dev img_scc_api_dev
+    - echo "Deploy api success!!!"  
+
+
+########################RELEASE#########################
+scc_build_api_prod:
+  tags:
+    - 118-runner
+  stage: build-prod
+  only:
+      refs:
+        - release
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(build).*/
+        - $CI_COMMIT_MESSAGE =~ /(build).*/
+  script:
+    - echo "Runing build api scc"
+    - |
+      if [[ ! -e "$PROD_DIR/api" ]]; then
+        mkdir -p "$PROD_DIR/api"
+      fi
+    - cp -rf ./app "$PROD_DIR/api/"
+    - |
+      if [[ ! -e "$PROD_DIR/api/storage/caches" ]]; then
+        mkdir -p "$PROD_DIR/api/storage/caches"
+      fi
+      if [[ ! -e "$PROD_DIR/api/storage/uploads" ]]; then
+        mkdir -p "$PROD_DIR/api/storage/uploads"
+      fi
+      if [[ ! -e "$PROD_DIR/api/storage/logs" ]]; then
+        mkdir -p "$PROD_DIR/api/storage/logs"
+      fi
+    - echo "Runing build api success"   
+
+scc_build_docker_api_prod:
+  tags:
+    - 118-runner
+  stage: build-prod  
+  only:
+      refs:
+        - release
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(build).*/
+        - $CI_COMMIT_MESSAGE =~ /(build).*/
+  script:
+    - echo "Runing build image api"
+    - cp -f "$TEST_DIR/env/.env.api" ".env"
+    - docker build -t img_scc_api_prod .
+    - echo "Build image api success"  
+
+scc_deploy_api_prod:
+  tags:
+    - 118-runner
+  stage: deploy-prod  
+  when: manual
+  only:
+      refs:
+        - release
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(build).*/ 
+        - $CI_COMMIT_MESSAGE =~ /(build).*/
+  script:
+    - echo "Runing deploy api"
+    - docker stop container_scc_api_prod || true && docker rm container_scc_api_prod || true 
+    - docker run -d -e TZ=Asia/Ho_Chi_Minh --restart always -v "$PROD_DIR/uploads":/usr/src/api/storage/uploads -v "$PROD_DIR/api/storage/logs":/usr/src/api/storage/logs -v "$PROD_DIR/api/storage/caches":/usr/src/api/storage/caches -p 127.0.0.1:2503:3001 --name container_scc_api_prod img_scc_api_prod
+    - echo "Deploy api success!!!" 
