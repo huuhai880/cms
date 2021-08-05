@@ -19,7 +19,7 @@ tsh_build_docker_api_dev:
         - $CI_COMMIT_MESSAGE =~ /(api|all).*/
   script:
     - echo "Runing build image api"
-    - cp "$TEST_DIR/env/.env.api" ./api
+    - cp "$TEST_DIR/env/.env.api" ./api/.env
     - cd api  
     - docker build -t img_tsh_api_dev .
     - echo "Build image api success"  
