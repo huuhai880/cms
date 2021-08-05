@@ -1,0 +1,30 @@
+body{
+    font-size: 16px;
+}
+table th, table td{
+    padding: 6px;
+}
+.img-logo{
+    height:152px;
+    width:132px
+}
+.underline{
+    display: inline-block;
+    width: 100%;
+    border-bottom: 1px dashed black;
+    box-sizing: border-box;
+    padding: 2px 6px;
+    font-size: 90%;
+}
+.shrink{
+    width: 1px;
+}
+.text-center{
+    text-align: center;
+}
+.align-middle{
+    vertical-align:middle
+}
+.text-nowrap{
+    white-space: nowrap;
+}

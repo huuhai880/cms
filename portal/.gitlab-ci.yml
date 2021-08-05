@@ -1,0 +1,84 @@
+variables:
+  TESTDIR: "/home/scc"
+  PRODDIR: "/home/scc"
+
+stages:
+  - build-dev
+  - deploy-dev
+  - build-prod
+  - deploy-prod
+
+scc_build_portal_dev:
+  tags:
+    - runner-global-hn
+  stage: build-dev  
+  only:
+      refs:
+        - dev
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(build).*/
+        - $CI_COMMIT_MESSAGE =~ /(build).*/
+  script:
+    - echo "Runing build image portal" 
+    # - sh ./script/build.sh
+    - |
+      if ! [[ -e "$TESTDIR/portal-build" ]]; then 
+        mkdir -p "$TESTDIR/portal-build"
+      fi
+    - cp -rf ./src "$TESTDIR/portal-build/"
+    - cp -rf ./public "$TESTDIR/portal-build/"
+    - cp -f ./.babelrc "$TESTDIR/portal-build/"
+    - cp -f ./.env.204 "$TESTDIR/portal-build/"
+    - cp -f ./package.json  "$TESTDIR/portal-build/"
+    - cp -f ./config-overrides.js  "$TESTDIR/portal-build/"
+    - cd "$TESTDIR/portal-build"
+    - npm install 
+    - CI=false npm run build:204
+    - tar -cf build.tar.gz build
+    - rm -f /home/scc/portal/build.tar.gz
+    - cp -f build.tar.gz /home/scc/portal
+    - cd /home/scc/portal
+    - git config --global user.email "ylv.blackwind@gmail.com"
+    - git config --global user.name "vanyle"
+    - git pull origin dev_build_portal
+    - git add -A
+    - git commit -m "build"
+    - git push origin dev_build_portal
+    - echo "Build image portal success"  
+ 
+ 
+   
+#################################PRODUCTION################################
+scc_build_docker_portal_prod:
+  tags:
+    - 118-runner
+  stage: build-prod  
+  only:
+      refs:
+        - release
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(portal|all).*/
+        - $CI_COMMIT_MESSAGE =~ /(portal|all).*/
+  script:
+    - echo "Runing build image portal"
+    - docker build -t img_scc_portal_prod .
+    - echo "Build image portal success"   
+
+scc_deploy_portal_prod:
+  tags:
+    - 118-runner
+  stage: deploy-prod  
+  only:
+      refs:
+        - release
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(portal|all).*/ 
+        - $CI_COMMIT_MESSAGE =~ /(portal|all).*/
+  when: manual
+  script:
+    - echo "Runing deploy portal"
+    - docker stop container_scc_portal_prod || true && docker rm container_scc_portal_prod || true 
+    - docker run -d --restart always -v "$PWD/build":/usr/share/nginx/html -p 127.0.0.1:2502:80 --name container_scc_portal_prod img_scc_portal_prod:latest
+    - echo "Deploy portal success!!!"   
+ 
+  

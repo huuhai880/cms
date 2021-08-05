@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "baseUrl": "./src",
+    "paths": {
+      "@widget":["./containers/Common/widget"],
+      "@utils":["./utils"],
+      "@models":["./models"],
+      "@navigation":["./navigation"],
+      "@common":["./components/Common"]
+    }
+  },
+  "exclude": [
+      "docs",
+      "node_modules"
+    ]
+}

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Fitness CRM # print</title>
+    <link rel="stylesheet" type="text/css" href="print.css">
+  </head>
+  <body>
+    <table align="center" border="0" cellpadding="6" style="width:100%">
+        <tbody>
+            <tr>
+                <td class="text-cener align-middle">
+                    <table cellpadding="0" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td style="width:1%">
+                                    <img src="logo.png" class="img-logo">
+                                </td>
+                                <td class="text-center">
+                                    <h2>
+                                        HỢP ĐỒNG BẢO LƯU
+                                    </h2>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" cellpadding="0" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td class="shrink text-nowrap">
+                                    Số hợp đồng/ID:
+                                </td>
+                                </td><td style="width:41%">
+                                    <span class="underline" data-f="contract_number"></span>
+                                </td>
+                                <td class="shrink text-nowrap">
+                                    Ngày/Date:
+                                </td>
+                                <td>
+                                    <span class="underline" data-f="order_date"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Thông tin hội viên/Member’s information:</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" cellpadding="6" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td class="shrink text-nowrap">
+                                    Tên hội viên/Member’s name:
+                                </td>
+                                <td>
+                                    <span class="underline" data-f="full_name"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" cellpadding="6" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td class="shrink text-nowrap">
+                                    Loại thẻ hội viên/Membership type:
+                                </td>
+                                <td>
+                                    <span class="underline" data-f="phone_number_1st"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Ngày bắt đầu/Start date:
+                                </td>
+                                <td>
+                                    Ngày kết thúc/Enddate:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="underline" data-f="start_date"></span>
+                                </td>
+                                <td>
+                                    <span class="underline" data-f="end_date"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Thông tin yêu cầu bảo lưu thẻ/Freexing request details:</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;Thời gian bảo lưu thẻ/Freezing period:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" cellpadding="0" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td class="shrink text-nowrap">
+                                    Từ ngày/From:
+                                </td>
+                                <td style="width: 41%;">
+                                    <span class="underline" data-f="start_date_freeze"></span>
+                                </td>
+                                <td class="shrink text-nowrap">
+                                    Đến ngày/To:
+                                </td>
+                                <td>
+                                    <span class="underline" data-f="end_date_freeze"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" cellpadding="6" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td class="shrink text-nowrap">
+                                    Hình thức bảo lưu/Freezing type option:
+                                </td>
+                                <td>
+                                    <span class="underline" data-f="phone_number_1st"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" cellpadding="6" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td class="shrink text-nowrap">
+                                    Giấy tờ kèm theo/Document required:
+                                </td>
+                                <td>
+                                    <span class="underline" data-f="phone_number_1st"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Lưu ý/Note: Nếu quý hội viên đi tập lại trong thời gian bảo lưu thì toàn bộ thời gian bảo lưu trước đó sẽ không cộng vào thẻ.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    If the member go to work out in reserved time, total reserved time will not be added to the card.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Phần dành cho trung tâm/For Ruby Fitness:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;Ngày hết hạn sau thời gian bảo lưu/Updated expired date:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="underline" data-f="phone_number_1st"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" cellpadding="6" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td class="text-center align-middle" style="width:25%">
+                                    Hội viên
+                                </td>
+                                <td class="text-center align-middle" style="width:25%">
+                                    Lễ tân
+                                </td>
+                                <td class="text-center align-middle" style="width:25%">
+                                    Tư vấn viên
+                                </td>
+                                <td class="text-center align-middle">
+                                    Công ty	
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center align-middle">
+                                    <span class="" data-f="full_name"></span>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>    
+  </body>
+</html>

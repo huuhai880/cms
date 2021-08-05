@@ -1,0 +1,29 @@
+
+.modal-preview-image-upload{
+    .ant-modal-close-x{
+        width: 25px;
+        height: 25px;
+        line-height: 25px;
+        font-weight: bold;
+        font-size: 25px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &:focus-visible{
+            outline: none;
+        }
+        .modal-preview-image-upload-close-icon{
+            height: 25px;
+            display: flex;
+            &:focus-visible{
+                outline: none;
+            }
+            .anticon-close{
+                &:focus-visible{
+                    outline: none;
+                }
+            }
+        }
+    }
+}

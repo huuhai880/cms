@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Fitness CRM # print</title>
+    <link rel="stylesheet" type="text/css" href="print.css">
+  </head>
+  <body>
+    <table align="center" border="0" cellpadding="6" cellspacing="0" style="width:100%">
+        <tbody>
+            <tr>
+                <td style="text-align:center; vertical-align:middle">
+                    <table cellpadding="0" cellspacing="0" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td style="width:1%">
+                                    <img src="logo.png" class="img-logo">
+                                </td>
+                                <td>
+                                    <h2>
+                                        HỢP ĐỒNG CHUYỂN NHƯỢNG
+                                    </h2>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;Số hợp đồng/ID CN:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span class="underline" data-f="contract_number"></span>
+                                </td>
+                                <td style="text-align:center; vertical-align:middle; width:1%">
+                                    Ng&agrave;y/Date:
+                                </td>
+                                <td>
+                                    <span class="underline" data-f="order_date"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Th&ocirc;ng tin người chuyển nhượng/Transferring Form:</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;T&ecirc;n Hội Vi&ecirc;n:/Member&rsquo;sname:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="underline" data-f="full_name"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;Số điện thoại/Phone Number:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="underline" data-f="phone_number"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Th&ocirc;ng tin người được chuyển nhượng/Transferring to:</strong>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    Tên Hội viên/Member’s name:
+                                </td>
+                            </tr>
+                                <td colspan="2">
+                                    <span class="underline" data-f="full_name_2nd"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Số điện thoại/Phone Number:
+                                </td>
+                                <td>
+                                    Số hợp đồng/ID:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="underline" data-f="phone_number_2nd"></span>
+                                </td>
+                                <td>
+                                    <span class="underline" data-f="contract_number"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Ngày bắt đầu/Start date:
+                                </td>
+                                <td>
+                                    Ngày kết thúc/End date:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="underline" data-f="start_date"></span>
+                                </td>
+                                <td>
+                                    <span class="underline" data-f="end_date"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;Ph&iacute; chuyển nhượng:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="underline" data-f="cost_contract"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;Ghi chú Remark:
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span class="underline rows2" data-f="transfer_note"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Lưu ý/ Note: Số lần bảo lưu còn lại của người chuyển nhượng sẽ được cộng dồn cho người được chuyển nhượng. Người được chuyển nhượng sẽ không được chuyển nhượng cho người thứ ba.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    The number of the transferror’s remaining reserve will be accucued to the transfer. The transferor’s can not transfer to the third one.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table border="0" cellpadding="6" cellspacing="0" style="width:100%">
+                        <tbody>
+                            <tr>
+                                <td class="text-center align-middle" style="width:25%">
+                                    Người chuyển nhượng
+                                </td>
+                                <td class="text-center align-middle" style="width:25%">
+                                    Người được chuyển nhượng
+                                </td>
+                                <td class="text-center align-middle" style="width:25%">
+                                    Tư vấn viên
+                                </td>
+                                <td class="text-center align-middle">
+                                    Công ty
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>    
+  </body>
+</html>

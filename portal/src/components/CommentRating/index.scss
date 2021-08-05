@@ -1,0 +1,18 @@
+.cmt-view {
+  cursor: pointer;
+}
+
+.view-image{
+  cursor: pointer;
+  color:#20a8d8;
+}
+
+.cmt-modal-close{
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+  z-index: 2;
+  width: 24px;
+  height: 24px;
+}
