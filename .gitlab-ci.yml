@@ -20,7 +20,7 @@ tsh_build_docker_api_dev:
   script:
     - echo "Runing build image api"
     - cp "$TEST_DIR/env/.env.api" ./api
-    - cd api
+    - cd api  
     - docker build -t img_tsh_api_dev .
     - echo "Build image api success"  
 
