@@ -20,7 +20,7 @@ import {
 } from "reactstrap";
 // Model(s)
 import UserModel from "../models/UserModel";
-import bg from '../assets/img/bg.png'
+import bg from '../assets/img/bg.jpg'
 
 /**
  * @class Login
