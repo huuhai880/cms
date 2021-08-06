@@ -33,29 +33,29 @@ const getListUser = async (req) => {
       @ORDERBYDES=:ORDERBYDES`;
     const users = await database.sequelize.query(query, {
       replacements: {
-        'PageSize': limit,
-        'PageIndex': page,
-        'KEYWORD': apiHelper.getQueryParam(req, 'search'),
-        'BIRTHDAY': apiHelper.getQueryParam(req, 'birthday'),
-        'GENDER': apiHelper.getQueryParam(req, 'gender'),
-        'BUSINESSID': apiHelper.getQueryParam(req, 'business_id'),
-        'DEPARTMENTID': apiHelper.getQueryParam(req, 'department_id'),
-        'FUNCTIONALIAS': apiHelper.getQueryParam(req, 'function_alias'),
-        'POSITIONID': apiHelper.getQueryParam(req, 'position_id'),
-        'ORDERBYDES': apiHelper.getQueryParam(req, 'sortorder'),
+        PageSize: limit,
+        PageIndex: page,
+        KEYWORD: apiHelper.getQueryParam(req, 'search'),
+        BIRTHDAY: apiHelper.getQueryParam(req, 'birthday'),
+        GENDER: apiHelper.getQueryParam(req, 'gender'),
+        BUSINESSID: apiHelper.getQueryParam(req, 'business_id'),
+        DEPARTMENTID: apiHelper.getQueryParam(req, 'department_id'),
+        FUNCTIONALIAS: apiHelper.getQueryParam(req, 'function_alias'),
+        POSITIONID: apiHelper.getQueryParam(req, 'position_id'),
+        ORDERBYDES: apiHelper.getQueryParam(req, 'sortorder'),
       },
       type: database.QueryTypes.SELECT,
     });
 
     return {
-      'data': UserClass.list(users),
-      'page': page,
-      'limit': limit,
-      'total': apiHelper.getTotalData(users),
+      data: UserClass.list(users),
+      page: page,
+      limit: limit,
+      total: apiHelper.getTotalData(users),
     };
   } catch (e) {
     logger.error(e, {
-      'function': 'userService.getListUser',
+      function: 'userService.getListUser',
     });
 
     return [];
@@ -69,7 +69,7 @@ const createUser = async (bodyParams = {}) => {
     return userid;
   } catch (e) {
     logger.error(e, {
-      'function': 'userService.createUser',
+      function: 'userService.createUser',
     });
 
     return null;
@@ -83,7 +83,7 @@ const updateUser = async (bodyParams) => {
     return userid;
   } catch (e) {
     logger.error(e, {
-      'function': 'userService.updateUser',
+      function: 'userService.updateUser',
     });
 
     return null;
@@ -96,13 +96,17 @@ const saveAvatar = async (base64, userId) => {
   try {
     if (fileHelper.isBase64(base64)) {
       const extension = fileHelper.getExtensionFromBase64(base64);
-      avatarUrl = await fileHelper.saveBase64(folderNameAvatar, base64, `${userId}.${extension}`);
+      avatarUrl = await fileHelper.saveBase64(
+        folderNameAvatar,
+        base64,
+        `${userId}.${extension}`
+      );
     } else {
       avatarUrl = base64.split(config.domain_cdn)[1];
     }
   } catch (e) {
     logger.error(e, {
-      'function': 'userService.saveAvatar',
+      function: 'userService.saveAvatar',
     });
 
     return avatarUrl;
@@ -115,35 +119,39 @@ const createUserOrUpdate = async (bodyParams) => {
   const params = bodyParams;
 
   // Upload Avatar
-  const pathAvatar = await saveAvatar(params.default_picture_url, params.user_id);
+  const pathAvatar = await saveAvatar(
+    params.default_picture_url,
+    params.user_id
+  );
   if (pathAvatar) {
     params.default_picture_url = pathAvatar;
   }
 
   let data = {
-    'USERNAME': params.user_name || '',
-    'FIRSTNAME': params.first_name || '',
-    'LASTNAME': params.last_name || '',
-    'FULLNAME': `${params.first_name} ${params.last_name}`,
-    'GENDER': params.gender || '',
-    'BIRTHDAY': params.birthday || '',
-    'EMAIL': params.email || '',
-    'PHONENUMBER_1': params.phone_number_1 || '',
-    'PHONENUMBER': params.phone_number || '',
-    'ADDRESS': params.address || '',
-    'PROVINCEID': params.province_id || '',
-    'DISTRICTID': params.district_id || '',
-    'WARDID': params.ward_id || '',
-    'COUNTRYID': params.country_id || '',
-    'CITYID': params.city_id || '',
-    'DESCRIPTION': params.description || '',
-    'DEFAULTPICTUREURL': params.default_picture_url || '',
-    'DEPARTMENTID': params.department_id || '',
-    'POSITIONID': params.position_id || '',
-    'EXTENSION': params.extension || '',
-    'ABOUTME': params.about_me || '',
-    'CREATEDUSER': params.auth_id,
+    USERNAME: params.user_name || '',
+    FIRSTNAME: params.first_name || '',
+    LASTNAME: params.last_name || '',
+    FULLNAME: `${params.first_name} ${params.last_name}`,
+    GENDER: params.gender || '',
+    BIRTHDAY: params.birthday || '',
+    EMAIL: params.email || '',
+    PHONENUMBER_1: params.phone_number_1 || '',
+    PHONENUMBER: params.phone_number || '',
+    ADDRESS: params.address || '',
+    PROVINCEID: params.province_id || '',
+    DISTRICTID: params.district_id || '',
+    WARDID: params.ward_id || '',
+    COUNTRYID: params.country_id || '',
+    CITYID: params.city_id || '',
+    DESCRIPTION: params.description || '',
+    DEFAULTPICTUREURL: params.default_picture_url || '',
+    DEPARTMENTID: params.department_id || '',
+    POSITIONID: params.position_id || '',
+    EXTENSION: params.extension || '',
+    ABOUTME: params.about_me || '',
+    CREATEDUSER: params.auth_id,
   };
+  console.log("🚀 ~ file: user.service.js ~ line 154 ~ createUserOrUpdate ~ data", data)
 
   let query = `${PROCEDURE_NAME.SYS_USER_CREATEORUPDATE} 
         @USERNAME=:USERNAME,
@@ -170,7 +178,7 @@ const createUserOrUpdate = async (bodyParams) => {
         @CREATEDUSER=:CREATEDUSER`;
   if (params.user_id) {
     data['USERID'] = params.user_id;
-    query+=',@USERID=:USERID';
+    query += ',@USERID=:USERID';
   }
   if (params.password) {
     data['PASSWORD'] = stringHelper.hashPassword(params.password);
@@ -206,22 +214,28 @@ const createUserOrUpdate = async (bodyParams) => {
       }
       return null;
     }
-    await database.sequelize.query(`${PROCEDURE_NAME.SYS_USER_USERGROUP_Delete} @USERID=:USERID`, {
-      replacements: {
-        'USERID': params.user_id,
-      },
-      type: database.QueryTypes.DELETE,
-      transaction: transaction,
-    });
+    await database.sequelize.query(
+      `${PROCEDURE_NAME.SYS_USER_USERGROUP_Delete} @USERID=:USERID`,
+      {
+        replacements: {
+          USERID: params.user_id,
+        },
+        type: database.QueryTypes.DELETE,
+        transaction: transaction,
+      }
+    );
 
-    await database.sequelize.query(`${PROCEDURE_NAME.SYS_USER_USERGROUP_Create} @USERID=:USERID, @USERGROUPID=:USERGROUPID`, {
-      replacements: {
-        'USERID': params.user_id,
-        'USERGROUPID': userGroups,
-      },
-      type: database.QueryTypes.INSERT,
-      transaction: transaction,
-    });
+    await database.sequelize.query(
+      `${PROCEDURE_NAME.SYS_USER_USERGROUP_Create} @USERID=:USERID, @USERGROUPID=:USERGROUPID`,
+      {
+        replacements: {
+          USERID: params.user_id,
+          USERGROUPID: userGroups,
+        },
+        type: database.QueryTypes.INSERT,
+        transaction: transaction,
+      }
+    );
 
     // commit
     await transaction.commit();
@@ -237,16 +251,19 @@ const createUserOrUpdate = async (bodyParams) => {
 
 const detailUser = async (userId) => {
   try {
-    let user = await database.sequelize.query(`${PROCEDURE_NAME.SYS_USER_GETUSERBYID} @USERID=:USERID`, {
-      replacements: {
-        'USERID': userId,
-      },
-      type: database.QueryTypes.SELECT,
-    });
+    let user = await database.sequelize.query(
+      `${PROCEDURE_NAME.SYS_USER_GETUSERBYID} @USERID=:USERID`,
+      {
+        replacements: {
+          USERID: userId,
+        },
+        type: database.QueryTypes.SELECT,
+      }
+    );
 
     if (user.length) {
       user = UserClass.detail(user[0]);
-      user.isAdministrator = (user.user_name === config.adminUserName ? 1 : 0);
+      user.isAdministrator = user.user_name === config.adminUserName ? 1 : 0;
 
       return user;
     }
@@ -254,7 +271,7 @@ const detailUser = async (userId) => {
     return null;
   } catch (e) {
     logger.error(e, {
-      'function': 'userService.detailUser',
+      function: 'userService.detailUser',
     });
 
     return null;
@@ -263,12 +280,15 @@ const detailUser = async (userId) => {
 
 const findByUserName = async (userName) => {
   try {
-    const user = await database.sequelize.query(`${PROCEDURE_NAME.SYS_USER_FINDBYUSERNAME} @UserName=:UserName`, {
-      replacements: {
-        'UserName': userName,
-      },
-      type: database.QueryTypes.SELECT,
-    });
+    const user = await database.sequelize.query(
+      `${PROCEDURE_NAME.SYS_USER_FINDBYUSERNAME} @UserName=:UserName`,
+      {
+        replacements: {
+          UserName: userName,
+        },
+        type: database.QueryTypes.SELECT,
+      }
+    );
 
     if (user.length) {
       return UserClass.detail(user[0]);
@@ -283,13 +303,16 @@ const findByUserName = async (userName) => {
 
 const deleteUser = async (userId, req) => {
   try {
-    await database.sequelize.query(`${PROCEDURE_NAME.SYS_USER_DELETE} @USERID=:USERID,@UPDATEDUSER=:UPDATEDUSER`, {
-      replacements: {
-        'USERID': userId,
-        'UPDATEDUSER': apiHelper.getAuthId(req),
-      },
-      type: database.QueryTypes.UPDATE,
-    });
+    await database.sequelize.query(
+      `${PROCEDURE_NAME.SYS_USER_DELETE} @USERID=:USERID,@UPDATEDUSER=:UPDATEDUSER`,
+      {
+        replacements: {
+          USERID: userId,
+          UPDATEDUSER: apiHelper.getAuthId(req),
+        },
+        type: database.QueryTypes.UPDATE,
+      }
+    );
     removeCacheOptions();
     return true;
   } catch (error) {
@@ -300,14 +323,17 @@ const deleteUser = async (userId, req) => {
 
 const changePasswordUser = async (userId, password, authId) => {
   try {
-    await database.sequelize.query(`${PROCEDURE_NAME.SYS_USER_CHANGEPASSWORD} @USERID=:USERID,@PASSWORD=:PASSWORD,@UPDATEDUSER=:UPDATEDUSER`, {
-      replacements: {
-        'USERID': userId,
-        'PASSWORD': stringHelper.hashPassword(password),
-        'UPDATEDUSER': authId,
-      },
-      type: database.QueryTypes.UPDATE,
-    });
+    await database.sequelize.query(
+      `${PROCEDURE_NAME.SYS_USER_CHANGEPASSWORD} @USERID=:USERID,@PASSWORD=:PASSWORD,@UPDATEDUSER=:UPDATEDUSER`,
+      {
+        replacements: {
+          USERID: userId,
+          PASSWORD: stringHelper.hashPassword(password),
+          UPDATEDUSER: authId,
+        },
+        type: database.QueryTypes.UPDATE,
+      }
+    );
 
     return true;
   } catch (error) {
@@ -317,12 +343,15 @@ const changePasswordUser = async (userId, password, authId) => {
 };
 const checkPassword = async (userId) => {
   try {
-    const data = await database.sequelize.query(`${PROCEDURE_NAME.SYS_USER_CHECKPASSWORD} @USERID=:USERID`, {
-      replacements: {
-        'USERID': userId,
-      },
-      type: database.QueryTypes.SELECT,
-    });
+    const data = await database.sequelize.query(
+      `${PROCEDURE_NAME.SYS_USER_CHECKPASSWORD} @USERID=:USERID`,
+      {
+        replacements: {
+          USERID: userId,
+        },
+        type: database.QueryTypes.SELECT,
+      }
+    );
     return data[0].PASSWORD;
   } catch (error) {
     console.error('userService.checkPassword', error);
@@ -331,10 +360,13 @@ const checkPassword = async (userId) => {
 };
 const generateUsername = async () => {
   try {
-    const user = await database.sequelize.query(`${PROCEDURE_NAME.SYS_USER_MAX}`, {
-      replacements: {},
-      type: database.QueryTypes.SELECT,
-    });
+    const user = await database.sequelize.query(
+      `${PROCEDURE_NAME.SYS_USER_MAX}`,
+      {
+        replacements: {},
+        type: database.QueryTypes.SELECT,
+      }
+    );
 
     let data = UserClass.generateUsername(user[0]);
     data.user_id = apiHelper.generateId();
@@ -349,7 +381,8 @@ const generateUsername = async () => {
 const logUserLogin = async (data = {}) => {
   try {
     const pool = await mssql.pool;
-    await pool.request()
+    await pool
+      .request()
       .input('USERPROFILEID', apiHelper.getValueFromObject(data, 'user_id'))
       .input('USERNAME', apiHelper.getValueFromObject(data, 'user_name'))
       .input('USERAGENT', apiHelper.getValueFromObject(data, 'user_agent'))
@@ -360,7 +393,7 @@ const logUserLogin = async (data = {}) => {
     return new ServiceResponse(true);
   } catch (e) {
     logger.error(e, {
-      'function': 'userService.logUserLogin',
+      function: 'userService.logUserLogin',
     });
 
     return new ServiceResponse(true);
@@ -373,12 +406,15 @@ const removeCacheOptions = () => {
 
 const findByEmail = async (email) => {
   try {
-    const user = await database.sequelize.query(`${PROCEDURE_NAME.SYS_USER_FINDBYEMAIL} @EMAIL=:EMAIL`, {
-      replacements: {
-        'EMAIL': email,
-      },
-      type: database.QueryTypes.SELECT,
-    });
+    const user = await database.sequelize.query(
+      `${PROCEDURE_NAME.SYS_USER_FINDBYEMAIL} @EMAIL=:EMAIL`,
+      {
+        replacements: {
+          EMAIL: email,
+        },
+        type: database.QueryTypes.SELECT,
+      }
+    );
 
     if (user.length) {
       return UserClass.detail(user[0]);
@@ -395,30 +431,40 @@ const getOptionsAll = async (queryParams = {}) => {
     const ids = apiHelper.getValueFromObject(queryParams, 'ids', []);
     const isActive = apiHelper.getFilterBoolean(queryParams, 'is_active');
     const parentId = apiHelper.getValueFromObject(queryParams, 'parent_id');
-    const function_alias = apiHelper.getValueFromObject(queryParams, 'function_alias');
+    const function_alias = apiHelper.getValueFromObject(
+      queryParams,
+      'function_alias'
+    );
     const data = await cache.wrap(CACHE_CONST.SYS_USER_OPTIONS, () => {
       return getOptions();
     });
     let dataUser = [];
-    if(function_alias) {
-      dataUser = await getByFunctionAlias(function_alias).filter((item) => { return item.USERID; });
+    if (function_alias) {
+      dataUser = await getByFunctionAlias(function_alias).filter((item) => {
+        return item.USERID;
+      });
     }
-    const idsFilter = ids.filter((item) => { return item; });
+    const idsFilter = ids.filter((item) => {
+      return item;
+    });
     const dataFilter = _.filter(data, (item) => {
       let isFilter = true;
-      if(Number(isActive) !== API_CONST.ISACTIVE.ALL && Boolean(Number(isActive)) !== item.ISACTIVE) {
+      if (
+        Number(isActive) !== API_CONST.ISACTIVE.ALL &&
+        Boolean(Number(isActive)) !== item.ISACTIVE
+      ) {
         isFilter = false;
       }
-      if(idsFilter.length && !idsFilter.includes(item.USERID.toString())) {
+      if (idsFilter.length && !idsFilter.includes(item.USERID.toString())) {
         isFilter = false;
       }
-      if(parentId && Number(parentId) !== item.PARENTID) {
+      if (parentId && Number(parentId) !== item.PARENTID) {
         isFilter = false;
       }
-      if(function_alias && !dataUser.includes(item.USERID.toString())) {
+      if (function_alias && !dataUser.includes(item.USERID.toString())) {
         isFilter = false;
       }
-      if(isFilter) {
+      if (isFilter) {
         return item;
       }
       return null;
@@ -426,7 +472,7 @@ const getOptionsAll = async (queryParams = {}) => {
 
     return new ServiceResponse(true, '', UserClass.options(dataFilter));
   } catch (e) {
-    logger.error(e, {'function': 'userService.getOptionsAll'});
+    logger.error(e, { function: 'userService.getOptionsAll' });
 
     return new ServiceResponse(true, '', []);
   }
@@ -437,7 +483,7 @@ const getOptions = async (req) => {
       @IsActive=:IsActive`;
     const users = await database.sequelize.query(query, {
       replacements: {
-        'IsActive': API_CONST.ISACTIVE.ALL,
+        IsActive: API_CONST.ISACTIVE.ALL,
       },
       type: database.QueryTypes.SELECT,
     });
@@ -445,7 +491,7 @@ const getOptions = async (req) => {
     return users;
   } catch (e) {
     logger.error(e, {
-      'function': 'userService.getOptions',
+      function: 'userService.getOptions',
     });
 
     return [];
@@ -453,12 +499,11 @@ const getOptions = async (req) => {
 };
 const getByFunctionAlias = async (FunctionAlias) => {
   try {
-
     const query = `${PROCEDURE_NAME.SYS_USER_GETBYFUNCTIONALIAS} 
       @FUNCTIONALIAS=:FUNCTIONALIAS`;
     const users = await database.sequelize.query(query, {
       replacements: {
-        'FUNCTIONALIAS': FunctionAlias,
+        FUNCTIONALIAS: FunctionAlias,
       },
       type: database.QueryTypes.SELECT,
     });
@@ -466,7 +511,7 @@ const getByFunctionAlias = async (FunctionAlias) => {
     return users;
   } catch (e) {
     logger.error(e, {
-      'function': 'userService.getOptions',
+      function: 'userService.getOptions',
     });
 
     return [];
