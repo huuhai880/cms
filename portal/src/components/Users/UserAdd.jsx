@@ -158,7 +158,7 @@ export default class UserAdd extends PureComponent {
    */
   getInitialValues() {
     let { userEnt } = this.props;
-    let { userData = {} } = this.state;
+    let { userData = {}, usrImgBase64 } = this.state;
     let values = Object.assign(
       {}, this._userModel.fillable(),
       {
@@ -167,8 +167,11 @@ export default class UserAdd extends PureComponent {
       },
       userData
     );
+
     if (userEnt) {
       Object.assign(values, userEnt);
+      // usrImgBase64 = usrImgBase64.includes('/uploads/avatar/')? usrImgBase64: null
+      // this.setState({ usrImgBase64 })
     }
     // Format
     Object.keys(values).forEach(key => {
@@ -234,8 +237,7 @@ export default class UserAdd extends PureComponent {
       }
       bundle[key] = data;
     });
-    // console.log('bundle: ', bundle);
-    //
+
     return bundle;
   }
 
@@ -281,7 +283,8 @@ export default class UserAdd extends PureComponent {
         }
       })
         .then(usrImgBase64 => {
-          this.setState({ usrImgBase64 });
+        usrImgBase64 =  usrImgBase64.length > 0? usrImgBase64[0]: usrImgBase64
+          this.setState({ usrImgBase64});
         })
         .catch(err => {
           window._$g.dialogs.alert(window._$g._(err.message));
@@ -368,8 +371,7 @@ export default class UserAdd extends PureComponent {
       city_id: values.province_id,
       description: values.about_me,
     });
-    // console.log('formData: ', formData, birthday, bdArr);
-    //
+
     let userId = (userEnt && userEnt.id()) || formData[this._userModel];
     let apiCall = userId
       ? this._userModel.update(userId, formData)
@@ -432,7 +434,6 @@ export default class UserAdd extends PureComponent {
     let { userEnt, noEdit } = this.props;
     /** @var {Object} */
     let initialValues = this.getInitialValues();
-    // console.log('initialValues: ', initialValues);
 
     // Ready?
     if (!ready) {
@@ -1119,3 +1120,9 @@ export default class UserAdd extends PureComponent {
     );
   }
 }
+
+
+
+
+
+
