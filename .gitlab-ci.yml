@@ -1,0 +1,69 @@
+variables:
+  TEST_DIR: "/home/tsh"
+
+stages:
+  - build-dev
+  - deploy-dev
+
+#################DEVELOP################
+
+tsh_build_docker_api_dev:
+  tags:
+    - 204-runner
+  stage: build-dev  
+  only:
+      refs:
+        - develop
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(api|all).*/
+        - $CI_COMMIT_MESSAGE =~ /(api|all).*/
+  script:
+    - echo "Runing build image api"
+    - cp "$TEST_DIR/env/.env.api" ./api
+    - cd api
+    - docker build -t img_tsh_api_dev .
+    - echo "Build image api success"  
+
+tsh_deploy_api_dev:
+  tags:
+    - 204-runner
+  stage: deploy-dev  
+  only:
+      refs:
+        - develop
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(api|all).*/
+        - $CI_COMMIT_MESSAGE =~ /(api|all).*/   
+  script:
+    - echo "Runing deploy api"
+    - docker stop container_tsh_api_dev || true && docker rm container_tsh_api_dev || true 
+    - docker run -d -v "$TEST_DIR/cdn":/usr/src/api/storage/uploads -v "$TEST_DIR/api/storage/logs":/usr/src/api/storage/logs -p 127.0.0.1:6101:3000 --name container_tsh_api_dev img_tsh_api_dev
+    - echo "Deploy api success!!!"   
+
+tsh_build_portal_dev:
+  tags:
+    - runner-global-hn   
+  stage: build-dev
+  only:
+      refs:
+        - develop
+      variables:
+        - $CI_COMMIT_DESCRIPTION =~ /(portal|all).*/  
+        - $CI_COMMIT_MESSAGE =~ /(portal|all).*/
+  script:
+    - echo "Runing build portal"
+    - cd portal
+    - npm i 
+    - CI=false npm run build
+    - tar -cf build.tar.gz build
+    - rm -f /home/tsh/cms/build.tar.gz
+    - cp -f build.tar.gz /home/tsh/cms
+    - cd /home/tsh/cms
+    - git config --global user.email "binhhv@blackwind.vn"
+    - git config --global user.name "binhhv"
+    - git pull origin build_develop
+    - git add -A
+    - git commit -m "$CI_COMMIT_MESSAGE"   
+    - git push origin build_develop
+    - echo "Runing build portal success"     
+
