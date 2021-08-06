@@ -27,8 +27,10 @@ class DefaultHeader extends Component {
       <React.Fragment>
         <SidebarToggler className="d-lg-none" display="md" mobile />
         <AppNavbarBrand
-          full={{ src: logo, width: 50, height: 40, alt: 'SCC' }}
-          minimized={{ src: sygnet, width: 35, height: 25, alt: 'SCC' }}
+          style={{cursor: "pointer"}}
+          onClick={()=>window._$g.rdr('/publishing-company')}
+          full={{ src: logo, width: 55, height: 45, alt: 'SCC' }}
+          minimized={{ src: sygnet, width: 40, height: 35, alt: 'SCC' }}
         />
         <SidebarToggler className="d-md-down-none" display="lg" />
 
