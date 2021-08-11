@@ -7,17 +7,17 @@ const routes = express.Router();
 
 const prefix = '/auth';
 
-routes.route('/token')
+routes
+  .route('/token')
   .post(validate(rules.createToken), authController.createToken);
 
-routes.route('/refresh-token')
+routes
+  .route('/refresh-token')
   .post(validate(rules.refreshToken), authController.refreshToken);
 
-routes.route('/get-profile')
-  .get(authController.getProfile);
+routes.route('/get-profile').get(authController.getProfile);
 
-routes.route('/logout')
-  .post(authController.logout);
+routes.route('/logout').post(authController.logout);
 
 module.exports = {
   prefix,

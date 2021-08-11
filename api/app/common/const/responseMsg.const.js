@@ -11,7 +11,7 @@ module.exports = {
     },
     LOGIN: {
       SUCCESS: 'Logged in successfully!',
-      FAILED: 'Invalid email or password.',
+      FAILED: 'Tên đăng nhập hoặc Mật khẩu đã nhập sai.',
       INACTIVE_USER: 'User account is inactive.',
       REFRESH_TOKEN_FAILED: 'Failed to request new session.',
       UNAUTHORIZED: 'Token invalid.',
@@ -62,10 +62,12 @@ module.exports = {
     CHANGE_STATUS_SUCCESS: 'Change status user group success.',
     CHECK_NAME_FAILED: 'Tên nhóm người dùng đã tồn tại.',
   },
-  USERGROUP_FUNCTION:{
-    SAVE_SYS_USERGROUP_FUNCTION_SUCCESS: 'Save SYS_USERGROUP_FUNCTION is success',
+  USERGROUP_FUNCTION: {
+    SAVE_SYS_USERGROUP_FUNCTION_SUCCESS:
+      'Save SYS_USERGROUP_FUNCTION is success',
     SAVE_SYS_USERGROUP_FUNCTION_FAILED: 'Save SYS_USERGROUP_FUNCTION is failed',
-    DELETE_SYS_USERGROUP_FUNCTION_FAILED: 'Delete SYS_USERGROUP_FUNCTION is failed',
+    DELETE_SYS_USERGROUP_FUNCTION_FAILED:
+      'Delete SYS_USERGROUP_FUNCTION is failed',
   },
   FUNCTION: {
     CREATE_SUCCESS: 'Create function success.',
@@ -150,13 +152,15 @@ module.exports = {
   CAMPAIGN: {
     CREATE_FAILED: 'Create campaign group failed.',
     CREATE_SUCCESS: 'Create campaign success.',
-    UPDATED_FAILED_CAMPAIGN_APPROVED: 'Campaign can not update because Campaign was approved.',
-    DELETE_FAILED_CAMPAIGN_APPROVED: 'Chiến dich không thể xóa vì đã được duyệt.',
+    UPDATED_FAILED_CAMPAIGN_APPROVED:
+      'Campaign can not update because Campaign was approved.',
+    DELETE_FAILED_CAMPAIGN_APPROVED:
+      'Chiến dich không thể xóa vì đã được duyệt.',
     DELETE_FAILED: 'Delete campaign is failed',
     DELETE_SUCCESS: 'Delete campaign success.',
   },
 
-  CAMPAIGNREVIEWLIST:{
+  CAMPAIGNREVIEWLIST: {
     DELETE_FAILED: 'Delete campaign review list is failed',
     CREATE_FAILED: 'Create campaign review list failed.',
     APPROVED_SUCCESS: 'Approved success.',
@@ -358,7 +362,8 @@ module.exports = {
     UPDATE_FAILED: 'Cập nhật thuộc tính sản phẩm thất bại.',
     DELETE_SUCCESS: 'Xóa thuộc tính sản phẩm thành công.',
     DELETE_FAILED: 'Xóa thuộc tính sản phẩm thất bại.',
-    CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thuộc tính sản phẩm thành công.',
+    CHANGE_STATUS_SUCCESS:
+      'Thay đổi trạng thái thuộc tính sản phẩm thành công.',
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thuộc tính sản phẩm thất bại.',
   },
   SL_PRICES: {
@@ -372,7 +377,8 @@ module.exports = {
     APPROVE_EXITST: 'Giá đã được duyệt.',
     APPROVE_NOTEXITST: 'Mức duyệt không tồn tại.',
     APPROVE_UNNOW: 'Lỗi không xác định.',
-    CHECK_TRUNG:'Không được phép làm giá đồng thời: hình thức xuất, khu vực, cơ sở, thời gian áp dụng',
+    CHECK_TRUNG:
+      'Không được phép làm giá đồng thời: hình thức xuất, khu vực, cơ sở, thời gian áp dụng',
   },
   PROMOTION: {
     CREATE_SUCCESS: 'Thêm mới khuyến mãi thành công.',
@@ -440,7 +446,8 @@ module.exports = {
     EXISTS_NAME: 'Tên chuyên mục đã tồn tại.',
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
     EXISTS_ORDERINDEX: 'Thứ tự hiển thị đã tồn tại.',
-    EXISTS_PARENT: 'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
+    EXISTS_PARENT:
+      'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
   },
   TOPIC: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
@@ -461,7 +468,7 @@ module.exports = {
     CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
   },
-  UPLOADFILE:{
+  UPLOADFILE: {
     CREATE_SUCCESS: 'Upload tập tin thành công.',
     CREATE_ERROR: 'Upload tập tin thất bại.',
   },
@@ -494,7 +501,8 @@ module.exports = {
     DELETE_SUCCESS: 'Xóa thành công.',
     CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
-    EXISTS_PARENT: 'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
+    EXISTS_PARENT:
+      'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
   },
   BANNER: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
@@ -529,7 +537,7 @@ module.exports = {
     EXISTS_TAG: 'Tag đã tồn tại.',
     EXISTS_METAKEYWORD: 'MataKeyword đã tồn tại.',
   },
-  WEBSITECATEGORY:{
+  WEBSITECATEGORY: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
     CREATE_FAILED: 'Thêm mới thất bại.',
     UPDATE_SUCCESS: 'Cập nhật thành công.',
@@ -537,18 +545,10 @@ module.exports = {
     DELETE_SUCCESS: 'Xóa thành công.',
     CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
-    EXISTS_PARENT: 'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
+    EXISTS_PARENT:
+      'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
   },
-  CANDIDATE:{
-    CREATE_SUCCESS: 'Thêm mới thành công.',
-    CREATE_FAILED: 'Thêm mới thất bại.',
-    UPDATE_SUCCESS: 'Cập nhật thành công.',
-    UPDATE_FAILED: 'Cập nhật thất bại.',
-    DELETE_SUCCESS: 'Xóa thành công.',
-    CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
-    CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
-  },
-  BOOKING:{
+  CANDIDATE: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
     CREATE_FAILED: 'Thêm mới thất bại.',
     UPDATE_SUCCESS: 'Cập nhật thành công.',
@@ -557,7 +557,7 @@ module.exports = {
     CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
   },
-  MEMBERSHIP:{
+  BOOKING: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
     CREATE_FAILED: 'Thêm mới thất bại.',
     UPDATE_SUCCESS: 'Cập nhật thành công.',
@@ -566,7 +566,7 @@ module.exports = {
     CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
   },
-  SETUPSERVICEREGISTER:{
+  MEMBERSHIP: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
     CREATE_FAILED: 'Thêm mới thất bại.',
     UPDATE_SUCCESS: 'Cập nhật thành công.',
@@ -574,9 +574,8 @@ module.exports = {
     DELETE_SUCCESS: 'Xóa thành công.',
     CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
-    EXISTS_PARENT: 'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
   },
-  COMMENT:{
+  SETUPSERVICEREGISTER: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
     CREATE_FAILED: 'Thêm mới thất bại.',
     UPDATE_SUCCESS: 'Cập nhật thành công.',
@@ -584,7 +583,19 @@ module.exports = {
     DELETE_SUCCESS: 'Xóa thành công.',
     CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
-    EXISTS_PARENT: 'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
+    EXISTS_PARENT:
+      'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
+  },
+  COMMENT: {
+    CREATE_SUCCESS: 'Thêm mới thành công.',
+    CREATE_FAILED: 'Thêm mới thất bại.',
+    UPDATE_SUCCESS: 'Cập nhật thành công.',
+    UPDATE_FAILED: 'Cập nhật thất bại.',
+    DELETE_SUCCESS: 'Xóa thành công.',
+    CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
+    CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
+    EXISTS_PARENT:
+      'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
   },
   CONTRACTTYPE: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
@@ -609,10 +620,10 @@ module.exports = {
     FREEZE_FAILED: 'Bảo lưu thất bại.',
   },
   HR_USER_TIMEKEEPING: {
-    'NOT_FOUND': 'Thông tin không tồn tại',
-    'APPROVED_SUCCESS': 'Duyệt thông tin thành công',
+    NOT_FOUND: 'Thông tin không tồn tại',
+    APPROVED_SUCCESS: 'Duyệt thông tin thành công',
   },
-  SETUPSERVICE:{
+  SETUPSERVICE: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
     CREATE_FAILED: 'Thêm mới thất bại.',
     UPDATE_SUCCESS: 'Cập nhật thành công.',
@@ -620,7 +631,8 @@ module.exports = {
     DELETE_SUCCESS: 'Xóa thành công.',
     CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
-    EXISTS_PARENT: 'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
+    EXISTS_PARENT:
+      'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
     UPLOAD_FAILED: 'Lưu ảnh thất bại.',
     EXISTS_METATITLE: 'MetaTitle đã tồn tại.',
     EXISTS_METAKEYWORD: 'MataKeyword đã tồn tại.',
@@ -649,7 +661,8 @@ module.exports = {
     EXISTS_NAME: 'Tên chuyên mục đã tồn tại.',
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
     EXISTS_ORDERINDEX: 'Thứ tự hiển thị đã tồn tại.',
-    EXISTS_PARENT: 'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
+    EXISTS_PARENT:
+      'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
   },
   PLAN: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
@@ -662,6 +675,19 @@ module.exports = {
     EXISTS_NAME: 'Tên chuyên mục đã tồn tại.',
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
     EXISTS_ORDERINDEX: 'Thứ tự hiển thị đã tồn tại.',
-    EXISTS_PARENT: 'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
-  }
+    EXISTS_PARENT:
+      'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
+  },
+  PARTNER: {
+    CREATE_SUCCESS: 'Thêm mới thành công.',
+    CREATE_FAILED: 'Thêm mới thất bại.',
+    UPDATE_SUCCESS: 'Cập nhật thành công.',
+    UPDATE_FAILED: 'Cập nhật thất bại.',
+    DELETE_SUCCESS: 'Xóa thành công.',
+    CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
+    CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
+    EXISTS_PARTNER_NAME: 'Tên công ty đã tồn tại.',
+    EXISTS_USER_NAME: 'Tài khoản đã tồn tại.',
+    SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
+  },
 };

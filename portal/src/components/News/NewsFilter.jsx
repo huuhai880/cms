@@ -57,7 +57,7 @@ class NewsFilter extends PureComponent {
     const { handleSubmit } = this.props;
     handleSubmit(
       isReset,
-      inputValue,
+      inputValue ? inputValue.trim() : null,
       selectedActive ? selectedActive.value : 2,
       newsCategory ? newsCategory.value : null,
       startDate ? startDate.format("DD/MM/YYYY") : startDate,
@@ -113,7 +113,7 @@ class NewsFilter extends PureComponent {
       <div className="ml-3 mr-3 mb-3 mt-3">
         <Form autoComplete="nope" className="zoom-scale-9">
           <Row>
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={4}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="inputValue" className="mr-sm-2">
                   Từ khóa
@@ -133,7 +133,7 @@ class NewsFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={4}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Chuyên mục
@@ -152,7 +152,7 @@ class NewsFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={4}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Kích hoạt
@@ -172,7 +172,7 @@ class NewsFilter extends PureComponent {
               </FormGroup>
             </Col>
 
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={4} className="mt-md-3">
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Ngày đăng
@@ -192,7 +192,7 @@ class NewsFilter extends PureComponent {
               </FormGroup>
             </Col>
 
-            <Col xs={12} sm={3} className="mt-md-3">
+            <Col xs={12} sm={4} className="mt-md-3">
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Ngày tạo
@@ -216,7 +216,7 @@ class NewsFilter extends PureComponent {
             </Col>
             <Col
               xs={12}
-              sm={9}
+              sm={4}
               className="d-flex align-items-end justify-content-end"
             >
               <FormGroup className="mb-2 mb-sm-0">
@@ -240,23 +240,23 @@ class NewsFilter extends PureComponent {
                   <span className="ml-1">Làm mới</span>
                 </Button>
               </FormGroup>
-              {
-                handlePick ?
+              {handlePick ? (
                 <FormGroup className="mb-2 ml-2 mb-sm-0">
-                <Button
-                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePick();
-                  }}
-                  color="success"
-                  size="sm"
-                >
-                  <i className="fa fa-plus" />
-                  <span className="ml-1"> Chọn </span>
-                </Button>
-              </FormGroup> : null 
-              }
+                  <Button
+                    className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      console.log("🚀 ~ file: NewsFilter.jsx ~ line 249 ~ NewsFilter ~ render ~ e.preventDefault();", e.preventDefault())
+                      handlePick();
+                    }}
+                    color="success"
+                    size="sm"
+                  >
+                    <i className="fa fa-plus" />
+                    <span className="ml-1"> Chọn </span>
+                  </Button>
+                </FormGroup>
+              ) : null}
             </Col>
           </Row>
         </Form>

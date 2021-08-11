@@ -79,7 +79,7 @@ export default class UserGroupsAdd extends Component {
     order_index: Yup.number()
       .min(0, "Thứ tự bắt buộc lớn hơn hoặc bằng 0")
       .required("Thứ tự là bắt buộc."),
-    company_id: Yup.string().required("Công ty áp dụng là bắt buộc.")
+    // company_id: Yup.string().required("Công ty áp dụng là bắt buộc.")
   });
 
   /** @var {String} */
@@ -323,7 +323,7 @@ export default class UserGroupsAdd extends Component {
                                 </Col>
                               </FormGroup>
                             </Col>
-                            <Col xs={12}>
+                            {/* <Col xs={12}>
                               <FormGroup>
                                 <Row>
                                   <Label sm={3}>
@@ -335,7 +335,7 @@ export default class UserGroupsAdd extends Component {
                                   <Col sm={9}>
                                     <Field
                                       name="company_id"
-                                      render={({ field /*, form*/ }) => {
+                                      render={({ field }) => {
                                         let defaultValue = companies.find(
                                           ({ value }) =>
                                             1 * value === 1 * field.value
@@ -383,7 +383,7 @@ export default class UserGroupsAdd extends Component {
                                     <Field
                                       key={`business_id_of_${values.company_id}`}
                                       name="business_id"
-                                      render={({ field /*, form*/ }) => {
+                                      render={({ field }) => {
                                         let defaultValue = businessArr.find(
                                           ({ value }) =>
                                             1 * value === 1 * field.value
@@ -421,7 +421,7 @@ export default class UserGroupsAdd extends Component {
                                   </Col>
                                 </Row>
                               </FormGroup>
-                            </Col>
+                            </Col> */}
 
                             <Col xs={12}>
                                 <FormGroup row>
@@ -458,7 +458,7 @@ export default class UserGroupsAdd extends Component {
                                             className="pull-left"
                                             onBlur={null}
                                             defaultChecked={(values.user_group_id !== "") ? values.is_active : 1}
-                                            type="switch"
+                                            type="checkbox"
                                             id="is_active"
                                             label="Kích hoạt"
                                             disabled={noEdit}
@@ -483,7 +483,7 @@ export default class UserGroupsAdd extends Component {
                                             className="pull-left"
                                             onBlur={null}
                                             defaultChecked={values.is_system}
-                                            type="switch"
+                                            type="checkbox"
                                             id="is_system"
                                             label="Hệ thống"
                                             disabled={noEdit}

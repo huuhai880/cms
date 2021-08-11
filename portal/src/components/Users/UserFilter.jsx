@@ -19,6 +19,7 @@ class UserFilter extends PureComponent {
     super(props)
     this.state = {
       /** @var {Array} */
+      gender: { label: "Tất cả", value: undefined },
       genders: [
         { name: "Tất cả", id: undefined },
         { name: "Nam", id: 1 },

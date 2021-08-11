@@ -317,7 +317,7 @@ export default class FunctionGroupAdd extends PureComponent {
                                 <Label for="order_index" sm={3}>
                                   Thứ tự<span className="font-weight-bold red-text">*</span>
                                 </Label>
-                                <Col sm={9}>
+                                <Col sm={3}>
                                   <Field
                                     name="order_index"
                                     render={({ field /* _form */ }) => <Input
@@ -342,45 +342,6 @@ export default class FunctionGroupAdd extends PureComponent {
                                 </Col>
                               </FormGroup>
                               
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col xs={12}>
-                              <FormGroup row>
-                                <Label for="is_active" sm={3}></Label>
-                                <Col xs={6} sm={4}>
-                                  <Field
-                                    name="is_active"
-                                    render={({ field /* _form */ }) => <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_active}
-                                      type="switch"
-                                      id="is_active"
-                                      label="Kích hoạt?"
-                                      disabled={noEdit}
-                                    />}
-                                  />
-                                  
-                                </Col>
-                                <Col xs={6} sm={5}>
-                                  <Field
-                                    name="is_system"
-                                    render={({ field /* _form */ }) => <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_system}
-                                      type="switch"
-                                      id="is_system"
-                                      label="Hệ thống?"
-                                      disabled={noEdit}
-                                    />}
-                                  />
-                                </Col>
-                                
-                              </FormGroup>
                             </Col>
                           </Row>
                           <Row>
@@ -414,10 +375,10 @@ export default class FunctionGroupAdd extends PureComponent {
                                   <Table size="sm" bordered striped hover responsive>
                                     <thead>
                                       <tr>
-                                        <th style={{ width: '1%' }}>#</th>
-                                        <th>Tên quyền</th>
-                                        <th>Code</th>
-                                        <th style={{ width: '%' }}>Xoá</th>
+                                        <th className="text-center" style={{ width: '1%' }}>#</th>
+                                        <th className="text-center">Tên quyền</th>
+                                        <th className="text-center">Code</th>
+                                        <th className="text-center" style={{ width: '%' }}>Xoá</th>
                                       </tr>
                                     </thead>
                                     <tbody>{functions.map((item, idx) => {
@@ -435,7 +396,7 @@ export default class FunctionGroupAdd extends PureComponent {
                                                 name="functions"
                                                 // onBlur={null}
                                                 onChange={() => this.handleChangeFunction(item)}
-                                                type="switch"
+                                                type="checkbox"
                                                 label=""
                                                 defaultChecked={item.function_group_is_check}
                                                 disabled={noEdit}
@@ -450,6 +411,45 @@ export default class FunctionGroupAdd extends PureComponent {
                                     </tfoot>*/}
                                   </Table>
                                 </Col>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={12}>
+                              <FormGroup row>
+                                <Label for="is_active" sm={1}></Label>
+                                <Col xs={6} sm={4}>
+                                  <Field
+                                    name="is_active"
+                                    render={({ field /* _form */ }) => <CustomInput
+                                      {...field}
+                                      className="pull-left"
+                                      onBlur={null}
+                                      checked={values.is_active}
+                                      type="checkbox"
+                                      id="is_active"
+                                      label="Kích hoạt?"
+                                      disabled={noEdit}
+                                    />}
+                                  />
+                                  
+                                </Col>
+                                <Col xs={6} sm={5}>
+                                  <Field
+                                    name="is_system"
+                                    render={({ field /* _form */ }) => <CustomInput
+                                      {...field}
+                                      className="pull-left"
+                                      onBlur={null}
+                                      checked={values.is_system}
+                                      type="checkbox"
+                                      id="is_system"
+                                      label="Hệ thống?"
+                                      disabled={noEdit}
+                                    />}
+                                  />
+                                </Col>
+                                
                               </FormGroup>
                             </Col>
                           </Row>
