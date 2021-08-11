@@ -54,7 +54,7 @@ const template = {
   parent_id: '{{#? PARENTID}}',
 };
 
-const templateOption = { 
+const templateOption = {
   id: '{{#? ID}}',
   name: '{{#? NAME}}',
 };
@@ -154,5 +154,5 @@ module.exports = {
   list,
   detail,
   listAll,
-  listRelated
+  listRelated,
 };

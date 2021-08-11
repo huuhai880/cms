@@ -64,7 +64,7 @@ class News extends Component {
       itemsPerPage: this.props.handlePick ? 10 : 25,
       page: 1,
       is_active: 1,
-      exclude_id: this.props.excludeNewsId||null
+      exclude_id: this.props.excludeNewsId || null,
     },
     newsCategoryArr: [{ name: "Tất cả", id: "", value: "" }],
     newsStatusArr: [],
@@ -112,7 +112,10 @@ class News extends Component {
    */
   async _getBundleData() {
     let bundle = {};
-    const queryPrams = this.props.history && this.props.history.location ? new URLSearchParams(this.props.history.location.search) : null;
+    const queryPrams =
+      this.props.history && this.props.history.location
+        ? new URLSearchParams(this.props.history.location.search)
+        : null;
     const author_id = queryPrams ? queryPrams.get("author_id") : "";
     let all = [
       // @TODO:
@@ -137,7 +140,10 @@ class News extends Component {
   // get data
   getData = (query = {}) => {
     this.setState({ isLoading: true });
-    const queryPrams = this.props.history && this.props.history.location ? new URLSearchParams(this.props.history.location.search) : null;
+    const queryPrams =
+      this.props.history && this.props.history.location
+        ? new URLSearchParams(this.props.history.location.search)
+        : null;
     const author_id = queryPrams ? queryPrams.get("author_id") : "";
     return this._newsModel.getList({ ...query, author_id }).then((res) => {
       let data = res.items;
@@ -313,10 +319,11 @@ class News extends Component {
 
   handlePickNews = () => {
     const { handlePick } = this.props;
-    if(handlePick){
-      handlePick(this._pickDataItems)
+    if (handlePick) {
+      console.log('this._pickDataItems)', this._pickDataItems)
+      handlePick(this._pickDataItems);
     }
-  }
+  };
 
   render() {
     const columns = [
@@ -440,8 +447,8 @@ class News extends Component {
                 {value == 1
                   ? "Đã duyệt"
                   : value == 2
-                    ? "Chưa duyệt"
-                    : "Không duyệt"}
+                  ? "Chưa duyệt"
+                  : "Không duyệt"}
               </div>
             );
           },
@@ -476,16 +483,29 @@ class News extends Component {
           empty: true,
           customBodyRender: (value, tableMeta, updateValue) => {
             if (handlePick) {
+              // let checked = false;
+              let related =  this.props.related;
+              // let checked = (Object.keys(related).length === this.state.data.length) && this.state.data.length ? true : false;
+              let item = this.state.data[tableMeta["rowIndex"]];
+              // related.forEach((items)=> {
+              //   if(items.news_id === item.news_id)
+              //   return checked = true
+              // })
+
               return (
                 <div className="text-center mb-1">
                   <Checkbox
+                    id={`"-td"${item.news_id}`}
+                    // checked={checked}
                     onChange={({ target }) => {
-                      let item = this.state.data[tableMeta["rowIndex"]];
+                      
                       let { _pickDataItems = {} } = this;
                       if (target.checked) {
                         _pickDataItems[item.news_id] = item;
+                        // checked = true
                       } else {
                         delete _pickDataItems[item.news_id];
+                        // checked = false
                       }
                       Object.assign(this, { _pickDataItems });
                     }}
@@ -493,6 +513,7 @@ class News extends Component {
                 </div>
               );
             }
+
             return (
               <div className="text-center">
                 <CheckAccess permission="NEWS_NEWS_REVIEW">
@@ -560,30 +581,35 @@ class News extends Component {
     const options = configTableOptions(count, page, query);
     return (
       <div>
-        <Card className={`animated fadeIn z-index-222 mb-3 ${handlePick ? 'news-header-no-border' : ''}`}>
+        <Card
+          className={`animated fadeIn z-index-222 mb-3 ${
+            handlePick ? "news-header-no-border" : ""
+          }`}
+        >
           <CardHeader className="d-flex">
-            <div className="flex-fill font-weight-bold">{handlePick ? 'Thêm bài viết liên quan' : 'Thông tin tìm kiếm'}</div>
-            {
-              handlePick ?
-                <Button color="danger"
-                  size="sm"
-                  onClick={() => handlePick({})} >
-                  <i className={`fa fa-remove`}/>
-                </Button> :
-                <div
-                  className="minimize-icon cur-pointer"
-                  onClick={() =>
-                    this.setState((prevState) => ({
-                      toggleSearch: !prevState.toggleSearch,
-                    }))
-                  }
-                >
-                  <i
-                    className={`fa ${this.state.toggleSearch ? "fa-minus" : "fa-plus"
-                      }`}
-                  />
-                </div>
-            }
+            <div className="flex-fill font-weight-bold">
+              {handlePick ? "Thêm bài viết liên quan" : "Thông tin tìm kiếm"}
+            </div>
+            {handlePick ? (
+              <Button color="danger" size="md" onClick={() => handlePick({})}>
+                <i className={`fa fa-remove`} />
+              </Button>
+            ) : (
+              <div
+                className="minimize-icon cur-pointer "
+                onClick={() =>
+                  this.setState((prevState) => ({
+                    toggleSearch: !prevState.toggleSearch,
+                  }))
+                }
+              >
+                <i
+                  className={`fa ${
+                    this.state.toggleSearch ? "fa-minus" : "fa-plus"
+                  }`}
+                />
+              </div>
+            )}
           </CardHeader>
           {this.state.toggleSearch && (
             <CardBody className="px-0 py-0">
@@ -598,8 +624,8 @@ class News extends Component {
             </CardBody>
           )}
         </Card>
-        {
-          handlePick ? null : <div>
+        {handlePick ? null : (
+          <div>
             <CheckAccess permission="NEWS_NEWS_ADD">
               <Button
                 className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
@@ -612,9 +638,14 @@ class News extends Component {
               </Button>
             </CheckAccess>
           </div>
-        }
-        <Card className="animated fadeIn" style={{ marginBottom: handlePick ? 0 : '1.5rem' }}>
-          <CardBody className="px-0 py-0">
+        )}
+        <Card
+          className="animated fadeIn"
+          style={{ marginBottom: handlePick ? 0 : "1.5rem", border: "none" }}
+        >
+          <CardBody
+            className={`py-0 ${!this.props.isOpenNewsList ? "px-0" : ""}`}
+          >
             <div className="MuiPaper-root__custom">
               {this.state.isLoading ? (
                 <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
@@ -631,7 +662,9 @@ class News extends Component {
                     count={count}
                     rowsPerPage={query.itemsPerPage}
                     page={page}
-                    rowsPerPageOptions={handlePick ? [10, 25, 50, 75, 100] : [25, 50, 75, 100]}
+                    rowsPerPageOptions={
+                      handlePick ? [10, 25, 50, 75, 100] : [25, 50, 75, 100]
+                    }
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                   />

@@ -167,14 +167,13 @@ export default class NewsAdd extends Component {
 
     if (isModal) {
       const modal = modalData();
-      values.is_qrcode = 1;
+      // values.is_qrcode = 1;
       const { product_id, author_id, publishing_company_id } = modal;
-      if (product_id) values.product_id = product_id;
+      // if (product_id) values.product_id = product_id;
       if (author_id) values.author_id = author_id;
       if (publishing_company_id)
         values.publishing_company_id = publishing_company_id;
     }
-
     // Return;
     return values;
   }
@@ -191,9 +190,9 @@ export default class NewsAdd extends Component {
       this._authorModel
         .getOptions({ is_active: 1 })
         .then((data) => (bundle["authorOpts"] = mapDataOptions4Select(data))),
-      this._productModel
-        .getOptions({ is_active: 1 })
-        .then((data) => (bundle["productOpts"] = mapDataOptions4Select(data))),
+      // this._productModel
+      //   .getOptions({ is_active: 1 })
+      //   .then((data) => (bundle["productOpts"] = mapDataOptions4Select(data))),
       this._publishingCompanyModel
         .getOptions({ is_active: 1 })
         .then(
@@ -286,12 +285,12 @@ export default class NewsAdd extends Component {
     return str;
   };
 
-  handleChangeQrCode = (event) => {
-    const { setFieldValue } = this.formikProps;
-    this.setState({ isQrCode: event.target.checked });
-    setFieldValue("is_qrcode", event.target.checked);
-    setFieldValue("news_category_id", "");
-  };
+  // handleChangeQrCode = (event) => {
+  //   const { setFieldValue } = this.formikProps;
+  //   this.setState({ isQrCode: event.target.checked });
+  //   setFieldValue("is_qrcode", event.target.checked);
+  //   setFieldValue("news_category_id", "");
+  // };
 
   handleFormikBeforeRender({ initialValues }) {
     let { values } = this.formikProps;
@@ -349,7 +348,7 @@ export default class NewsAdd extends Component {
       news_date: values.news_date || "",
       seo_name: seo_name != "" ? seo_name : values.seo_name,
       is_active: values.is_active == true ? 1 : 0,
-      is_qrcode: values.is_qrcode == true ? 1 : 0,
+      // is_qrcode: values.is_qrcode == true ? 1 : 0,
       news_category_id: values.news_category_id * 1,
     });
     //
@@ -443,27 +442,27 @@ export default class NewsAdd extends Component {
     return errors;
   }
 
-  handleChangeAuthor(author_id) {
-    this._productModel
-      .getOptions({ is_active: 1, author_id: author_id })
-      .then((data) => {
-        this.formikProps.setFieldTouched("poroduct_id", true, false);
-        this.formikProps.setFieldValue("poroduct_id", "", true);
-        this.setState({
-          productOpts: [
-            { label: "-- Chọn --", value: "" },
-            ...mapDataOptions4Select(data),
-          ],
-        });
-      });
-  }
+  // handleChangeAuthor(author_id) {
+  //   this._productModel
+  //     .getOptions({ is_active: 1, author_id: author_id })
+  //     .then((data) => {
+  //       this.formikProps.setFieldTouched("poroduct_id", true, false);
+  //       this.formikProps.setFieldValue("poroduct_id", "", true);
+  //       this.setState({
+  //         productOpts: [
+  //           { label: "-- Chọn --", value: "" },
+  //           ...mapDataOptions4Select(data),
+  //         ],
+  //       });
+  //     });
+  // }
 
-  handleChangeProduct(product_id) {
-    this._productModel.read(product_id).then((data) => {
-      this.formikProps.setFieldTouched("author_id", true, false);
-      this.formikProps.setFieldValue("author_id", data.author_id, true);
-    });
-  }
+  // handleChangeProduct(product_id) {
+  //   this._productModel.read(product_id).then((data) => {
+  //     this.formikProps.setFieldTouched("author_id", true, false);
+  //     this.formikProps.setFieldValue("author_id", data.author_id, true);
+  //   });
+  // }
 
   handleOpenReview = (item) => {
     this.setState({
@@ -536,7 +535,9 @@ export default class NewsAdd extends Component {
           related.unshift(news[key]);
         }
       });
+      
       setFieldValue("related", related);
+      this.setState({dataRelated: related})
     });
   };
 
@@ -566,6 +567,7 @@ export default class NewsAdd extends Component {
       const cloneData = JSON.parse(JSON.stringify(related));
       cloneData.splice(index, 1);
       handleChange({ target: { name: "related", value: cloneData } });
+      this.setState({dataRelated: related})
     }
   }
 
@@ -729,23 +731,13 @@ export default class NewsAdd extends Component {
                                           </Row>
                                           <Row>
                                             <FormSelectGroup
-                                              isRequired={
-                                                this.state.isQrCode
-                                                  ? false
-                                                  : true
-                                              }
+                                              isRequired={true}
                                               label="Chuyên mục bài viết"
                                               name="news_category_id"
                                               // isObject
                                               smColSelect={9}
                                               smColLabel={3}
-                                              isEdit={
-                                                noEdit === undefined
-                                                  ? !this.state.isQrCode
-                                                  : noEdit === true
-                                                  ? !noEdit
-                                                  : !this.state.isQrCode
-                                              }
+                                              isEdit={!noEdit}
                                               placeHolder={
                                                 "-- Chọn mục tin tức--"
                                               }
@@ -791,9 +783,9 @@ export default class NewsAdd extends Component {
                                                                 value,
                                                               },
                                                             });
-                                                            this.handleChangeAuthor(
-                                                              value
-                                                            );
+                                                            // this.handleChangeAuthor(
+                                                            //   value
+                                                            // );
                                                           }}
                                                           isSearchable={true}
                                                           placeholder={
@@ -824,7 +816,7 @@ export default class NewsAdd extends Component {
                                               </FormGroup>
                                             </Col>
                                           </Row>
-                                          <Row>
+                                          {/* <Row>
                                             <Col xs={12}>
                                               <FormGroup row>
                                                 <Label for="product_id" sm={3}>
@@ -835,7 +827,7 @@ export default class NewsAdd extends Component {
                                                   <Field
                                                     name="product_id"
                                                     render={({
-                                                      field /*, form*/,
+                                                      field ,
                                                     }) => {
                                                       let defaultValue =
                                                         productOpts.find(
@@ -893,7 +885,7 @@ export default class NewsAdd extends Component {
                                                 </Col>
                                               </FormGroup>
                                             </Col>
-                                          </Row>
+                                          </Row> */}
                                           <Row>
                                             <Col xs={12} sm={12}>
                                               <FormGroup row>
@@ -946,7 +938,7 @@ export default class NewsAdd extends Component {
                                                   sm={4}
                                                   className="d-flex flex-column"
                                                 >
-                                                  <Field
+                                                  {/* <Field
                                                     name="is_qrcode"
                                                     render={({ field }) => (
                                                       <CustomInput
@@ -966,7 +958,7 @@ export default class NewsAdd extends Component {
                                                         }
                                                       />
                                                     )}
-                                                  />
+                                                  /> */}
                                                   {values.is_qrcode &&
                                                   NewsEnt &&
                                                   NewsEnt.news_id ? (
@@ -996,21 +988,31 @@ export default class NewsAdd extends Component {
                                             </Col>
                                           </Row>
                                           <Row>
-                                            <DateTimePicker
-                                              label="Ngày đăng tin"
-                                              name="news_date"
-                                              labelsm={3}
-                                              inputsm={9}
-                                              isRequired={false}
-                                              isEdit={
-                                                !(
-                                                  NewsEnt &&
-                                                  NewsEnt.news_date &&
-                                                  moment(NewsEnt.news_date) <
-                                                    moment()
-                                                )
-                                              }
-                                            />
+                                            <Col sm={12}>
+                                              <FormGroup row>
+                                                <Label for="news_date" sm={3}>
+                                                  Ngày đăng tin
+                                                </Label>
+                                                <Col sm={9} className="pl-0">
+                                                  <DateTimePicker
+                                                    // label="Ngày đăng tin"
+                                                    name="news_date"
+                                                    labelsm={3}
+                                                    inputsm={6}
+                                                    isRequired={false}
+                                                    isEdit={
+                                                      !(
+                                                        NewsEnt &&
+                                                        NewsEnt.news_date &&
+                                                        moment(
+                                                          NewsEnt.news_date
+                                                        ) < moment()
+                                                      )
+                                                    }
+                                                  />
+                                                </Col>
+                                              </FormGroup>
+                                            </Col>
                                           </Row>
                                           <Row>
                                             <Col xs={12}>
@@ -1544,11 +1546,14 @@ export default class NewsAdd extends Component {
         </Modal>
         {/* Open modal News list here */}
         {isOpenNewsList ? (
-          <Modal isOpen={true} size={"lg"}>
+          <Modal isOpen={true} size={"lg"} style={{maxWidth: "60rem"}}>
             {/* <ModalHeader>Duyệt bài viết</ModalHeader> */}
             <ModalBody className="p-0">
+              {console.log('this.formikProps', this.formikProps.values.related)}
               <News
+                isOpenNewsList={isOpenNewsList}
                 handlePick={this.handlePickNews}
+                related={this.formikProps.values.related}
                 excludeNewsId={NewsEnt ? NewsEnt.news_id : null}
               />
             </ModalBody>

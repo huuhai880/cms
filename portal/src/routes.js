@@ -795,6 +795,13 @@ const PageSetting = React.lazy(() =>
   import("./components/PageSetting/PageSetting")
 );
 
+//Partner
+const Partner = React.lazy(() => import("./components/Partner/Partner"));
+const PartnerAdd = React.lazy(() => import("./components/Partner/PartnerAdd"));
+const PartnerDetail = React.lazy(() => import("./components/Partner/PartnerDetail"));
+const PartnerEdit = React.lazy(() => import("./components/Partner/PartnerEdit"));
+//end#Partner
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   // dashboard
@@ -2722,6 +2729,37 @@ const routes = [
     component: PageSetting,
   },
   // end#PageSeting
+
+  // Partner
+  {
+    path: "/partner",
+    exact: true,
+    name: "Danh sách công ty",
+    function: "MD_PARTNER_VIEW",
+    component: Partner,
+  },
+  {
+    path: "/partner/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "MD_PARTNER_ADD",
+    component: PartnerAdd,
+  },
+  {
+    path: "/partner/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "MD_PARTNER_VIEW",
+    component: PartnerDetail,
+  },
+  {
+    path: "/partner/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "MD_PARTNER_EDIT",
+    component: PartnerEdit,
+  },
+  // end#Partner
 ];
 
 export default routes;

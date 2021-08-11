@@ -37,27 +37,28 @@ const ruleCreateOrUpdate = {
   is_hot_news: Joi.number().valid(0, 1).required(),
   is_active: Joi.number().valid(0, 1).required(),
   is_system: Joi.number().valid(0, 1).required(),
-  is_qrcode: Joi.number().valid(0, 1).required(),
-  product_id: Joi.when('is_qrcode', {
-    is: 1,
-    then: Joi.number().required(),
-    otherwise: Joi.allow(null, 0, ''),
-  }).error((errors) => {
-    return { message: 'Sách cho QRcode là bắt buộc.' };
-    // return errors.map(error => {
-    //   switch (error.type) {
-    //     case "number.base":
-    //       return { message: "Sách cho QRcode là bắt buộc." };
-    //   }}
-    // )
-  }),
-  news_category_id: Joi.when('is_qrcode', {
-    is: 0,
-    then: Joi.number().required(),
-    otherwise: Joi.allow(null, 0, ''),
-  }).error((errors) => {
-    return { message: 'Chuyên mục tin tức là bắt buộc.' };
-  }),
+  // is_qrcode: Joi.number().valid(0, 1).required(),
+  // product_id: Joi.when('is_qrcode', {
+  //   is: 1,
+  //   then: Joi.number().required(),
+  //   otherwise: Joi.allow(null, 0, ''),
+  // }).error((errors) => {
+  //   return { message: 'Sách cho QRcode là bắt buộc.' };
+  //   // return errors.map(error => {
+  //   //   switch (error.type) {
+  //   //     case "number.base":
+  //   //       return { message: "Sách cho QRcode là bắt buộc." };
+  //   //   }}
+  //   // )
+  // }),
+  // news_category_id: Joi.when('is_qrcode', {
+  //   is: 0,
+  //   then: Joi.number().required(),
+  //   otherwise: Joi.allow(null, 0, ''),
+  // }).error((errors) => {
+  //   return { message: 'Chuyên mục tin tức là bắt buộc.' };
+  // }),
+  news_category_id: Joi.number().required('Chuyên mục tin tức là bắt buộc.')
 };
 
 const validateRules = {

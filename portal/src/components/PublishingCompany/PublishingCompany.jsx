@@ -313,7 +313,6 @@ class PublishingCompany extends Component {
           <div className="text-right mb-1">
             <Button
               color="success"
-              size="sm"
               className="col-12 max-w-110 ml-2 mobile-reset-width"
               onClick={() => {
                 let { _pickDataItems } = this;
@@ -332,7 +331,6 @@ class PublishingCompany extends Component {
                 className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
                 onClick={() => this.handleClickAdd()}
                 color="success"
-                size="sm"
               >
                 <i className="fa fa-plus mr-1" />
                 Thêm mới
