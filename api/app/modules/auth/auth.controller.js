@@ -30,7 +30,7 @@ const createToken = async (req, res, next) => {
     const tokenData = await authService.generateToken(user);
     return res.json(new SingleResponse(tokenData, RESPONSE_MSG.AUTH.LOGIN.SUCCESS));
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.AUTH.LOGIN.FAILED));
   }
 };
 

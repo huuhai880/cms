@@ -12,57 +12,64 @@ const ValidationResponse = require('../../common/responses/validation.response')
 const config = require('../../../config/config');
 const optionService = require('../../common/services/options.service');
 
-// Get list author 
+// Get list author
 const getListAuthor = async (req, res, next) => {
   try {
     const serviceRes = await authorService.getListAuthor(req.query);
-    if(serviceRes.isFailed()) {
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    const {data, total, page, limit} = serviceRes.getData();
+    const { data, total, page, limit } = serviceRes.getData();
     return res.json(new ListResponse(data, total, page, limit));
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 
 // Create author
 const createAuthor = async (req, res, next) => {
   try {
-
     // Check author name exists
-    const authorNameExist = await authorService.findByAuthorName(req.body.author_name);
-    if(authorNameExist) {
+    const authorNameExist = await authorService.findByAuthorName(
+      req.body.author_name
+    );
+    if (authorNameExist) {
       return next(new ValidationResponse('ID Tác giả ', 'đã được sử dụng'));
     }
 
     // Check email exists
     const emailExist = await authorService.findByEmail(req.body.email);
-    if(emailExist) {
+    if (emailExist) {
       return next(new ValidationResponse('Email', 'đã được sử dụng.'));
     }
 
-     // Check phone number exists
-     const phoneExits = await authorService.findByPhone(req.body.phone_number);
-     if(phoneExits) {
-       return next(new ValidationResponse('Số điện thoại', 'đã được sử dụng.'));
-     }
+    // Check phone number exists
+    const phoneExits = await authorService.findByPhone(req.body.phone_number);
+    if (phoneExits) {
+      return next(new ValidationResponse('Số điện thoại', 'đã được sử dụng.'));
+    }
 
     // Insert Author
     const serviceRes = await authorService.createAuthor(req.body);
-    if(serviceRes.isFailed()) {
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
 
-    // create otp 
+    // create otp
     const tokenRes = await otpService.createOtp({
       // author_id: serviceRes.getData(),
       author_id: 1,
       email: req.body.email,
     });
 
-    if(tokenRes.isSuccess()) {
-      // // Call event send email 
+    if (tokenRes.isSuccess()) {
+      // // Call event send email
       // const { token } = tokenRes.getData();
       events.emit('send-email', {
         to: req.body.email,
@@ -73,14 +80,25 @@ const createAuthor = async (req, res, next) => {
             name: `${req.body.first_name} ${req.body.last_name}`,
             email: req.body.email,
             password: req.body.password,
-            link:  config.website
+            link: config.website,
           },
         }),
       });
     }
-    return res.json(new SingleResponse(serviceRes.getData(), RESPONSE_MSG.AUTHOR.CREATE_SUCCESS));
+    return res.json(
+      new SingleResponse(
+        serviceRes.getData(),
+        RESPONSE_MSG.AUTHOR.CREATE_SUCCESS
+      )
+    );
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 
@@ -89,52 +107,73 @@ const updateAuthor = async (req, res, next) => {
   try {
     const author_id = req.params.author_id;
     // Check email exists
-    const emailExist = await authorService.findByEmail(req.body.email, author_id);
-    if(emailExist) {
+    const emailExist = await authorService.findByEmail(
+      req.body.email,
+      author_id
+    );
+    if (emailExist) {
       return next(new ValidationResponse('Email', 'đã được sử dụng.'));
     }
 
-     // Check phone number exists
-     const phoneExits = await authorService.findByPhone(req.body.phone_number, author_id);
-     if(phoneExits) {
-       return next(new ValidationResponse('Số điện thoại', 'đã được sử dụng.'));
-     }
+    // Check phone number exists
+    const phoneExits = await authorService.findByPhone(
+      req.body.phone_number,
+      author_id
+    );
+    if (phoneExits) {
+      return next(new ValidationResponse('Số điện thoại', 'đã được sử dụng.'));
+    }
 
     // Check Author exists
     const serviceResDetail = await authorService.detailAuthor(author_id);
-    if(serviceResDetail.isFailed()) {
+    if (serviceResDetail.isFailed()) {
       return next(serviceResDetail);
     }
     // Update Author
-    const serviceRes = await authorService.updateAuthor(req.body,author_id);
-    if(serviceRes.isFailed()) {
+    const serviceRes = await authorService.updateAuthor(req.body, author_id);
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    return res.json(new SingleResponse(null, RESPONSE_MSG.AUTHOR.UPDATE_SUCCESS));
+    return res.json(
+      new SingleResponse(null, RESPONSE_MSG.AUTHOR.UPDATE_SUCCESS)
+    );
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 
 // Delete author
 const deleteAuthor = async (req, res, next) => {
   try {
-
     const author_id = req.params.author_id;
     const auth_name = req.auth.user_name;
     // Check Author exists
     const serviceResDetail = await authorService.detailAuthor(author_id);
-    if(serviceResDetail.isFailed()) {
+    if (serviceResDetail.isFailed()) {
       return next(serviceResDetail);
     }
     // Delete Author
-    const serviceRes = await authorService.deleteAuthor(author_id,auth_name);
-    if(serviceRes.isFailed()) {
+    const serviceRes = await authorService.deleteAuthor(author_id, auth_name);
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    return res.json(new SingleResponse(null, RESPONSE_MSG.AUTHOR.DELETE_SUCCESS));
+    return res.json(
+      new SingleResponse(null, RESPONSE_MSG.AUTHOR.DELETE_SUCCESS)
+    );
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 
@@ -144,12 +183,18 @@ const detailAuthor = async (req, res, next) => {
     const author_id = req.params.author_id;
 
     const serviceRes = await authorService.detailAuthor(author_id);
-    if(serviceRes.isFailed()) {
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
     return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 
@@ -161,16 +206,28 @@ const changeStatusAuthor = async (req, res, next) => {
     const is_active = apiHelper.getValueFromObject(req.body, 'is_active');
     // Check function exists
     const serviceResDetail = await authorService.detailAuthor(author_id);
-    if(serviceResDetail.isFailed()) {
+    if (serviceResDetail.isFailed()) {
       return next(serviceResDetail);
     }
-    const serviceRes = await authorService.changeStatusAuthor(author_id,auth_name,is_active);
-    if(serviceRes.isFailed()) {
+    const serviceRes = await authorService.changeStatusAuthor(
+      author_id,
+      auth_name,
+      is_active
+    );
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    return res.json(new SingleResponse(null, RESPONSE_MSG.AUTHOR.CHANGE_STATUS_SUCCESS));
+    return res.json(
+      new SingleResponse(null, RESPONSE_MSG.AUTHOR.CHANGE_STATUS_SUCCESS)
+    );
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 
@@ -181,16 +238,27 @@ const changePassAuthor = async (req, res, next) => {
 
     // Check function exists
     const serviceResDetail = await authorService.detailAuthor(author_id);
-    if(serviceResDetail.isFailed()) {
+    if (serviceResDetail.isFailed()) {
       return next(serviceResDetail);
     }
-    const serviceRes = await authorService.changePassAuthor(author_id,req.body);
-    if(serviceRes.isFailed()) {
+    const serviceRes = await authorService.changePassAuthor(
+      author_id,
+      req.body
+    );
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    return res.json(new SingleResponse(null, RESPONSE_MSG.AUTHOR.CHANGE_PASSWORD_SUCCESS));
+    return res.json(
+      new SingleResponse(null, RESPONSE_MSG.AUTHOR.CHANGE_PASSWORD_SUCCESS)
+    );
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 
@@ -198,12 +266,19 @@ const generateAuthorName = async (req, res, next) => {
   try {
     // Check author exists
     const user = await authorService.generateAuthorName();
-    return res.json(new SingleResponse(user, RESPONSE_MSG.AUTHOR.GENERATE_AUTHORNAME_SUCCESS));
+    return res.json(
+      new SingleResponse(user, RESPONSE_MSG.AUTHOR.GENERATE_AUTHORNAME_SUCCESS)
+    );
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
-
 
 const getOptions = async (req, res, next) => {
   try {
@@ -224,5 +299,5 @@ module.exports = {
   changeStatusAuthor,
   changePassAuthor,
   generateAuthorName,
-  getOptions
+  getOptions,
 };

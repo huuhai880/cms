@@ -12,7 +12,6 @@ const fileHelper = require('../../common/helpers/file.helper');
 const folderName = 'author';
 const config = require('../../../config/config');
 
-
 const getListAuthor = async (queryParams = {}) => {
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
@@ -20,24 +19,28 @@ const getListAuthor = async (queryParams = {}) => {
     const keyword = apiHelper.getSearch(queryParams);
 
     const pool = await mssql.pool;
-    const data = await pool.request()
+    const data = await pool
+      .request()
       .input('PAGESIZE', itemsPerPage)
       .input('PAGEINDEX', currentPage)
       .input('KEYWORD', keyword)
-      .input('NEWSCATEGORYID', apiHelper.getValueFromObject(queryParams, 'news_category_id'))
+      .input(
+        'NEWSCATEGORYID',
+        apiHelper.getValueFromObject(queryParams, 'news_category_id')
+      )
       .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'is_active'))
       .execute(PROCEDURE_NAME.CRM_AUTHOR_GETLIST_ADMINWEB);
 
     const Author = data.recordset;
     return new ServiceResponse(true, '', {
-      'data': authorClass.list(Author),
-      'page': currentPage,
-      'limit': itemsPerPage,
-      'total': apiHelper.getTotalData(Author),
+      data: authorClass.list(Author),
+      page: currentPage,
+      limit: itemsPerPage,
+      total: apiHelper.getTotalData(Author),
     });
   } catch (e) {
     logger.error(e, {
-      'function': 'AuthorService.getListAuthor',
+      function: 'AuthorService.getListAuthor',
     });
 
     return new ServiceResponse(true, '', {});
@@ -68,23 +71,41 @@ const createAuthorOrUpdate = async (body = {}) => {
       banner_image = path_banner_image;
     }
   }
-  let identity_front_image = apiHelper.getValueFromObject(body, 'identity_front_image');
+  let identity_front_image = apiHelper.getValueFromObject(
+    body,
+    'identity_front_image'
+  );
   if (identity_front_image) {
-    const path_identity_front_image = await saveFile(identity_front_image, folderName);
+    const path_identity_front_image = await saveFile(
+      identity_front_image,
+      folderName
+    );
     if (path_identity_front_image) {
       identity_front_image = path_identity_front_image;
     }
   }
-  let identity_back_image = apiHelper.getValueFromObject(body, 'identity_back_image');
+  let identity_back_image = apiHelper.getValueFromObject(
+    body,
+    'identity_back_image'
+  );
   if (identity_back_image) {
-    const path_identity_back_image = await saveFile(identity_back_image, folderName);
+    const path_identity_back_image = await saveFile(
+      identity_back_image,
+      folderName
+    );
     if (path_identity_back_image) {
       identity_back_image = path_identity_back_image;
     }
   }
-  let banner_image_mobile = apiHelper.getValueFromObject(body, 'banner_image_mobile');
+  let banner_image_mobile = apiHelper.getValueFromObject(
+    body,
+    'banner_image_mobile'
+  );
   if (banner_image_mobile) {
-    const path_banner_image_mobile = await saveFile(banner_image_mobile, folderName);
+    const path_banner_image_mobile = await saveFile(
+      banner_image_mobile,
+      folderName
+    );
     if (path_banner_image_mobile) {
       banner_image_mobile = path_banner_image_mobile;
     }
@@ -95,8 +116,7 @@ const createAuthorOrUpdate = async (body = {}) => {
   try {
     await transaction.begin();
     let password = apiHelper.getValueFromObject(body, 'password');
-    if (!id)
-      password = stringHelper.hashPassword(password);
+    if (!id) password = stringHelper.hashPassword(password);
     // Save CRM_AUTHOR
     const requestAuthor = new sql.Request(transaction);
     const resultAuthor = await requestAuthor
@@ -113,9 +133,18 @@ const createAuthorOrUpdate = async (body = {}) => {
       .input('GENDER', apiHelper.getValueFromObject(body, 'gender'))
       .input('PHONENUMBER', apiHelper.getValueFromObject(body, 'phone_number'))
       .input('EMAIL', apiHelper.getValueFromObject(body, 'email'))
-      .input('IDENTITYNUMBER', apiHelper.getValueFromObject(body, 'identity_number'))
-      .input('IDENTITYDATE', apiHelper.getValueFromObject(body, 'identity_date'))
-      .input('IDENTITYPLACE', apiHelper.getValueFromObject(body, 'identity_place'))
+      .input(
+        'IDENTITYNUMBER',
+        apiHelper.getValueFromObject(body, 'identity_number')
+      )
+      .input(
+        'IDENTITYDATE',
+        apiHelper.getValueFromObject(body, 'identity_date')
+      )
+      .input(
+        'IDENTITYPLACE',
+        apiHelper.getValueFromObject(body, 'identity_place')
+      )
       .input('IDENTITYFRONTIMAGE', identity_front_image)
       .input('IDENTITYBACKIMAGE', identity_back_image)
       .input('ADDRESS', apiHelper.getValueFromObject(body, 'address'))
@@ -123,12 +152,21 @@ const createAuthorOrUpdate = async (body = {}) => {
       .input('DISTRICTID', apiHelper.getValueFromObject(body, 'district_id'))
       .input('COUNTRYID', apiHelper.getValueFromObject(body, 'country_id'))
       .input('WARDID', apiHelper.getValueFromObject(body, 'ward_id'))
-      .input('ISREVIEWNEWS', apiHelper.getValueFromObject(body, 'is_review_news'))
+      .input(
+        'ISREVIEWNEWS',
+        apiHelper.getValueFromObject(body, 'is_review_news')
+      )
       .input('ABOUTME', apiHelper.getValueFromObject(body, 'about_me'))
       .input('DESCRIPTION', apiHelper.getValueFromObject(body, 'description'))
       .input('INTRODUCE', apiHelper.getValueFromObject(body, 'introduce'))
-      .input('EDUCATIONCAREER', apiHelper.getValueFromObject(body, 'education_career'))
-      .input('AUTHORDEGREE', apiHelper.getValueFromObject(body, 'author_degree'))
+      .input(
+        'EDUCATIONCAREER',
+        apiHelper.getValueFromObject(body, 'education_career')
+      )
+      .input(
+        'AUTHORDEGREE',
+        apiHelper.getValueFromObject(body, 'author_degree')
+      )
       .input('AUTHORQUOTE', apiHelper.getValueFromObject(body, 'author_quote'))
       .input('ORDERINDEX', apiHelper.getValueFromObject(body, 'order_index'))
       .input('BANNERIMAGEMOBILE', banner_image_mobile)
@@ -172,7 +210,7 @@ const createAuthorOrUpdate = async (body = {}) => {
     return new ServiceResponse(true, '', author_id);
   } catch (error) {
     logger.error(error, {
-      'function': 'AuthorService.createAuthorOrUpdate',
+      function: 'AuthorService.createAuthorOrUpdate',
     });
     console.error('AuthorService.createAuthorOrUpdate', error);
     return new ServiceResponse(false, e.message);
@@ -182,7 +220,8 @@ const createAuthorOrUpdate = async (body = {}) => {
 const detailAuthor = async (author_id) => {
   try {
     const pool = await mssql.pool;
-    const data = await pool.request()
+    const data = await pool
+      .request()
       .input('AUTHORID', author_id)
       .execute(PROCEDURE_NAME.CRM_AUTHOR_GETBYID_ADMINWEB);
     const Author = data.recordset[0];
@@ -194,7 +233,7 @@ const detailAuthor = async (author_id) => {
     return new ServiceResponse(false, '', null);
   } catch (e) {
     logger.error(e, {
-      'function': 'AuthorService.detailAuthor',
+      function: 'AuthorService.detailAuthor',
     });
 
     return new ServiceResponse(false, e.message);
@@ -205,7 +244,8 @@ const deleteAuthor = async (author_id, auth_name) => {
   const pool = await mssql.pool;
   try {
     // Delete AUTHOR
-    await pool.request()
+    await pool
+      .request()
       .input('AUTHORID', author_id)
       .input('UPDATEDUSER', auth_name)
       .execute(PROCEDURE_NAME.CRM_AUTHOR_DELETE_ADMINWEB);
@@ -214,7 +254,7 @@ const deleteAuthor = async (author_id, auth_name) => {
     return new ServiceResponse(true);
   } catch (e) {
     logger.error(e, {
-      'function': 'AuthorService.deleteAuthor',
+      function: 'AuthorService.deleteAuthor',
     });
 
     // Return failed
@@ -225,7 +265,8 @@ const deleteAuthor = async (author_id, auth_name) => {
 const changeStatusAuthor = async (author_id, auth_name, is_active) => {
   try {
     const pool = await mssql.pool;
-    await pool.request()
+    await pool
+      .request()
       .input('AUTHORID', author_id)
       .input('ISACTIVE', is_active)
       .input('UPDATEDUSER', auth_name)
@@ -234,7 +275,7 @@ const changeStatusAuthor = async (author_id, auth_name, is_active) => {
     return new ServiceResponse(true);
   } catch (e) {
     logger.error(e, {
-      'function': 'AuthorService.changeStatusAuthor',
+      function: 'AuthorService.changeStatusAuthor',
     });
 
     return new ServiceResponse(false);
@@ -247,32 +288,36 @@ const saveFile = async (base64, folderName) => {
     if (fileHelper.isBase64(base64)) {
       const extension = fileHelper.getExtensionFromBase64(base64);
       const guid = createGuid();
-      url = await fileHelper.saveBase64(folderName, base64, `${guid}.${extension}`);
+      url = await fileHelper.saveBase64(
+        folderName,
+        base64,
+        `${guid}.${extension}`
+      );
     } else {
       url = base64.split(config.domain_cdn)[1];
     }
   } catch (e) {
     logger.error(e, {
-      'function': 'AuthorService.saveFile',
+      function: 'AuthorService.saveFile',
     });
   }
   return url;
 };
 const createGuid = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    var r = Math.random() * 16 | 0,
-      v = c === 'x' ? r : (r & 0x3 | 0x8);
+    var r = (Math.random() * 16) | 0,
+      v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 };
-
 
 const changePassAuthor = async (author_id, body = {}) => {
   try {
     const pool = await mssql.pool;
     let password = apiHelper.getValueFromObject(body, 'password');
     password = stringHelper.hashPassword(password);
-    await pool.request()
+    await pool
+      .request()
       .input('AUTHORID', author_id)
       .input('PASSWORD', password)
       .input('UPDATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
@@ -281,7 +326,7 @@ const changePassAuthor = async (author_id, body = {}) => {
     return new ServiceResponse(true);
   } catch (e) {
     logger.error(e, {
-      'function': 'AuthorService.changePassAuthor',
+      function: 'AuthorService.changePassAuthor',
     });
 
     return new ServiceResponse(false);
@@ -291,8 +336,7 @@ const changePassAuthor = async (author_id, body = {}) => {
 const generateAuthorName = async () => {
   try {
     const pool = await mssql.pool;
-    const author = await pool.request()
-      .execute(PROCEDURE_NAME.CRM_AUTHOR_MAX);
+    const author = await pool.request().execute(PROCEDURE_NAME.CRM_AUTHOR_MAX);
 
     let data = authorClass.generateAuthorName(author.recordset[0]);
     return data;
@@ -302,12 +346,11 @@ const generateAuthorName = async () => {
   }
 };
 
-
-
 const findByAuthorName = async (authorName) => {
   try {
     const pool = await mssql.pool;
-    const res = await pool.request()
+    const res = await pool
+      .request()
       .input('AUTHORNAME', authorName)
       .execute(PROCEDURE_NAME.CRM_AUTHOR_FINDBYAUTHORNAME_ADMINWEB);
     const author = res.recordset;
@@ -324,7 +367,8 @@ const findByAuthorName = async (authorName) => {
 const findByEmail = async (email, author_id = null) => {
   try {
     const pool = await mssql.pool;
-    const res = await pool.request()
+    const res = await pool
+      .request()
       .input('EMAIL', email)
       .input('AUTHORID', author_id)
       .execute(PROCEDURE_NAME.CRM_AUTHOR_FINDBYEMAIL_ADMINWEB);
@@ -341,10 +385,11 @@ const findByEmail = async (email, author_id = null) => {
   }
 };
 
-const findByPhone  = async (phone_number, author_id = null) => {
+const findByPhone = async (phone_number, author_id = null) => {
   try {
     const pool = await mssql.pool;
-    const res = await pool.request()
+    const res = await pool
+      .request()
       .input('PHONENUMBER', phone_number)
       .input('AUTHORID', author_id)
       .execute(PROCEDURE_NAME.CRM_AUTHOR_FINDBYPHONENUMBER_ADMINWEB);
@@ -372,5 +417,5 @@ module.exports = {
   generateAuthorName,
   findByAuthorName,
   findByEmail,
-  findByPhone
+  findByPhone,
 };

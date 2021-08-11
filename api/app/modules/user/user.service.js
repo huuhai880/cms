@@ -151,7 +151,6 @@ const createUserOrUpdate = async (bodyParams) => {
     ABOUTME: params.about_me || '',
     CREATEDUSER: params.auth_id,
   };
-  console.log("🚀 ~ file: user.service.js ~ line 154 ~ createUserOrUpdate ~ data", data)
 
   let query = `${PROCEDURE_NAME.SYS_USER_CREATEORUPDATE} 
         @USERNAME=:USERNAME,

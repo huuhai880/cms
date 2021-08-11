@@ -238,10 +238,10 @@ const createNewsOrUpdate = async (bodyParams) => {
       )
       .input('SEONAME', apiHelper.getValueFromObject(bodyParams, 'seo_name'))
       .input('AUTHORID', apiHelper.getValueFromObject(bodyParams, 'author_id'))
-      .input(
-        'PRODUCTID',
-        apiHelper.getValueFromObject(bodyParams, 'product_id')
-      )
+      // .input(
+      //   'PRODUCTID',
+      //   apiHelper.getValueFromObject(bodyParams, 'product_id')
+      // )
       .input(
         'PUBLISHINGCOMPANYID',
         apiHelper.getValueFromObject(bodyParams, 'publishing_company_id')
@@ -326,7 +326,7 @@ const createNewsOrUpdate = async (bodyParams) => {
       )
       .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active'))
       .input('ISSYSTEM', apiHelper.getValueFromObject(bodyParams, 'is_system'))
-      .input('ISQRCODE', apiHelper.getValueFromObject(bodyParams, 'is_qrcode'))
+      // .input('ISQRCODE', apiHelper.getValueFromObject(bodyParams, 'is_qrcode'))
       .input('ISADMINPOST', 1)
       .input('USER', apiHelper.getValueFromObject(bodyParams, 'auth_name'))
       .execute(PROCEDURE_NAME.NEWS_NEWS_CREATEORUPDATE_ADMINWEB);

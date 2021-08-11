@@ -37,6 +37,7 @@ export default class UserGroupsEdit extends Component {
         })
       ;
       UserGroupEnti && this.setState({ UserGroupEnti });
+      console.log("🚀 ~ file: UserGroupsEdit.jsx ~ line 40 ~ UserGroupsEdit ~ UserGroupEnti", UserGroupEnti)
     })();
     //.end
   }

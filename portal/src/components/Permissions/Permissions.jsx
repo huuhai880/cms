@@ -161,7 +161,7 @@ export default class Permissions extends PureComponent {
               .then(({ items = [] }) => {
                 Object.assign(functionGroup, {
                   _functions: (functionGroup._functions || []).concat(items),
-                  _isOpen: true
+                  _isOpen: false
                 });
                 return items;
               })
@@ -487,21 +487,21 @@ export default class Permissions extends PureComponent {
                     );
                   })()}
                 </Col>
-                <Col xs={12} sm={4} className="text-right">
+                <Col xs={12} sm={4} className="text-right mt-2">
                   <Label for="" className="font-weight-bold">&nbsp;</Label>
                   <div>
                     <Button
                       color="info"
-                      size="sm"
                       className="ml-2 mb-2"
+                      size="sm"
                       disabled={isSubmitting}
                       onClick={this.handleSubmitFilter}
                     >
                       <i className="fa fa-search" /><span className="ml-1">Tìm kiếm</span>
                     </Button>
                     <Button
-                      size="sm"
                       className="ml-2 mb-2"
+                      size="sm"
                       disabled={isSubmitting}
                       onClick={this.handleResetFilter}
                     >
@@ -509,8 +509,8 @@ export default class Permissions extends PureComponent {
                     </Button>
                     <Button
                       color="primary"
-                      size="sm"
                       type="submit"
+                      size="sm"
                       className="ml-2 mb-2"
                       disabled={isSubmitting}
                     >
