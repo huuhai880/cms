@@ -158,7 +158,7 @@ const createWebsiteCategoryOrUpdate = async (bodyParams) => {
         const resultChild = await requestChild // eslint-disable-line no-await-in-loop
           .input('WEBCATEGORYID', websiteCategoryId)
           .input('MANUFACTURERID', apiHelper.getValueFromObject(item, 'manufacture_id'))
-          .execute(PROCEDURE_NAME.CMS_PRONEWSWEBCATEGORY_CREATEORUPDATE_ADMINWEB);
+          .execute(PROCEDURE_NAME.dCMS_PRONEWSWEBCATEGORY_CREATEORUPDATE_ADMINWEB);
         const child_id = resultChild.recordset[0].RESULT;
         if (child_id <= 0) {
           return new ServiceResponse(false, RESPONSE_MSG.PRODUCT.CREATE_FAILED);

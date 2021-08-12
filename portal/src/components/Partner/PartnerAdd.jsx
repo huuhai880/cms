@@ -191,11 +191,8 @@ export default class PartnerAdd extends PureComponent {
     partner_name: Yup.string().required("Tên công ty là bắt buộc."),
     // company_type_id: Yup.string().required("Loại hình tổ chức là bắt buộc."),
     phone_number: Yup.string()
-      .required("Số điện thoại là bắt buộc.")
-      .matches(
-        /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-        "Số điện thoại không hợp lệ."
-      ),
+      .matches(/^\d{10,11}$/, "Số điện thoại không hợp lệ!")
+      .required("Số điện thoại là bắt buộc."),
     country_id: Yup.string().required("Quốc gia phố là bắt buộc."),
     province_id: Yup.string().required("Tỉnh/Thành phố là bắt buộc."),
     district_id: Yup.string().required("Quận/Huyện là bắt buộc."),
@@ -204,16 +201,16 @@ export default class PartnerAdd extends PureComponent {
     ower_name: Yup.string().required("Tên người đại diện là bắt buộc."),
     ower_email: Yup.string().required("Email người đại diện là bắt buộc."),
     user_name: Yup.string().required("Tên tài khoản là bắt buộc."),
-    password: this.props.partnerEnt ? undefined : Yup.string().trim()
-        .min(8, 'Mật khẩu quá ngắn, ít nhất 8 ký tự!')
-        .max(25, 'Mật khẩu quá dài, tối đa 25 ký tự!')
-        .required("Mật khẩu là bắt buộc."),
+    password: this.props.partnerEnt
+      ? undefined
+      : Yup.string()
+          .trim()
+          .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
+          .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!")
+          .required("Mật khẩu là bắt buộc."),
     ower_phone_1: Yup.string()
-      .required("Số điện thoại là bắt buộc.")
-      .matches(
-        /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-        "Số điện thoại không hợp lệ."
-      ),
+      .matches(/^\d{10,11}$/, "Số điện thoại không hợp lệ!")
+      .required("Số điện thoại là bắt buộc."),
   });
 
   handleFormikBeforeRender = ({ initialValues }) => {

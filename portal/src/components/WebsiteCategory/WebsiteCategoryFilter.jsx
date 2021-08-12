@@ -53,7 +53,7 @@ class WebsiteCategoryFilter extends PureComponent {
     const { inputValue, WebsiteCategoryOptions, create_date_from, create_date_to, selectedIsActive } = this.state
     const { handleSubmit } = this.props
     handleSubmit(
-      inputValue,
+      inputValue? inputValue.trim(): "",
       WebsiteCategoryOptions ? WebsiteCategoryOptions.value : undefined,
       create_date_from ? create_date_from.format('DD/MM/YYYY') : create_date_from,
       create_date_to ? create_date_to.format('DD/MM/YYYY') : create_date_to,
@@ -157,13 +157,13 @@ class WebsiteCategoryFilter extends PureComponent {
               <div className="d-flex align-items-center mt-3">
                 <div className="d-flex flex-fill justify-content-end">
                   <FormGroup className="mb-2 ml-2 mb-sm-0">
-                    <Button className="col-12 MuiPaper-filter__custom--button" onClick={this.onSubmit} color="primary" size="sm">
+                    <Button className="col-12 MuiPaper-filter__custom--button" onClick={this.onSubmit} color="primary">
                       <i className="fa fa-search" />
                       <span className="ml-1">Tìm kiếm</span>
                     </Button>
                   </FormGroup>
                   <FormGroup className="mb-2 ml-2 mb-sm-0">
-                    <Button className="mr-1 col-12 MuiPaper-filter__custom--button" onClick={this.onClear} size="sm">
+                    <Button className="mr-1 col-12 MuiPaper-filter__custom--button" onClick={this.onClear} >
                       <i className="fa fa-refresh" />
                       <span className="ml-1">Làm mới</span>
                     </Button>
