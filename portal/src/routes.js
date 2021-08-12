@@ -1,8 +1,8 @@
 import React from "react";
 
 // Dashboard
-// const Dashboard = React.lazy(() => import('./containers/Common/Dashboard'))
-//.end#Dashboard
+const Dashboard = React.lazy(() => import('./components/Dashboard/Dashboard'))
+// .end#Dashboard
 
 // Users
 const Users = React.lazy(() => import("./components/Users/Users"));
@@ -810,10 +810,11 @@ const routes = [
     exact: true,
     name: "Trang chủ",
     function: "DASHBOARD_VIEW",
-    component: () => {
-      window._$g.rdr("/author");
-      return null;
-    },
+    component: Dashboard,
+    // component: () => {
+    //   window._$g.rdr("/dashboard");
+    //   return null;
+    // },
   },
   //.end#dashboard
   // Users
