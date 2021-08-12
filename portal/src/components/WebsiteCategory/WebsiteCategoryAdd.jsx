@@ -13,25 +13,26 @@ import {
   FormGroup,
   Label,
   Input,
-  CustomInput
+  CustomInput,
 } from "reactstrap";
-import Select from 'react-select';
+import Select from "react-select";
 // Component(s)
 import Loading from "../Common/Loading";
-import { CheckAccess } from '../../navigation/VerifyAccess'
+import { CheckAccess } from "../../navigation/VerifyAccess";
 // Model(s)
 import WebsiteCategoryModel from "../../models/WebsiteCategoryModel";
 // Util(s)
-import { mapDataOptions4Select } from '../../utils/html';
+import { mapDataOptions4Select } from "../../utils/html";
 /** @var {Object} */
 /**
  * @class WebsiteCategoryAdd
  */
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16)
-  })
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }
 export default class WebsiteCategoryAdd extends Component {
   /** @var {Object} */
@@ -64,9 +65,7 @@ export default class WebsiteCategoryAdd extends Component {
         { label: "-- Chọn --", id: "", name: "-- Chọn --", value: "" },
       ],
       /** @var {Array} */
-      ProductCategoryOptions: [
-        { label: "-- Chọn --", id: "", name: "-- Chọn --", value: "" },
-      ],
+      ProductCategoryOptions: [],
       /** @var {Array} */
       NewsCategoryOptions: [
         { label: "-- Chọn --", id: "", name: "-- Chọn --", value: "" },
@@ -96,33 +95,52 @@ export default class WebsiteCategoryAdd extends Component {
   _btnType = null;
 
   getInitialValues() {
-
     let { WebsiteCategoryEnt } = this.props;
-    let values = Object.assign(
-      {}, this._websiteCategoryModel.fillable(),
-    );
+    let values = Object.assign({}, this._websiteCategoryModel.fillable());
 
     if (WebsiteCategoryEnt) {
       let categoryDataName = [];
       let newscategoryDataName = [];
       let manufacturenameDataName = [];
       if (WebsiteCategoryEnt.categoryname) {
-        categoryDataName = WebsiteCategoryEnt.categoryname.map(function (obj) { return ({ "label": obj.category_name, "value": obj.product_category_id, "id": obj.product_category_id }) });
+        categoryDataName = WebsiteCategoryEnt.categoryname.map(function (obj) {
+          return {
+            label: obj.category_name,
+            value: obj.product_category_id,
+            id: obj.product_category_id,
+          };
+        });
       }
       if (WebsiteCategoryEnt.newscategoryname) {
-        newscategoryDataName = WebsiteCategoryEnt.newscategoryname.map(function (obj) { return ({ "label": obj.news_category_name, "value": obj.news_category_id, "id": obj.news_category_id }) });
+        newscategoryDataName = WebsiteCategoryEnt.newscategoryname.map(
+          function (obj) {
+            return {
+              label: obj.news_category_name,
+              value: obj.news_category_id,
+              id: obj.news_category_id,
+            };
+          }
+        );
       }
       if (WebsiteCategoryEnt.manufacturename) {
-        manufacturenameDataName = WebsiteCategoryEnt.manufacturename.map(function (obj) { return ({ "label": obj.manufacture_name, "value": obj.manufacture_id, "id": obj.manufacture_id }) });
+        manufacturenameDataName = WebsiteCategoryEnt.manufacturename.map(
+          function (obj) {
+            return {
+              label: obj.manufacture_name,
+              value: obj.manufacture_id,
+              id: obj.manufacture_id,
+            };
+          }
+        );
       }
       Object.assign(values, WebsiteCategoryEnt, {
         categoryname: categoryDataName,
         newscategoryname: newscategoryDataName,
-        manufacturename: manufacturenameDataName
+        manufacturename: manufacturenameDataName,
       });
     }
     // Format
-    Object.keys(values).forEach(key => {
+    Object.keys(values).forEach((key) => {
       if (null === values[key]) {
         values[key] = "";
       }
@@ -139,27 +157,38 @@ export default class WebsiteCategoryAdd extends Component {
     let bundle = {};
     let all = [
       //Website áp dụng
-      this._websiteCategoryModel.getOptionsWebsite({ is_active: 1 })
-        .then(data => { return (bundle['WebsiteCategoryOptions'] = mapDataOptions4Select(data)) }),
+      this._websiteCategoryModel
+        .getOptionsWebsite({ is_active: 1 })
+        .then((data) => {
+          return (bundle["WebsiteCategoryOptions"] =
+            mapDataOptions4Select(data));
+        }),
       //Danh mục cha
-      this._websiteCategoryModel.getOptionsParent({ is_active: 1 })
-        .then(data => { return (bundle['WebsiteCategoryParentOptions'] = mapDataOptions4Select(data)) }),
+      this._websiteCategoryModel
+        .getOptionsParent({ is_active: 1 })
+        .then((data) => {
+          return (bundle["WebsiteCategoryParentOptions"] =
+            mapDataOptions4Select(data));
+        }),
       //Danh mục loại sản phẩm
-      this._websiteCategoryModel.getOptionsForListProductCategory({ is_active: 1 })
-        .then(data => { return (bundle['ProductCategoryOptions'] = mapDataOptions4Select(data)) }),
+      // this._websiteCategoryModel.getOptionsForListProductCategory({ is_active: 1 })
+      //   .then(data => { return (bundle['ProductCategoryOptions'] = mapDataOptions4Select(data)) }),
       //Danh mục loại tin tức
-      this._websiteCategoryModel.getOptionsForListNewsCategory(0, {})
-        .then(data => { return (bundle['NewsCategoryOptions'] = mapDataOptions4Select(data)) }),
-      this._websiteCategoryModel.getOptionsForListManufacturer({ is_active: 1 })
-        .then(data => (bundle['ManufacturerOptions'] = mapDataOptions4Select(data))),
+      this._websiteCategoryModel
+        .getOptionsForListNewsCategory(0, {})
+        .then((data) => {
+          return (bundle["NewsCategoryOptions"] = mapDataOptions4Select(data));
+        }),
+      // this._websiteCategoryModel.getOptionsForListManufacturer({ is_active: 1 })
+      //   .then(data => (bundle['ManufacturerOptions'] = mapDataOptions4Select(data))),
     ];
 
-    await Promise.all(all)
-      .catch(err => window._$g.dialogs.alert(
+    await Promise.all(all).catch((err) =>
+      window._$g.dialogs.alert(
         window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
         () => window.location.reload()
-      ))
-      ;
+      )
+    );
     //
     Object.keys(bundle).forEach((key) => {
       let data = bundle[key];
@@ -185,40 +214,62 @@ export default class WebsiteCategoryAdd extends Component {
 
   handleFormikValidate(values) {
     // Trim string values,...
-    Object.keys(values).forEach(prop => {
-      (typeof values[prop] === "string") && (values[prop] = values[prop].trim());
+    Object.keys(values).forEach((prop) => {
+      typeof values[prop] === "string" && (values[prop] = values[prop].trim());
     });
     //.end
   }
 
   handleFormikSubmit(values, formProps) {
     let { WebsiteCategoryEnt, handleFormikSubmitSucceed } = this.props;
-    let { setSubmitting/*, resetForm*/ } = formProps;
+    let { setSubmitting /*, resetForm*/ } = formProps;
 
     let willRedirect = false;
     let alerts = [];
     // Build form data
     let formData = Object.assign({}, values, {
       is_active: 1 * values.is_active,
-      website_id: ((1 * values.website_id) > 0 ? 1 * values.website_id : (1 * values.website_id.value || 0)),
-      cate_parent_id: ((1 * values.cate_parent_id) > 0 ? 1 * values.cate_parent_id : (1 * values.cate_parent_id.value || 0)),
-      list_product_category: values.categoryname != null ? values.categoryname.map(function (obj) { return ({ "product_category_id": obj.id || obj.value }) }).filter(function (hero) {
-        return hero.product_category_id > 0;
-      }) : [],
-      list_news_category: values.newscategoryname != null ? values.newscategoryname.map(function (obj) { return ({ "news_category_id": obj.id || obj.value }) }).filter(function (hero) {
-        return hero.news_category_id > 0;
-      }) : [],
-      list_manufacture: values.manufacturename != null ? values.manufacturename.map(function (obj) { return ({ "manufacture_id": obj.id || obj.value }) }).filter(function (hero) {
-        return hero.manufacture_id > 0;
-      }) : [],
+      website_id:
+        1 * values.website_id > 0
+          ? 1 * values.website_id
+          : 1 * values.website_id.value || 0,
+      cate_parent_id:
+        1 * values.cate_parent_id > 0
+          ? 1 * values.cate_parent_id
+          : 1 * values.cate_parent_id.value || 0,
+      list_product_category:
+        values.categoryname != null
+          ? values.categoryname
+              .map(function (obj) {
+                return { product_category_id: obj.id || obj.value };
+              })
+              .filter(function (hero) {
+                return hero.product_category_id > 0;
+              })
+          : [],
+      list_news_category:
+        values.newscategoryname != null
+          ? values.newscategoryname
+              .map(function (obj) {
+                return { news_category_id: obj.id || obj.value };
+              })
+              .filter(function (hero) {
+                return hero.news_category_id > 0;
+              })
+          : [],
+      // list_manufacture: values.manufacturename != null ? values.manufacturename.map(function (obj) { return ({ "manufacture_id": obj.id || obj.value }) }).filter(function (hero) {
+      //   return hero.manufacture_id > 0;
+      // }) : [],
     });
-    let _websiteCategoryId = (WebsiteCategoryEnt && WebsiteCategoryEnt.web_category_id) || formData[this._websiteCategoryModel];
+    let _websiteCategoryId =
+      (WebsiteCategoryEnt && WebsiteCategoryEnt.web_category_id) ||
+      formData[this._websiteCategoryModel];
     let apiCall = _websiteCategoryId
       ? this._websiteCategoryModel.update(_websiteCategoryId, formData)
-      : this._websiteCategoryModel.create(formData)
-      ;
+      : this._websiteCategoryModel.create(formData);
     apiCall
-      .then(async (data) => { // OK
+      .then(async (data) => {
+        // OK
         // Fire callback?
         if (handleFormikSubmitSucceed) {
           let cbData = await this._websiteCategoryModel.read(data, {});
@@ -229,17 +280,20 @@ export default class WebsiteCategoryAdd extends Component {
         }
 
         //.end
-        window._$g.toastr.show('Lưu thành công!', 'success');
-        if (this._btnType === 'save_n_close') {
+        window._$g.toastr.show("Lưu thành công!", "success");
+        if (this._btnType === "save_n_close") {
           willRedirect = true;
-          return window._$g.rdr('/website-category');
+          return window._$g.rdr("/website-category");
         }
         // Chain
         return data;
       })
-      .catch(apiData => { // NG
+      .catch((apiData) => {
+        // NG
         let { errors, statusText, message } = apiData;
-        let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join('<br/>');
+        let msg = [`<b>${statusText || message}</b>`]
+          .concat(errors || [])
+          .join("<br/>");
         alerts.push({ color: "danger", msg });
       })
       .finally(() => {
@@ -249,44 +303,55 @@ export default class WebsiteCategoryAdd extends Component {
         if (!WebsiteCategoryEnt && !willRedirect && !alerts.length) {
           return this.handleFormikReset();
         }
-        this.setState(() => ({ alerts }), () => { window.scrollTo(0, 0); });
+        this.setState(
+          () => ({ alerts }),
+          () => {
+            window.scrollTo(0, 0);
+          }
+        );
       });
   }
 
   handleFormikReset() {
-    this.setState(state => ({
+    this.setState((state) => ({
       _id: 1 + state._id,
       ready: true,
-      alerts: []
+      alerts: [],
     }));
   }
 
   handleChangeWebsite = (event) => {
     let { category_name_change, url_website_id } = this.state;
     url_website_id = 1 * event || undefined;
-    url_website_id ?
-      this._websiteCategoryModel
-        .readWebsite(url_website_id)
-        .then(data => {
-          this.setState({ url_category_change: (data.url_category + (category_name_change ? '/' + category_name_change : "")) });
+    url_website_id
+      ? this._websiteCategoryModel.readWebsite(url_website_id).then((data) => {
+          this.setState({
+            url_category_change:
+              data.url_category +
+              (category_name_change ? "/" + category_name_change : ""),
+          });
           this.setState({ url_website_id: url_website_id });
-        }) :
-      this.setState({ url_category_change: "" });
-  }
+        })
+      : this.setState({ url_category_change: "" });
+  };
 
   updateURLCategory = (item) => {
     let { category_name_change, url_website_id } = this.state;
-    category_name_change = item.target.value ? this.ChangeAlias(item.target.value) : "";
+    category_name_change = item.target.value
+      ? this.ChangeAlias(item.target.value)
+      : "";
     url_website_id = url_website_id ? 1 * url_website_id : undefined;
-    url_website_id ?
-      this._websiteCategoryModel
-        .readWebsite(url_website_id)
-        .then(data => {
-          this.setState({ url_category_change: (data.url_category + (category_name_change ? '/' + category_name_change : "")) });
+    url_website_id
+      ? this._websiteCategoryModel.readWebsite(url_website_id).then((data) => {
+          this.setState({
+            url_category_change:
+              data.url_category +
+              (category_name_change ? "/" + category_name_change : ""),
+          });
           this.setState({ category_name_change: category_name_change });
-        }) :
-      this.setState({ url_category_change: "" });
-  }
+        })
+      : this.setState({ url_category_change: "" });
+  };
 
   ChangeAlias = (val) => {
     var str = val;
@@ -299,17 +364,20 @@ export default class WebsiteCategoryAdd extends Component {
     str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
     str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
     str = str.replace(/đ/g, "d");
-    str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, " ");
+    str = str.replace(
+      /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+      " "
+    );
     str = str.replace(/ + /g, "-");
     str = str.replace(/[ ]/g, "-");
     str = str.trim();
     return str;
-  }
+  };
 
   handleEnterSession(session, data, key, ref) {
     let { values, handleChange } = this.formikProps;
     let value = values[key] || [];
-    let newsValue = data.find(d => ('' + d.label) === ('' + session));
+    let newsValue = data.find((d) => "" + d.label === "" + session);
     if (newsValue === undefined) {
       let item = { label: session, value: uuidv4() };
       value.push(item);
@@ -319,7 +387,16 @@ export default class WebsiteCategoryAdd extends Component {
     }
   }
   render() {
-    let { _id, ready, alerts, WebsiteCategoryOptions, WebsiteCategoryParentOptions, ProductCategoryOptions, NewsCategoryOptions, ManufacturerOptions } = this.state;
+    let {
+      _id,
+      ready,
+      alerts,
+      WebsiteCategoryOptions,
+      WebsiteCategoryParentOptions,
+      ProductCategoryOptions,
+      NewsCategoryOptions,
+      ManufacturerOptions,
+    } = this.state;
     let { WebsiteCategoryEnt, noEdit } = this.props;
     let initialValues = this.getInitialValues();
     // Ready?
@@ -333,13 +410,26 @@ export default class WebsiteCategoryAdd extends Component {
           <Col xs={12} md={12}>
             <Card>
               <CardHeader>
-                <b>{WebsiteCategoryEnt ? (noEdit ? 'Chi tiết' : 'Chỉnh sửa') : 'Thêm mới'} Danh mục website {WebsiteCategoryEnt ? WebsiteCategoryEnt.status_name : ''}</b>
+                <b>
+                  {WebsiteCategoryEnt
+                    ? noEdit
+                      ? "Chi tiết"
+                      : "Chỉnh sửa"
+                    : "Thêm mới"}{" "}
+                  Danh mục website{" "}
+                  {WebsiteCategoryEnt ? WebsiteCategoryEnt.status_name : ""}
+                </b>
               </CardHeader>
               <CardBody>
                 {/* general alerts */}
                 {alerts.map(({ color, msg }, idx) => {
                   return (
-                    <Alert key={`alert-${idx}`} color={color} isOpen={true} toggle={() => this.setState({ alerts: [] })} >
+                    <Alert
+                      key={`alert-${idx}`}
+                      color={color}
+                      isOpen={true}
+                      toggle={() => this.setState({ alerts: [] })}
+                    >
                       <span dangerouslySetInnerHTML={{ __html: msg }} />
                     </Alert>
                   );
@@ -350,13 +440,11 @@ export default class WebsiteCategoryAdd extends Component {
                   // validate={this.handleFormikValidate}
                   onSubmit={this.handleFormikSubmit}
                 >
-                  {formikProps => {
-                    let {
-                      values,
-                      handleSubmit,
-                      handleReset,
-                      isSubmitting
-                    } = (this.formikProps = window._formikProps = formikProps);
+                  {(formikProps) => {
+                    let { values, handleSubmit, handleReset, isSubmitting } =
+                      (this.formikProps =
+                      window._formikProps =
+                        formikProps);
                     // Render
                     return (
                       <Form
@@ -369,14 +457,21 @@ export default class WebsiteCategoryAdd extends Component {
                             <Col xs={12}>
                               <FormGroup row>
                                 <Label for="category_name" sm={3}>
-                                  Tên danh mục {" "} <span className="font-weight-bold red-text"> * </span>
+                                  Tên danh mục{" "}
+                                  <span className="font-weight-bold red-text">
+                                    {" "}
+                                    *{" "}
+                                  </span>
                                 </Label>
                                 <Col sm={9}>
-                                  <Field name="category_name"
+                                  <Field
+                                    name="category_name"
                                     render={({ field }) => (
                                       <Input
                                         {...field}
-                                        onBlur={(item) => this.updateURLCategory(item)}
+                                        onBlur={(item) =>
+                                          this.updateURLCategory(item)
+                                        }
                                         type="text"
                                         placeholder=""
                                         disabled={noEdit}
@@ -385,33 +480,54 @@ export default class WebsiteCategoryAdd extends Component {
                                     )}
                                   />
                                   <ErrorMessage
-                                    name="category_name" component={({ children }) => (<Alert color="danger" className="field-validation-error">{children}</Alert>)}
+                                    name="category_name"
+                                    component={({ children }) => (
+                                      <Alert
+                                        color="danger"
+                                        className="field-validation-error"
+                                      >
+                                        {children}
+                                      </Alert>
+                                    )}
                                   />
                                 </Col>
                               </FormGroup>
                             </Col>
 
-                            <Col xs={12} >
+                            <Col xs={12}>
                               <FormGroup row>
                                 <Label sm={3}>Danh mục cha</Label>
                                 <Col sm={9}>
                                   <Field
                                     name="cate_parent_id"
                                     render={({ field /*, form*/ }) => {
-                                      let defaultValue = WebsiteCategoryParentOptions.find(({ value }) => 1 * value === 1 * field.value);
-                                      let placeholder = (WebsiteCategoryParentOptions[0] && WebsiteCategoryParentOptions[0].label) || "";
+                                      let defaultValue =
+                                        WebsiteCategoryParentOptions.find(
+                                          ({ value }) =>
+                                            1 * value === 1 * field.value
+                                        );
+                                      let placeholder =
+                                        (WebsiteCategoryParentOptions[0] &&
+                                          WebsiteCategoryParentOptions[0]
+                                            .label) ||
+                                        "";
                                       return (
                                         <Select
                                           name={field.name}
                                           onChange={({ value }) => {
                                             value = value ? value : 0;
                                             field.onChange({
-                                              target: { name: field.name, value }
+                                              target: {
+                                                name: field.name,
+                                                value,
+                                              },
                                             });
                                           }}
                                           isSearchable={true}
                                           placeholder={placeholder}
-                                          defaultValue={defaultValue || undefined}
+                                          defaultValue={
+                                            defaultValue || undefined
+                                          }
                                           options={WebsiteCategoryParentOptions}
                                           isDisabled={noEdit}
                                         />
@@ -423,36 +539,62 @@ export default class WebsiteCategoryAdd extends Component {
                               </FormGroup>
                             </Col>
 
-                            <Col xs={12} >
+                            <Col xs={12}>
                               <FormGroup row>
                                 <Label for="website_id" sm={3}>
-                                  Website áp dụng {" "} <span className="font-weight-bold red-text"> * </span>
+                                  Website áp dụng{" "}
+                                  <span className="font-weight-bold red-text">
+                                    {" "}
+                                    *{" "}
+                                  </span>
                                 </Label>
                                 <Col sm={9}>
                                   <Field
                                     name="website_id"
                                     render={({ field /*, form*/ }) => {
-                                      let defaultValue = WebsiteCategoryOptions.find(({ value }) => 1 * value === 1 * field.value);
-                                      let placeholder = (WebsiteCategoryOptions[0] && WebsiteCategoryOptions[0].label) || "";
+                                      let defaultValue =
+                                        WebsiteCategoryOptions.find(
+                                          ({ value }) =>
+                                            1 * value === 1 * field.value
+                                        );
+                                      let placeholder =
+                                        (WebsiteCategoryOptions[0] &&
+                                          WebsiteCategoryOptions[0].label) ||
+                                        "";
                                       return (
                                         <Select
                                           name={field.name}
                                           onChange={({ value }) => {
                                             field.onChange({
-                                              target: { name: field.name, value }
+                                              target: {
+                                                name: field.name,
+                                                value,
+                                              },
                                             });
                                             //this.handleChangeWebsite(value);
                                           }}
                                           isSearchable={true}
                                           placeholder={placeholder}
-                                          defaultValue={defaultValue || undefined}
+                                          defaultValue={
+                                            defaultValue || undefined
+                                          }
                                           options={WebsiteCategoryOptions}
                                           isDisabled={noEdit}
                                         />
                                       );
                                     }}
                                   />
-                                  <ErrorMessage name="website_id" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
+                                  <ErrorMessage
+                                    name="website_id"
+                                    component={({ children }) => (
+                                      <Alert
+                                        color="danger"
+                                        className="field-validation-error"
+                                      >
+                                        {children}
+                                      </Alert>
+                                    )}
+                                  />
                                 </Col>
                               </FormGroup>
                             </Col>
@@ -460,10 +602,15 @@ export default class WebsiteCategoryAdd extends Component {
                             <Col xs={12}>
                               <FormGroup row>
                                 <Label for="url_category" sm={3}>
-                                  URL danh mục {" "} <span className="font-weight-bold red-text"> * </span>
+                                  URL danh mục{" "}
+                                  <span className="font-weight-bold red-text">
+                                    {" "}
+                                    *{" "}
+                                  </span>
                                 </Label>
                                 <Col sm={9}>
-                                  <Field name="url_category"
+                                  <Field
+                                    name="url_category"
                                     render={({ field }) => {
                                       return (
                                         <Input
@@ -471,20 +618,30 @@ export default class WebsiteCategoryAdd extends Component {
                                           onBlur={null}
                                           type="text"
                                           placeholder=""
-                                          value={this.ChangeAlias(values.category_name)}
+                                          value={this.ChangeAlias(
+                                            values.category_name
+                                          )}
                                           disabled={true}
                                         />
-                                      )
+                                      );
                                     }}
                                   />
                                   <ErrorMessage
-                                    name="url_category" component={({ children }) => (<Alert color="danger" className="field-validation-error">{children}</Alert>)}
+                                    name="url_category"
+                                    component={({ children }) => (
+                                      <Alert
+                                        color="danger"
+                                        className="field-validation-error"
+                                      >
+                                        {children}
+                                      </Alert>
+                                    )}
                                   />
                                 </Col>
                               </FormGroup>
                             </Col>
 
-                            <Col xs={12} >
+                            <Col xs={12}>
                               <FormGroup row>
                                 <Label for="categoryname" sm={3}>
                                   Danh mục sản phẩm
@@ -492,27 +649,37 @@ export default class WebsiteCategoryAdd extends Component {
                                 <Col sm={9}>
                                   <Field
                                     name="categoryname"
-                                    render={({ field/*, form*/ }) => {
-                                      let placeholder = (ProductCategoryOptions[0] && ProductCategoryOptions[0].label) || '';
+                                    render={({ field }) => {
                                       return (
                                         <Select
                                           isMulti
                                           id={field.name}
                                           name={field.name}
-                                          ref={(ref) => { this.categoryname = ref }}
+                                          ref={(ref) => {
+                                            this.categoryname = ref;
+                                          }}
                                           onChange={(changeItem) => {
                                             field.onChange({
-                                              target: { type: "select", name: field.name, value: changeItem }
-                                            })
+                                              target: {
+                                                type: "select",
+                                                name: field.name,
+                                                value: changeItem,
+                                              },
+                                            });
                                           }}
                                           onKeyDown={(event) => {
-                                            const { target } = event
+                                            const { target } = event;
                                             if (event.keyCode === 13) {
-                                              this.handleEnterSession(target.value, ProductCategoryOptions, "categoryname", this.categoryname)
+                                              this.handleEnterSession(
+                                                target.value,
+                                                ProductCategoryOptions,
+                                                "categoryname",
+                                                this.categoryname
+                                              );
                                             }
                                           }}
                                           isSearchable={true}
-                                          placeholder={placeholder}
+                                          placeholder="-- Chọn --"
                                           defaultValue={field.value}
                                           options={ProductCategoryOptions}
                                           isDisabled={noEdit}
@@ -524,7 +691,7 @@ export default class WebsiteCategoryAdd extends Component {
                               </FormGroup>
                             </Col>
 
-                            <Col xs={12} >
+                            <Col xs={12}>
                               <FormGroup row>
                                 <Label for="newscategoryname" sm={3}>
                                   Danh mục tin tức
@@ -532,23 +699,37 @@ export default class WebsiteCategoryAdd extends Component {
                                 <Col sm={9}>
                                   <Field
                                     name="newscategoryname"
-                                    render={({ field/*, form*/ }) => {
-                                      let placeholder = (NewsCategoryOptions[0] && NewsCategoryOptions[0].label) || '';
+                                    render={({ field /*, form*/ }) => {
+                                      let placeholder =
+                                        (NewsCategoryOptions[0] &&
+                                          NewsCategoryOptions[0].label) ||
+                                        "";
                                       return (
                                         <Select
                                           isMulti
                                           id={field.name}
                                           name={field.name}
-                                          ref={(ref) => { this.newscategoryname = ref }}
+                                          ref={(ref) => {
+                                            this.newscategoryname = ref;
+                                          }}
                                           onChange={(changeItem) => {
                                             field.onChange({
-                                              target: { type: "select", name: field.name, value: changeItem }
-                                            })
+                                              target: {
+                                                type: "select",
+                                                name: field.name,
+                                                value: changeItem,
+                                              },
+                                            });
                                           }}
                                           onKeyDown={(event) => {
-                                            const { target } = event
+                                            const { target } = event;
                                             if (event.keyCode === 13) {
-                                              this.handleEnterSession(target.value, NewsCategoryOptions, "newscategoryname", this.newscategoryname)
+                                              this.handleEnterSession(
+                                                target.value,
+                                                NewsCategoryOptions,
+                                                "newscategoryname",
+                                                this.newscategoryname
+                                              );
                                             }
                                           }}
                                           isSearchable={true}
@@ -563,7 +744,7 @@ export default class WebsiteCategoryAdd extends Component {
                                 </Col>
                               </FormGroup>
                             </Col>
-                            <Col xs={12} >
+                            {/* <Col xs={12} >
                               <FormGroup row>
                                 <Label for="manufacturename" sm={3}>
                                   Danh mục nhà sản xuất
@@ -571,7 +752,7 @@ export default class WebsiteCategoryAdd extends Component {
                                 <Col sm={9}>
                                   <Field
                                     name="manufacturename"
-                                    render={({ field/*, form*/ }) => {
+                                    render={({ field }) => {
                                       let placeholder = (ManufacturerOptions[0] && ManufacturerOptions[0].label) || '';
                                       return (
                                         <Select
@@ -601,21 +782,26 @@ export default class WebsiteCategoryAdd extends Component {
                                   />
                                 </Col>
                               </FormGroup>
-                            </Col>
+                            </Col> */}
                             <Col xs={12}>
                               <FormGroup row>
-                                <Label for="description" sm={3}>  Mô tả </Label>
+                                <Label for="description" sm={3}>
+                                  {" "}
+                                  Mô tả{" "}
+                                </Label>
                                 <Col sm={9}>
                                   <Field
                                     name="description"
-                                    render={({ field /* _form */ }) => <Input
-                                      {...field}
-                                      onBlur={null}
-                                      type="textarea"
-                                      id="description"
-                                      disabled={noEdit}
-                                      maxLength={500}
-                                    />}
+                                    render={({ field /* _form */ }) => (
+                                      <Input
+                                        {...field}
+                                        onBlur={null}
+                                        type="textarea"
+                                        id="description"
+                                        disabled={noEdit}
+                                        maxLength={500}
+                                      />
+                                    )}
                                   />
                                 </Col>
                               </FormGroup>
@@ -633,7 +819,7 @@ export default class WebsiteCategoryAdd extends Component {
                                         className="pull-left"
                                         onBlur={null}
                                         checked={values.is_active}
-                                        type="switch"
+                                        type="checkbox"
                                         id="is_active"
                                         label="Kích hoạt"
                                         disabled={noEdit}
@@ -649,30 +835,81 @@ export default class WebsiteCategoryAdd extends Component {
                                 <Label for="" sm={3}></Label>
                                 <Col sm={9}>
                                   <div className="d-flex button-list-default justify-content-end">
-                                    {
-                                      noEdit ? (
-                                        <CheckAccess permission="CMS_WEBSITECATE_EDIT">
-                                          <Button color="primary" className="mr-2 btn-block-sm" onClick={() => window._$g.rdr(`/website-category/edit/${WebsiteCategoryEnt.web_category_id}`)}> <i className="fa fa-edit mr-1" /> Chỉnh sửa </Button>
-                                        </CheckAccess>
-                                      ) :
-                                        [
-                                          <CheckAccess permission={[
+                                    {noEdit ? (
+                                      <CheckAccess permission="CMS_WEBSITECATE_EDIT">
+                                        <Button
+                                          color="primary"
+                                          className="mr-2 btn-block-sm"
+                                          onClick={() =>
+                                            window._$g.rdr(
+                                              `/website-category/edit/${WebsiteCategoryEnt.web_category_id}`
+                                            )
+                                          }
+                                        >
+                                          {" "}
+                                          <i className="fa fa-edit mr-1" />{" "}
+                                          Chỉnh sửa{" "}
+                                        </Button>
+                                      </CheckAccess>
+                                    ) : (
+                                      [
+                                        <CheckAccess
+                                          permission={[
                                             "CMS_WEBSITECATE_EDIT",
                                             "CMS_WEBSITECATE_ADD",
-                                          ]} any key={1}
+                                          ]}
+                                          any
+                                          key={1}
+                                        >
+                                          <Button
+                                            key="buttonSave"
+                                            type="submit"
+                                            color="primary"
+                                            disabled={isSubmitting}
+                                            onClick={() =>
+                                              this.handleSubmit("save")
+                                            }
+                                            className="mr-2 btn-block-sm"
                                           >
-                                            <Button key="buttonSave" type="submit" color="primary" disabled={isSubmitting} onClick={() => this.handleSubmit('save')} className="mr-2 btn-block-sm"><i className="fa fa-save mr-2" /> Lưu </Button>
-                                          </CheckAccess>,
-                                          <CheckAccess permission={[
+                                            <i className="fa fa-save mr-2" />{" "}
+                                            Lưu{" "}
+                                          </Button>
+                                        </CheckAccess>,
+                                        <CheckAccess
+                                          permission={[
                                             "CMS_WEBSITECATE_EDIT",
                                             "CMS_WEBSITECATE_ADD",
-                                          ]} any key={2}
+                                          ]}
+                                          any
+                                          key={2}
+                                        >
+                                          <Button
+                                            key="buttonSaveClose"
+                                            type="submit"
+                                            color="success"
+                                            disabled={isSubmitting}
+                                            onClick={() =>
+                                              this.handleSubmit("save_n_close")
+                                            }
+                                            className="mr-2 btn-block-sm mt-md-0 mt-sm-2"
                                           >
-                                            <Button key="buttonSaveClose" type="submit" color="success" disabled={isSubmitting} onClick={() => this.handleSubmit('save_n_close')} className="mr-2 btn-block-sm mt-md-0 mt-sm-2"><i className="fa fa-save mr-2" />Lưu &amp; Đóng</Button>
-                                          </CheckAccess>
-                                        ]
-                                    }
-                                    <Button disabled={isSubmitting} onClick={() => window._$g.rdr('/website-category')} className="btn-block-sm mt-md-0 mt-sm-2"> <i className="fa fa-times-circle mr-1" />Đóng </Button>
+                                            <i className="fa fa-save mr-2" />
+                                            Lưu &amp; Đóng
+                                          </Button>
+                                        </CheckAccess>,
+                                      ]
+                                    )}
+                                    <Button
+                                      disabled={isSubmitting}
+                                      onClick={() =>
+                                        window._$g.rdr("/website-category")
+                                      }
+                                      className="btn-block-sm mt-md-0 mt-sm-2"
+                                    >
+                                      {" "}
+                                      <i className="fa fa-times-circle mr-1" />
+                                      Đóng{" "}
+                                    </Button>
                                   </div>
                                 </Col>
                               </FormGroup>

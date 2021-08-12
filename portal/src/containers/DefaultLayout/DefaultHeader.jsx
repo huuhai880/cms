@@ -28,7 +28,7 @@ class DefaultHeader extends Component {
         <SidebarToggler className="d-lg-none" display="md" mobile />
         <AppNavbarBrand
           style={{cursor: "pointer"}}
-          onClick={()=>window._$g.rdr('/publishing-company')}
+          onClick={()=>window._$g.rdr('/')}
           full={{ src: logo, width: 55, height: 45, alt: 'SCC' }}
           minimized={{ src: sygnet, width: 40, height: 35, alt: 'SCC' }}
         />

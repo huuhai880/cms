@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 // Component(s)
-import Loading from '../Common/Loading';
-import WebsiteCategoryAdd from './WebsiteCategoryAdd';
+import Loading from "../Common/Loading";
+import WebsiteCategoryAdd from "./WebsiteCategoryAdd";
 
 // Model(s)
 import WebsiteCategoryModel from "../../models/WebsiteCategoryModel";
@@ -22,7 +22,7 @@ export default class WebsiteCategoryEdit extends Component {
     // Init state
     this.state = {
       /** @var {SegmentEntity} */
-      WebsiteCategoryEnt: null
+      WebsiteCategoryEnt: null,
     };
   }
 
@@ -30,25 +30,29 @@ export default class WebsiteCategoryEdit extends Component {
     // Fetch record data
     (async () => {
       let ID = this.props.match.params.id;
-      let WebsiteCategoryEnt = await this._WebsiteCategoryModel.read(ID)
+      let WebsiteCategoryEnt = await this._WebsiteCategoryModel
+        .read(ID)
         .catch(() => {
-          setTimeout(() => window._$g.rdr('/404'));
-        })
-      ;
+          setTimeout(() => window._$g.rdr("/404"));
+        });
+        console.log("WebsiteCategoryEnt", WebsiteCategoryEnt)
       WebsiteCategoryEnt && this.setState({ WebsiteCategoryEnt });
     })();
     //.end
   }
 
   render() {
-    let {
-      WebsiteCategoryEnt,
-    } = this.state;
-    
+    let { WebsiteCategoryEnt } = this.state;
+
     // Ready?
     if (!WebsiteCategoryEnt) {
       return <Loading />;
     }
-    return <WebsiteCategoryAdd WebsiteCategoryEnt={WebsiteCategoryEnt} {...this.props}/>    
+    return (
+      <WebsiteCategoryAdd
+        WebsiteCategoryEnt={WebsiteCategoryEnt}
+        {...this.props}
+      />
+    );
   }
 }

@@ -1,0 +1,102 @@
+.cardBody-wrap {
+      padding: 10px;
+}
+
+.wrap-routing {
+  width: 100%;
+  height: 300px;
+  background: url(./image/bg.jpg);
+  background-size: cover;
+  //   background-attachment: fixed;
+  background-position: center;
+  border-radius: 0.25rem;
+  animation: animateBG 15s linear infinite;
+}
+
+.section {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+@keyframes animateBG {
+  0% {
+      background-size: 100% auto;
+  }
+  100% {
+      background-size: 170% auto;
+  }
+}
+
+.earth {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background: url(./image/image.jpg);
+  background-size: cover;
+  border-radius: 50%;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 1), 0 0 50px #4069ff;
+  animation: animateEarth 15s linear infinite;
+}
+
+@keyframes animateEarth {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -750px 0;
+  }
+}
+
+.circle {
+  transform-style: preserve-3d;
+  animation: animateText 10s linear infinite;
+}
+
+.circle span {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  top: 0;
+  left: 0;
+  font-weight: 600;
+  background: #fff;
+  color: #35146f;
+  text-transform: uppercase;
+  font-size: 26px;
+  transform-origin: center;
+  transform-style: preserve-3d;
+  transform: rotateY(calc(var(--i) * calc(360deg / var(--a)))) translateZ(200px);
+  border-top: 2px solid #35146f;
+  border-bottom: 2px solid #35146f;
+  box-sizing: border-box;
+  align-self: center;
+}
+
+.circle span::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  transform: translateZ(-5px);
+}
+
+@keyframes animateText {
+  0% {
+    transform: perspective(1500px) rotateY(360deg) rotateX(8deg)
+      translateY(-30px);
+  }
+  100% {
+    transform: perspective(1500px) rotateY(0deg) rotateX(8deg) translateY(-30px);
+  }
+}

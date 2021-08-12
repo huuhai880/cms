@@ -278,7 +278,20 @@ class WebsiteCategory extends Component {
         label: "Tên doanh mục",
         options: {
           filter: false,
-          sort: false
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: value => {
+            return <span className="d-block text-left">{value || ""}</span>;
+          }
         }
       },
       {
@@ -287,8 +300,18 @@ class WebsiteCategory extends Component {
         options: {
           filter: false,
           sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
           customBodyRender: value => {
-            return <span className="d-block text-right">{value || ""}</span>;
+            return <span className="d-block text-left">{value || ""}</span>;
           }
         }
       },
@@ -298,8 +321,18 @@ class WebsiteCategory extends Component {
         options: {
           filter: false,
           sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
           customBodyRender: value => {
-            return <span className="d-block text-right">{value || ""}</span>;
+            return <span className="d-block text-left">{value || ""}</span>;
           }
         }
       },
@@ -308,7 +341,20 @@ class WebsiteCategory extends Component {
         label: "Ngày tạo",
         options: {
           filter: false,
-          sort: false
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: value => {
+            return <span className="d-block text-center">{value || ""}</span>;
+          }
         }
       },
       {
@@ -327,34 +373,8 @@ class WebsiteCategory extends Component {
               </th>
             );
           },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            let { controlIsActiveProps = {} } = this.props;
-            return (
-              <div className="text-center">
-                <CheckAccess permission="CRM_CUSTOMERTYPE_EDIT">
-                  <FormControlLabel
-                    label={value ? "Có" : "Không"}
-                    value={value ? "Có" : "Không"}
-                    control={
-                      <Switch
-                        color="primary"
-                        checked={value === 1}
-                        value={value}
-                      />
-                    }
-                    onChange={event => {
-                      let checked = 1 * event.target.value === 1 ? 0 : 1;
-                      this.handleChangeStatus(
-                        checked,
-                        this.state.data[tableMeta["rowIndex"]].web_category_id,
-                        tableMeta["rowIndex"]
-                      );
-                    }}
-                    {...controlIsActiveProps}
-                  />
-                </CheckAccess>
-              </div>
-            );
+          customBodyRender: value => {
+            return <span className="d-block text-center">{value? "Có": "Không"}</span>;
           }
         }
       },
