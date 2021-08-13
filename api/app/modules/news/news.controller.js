@@ -76,6 +76,21 @@ const detailNews = async (req, res, next) => {
 };
 
 /**
+ * Get detail
+ */
+const getLastItemNews = async (req, res, next) => {
+  try {
+    const serviceRes = await newsService.getLastItemNews();
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(error);
+  }
+};
+
+/**
  * Create
  */
 const createNews = async (req, res, next) => {
@@ -184,7 +199,10 @@ const deleteNewsRelated = async (req, res, next) => {
       return next(serviceResDetail);
     }
 
-    const serviceRes = await newsService.deleteNewsRelated(newsId, Object.assign(req.body, { news_id : relatedId}));
+    const serviceRes = await newsService.deleteNewsRelated(
+      newsId,
+      Object.assign(req.body, { news_id: relatedId })
+    );
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -208,4 +226,5 @@ module.exports = {
   checkMetaKeyword,
   updateReview,
   deleteNewsRelated,
+  getLastItemNews,
 };
