@@ -13,7 +13,7 @@ import MUIDataTable from 'mui-datatables'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 import { CircularProgress } from '@material-ui/core'
-import CustomPagination from '../../utils/CustomPagination'
+import CustomPagination from '../../utils/CustomPaginationCustom'
 
 // Component(s)
 import { CheckAccess } from '../../navigation/VerifyAccess'
@@ -52,7 +52,7 @@ class Account extends Component {
     count: 1,
     data: [],
     query: {
-      itemsPerPage: 25,
+      itemsPerPage: 10,
       page: 1,
       is_active: 1,
     }

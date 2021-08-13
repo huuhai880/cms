@@ -161,6 +161,28 @@ const detailNews = async (newsId) => {
     return new ServiceResponse(false, e.message);
   }
 };
+
+const getLastItemNews = async (newsId) => {
+  try {
+    const pool = await mssql.pool;
+    const data = await pool
+      .request()
+      .execute(PROCEDURE_NAME.NEWS_NEWS_GETLASTITEM_ADMINWEB);
+
+    let news = data.recordset;
+    // If exists news
+    if (news && news.length > 0) {
+      news = newsClass.detail(news[0]);
+      news.related = [];
+      return new ServiceResponse(true, '', news);
+    }
+    return new ServiceResponse(false, RESPONSE_MSG.NOT_FOUND);
+  } catch (e) {
+    logger.error(e, { function: 'newsService.lastItemNews' });
+    return new ServiceResponse(false, e.message);
+  }
+};
+
 const createNewsOrUpdate = async (bodyParams) => {
   try {
     const id = apiHelper.getValueFromObject(bodyParams, 'news_id');
@@ -468,6 +490,7 @@ const deleteNewsRelated = async (newsId, relatedId) => {
 module.exports = {
   getListNews,
   detailNews,
+  getLastItemNews,
   createNewsOrUpdate,
   deleteNews,
   changeStatusNews,
