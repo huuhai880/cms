@@ -1,11 +1,10 @@
 .cardBody-wrap {
-      padding: 10px;
+  padding: 10px;
 }
 
 .wrap-routing {
   width: 100%;
   height: 300px;
-  background: url(./image/bg.jpg);
   background-size: cover;
   //   background-attachment: fixed;
   background-position: center;
@@ -25,10 +24,10 @@
 
 @keyframes animateBG {
   0% {
-      background-size: 100% auto;
+    background-size: 100% auto;
   }
   100% {
-      background-size: 170% auto;
+    background-size: 170% auto;
   }
 }
 
@@ -39,7 +38,6 @@
   transform: translate(-50%, -50%);
   width: 200px;
   height: 200px;
-  background: url(./image/image.jpg);
   background-size: cover;
   border-radius: 50%;
   box-shadow: inset 0 0 20px rgba(0, 0, 0, 1), 0 0 50px #4069ff;
@@ -99,4 +97,110 @@
   100% {
     transform: perspective(1500px) rotateY(0deg) rotateX(8deg) translateY(-30px);
   }
+}
+
+.img-news {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  margin: auto;
+  //   border-radius: 0.25rem;
+}
+
+.body-news {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  background: #fff;
+}
+
+.card-news {
+  position: relative;
+  padding: 0;
+  width: 100%;
+  height: 350px;
+  background: #fff;
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.circle-news {
+  position: absolute;
+  bottom: 40%;
+  left: 0;
+  width: 500px;
+  height: 500px;
+  background: #fff;
+  clip-path: circle();
+}
+
+.circle-news::before {
+  content: "";
+  position: absolute;
+  top: -16px;
+  right: 11px;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  box-shadow: 0 0 0 20px rgba(156, 68, 153, 0.8);
+  border-radius: 50%;
+  z-index: 1000;
+}
+
+.circle-news .imgBx {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 310px;
+  background: #fff;
+}
+
+.circle-news .imgBx img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.content-news {
+  position: absolute;
+  left: 0px;
+  bottom: 14%;
+  width: 100%;
+  height: 140px;
+  padding: 20px 0px;
+}
+
+.text-review {
+  display: inline-block;
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 0.35rem;
+  font-size: 18px;
+}
+
+.content-news span {
+  word-wrap: break-word;
+  font-size: 1.4em;
+  color: #333;
+  margin-top: 7px;
+}
+
+.textIcon {
+  font-size: 13px;
+  padding: 10px 5px;
+  margin-bottom: 10px;
+  background-color: #c4eff8;
+  border-radius: 0.35rem;
+  box-shadow: rgba(17, 12, 46, 0.15) 2px 2px 3px 1px;
+}
+
+.textIcon span:nth-child(1) {
+  text-transform: uppercase;
+  font-weight: bold;
 }

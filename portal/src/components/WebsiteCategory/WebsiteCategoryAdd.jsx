@@ -621,7 +621,7 @@ export default class WebsiteCategoryAdd extends Component {
                                           value={this.ChangeAlias(
                                             values.category_name
                                           )}
-                                          disabled={true}
+                                          disabled={noEdit}
                                         />
                                       );
                                     }}

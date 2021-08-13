@@ -20,6 +20,9 @@ routes.route('/check-meta-keyword').put(newsController.checkMetaKeyword);
 // Get List
 routes.route('').get(newsController.getListNews);
 
+// Get Last item
+routes.route('/last-item').get(newsController.getLastItemNews);
+
 // Detail a area
 routes.route('/:newsId(\\d+)').get(newsController.detailNews);
 
