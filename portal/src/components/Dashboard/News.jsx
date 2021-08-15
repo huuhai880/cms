@@ -82,7 +82,7 @@ class News extends Component {
                 </Col>
               </Row>
             </CardHeader>
-            <CardBody style={{ padding: "0 10px" }}>
+            <CardBody style={{ padding: "0" }}>
               <div className="body-news">
                 <div className="card-news">
                   {lastItem && lastItem.image_url && (
@@ -122,7 +122,11 @@ class News extends Component {
                     </div>
                     <div className="textIcon mt-1">
                       <span>Chuyên mục bài viết: </span>
-                      <span>{valueCategory && valueCategory[0].name}</span>
+                      <span>{valueCategory && valueCategory.length > 0 ? valueCategory[0].name: ""}</span>
+                    </div>
+                    <div className="textIcon mt-1">
+                      <span>Ngày tạo: </span>
+                      <span>{lastItem && lastItem.create_date}</span>
                     </div>
                   </div>
                 </div>

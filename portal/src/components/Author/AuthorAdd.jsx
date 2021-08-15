@@ -118,9 +118,9 @@ export default class AuthorAdd extends PureComponent {
         .trim()
         .email("Email không hợp lệ")
         .required("Email là bắt buộc."),
-      birthday: Yup.date()
-        .typeError("Ngày sinh không hợp lệ.")
-        .required("Ngày sinh là bắt buộc."),
+      // birthday: Yup.date()
+      //   .typeError("Ngày sinh không hợp lệ.")
+      //   .required("Ngày sinh là bắt buộc."),
       first_name: Yup.string()
         .trim()
         // .matches(
@@ -154,11 +154,11 @@ export default class AuthorAdd extends PureComponent {
       education_career: Yup.string().required(
         "Họ vấn và sự nghiệp là bắt buộc."
       ),
-      news_category: Yup.string().required("Danh mục bài viết là bắt buộc."),
+      // news_category: Yup.string().required("Danh mục bài viết là bắt buộc."),
       order_index: Yup.number()
-          .typeError('Thứ tự hiển thị phải là số.')
-          .positive('Thứ tự hiển thị phải lớn hơn 0.')
-          .required('Thứ tự hiển thị là bắt buộc.')
+        .typeError("Thứ tự hiển thị phải là số.")
+        .positive("Thứ tự hiển thị phải lớn hơn 0.")
+        .required("Thứ tự hiển thị là bắt buộc."),
     });
   }
 
@@ -249,9 +249,9 @@ export default class AuthorAdd extends PureComponent {
       bundle["urlImageBannerEdit"] = authorEnt.banner_image;
     }
 
-    if (authorEnt && authorEnt.news_category) {
-      bundle["slectedCategoryLength"] = authorEnt.news_category.length;
-    }
+    // if (authorEnt && authorEnt.news_category) {
+    //   bundle["slectedCategoryLength"] = authorEnt.news_category.length;
+    // }
     //
     Object.keys(bundle).forEach((key) => {
       let data = bundle[key];
@@ -858,9 +858,6 @@ export default class AuthorAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="birthday" sm={4}>
                                     Ngày sinh
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -952,28 +949,29 @@ export default class AuthorAdd extends PureComponent {
                               </Col>
                             </Row>
                             <Row>
-                            <Col xs={12} sm={6}>
+                              <Col xs={12} sm={6}>
                                 <FormGroup row>
                                   <Label for="order_index" sm={4}>
-                                     Thứ tự hiển thị   <span className="font-weight-bold red-text">
+                                    Thứ tự hiển thị{" "}
+                                    <span className="font-weight-bold red-text">
                                       *
                                     </span>
                                   </Label>
                                   <Col sm={8}>
-                                      <Field
-                                        name="order_index"
-                                        render={({ field /* _form */ }) => (
-                                          <Input
-                                            {...field}
-                                            onBlur={null}
-                                            type={`number`}
-                                            name="order_index"
-                                            className="text-right"
-                                            id="order_index"
-                                            disabled={noEdit}
-                                          />
-                                        )}
-                                      />
+                                    <Field
+                                      name="order_index"
+                                      render={({ field /* _form */ }) => (
+                                        <Input
+                                          {...field}
+                                          onBlur={null}
+                                          type={`number`}
+                                          name="order_index"
+                                          className="text-right"
+                                          id="order_index"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
                                     <ErrorMessage
                                       name="order_index"
                                       component={({ children }) => (
@@ -988,10 +986,10 @@ export default class AuthorAdd extends PureComponent {
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            <Col xs={12} sm={6}>
+                              <Col xs={12} sm={6}>
                                 <FormGroup row>
                                   <Label for="author_degree" sm={4}>
-                                    Học vị 
+                                    Học vị
                                   </Label>
                                   <Col sm={8}>
                                     <InputGroup>
@@ -1573,33 +1571,35 @@ export default class AuthorAdd extends PureComponent {
                                     </span>
                                   </Label>
                                   <Col sm={5} xs={12}>
-                                  <label className="text-center mb-0 mt-3 w-100">Phiên bản máy tính</label>
-                                      <Field
-                                        name="banner_image"
-                                        render={({ field }) => {
-                                          return (
-                                            <div className="author-banner-upload">
-                                              <Upload
-                                                onChange={(img) =>
-                                                  field.onChange({
-                                                    target: {
-                                                      name: field.name,
-                                                      value: img,
-                                                    },
-                                                  })
-                                                }
-                                                imageUrl={values.banner_image}
-                                                accept="image/*"
-                                                disabled={noEdit}
-                                                label="Upload (Ưu tiên ảnh có chiều ngang 1600px)"
-                                                // beforeUpload={
-                                                //   this.beforeUploadBannerImage
-                                                // }
-                                              />
-                                            </div>
-                                          );
-                                        }}
-                                      />
+                                    <label className="text-center mb-0 mt-3 w-100">
+                                      Phiên bản máy tính
+                                    </label>
+                                    <Field
+                                      name="banner_image"
+                                      render={({ field }) => {
+                                        return (
+                                          <div className="author-banner-upload">
+                                            <Upload
+                                              onChange={(img) =>
+                                                field.onChange({
+                                                  target: {
+                                                    name: field.name,
+                                                    value: img,
+                                                  },
+                                                })
+                                              }
+                                              imageUrl={values.banner_image}
+                                              accept="image/*"
+                                              disabled={noEdit}
+                                              label="Upload (Ưu tiên ảnh có chiều ngang 1600px)"
+                                              // beforeUpload={
+                                              //   this.beforeUploadBannerImage
+                                              // }
+                                            />
+                                          </div>
+                                        );
+                                      }}
+                                    />
                                     <ErrorMessage
                                       name="banner_image"
                                       component={({ children }) => (
@@ -1613,7 +1613,9 @@ export default class AuthorAdd extends PureComponent {
                                     />
                                   </Col>
                                   <Col sm={5} xs={12}>
-                                  <label className="text-center mb-0 mt-3 w-100">Phiên bản di động</label>
+                                    <label className="text-center mb-0 mt-3 w-100">
+                                      Phiên bản di động
+                                    </label>
                                     {
                                       <Field
                                         name="banner_image_mobile"
@@ -1629,7 +1631,9 @@ export default class AuthorAdd extends PureComponent {
                                                     },
                                                   })
                                                 }
-                                                imageUrl={values.banner_image_mobile}
+                                                imageUrl={
+                                                  values.banner_image_mobile
+                                                }
                                                 accept="image/*"
                                                 disabled={noEdit}
                                                 label="Upload (Ưu tiên ảnh có kích thước 450px * 965px)"
@@ -1657,7 +1661,7 @@ export default class AuthorAdd extends PureComponent {
                                 </FormGroup>
                               </Col>
                             </Row>
-                            <Row>
+                            {/* <Row>
                               <FormSelectGroup
                                 isRequired
                                 label="Danh mục bài viết"
@@ -1673,11 +1677,13 @@ export default class AuthorAdd extends PureComponent {
                                   this.handleCategoryChange(values, field)
                                 }
                               />
-                            </Row>
+                            </Row> */}
+                          </Col>
+                          <Col xs={12} md={12}>
                             <Row>
                               <Col sm={12}>
-                                <FormGroup row>
-                                  <Label for="introduce" sm={2}>
+                                <FormGroup >
+                                  <Label for="introduce" sm={4}>
                                     <b className="underline">
                                       Giới thiệu bản thân
                                     </b>
@@ -1685,7 +1691,7 @@ export default class AuthorAdd extends PureComponent {
                                       *
                                     </span>
                                   </Label>
-                                  <Col sm={10} xs={12}>
+                                  <Col sm={12} xs={12}>
                                     <Editor
                                       apiKey={
                                         "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
@@ -1744,8 +1750,8 @@ export default class AuthorAdd extends PureComponent {
 
                             <Row>
                               <Col sm={12}>
-                                <FormGroup row>
-                                  <Label for="education_career" sm={2}>
+                                <FormGroup >
+                                  <Label for="education_career" sm={4}>
                                     <b className="underline">
                                       Học vấn & sự nghiệp
                                     </b>
@@ -1753,7 +1759,7 @@ export default class AuthorAdd extends PureComponent {
                                       *
                                     </span>
                                   </Label>
-                                  <Col sm={10} xs={12}>
+                                  <Col sm={12} xs={12}>
                                     <Editor
                                       apiKey={
                                         "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
@@ -1811,13 +1817,13 @@ export default class AuthorAdd extends PureComponent {
                             </Row>
                             <Row>
                               <Col sm={12}>
-                                <FormGroup row>
-                                  <Label for="author_quote" sm={2}>
+                                <FormGroup >
+                                  <Label for="author_quote" sm={4}>
                                     <b className="underline">
-                                      Tác giả nói về SCC 
+                                      Chuyên gia nói về Thần Số Học
                                     </b>
                                   </Label>
-                                  <Col sm={10} xs={12}>
+                                  <Col sm={12} xs={12}>
                                     <Field
                                       name="author_quote"
                                       render={({ field /* _form */ }) => (

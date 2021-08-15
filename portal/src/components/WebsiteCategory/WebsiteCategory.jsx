@@ -46,11 +46,11 @@ class WebsiteCategory extends Component {
     query: {
       itemsPerPage: 25,
       page: 1,
-      is_active: 1
+      is_active: 1,
     },
 
     /** @var {Array} */
-    WebsiteCategoryOptions: [{ name: "-- Chọn --", id: "" }]
+    WebsiteCategoryOptions: [{ name: "-- Chọn --", id: "" }],
   };
 
   componentDidMount() {
@@ -71,14 +71,14 @@ class WebsiteCategory extends Component {
 
       this.setState(
         {
-          isLoading
+          isLoading,
         },
         () => {
           this.setState({
             data: dataConfig,
             WebsiteCategoryOptions,
             count,
-            page
+            page,
           });
         }
       );
@@ -95,13 +95,13 @@ class WebsiteCategory extends Component {
       // @TODO:
       this._websiteCategoryModel
         .list(this.state.query)
-        .then(data => (bundle["data"] = data)),
+        .then((data) => (bundle["data"] = data)),
       this._websiteCategoryModel
         .getOptionsWebsite({ is_active: 1 })
-        .then(data => (bundle["WebsiteCategoryOptions"] = data))
+        .then((data) => (bundle["WebsiteCategoryOptions"] = data)),
     ];
 
-    await Promise.all(all).catch(err => {
+    await Promise.all(all).catch((err) => {
       // window._$g.dialogs.alert(
       //   window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
       //   () => {
@@ -115,7 +115,7 @@ class WebsiteCategory extends Component {
   // get data
   getData = (query = {}) => {
     this.setState({ isLoading: true });
-    return this._websiteCategoryModel.list(query).then(res => {
+    return this._websiteCategoryModel.list(query).then((res) => {
       let data = res.items;
       let isLoading = false;
       let count = res.totalItems;
@@ -125,7 +125,7 @@ class WebsiteCategory extends Component {
         isLoading,
         count,
         page,
-        query
+        query,
       });
     });
   };
@@ -138,7 +138,7 @@ class WebsiteCategory extends Component {
     window._$g.dialogs.prompt(
       "Bạn có chắc chắn muốn thay đổi trạng thái dữ liệu đang chọn?",
       "Cập nhật",
-      confirm => this.onChangeStatus(confirm, status, id, rowIndex)
+      (confirm) => this.onChangeStatus(confirm, status, id, rowIndex)
     );
   };
 
@@ -152,7 +152,7 @@ class WebsiteCategory extends Component {
           cloneData[idx].is_active = status;
           this.setState(
             {
-              data: cloneData
+              data: cloneData,
             },
             () => {
               window._$g.toastr.show(
@@ -175,7 +175,7 @@ class WebsiteCategory extends Component {
     let routes = {
       detail: "/website-category/detail/",
       delete: "/website-category/delete/",
-      edit: "/website-category/edit/"
+      edit: "/website-category/edit/",
     };
     const route = routes[type];
     if (type.match(/detail|edit/i)) {
@@ -184,7 +184,7 @@ class WebsiteCategory extends Component {
       window._$g.dialogs.prompt(
         "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
         "Xóa",
-        confirm => this.handleClose(confirm, id, rowIndex)
+        (confirm) => this.handleClose(confirm, id, rowIndex)
       );
     }
   }
@@ -194,7 +194,7 @@ class WebsiteCategory extends Component {
     if (confirm) {
       this._websiteCategoryModel
         .checkParent(id)
-        .then(res => {
+        .then((res) => {
           if (1 * res === 1) {
             this._websiteCategoryModel
               .delete(id)
@@ -202,7 +202,7 @@ class WebsiteCategory extends Component {
                 const cloneData = JSON.parse(JSON.stringify(data));
                 cloneData.splice(rowIndex, 1);
                 this.setState({
-                  data: cloneData
+                  data: cloneData,
                 });
               })
               .catch(() => {
@@ -242,7 +242,7 @@ class WebsiteCategory extends Component {
       website_id,
       create_date_from,
       create_date_to,
-      is_active
+      is_active,
     });
     this.getData(query).catch(() => {
       window._$g.dialogs.alert(
@@ -251,7 +251,7 @@ class WebsiteCategory extends Component {
     });
   };
 
-  handleChangeRowsPerPage = event => {
+  handleChangeRowsPerPage = (event) => {
     let query = { ...this.state.query };
     query.itemsPerPage = event.target.value;
     query.page = 1;
@@ -289,10 +289,10 @@ class WebsiteCategory extends Component {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "website_name",
@@ -310,10 +310,10 @@ class WebsiteCategory extends Component {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "user",
@@ -331,10 +331,10 @@ class WebsiteCategory extends Component {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "create_date",
@@ -352,10 +352,10 @@ class WebsiteCategory extends Component {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-center">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "is_active",
@@ -373,10 +373,14 @@ class WebsiteCategory extends Component {
               </th>
             );
           },
-          customBodyRender: value => {
-            return <span className="d-block text-center">{value? "Có": "Không"}</span>;
-          }
-        }
+          customBodyRender: (value) => {
+            return (
+              <span className="d-block text-center">
+                {value ? "Có" : "Không"}
+              </span>
+            );
+          },
+        },
       },
       {
         name: "Thao tác",
@@ -409,7 +413,7 @@ class WebsiteCategory extends Component {
                   color="warning"
                   title="Chi tiết"
                   className="mr-1"
-                  onClick={evt =>
+                  onClick={(evt) =>
                     this.handleActionItemClick(
                       "detail",
                       this.state.data[tableMeta["rowIndex"]].web_category_id,
@@ -424,7 +428,7 @@ class WebsiteCategory extends Component {
                     color="success"
                     title="Chỉnh sửa"
                     className="mr-1"
-                    onClick={evt =>
+                    onClick={(evt) =>
                       this.handleActionItemClick(
                         "edit",
                         this.state.data[tableMeta["rowIndex"]].web_category_id,
@@ -440,7 +444,7 @@ class WebsiteCategory extends Component {
                     color="danger"
                     title="Xóa"
                     className=""
-                    onClick={evt =>
+                    onClick={(evt) =>
                       this.handleActionItemClick(
                         "delete",
                         this.state.data[tableMeta["rowIndex"]].web_category_id,
@@ -453,9 +457,9 @@ class WebsiteCategory extends Component {
                 </CheckAccess>
               </div>
             );
-          }
-        }
-      }
+          },
+        },
+      },
     ];
 
     const { count, page, query } = this.state;
@@ -469,8 +473,8 @@ class WebsiteCategory extends Component {
             <div
               className="minimize-icon cur-pointer"
               onClick={() =>
-                this.setState(prevState => ({
-                  toggleSearch: !prevState.toggleSearch
+                this.setState((prevState) => ({
+                  toggleSearch: !prevState.toggleSearch,
                 }))
               }
             >

@@ -37,10 +37,6 @@ class Summary extends Component {
     this._newsModel
       .getList()
       .then((data) => {
-        console.log(
-          "🚀 ~ file: NewsSummary.jsx ~ line 39 ~ Summary ~ .then ~ data",
-          data
-        );
         data = data ? data.items : [];
         let dataNoIsReview = [];
         let dataIsReview = [];
