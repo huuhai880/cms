@@ -101,79 +101,47 @@
 
 .img-news {
   width: 100%;
-  height: 150px;
+  height: 100%;
   object-fit: cover;
   margin: auto;
-  //   border-radius: 0.25rem;
 }
 
 .body-news {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100%;
   background: #fff;
 }
 
 .card-news {
-  position: relative;
-  padding: 0;
-  width: 100%;
-  height: 350px;
+  display: flex;
+  height: 400px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   background: #fff;
-  border-radius: 0.25rem;
-  overflow: hidden;
 }
 
 .circle-news {
-  position: absolute;
-  bottom: 40%;
-  left: 0;
-  width: 500px;
-  height: 500px;
-  background: #fff;
-  clip-path: circle();
-}
-
-.circle-news::before {
-  content: "";
-  position: absolute;
-  top: -16px;
-  right: 11px;
   width: 100%;
-  height: 100%;
-  background: transparent;
-  box-shadow: 0 0 0 20px rgba(156, 68, 153, 0.8);
-  border-radius: 50%;
-  z-index: 1000;
+  background: #fff;
+  overflow: hidden;
 }
 
 .circle-news .imgBx {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%);
   width: 100%;
-  height: 310px;
+  height: 100%;
   background: #fff;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 }
 
 .circle-news .imgBx img {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .content-news {
-  position: absolute;
-  left: 0px;
-  bottom: 14%;
   width: 100%;
-  height: 140px;
-  padding: 20px 0px;
+  height: 100%;
+  padding: 10px 10px 0px;
 }
 
 .text-review {
@@ -186,21 +154,30 @@
 
 .content-news span {
   word-wrap: break-word;
-  font-size: 1.4em;
+  font-size: 14px;
   color: #333;
   margin-top: 7px;
+  padding: 10px 0;
 }
 
 .textIcon {
-  font-size: 13px;
+  font-size: 14px;
   padding: 10px 5px;
   margin-bottom: 10px;
   background-color: #c4eff8;
   border-radius: 0.35rem;
-  box-shadow: rgba(17, 12, 46, 0.15) 2px 2px 3px 1px;
+  // box-shadow: rgba(17, 12, 46, 0.15) 2px 2px 3px 1px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 
 .textIcon span:nth-child(1) {
   text-transform: uppercase;
   font-weight: bold;
+  padding-right: 5px;
+}
+
+.textIcon span:nth-child(2) {
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 600;
 }
