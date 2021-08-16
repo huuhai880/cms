@@ -11,9 +11,8 @@ import {
 } from "reactstrap";
 import {
     FormInput,
-    YoutubePreview,
-    UploadImage
 } from "@widget";
+
 
 // Component(s)
 import Loading from '../../Common/Loading';
@@ -42,128 +41,130 @@ export default class HomePage extends PureComponent {
             _id: 0,
             alerts: [],
             ready: false,
-            authorImage: "",
-            clearAuthorImage: false,
-            publishingImage: "",
-            clearPublishingImage: false,
-            productImage: "",
-            clearProductImage: false,
-            sccImage: "",
-            clearSCCImage: false,
             configEnt: null 
         };
     }
 
     componentDidMount() {
         (async () => {
-            let {  authorImage= "", publishingImage= "", productImage= "", sccImage = "", configEnt} = this.state;
+            let { configEnt} = this.state;
             let bundle = await this._getBundleData();
-            if(bundle['HOME_AUTHOR_IMAGE']) authorImage = bundle["HOME_AUTHOR_IMAGE"] ? bundle["HOME_AUTHOR_IMAGE"].value : null ;
-            if(bundle['HOME_PUBLISHING_IMAGE']) publishingImage = bundle["HOME_PUBLISHING_IMAGE"] ? bundle["HOME_PUBLISHING_IMAGE"].value : null;
-            if(bundle['HOME_PRODUCT_IMAGE']) productImage = bundle["HOME_PRODUCT_IMAGE"] ? bundle["HOME_PRODUCT_IMAGE"].value : null ;
-            if(bundle['HOME_SCC_IMAGE']) sccImage = bundle["HOME_SCC_IMAGE"] ? bundle["HOME_SCC_IMAGE"].value : null;
             if(bundle) configEnt = bundle;
-            this.setState({ ...bundle, configEnt, ready: true , authorImage, publishingImage, productImage, sccImage});
+            this.setState({ ...bundle, configEnt, ready: true });
         })();
     }
 
     formikValidationSchema = Yup.object().shape({
-        HOME_SCC_TITLE: Yup.object().shape({
-            value: Yup.string().required("Tiêu đề câu chuyện SCC là bắt buộc."),
+        HOME_TSH_TITLE1: Yup.object().shape({
+            value: Yup.string().required("Tiêu đề trên của KHÁM PHÁ BÍ MẬT là bắt buộc."),
         }),
-        HOME_SCC_IMAGE:  Yup.object().shape({
-            value:  Yup.string().required("Hình ảnh video câu chuyện SCC là bắt buộc."),
+        HOME_TSH_TITLE2: Yup.object().shape({
+            value: Yup.string().required("Tiêu đề dưới của KHÁM PHÁ BÍ MẬT là bắt buộc."),
         }),
-        HOME_SCC_VIDEO:  Yup.object().shape({
-            value:  Yup.string().required("Link video câu chuyện SCC là bắt buộc."),
+        HOME_TSH_DESCRIPTION:  Yup.object().shape({
+            value:  Yup.string().required("Mô tả ngắn của KHÁM PHÁ BÍ MẬT là bắt buộc."),
         }),
-        HOME_SCC_DESCRIPTION:  Yup.object().shape({
-            value: Yup.string().required("Mô tả ngắn gọn câu chuyện SCC là bắt buộc."),
+        HOME_TSH_BUTTON:  Yup.object().shape({
+            value:  Yup.string().required("Tên link của KHÁM PHÁ BÍ MẬT là bắt buộc."),
         }),
-        HOME_AUTHOR_TITLE:  Yup.object().shape({
-            value: Yup.string().required("Tiêu đề góc độc giả là bắt buộc."),
+        HOME_TSH_USED:  Yup.object().shape({
+            value: Yup.string().required("Số người dùng là bắt buộc."),
         }),
-        HOME_AUTHOR_IMAGE:  Yup.object().shape({
-            value: Yup.string().required("Hình ảnh góc độc giả là bắt buộc."),
+        HOME_TSH_USED_DESCRIPTION:  Yup.object().shape({
+            value: Yup.string().required("Mô tả ngắn SỐ NGƯỜI DÙNG là bắt buộc."),
         }),
-        HOME_AUTHOR_DESCRIPTION:  Yup.object().shape({
-            value: Yup.string().required("Mô tả ngắn gọn góc độc giả là bắt buộc."),
+        HOME_TSH_STARTNOW_TITLE:  Yup.object().shape({
+            value: Yup.string().required("Tiêu đề BẮT ĐẦU NGAY là bắt buộc."),
         }),
-        HOME_PUBLISHING_TITLE:  Yup.object().shape({
-            value: Yup.string().required("Tiêu đề đơn vị xuất bản là bắt buộc."),
+        HOME_TSH_WELCOME_TITLE1:  Yup.object().shape({
+            value: Yup.string().required("Tiêu đề trên của CHÀO MỪNG là bắt buộc."),
         }),
-        HOME_PUBLISHING_IMAGE:  Yup.object().shape({
-            value: Yup.string().required("Hình ảnh đơn vị xuất bản là bắt buộc."),
+        HOME_TSH_WELCOME_TITLE2:  Yup.object().shape({
+            value: Yup.string().required("Tiêu đề dưới của CHÀO MỪNG là bắt buộc."),
         }),
-        HOME_PUBLISHING_DESCRIPTION:  Yup.object().shape({
-            value: Yup.string().required("Mô tả ngắn gọn đơn vị xuất bản là bắt buộc."),
+        HOME_TSH_WELCOME_DESCRIPTION:  Yup.object().shape({
+            value: Yup.string().required("Mô tả ngắn của CHÀO MỪNG là bắt buộc."),
         }),
-        HOME_PRODUCT_TITLE:  Yup.object().shape({
-            value: Yup.string().required("Tiêu đề góc độc giả là bắt buộc."),
+        HOME_TSH_WELCOME_BUTTON:  Yup.object().shape({
+            value: Yup.string().required("Tên link của CHÀO MỪNG là bắt buộc."),
         }),
-        HOME_PRODUCT_IMAGE:  Yup.object().shape({
-            value: Yup.string().required("Hình ảnh góc độc giả là bắt buộc."),
+        HOME_TSH_NUMBER_TITLE:  Yup.object().shape({
+            value: Yup.string().required("Tiêu đề CHỌN SỐ PATH là bắt buộc."),
         }),
-        HOME_PRODUCT_DESCRIPTION:  Yup.object().shape({
-            value: Yup.string().required("Mô tả ngắn gọn góc độc giả là bắt buộc."),
+        HOME_TSH_FOOTER_TITLE:  Yup.object().shape({
+            value: Yup.string().required("Tiêu đề ở FOOTER là bắt buộc."),
+        }),
+        HOME_TSH_FOOTER_DESCRIPTION:  Yup.object().shape({
+            value: Yup.string().required("Mô tả ngắn gọn ở FOOTER là bắt buộc."),
+        }),
+        HOME_TSH_REVIEW_TITLE:  Yup.object().shape({
+            value: Yup.string().required("Tiêu đề CẢM NHẬN KHÁCH HÀNG là bắt buộc."),
         }),
     });
 
     getInitialValues() {
         let values = Object.assign(
             {}, {
-                HOME_SCC_TITLE: {
-                    value: "CÂU CHUYỆN SCC",
+                HOME_TSH_TITLE1: {
+                    value: "KHÁM PHÁ BÍ MẬT",
                     data_type: 'string'
                 },
-                HOME_SCC_VIDEO: {
-                    value: "https://www.youtube.com/watch?v=tcWmNwC7yyI",
+                HOME_TSH_TITLE2: {
+                    value: "QUA NGÀY THÁNG NĂM SINH CỦA BẠN",
                     data_type: 'string'
                 },
-                HOME_SCC_IMAGE: {
-                    value: "",
-                    data_type: 'image'
-                },
-                HOME_SCC_DESCRIPTION:{
-                    value:  "Con người chúng ta đang lãng phí tri thức! Điều nhức nhối là người cần thì không có, người có thì lại “cất đi” chết mang theo”, vậy, bằng cách nào chúng ta giải quyết được vấn đề này? đó là câu dẫn lối chúng tôi đi tìm…",
+                HOME_TSH_DESCRIPTION:{
+                    value:  "Những kiến thức trí tuệ cổ xưa của Nhà toán học Pythagoras giúp bạn Thấu hiểu sâu sắc về chính bản thân mình.",
                     data_type: 'string'
                 },
-                HOME_AUTHOR_TITLE: {
-                    value: "GÓC TÁC GIẢ",
+                HOME_TSH_BUTTON:{
+                    value:  "Nhận báo cáo miễn phí",
                     data_type: 'string'
                 },
-                HOME_AUTHOR_IMAGE: {
-                    value: "",
-                    data_type: 'image'
-                },
-                HOME_AUTHOR_DESCRIPTION: {
-                    value:  "Bạn muốn Xuất bản một cuốn sách nhưng không có thời gian viết, khả năng viết của bạn không tốt và không hiểu biết về lĩnh vực Xuất bản. Vậy, chúng tôi sẽ giúp bạn Xuất bản một cuốn sách bằng cách nào ?",
+                HOME_TSH_USED: {
+                    value: "883 600",
                     data_type: 'string'
                 },
-                HOME_PUBLISHING_TITLE: {
-                    value: "ĐƠN VỊ XUẤT BẢN",
+                HOME_TSH_USED_DESCRIPTION: {
+                    value: "Người lựa chọn ungdungthansohoc.com để sở hữu những kiến thức chính xác nhất định hướng phát triển cá nhân và tổ chức của mình",
                     data_type: 'string'
                 },
-                HOME_PUBLISHING_IMAGE: {
-                    value: "",
-                    data_type: 'image'
-                },
-                HOME_PUBLISHING_DESCRIPTION: {
-                    value: "Bạn là Nhà Xuất bản hoặc đơn vị Liên kết Xuất bản thì việc nuôi một phòng Thiết kế sách là cả một vấn đề chi phí cũng như quản lý. Vậy, chúng tôi sẽ giúp bạn “giải phóng” phòng thiết kế bằng cách nào?",
+                HOME_TSH_STARTNOW_TITLE: {
+                    value: "BẮT ĐẦU NGAY",
                     data_type: 'string'
                 },
-                HOME_PRODUCT_TITLE: {
-                    value:  "GÓC ĐỘC GIẢ",
+                HOME_TSH_WELCOME_TITLE1: {
+                    value: "CHÀO MỪNG BẠN ĐẾN VỚI",
                     data_type: 'string'
                 },
-                HOME_PRODUCT_IMAGE: {
-                    value: "",
-                    data_type: 'image'
-                },
-                HOME_PRODUCT_DESCRIPTION: {
-                    value: "Bạn là Nhà Xuất bản hoặc đơn vị Liên kết Xuất bản thì việc nuôi một phòng Thiết kế sách là cả một vấn đề chi phí cũng như quản lý. Vậy, chúng tôi sẽ giúp bạn “giải phóng” phòng thiết kế bằng cách nào?",
+                HOME_TSH_WELCOME_TITLE2: {
+                    value: "HÀNH TRÌNH KHÁM PHÁ BẢN THÂN",
                     data_type: 'string'
-                }
+                },
+                HOME_TSH_WELCOME_DESCRIPTION:{
+                    value:  "Trang ungdungthansohoc.com ra đời với mục tiêu số 1 là hỗ trợ bạn trên con đường thấu hiểu sâu sắc chính bản thân mình và trở nên tự tin hơn trong cuộc sống. Tại đây, bạn không chỉ tìm thấy cho mình những luận giải chính xác nhất, hữu ích nhất về bản thân thông qua ngày tháng năm sinh mà còn tìm thấy những công cụ đầy sức mạnh để hỗ trợ bạn trong việc phát triển sự nghiệp, hài hòa trong các mối quan hệ và phát triển bản thân tốt nhất.",
+                    data_type: 'string'
+                },
+                HOME_TSH_WELCOME_BUTTON:{
+                    value:  "Bắt đầu hành trình nào!",
+                    data_type: 'string'
+                },
+                HOME_TSH_NUMBER_TITLE:{
+                    value:  "HÃY CHỌN SỐ PATH CHO CUỘC SỐNG CỦA BẠN",
+                    data_type: 'string'
+                },
+                HOME_TSH_FOOTER_TITLE:{
+                    value:  "THẦN SỐ HỌC: CÔNG THỨC KHÁM PHÁ CUỘC CỦA ĐỜI BẠN",
+                    data_type: 'string'
+                },
+                HOME_TSH_FOOTER_DESCRIPTION:{
+                    value:  "Tính số đường đời, số thúc giục linh hồn và số biểu hiện của bạn chỉ dựa trên tên và ngày sinh của bạn với Máy tính số học của chúng tôi .",
+                    data_type: 'string'
+                },
+                HOME_TSH_REVIEW_TITLE:{
+                    value:  "CẢM NHẬN TỪ KHÁCH HÀNG",
+                    data_type: 'string'
+                },
             },
         );
         if(this.state.configEnt){
@@ -237,14 +238,6 @@ export default class HomePage extends PureComponent {
             _id,
             ready,
             alerts,
-            productImage,
-            clearProductImage,
-            authorImage,
-            clearAuthorImage,
-            publishingImage,
-            clearPublishingImage,
-            sccImage,
-            clearSCCImage
         } = this.state;
         let { noEdit } = this.props;
         let initialValues = this.getInitialValues();
@@ -295,48 +288,53 @@ export default class HomePage extends PureComponent {
                                             <Col xs={12}>
                                                 <Row className="mb-4">
                                                     <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">Câu chuyện SCC</b>
+                                                        <b className="title_page_h1 text-primary underline">Khám phá bí mật & Số người sử dụng</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
                                                     <Col xs={8} className="mx-auto">
                                                         <Row>
                                                             <FormInput
-                                                                label="Tiêu đề"
-                                                                name="HOME_SCC_TITLE.value"
+                                                                label="Tiêu đề trên"
+                                                                name="HOME_TSH_TITLE1.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
-                                                            />
-                                                            <UploadImage
-                                                                urlImageEdit={sccImage}
-                                                                clearImage={clearSCCImage}
-                                                                isEdit={!noEdit}
-                                                                name="HOME_SCC_IMAGE.value"
-                                                                title="Ảnh thumbnail Video"
-                                                                isHorizontal={true}
-                                                                textColor=""
-                                                                labelSm={3}
-                                                                inputSm={9}
-                                                                isBoldLabel={false}
-                                                                dropzoneText={'Ưu tiên ảnh có kích thước 1500x730 px '}
-                                                            />
-                                                            <YoutubePreview
-                                                                title="Link Video"
-                                                                canEdit={!noEdit}
-                                                                name="HOME_SCC_VIDEO.value"
-                                                                value={''}
-                                                                useFormGroup={true}
-                                                                labelSm={3}
-                                                                inputSm={9}
-                                                                label
-                                                                isBoldLabel={false}
-                                                                textNote={'Định dạng link youtube: https://www.youtube.com/watch?v=xxxx (xxxx: là videoId)'}
                                                             />
                                                             <FormInput
-                                                                label="Mô tả ngắn gọn"
+                                                                label="Tiêu đề dưới"
+                                                                name="HOME_TSH_TITLE2.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn"
                                                                 type="textarea"
-                                                                name="HOME_SCC_DESCRIPTION.value"
+                                                                name="HOME_TSH_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                            />
+                                                            <FormInput
+                                                                label="Tiêu đề link"
+                                                                name="HOME_TSH_BUTTON.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                            />
+                                                            <FormInput
+                                                                label="Số người sử dụng"
+                                                                name="HOME_TSH_USED.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn"
+                                                                type="textarea"
+                                                                name="HOME_TSH_USED_DESCRIPTION.value"
                                                                 isEdit={!noEdit}
                                                                 labelSm={3}
                                                                 inputSm={9}
@@ -349,7 +347,7 @@ export default class HomePage extends PureComponent {
                                             <Col xs={12}>
                                                 <Row className="mb-4">
                                                     <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">Góc tác giả</b>
+                                                        <b className="title_page_h1 text-primary underline">Bắt đầu ngay</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
@@ -357,32 +355,10 @@ export default class HomePage extends PureComponent {
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
-                                                                name="HOME_AUTHOR_TITLE.value"
+                                                                name="HOME_TSH_STARTNOW_TITLE.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
-                                                            />
-                                                            <UploadImage
-                                                                urlImageEdit={authorImage}
-                                                                clearImage={clearAuthorImage}
-                                                                isEdit={!noEdit}
-                                                                name="HOME_AUTHOR_IMAGE.value"
-                                                                title="Ảnh banner"
-                                                                isHorizontal={true}
-                                                                textColor=""
-                                                                labelSm={3}
-                                                                inputSm={9}
-                                                                isBoldLabel={false}
-                                                                dropzoneText={'Ưu tiên ảnh có kích thước 1500x1000 px '}
-                                                            />
-                                                            <FormInput
-                                                                label="Mô tả ngắn gọn"
-                                                                type="textarea"
-                                                                name="HOME_AUTHOR_DESCRIPTION.value"
-                                                                isEdit={!noEdit}
-                                                                labelSm={3}
-                                                                inputSm={9}
-                                                                inputClassName="home-page_textarea"
                                                             />
                                                         </Row>
                                                     </Col>
@@ -391,40 +367,41 @@ export default class HomePage extends PureComponent {
                                             <Col xs={12}>
                                                 <Row className="mb-4">
                                                     <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">Đơn vị xuất bản</b>
+                                                        <b className="title_page_h1 text-primary underline">Chào mừng</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
                                                     <Col xs={8} className="mx-auto">
                                                         <Row>
                                                             <FormInput
-                                                                label="Tiêu đề"
-                                                                name="HOME_PUBLISHING_TITLE.value"
+                                                                label="Tiêu đề trên"
+                                                                name="HOME_TSH_WELCOME_TITLE1.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
-                                                            />
-                                                            <UploadImage
-                                                                urlImageEdit={publishingImage}
-                                                                clearImage={clearPublishingImage}
-                                                                isEdit={!noEdit}
-                                                                name="HOME_PUBLISHING_IMAGE.value"
-                                                                title="Ảnh banner"
-                                                                isHorizontal={true}
-                                                                textColor=""
-                                                                labelSm={3}
-                                                                inputSm={9}
-                                                                isBoldLabel={false}
-                                                                dropzoneText={'Ưu tiên ảnh có kích thước 1500x1000 px '}
                                                             />
                                                             <FormInput
-                                                                label="Mô tả ngắn gọn"
+                                                                label="Tiêu đề dưới"
+                                                                name="HOME_TSH_WELCOME_TITLE2.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn"
                                                                 type="textarea"
-                                                                name="HOME_PUBLISHING_DESCRIPTION.value"
+                                                                name="HOME_TSH_WELCOME_DESCRIPTION.value"
                                                                 isEdit={!noEdit}
                                                                 labelSm={3}
                                                                 inputSm={9}
-                                                                inputClassName="home-page_textarea"
+                                                                inputClassName="home-page_textarea_WELCOME"
+                                                            />
+                                                            <FormInput
+                                                                label="Tiêu đề link"
+                                                                name="HOME_TSH_WELCOME_BUTTON.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
                                                             />
                                                         </Row>
                                                     </Col>
@@ -433,7 +410,7 @@ export default class HomePage extends PureComponent {
                                             <Col xs={12}>
                                                 <Row className="mb-4">
                                                     <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">Góc độc giả</b>
+                                                        <b className="title_page_h1 text-primary underline">Chọn số PATH</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
@@ -441,33 +418,61 @@ export default class HomePage extends PureComponent {
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
-                                                                name="HOME_PRODUCT_TITLE.value"
+                                                                name="HOME_TSH_NUMBER_TITLE.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
                                                             />
-                                                            <UploadImage
-                                                                urlImageEdit={productImage}
-                                                                clearImage={clearProductImage}
-                                                                isEdit={!noEdit}
-                                                                name="HOME_PRODUCT_IMAGE.value"
-                                                                title="Ảnh banner"
-                                                                isHorizontal={true}
-                                                                textColor=""
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                            <Col xs={12}>
+                                                <Row className="mb-4">
+                                                    <Col xs={8} className="mx-auto">
+                                                        <b className="title_page_h1 text-primary underline">Cảm nhận khách hàng</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={8} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="HOME_TSH_REVIEW_TITLE.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
-                                                                isBoldLabel={false}
-                                                                dropzoneText={'Ưu tiên ảnh có kích thước 1500x1000 px '}
+                                                                isEdit={!noEdit}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                            <Col xs={12}>
+                                                <Row className="mb-4">
+                                                    <Col xs={8} className="mx-auto">
+                                                        <b className="title_page_h1 text-primary underline">Thần số học & Công thức khám phá</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={8} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="HOME_TSH_FOOTER_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
                                                             />
                                                             <FormInput
-                                                                label="Mô tả ngắn gọn"
+                                                                label="Mô tả ngắn"
                                                                 type="textarea"
-                                                                name="HOME_PRODUCT_DESCRIPTION.value"
+                                                                name="HOME_TSH_FOOTER_DESCRIPTION.value"
                                                                 isEdit={!noEdit}
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 inputClassName="home-page_textarea"
                                                             />
+                                                            
                                                         </Row>
                                                     </Col>
                                                 </Row>
