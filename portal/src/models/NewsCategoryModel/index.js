@@ -1,6 +1,6 @@
 //
-import Model from '../Model';
-import NewsCategoryEntity from '../NewsCategoryEntity';
+import Model from "../Model";
+import NewsCategoryEntity from "../NewsCategoryEntity";
 
 // Util(s)
 
@@ -9,7 +9,7 @@ import NewsCategoryEntity from '../NewsCategoryEntity';
  */
 export default class NewsCategoryModel extends Model {
   /** @var {String} redux store::state key */
-  _stateKeyName = 'news-category';
+  _stateKeyName = "news-category";
 
   /** @var {Ref} */
   _entity = NewsCategoryEntity;
@@ -17,52 +17,55 @@ export default class NewsCategoryModel extends Model {
   /**
    * @var {String}
    */
-  static API_NEWS_CATEGORY_LIST = 'news-category';
+  static API_NEWS_CATEGORY_LIST = "news-category";
   /** @var {String} */
-  static API_NEWS_CATEGORY_DETAIL = 'news-category/:id';
+  static API_NEWS_CATEGORY_DETAIL = "news-category/:id";
   /** @var {String} */
   // static API_NEWS_CATEGORY_OPTS = 'news-category/:id/get-options';
   /** @var {String} */
-  static API_NEWS_CATEGORY_CHANGE_STATUS = 'news-category/:id/change-status';
+  static API_NEWS_CATEGORY_CHANGE_STATUS = "news-category/:id/change-status";
   /** @var {String} */
-  static API_NEWS_CATEGORY_CHECKED_PARENT = 'news-category/:id/check-parent';
+  static API_NEWS_CATEGORY_CHECKED_PARENT = "news-category/:id/check-parent";
   /** @var {String} */
-  static API_NEWS_CATEGORY_AUTHORPOST_OPTS = 'news-category/get-options-for-author-post';
+  static API_NEWS_CATEGORY_AUTHORPOST_OPTS =
+    "news-category/get-options-for-author-post";
   /** @var {String} */
-  static API_NEWS_CATEGORY_CREATE_OPTS = 'news-category/get-options-for-create';
+  static API_NEWS_CATEGORY_CREATE_OPTS = "news-category/get-options-for-create";
   /** @var {String} */
-  static API_NEWS_CATEGORY_OPTS = 'news-category/get-options';
+  static API_NEWS_CATEGORY_OPTS = "news-category/get-options";
 
   /** @var {String} Primary Key */
-  primaryKey = 'news_category_id';
+  primaryKey = "news_category_id";
 
   /**
    * Column datafield prefix
    * @var {String}
    */
-  static columnPrefix = '';
+  static columnPrefix = "";
 
   /**
    * @return {Object}
    */
   fillable = () => ({
-    "news_category_id": null,
-    "parent_id": null,
-    "news_category_name": null,
-    "category_level": "",
-    "pictures": "",
-    "image_file_id": null,
-    "description": null,
-    "meta_key_words": null,
-    "meta_descriptions": null,
-    "meta_title": null,
-    "seo_name": null,
-    "order_index": 0,
-    "create_date": null,
-    "is_active": 1,
-    "is_cate_video": 0,
-    "is_system": 0,
-    "is_author_post": 0
+    news_category_id: null,
+    parent_id: null,
+    news_category_name: null,
+    category_level: "",
+    pictures: "",
+    image_file_id: null,
+    description: null,
+    meta_key_words: null,
+    meta_descriptions: null,
+    meta_title: null,
+    seo_name: null,
+    order_index: 1,
+    create_date: null,
+    is_active: 1,
+    is_cate_video: 0,
+    is_system: 0,
+    is_author_post: 0,
+    is_show_with_parent: 0,
+    // "is_author_post": 0
   });
 
   /**
@@ -82,21 +85,20 @@ export default class NewsCategoryModel extends Model {
   getOptions(_data = {}) {
     let data = Object.assign({}, _data);
     //
-    return this._api.get(_static.API_NEWS_CATEGORY_OPTS, data)
+    return this._api.get(_static.API_NEWS_CATEGORY_OPTS, data);
   }
 
   /**
- * Get options for create (list opiton)
- * @param {Object} _opts
- * @returns Promise
- */
+   * Get options for create (list opiton)
+   * @param {Object} _opts
+   * @returns Promise
+   */
   getOptionsForAuthorPost(_opts) {
     let opts = Object.assign({}, _opts);
     return this._api.get(_static.API_NEWS_CATEGORY_AUTHORPOST_OPTS, opts);
   }
 
-  getOptionsForCreate(_opts)
-  {
+  getOptionsForCreate(_opts) {
     let opts = Object.assign({}, _opts);
     return this._api.get(_static.API_NEWS_CATEGORY_CREATE_OPTS, opts);
   }
@@ -116,7 +118,10 @@ export default class NewsCategoryModel extends Model {
   update(id, _data) {
     // Validate data?!
     let data = Object.assign({}, _data);
-    return this._api.put(_static.API_NEWS_CATEGORY_DETAIL.replace(':id', id), data);
+    return this._api.put(
+      _static.API_NEWS_CATEGORY_DETAIL.replace(":id", id),
+      data
+    );
   }
   /**
    *
@@ -124,13 +129,19 @@ export default class NewsCategoryModel extends Model {
   changeStatus(id, _data) {
     // Validate data?!
     let data = Object.assign({}, _data);
-    return this._api.put(_static.API_NEWS_CATEGORY_CHANGE_STATUS.replace(':id', id), data);
+    return this._api.put(
+      _static.API_NEWS_CATEGORY_CHANGE_STATUS.replace(":id", id),
+      data
+    );
   }
 
   checkParent(id, _data) {
     // Validate data?!
     let data = Object.assign({}, _data);
-    return this._api.get(_static.API_NEWS_CATEGORY_CHECKED_PARENT.replace(':id', id), data);
+    return this._api.get(
+      _static.API_NEWS_CATEGORY_CHECKED_PARENT.replace(":id", id),
+      data
+    );
   }
 
   /**
@@ -140,7 +151,10 @@ export default class NewsCategoryModel extends Model {
     // Validate data?!
     let data = Object.assign({}, _data);
     //
-    return this._api.delete(_static.API_NEWS_CATEGORY_DETAIL.replace(':id', id), data);
+    return this._api.delete(
+      _static.API_NEWS_CATEGORY_DETAIL.replace(":id", id),
+      data
+    );
   }
 
   /**
@@ -150,9 +164,9 @@ export default class NewsCategoryModel extends Model {
     // Validate data?!
     let data = Object.assign({}, _data);
     //
-    return this._api.get(_static.API_NEWS_CATEGORY_DETAIL.replace(':id', id), data)
-      .then((data) => new NewsCategoryEntity(data))
-      ;
+    return this._api
+      .get(_static.API_NEWS_CATEGORY_DETAIL.replace(":id", id), data)
+      .then((data) => new NewsCategoryEntity(data));
   }
 }
 // Make alias
