@@ -33,7 +33,7 @@ import {
   readFileAsBase64,
   readImageAsBase64,
   mapDataOptions4Select,
-  validateDimession,
+validateDimession,
 } from "../../utils/html";
 import { isHaveChild } from "@utils/arrayHelper";
 // Model(s)

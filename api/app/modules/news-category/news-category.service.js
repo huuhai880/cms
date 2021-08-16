@@ -145,6 +145,7 @@ const createNewsCategoryOrUpdate = async (bodyParams) => {
       .input('IMAGEFILEID', apiHelper.getValueFromObject(bodyParams, 'image_file_id'))
       .input('ISCATEVIDEO', apiHelper.getValueFromObject(bodyParams, 'is_cate_video'))
       .input('ORDERINDEX', apiHelper.getValueFromObject(bodyParams, 'order_index', 0))
+      .input('ISSHOWWITHPARENT', apiHelper.getValueFromObject(bodyParams, 'is_show_with_parent'))
       .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active'))
       .input('ISAUTHORPOST', apiHelper.getValueFromObject(bodyParams, 'is_author_post'))
       .input('ISSYSTEM', apiHelper.getValueFromObject(bodyParams, 'is_system'))

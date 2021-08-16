@@ -221,9 +221,34 @@ class Banner extends Component {
           },
         },
       },
+      // {
+      //   name: "picture_url",
+      //   label: "Ảnh banner",
+      //   options: {
+      //     filter: false,
+      //     sort: false,
+      //     customHeadRender: (columnMeta, handleToggleColumn) => {
+      //       return (
+      //         <th
+      //           key={`head-th-${columnMeta.label}`}
+      //           className="MuiTableCell-root MuiTableCell-head"
+      //         >
+      //           <div className="text-center">{columnMeta.label}</div>
+      //         </th>
+      //       );
+      //     },
+      //     customBodyRender: (value) => {
+      //       return (
+      //         <div class="text-left">
+      //           <img src={value} alt="" height="100" style={{objectFit: 'scale-down'}} />
+      //         </div>
+      //       );
+      //     },
+      //   },
+      // },
       {
-        name: "picture_url",
-        label: "Ảnh banner",
+        name: "created_date",
+        label: "Ngày tạo",
         options: {
           filter: false,
           sort: false,
@@ -239,27 +264,9 @@ class Banner extends Component {
           },
           customBodyRender: (value) => {
             return (
-              <div class="text-left">
-                <img src={value} alt="" height="100" style={{objectFit: 'scale-down'}} />
+              <div class="text-center" >
+                {value}
               </div>
-            );
-          },
-        },
-      },
-      {
-        name: "created_date",
-        label: "Ngày tạo",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
             );
           },
         },

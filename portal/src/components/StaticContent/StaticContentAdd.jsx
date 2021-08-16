@@ -410,7 +410,7 @@ export default class StaticContentAdd extends Component {
                                       className="pull-left"
                                       onBlur={null}
                                       checked={values.is_childrent}
-                                      type="switch"
+                                      type="checkbox"
                                       id="is_childrent"
                                       label="Là trang con"
                                       disabled={noEdit}
@@ -575,7 +575,7 @@ export default class StaticContentAdd extends Component {
                                       className="pull-left"
                                       onBlur={null}
                                       checked={values.is_active}
-                                      type="switch"
+                                      type="checkbox"
                                       id="is_active"
                                       label="Kích hoạt"
                                       disabled={noEdit}
