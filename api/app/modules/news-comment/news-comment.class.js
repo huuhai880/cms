@@ -17,6 +17,7 @@ const template = {
   is_review_user: '{{#? REVIEWUSER}}',
   is_staffcomment: '{{#? ISSTAFFCOMMENT }}',
   news_comment_admin_fullname: '{{#? COMMENTUSER}}',
+  news_comment_reply_user: '{{#? REPLYUSER}}',
   news_comment_create_date: '{{#? CREATEDDATE}}',
 };
 let transform = new Transform(template);
@@ -30,6 +31,7 @@ const listComment = (areas = []) => {
     'is_review',
     'is_staffcomment',
     'news_comment_admin_fullname',
+    'news_comment_reply_user',
     'news_comment_create_date',
     'is_review_user'
   ]);

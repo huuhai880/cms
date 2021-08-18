@@ -37,7 +37,7 @@ const getListCommentByNewId = async (queryParams = {}) => {
       )
       .execute('NEWS_NEWS_COMMENT_GetCommentById');
     const stores = newCommentModel.listComment(data.recordsets[0]);
-    // console.log(data.recordsets[0]);
+    // console.log(stores);
 
     return new ServiceResponse(true, '', {
       data: stores,
@@ -77,6 +77,17 @@ const createNewsComment = async (bodyParams) => {
       )
       .execute('NEWS_NEWS_COMMENT_NewComment');
     const newsCategoryId = data.recordset[0].RESULT;
+    const dataupdate = await pool
+      .request()
+      .input(
+        'COMMENTID',
+        apiHelper.getValueFromObject(bodyParams, 'replyToComment_id')
+      )
+      .input(
+        'COMMENTUSER',
+        apiHelper.getValueFromObject(bodyParams, 'auth_name')
+      )
+      .execute('NEWS_NEWS_COMMENT_UpdateComment');
     return new ServiceResponse(true, '', newsCategoryId);
   } catch (e) {
     logger.error(e, {

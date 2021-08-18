@@ -82,7 +82,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          console.log(data[tableMeta["rowIndex"]].is_review_user)
+          // console.log(data[tableMeta["rowIndex"]].is_review_user)
           return (
             <div className="text-left">
               {data[tableMeta["rowIndex"]].is_review_user == null
@@ -111,10 +111,11 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
+          console.log(data[tableMeta["rowIndex"]].news_comment_reply_user)
           return (
             <div className="text-left">
               {value == 1
-                ? `Đã phản hồi(${data[tableMeta["rowIndex"]].news_comment_admin_fullname})`
+                ? `Đã phản hồi(${data[tableMeta["rowIndex"]].news_comment_reply_user})`
                 : value == 0
                 ? `Chưa phản hồi`
                 : "Chưa phản hồi"}
@@ -162,7 +163,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          // console.log(data[tableMeta["rowIndex"]].is_review);
+          // console.log(data[tableMeta["rowIndex"]].news_comment_user_fullname);
           return (
             <div className="text-center">
               <CheckAccess permission="NEWS_NEWS_COMMENT">
@@ -171,7 +172,10 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   title="Trả lời bình luận"
                   className="mr-1"
                   onClick={(evt) =>
-                    handleReply(data[tableMeta["rowIndex"]].news_comment_id, tableMeta["rowIndex"])
+                    handleReply({
+                      id: data[tableMeta["rowIndex"]].news_comment_id,
+                      fullname: data[tableMeta["rowIndex"]].news_comment_user_fullname,
+                    })
                   }
                 >
                   <i className="fa fa-comment" />
@@ -182,9 +186,10 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   color={"success"}
                   title="Duyệt"
                   className="mr-1"
-                  onClick={(evt) =>
-                    handleReview(data[tableMeta["rowIndex"]].news_comment_id, tableMeta["rowIndex"])
-                  }
+                  onClick={(evt) => handleReview({
+                    id: data[tableMeta["rowIndex"]].news_comment_id,
+                    fullname: data[tableMeta["rowIndex"]].news_comment_user_fullname,
+                  })}
                   disabled={data[tableMeta["rowIndex"]].is_review_user != null}
                 >
                   <i className="fa fa-check" />
