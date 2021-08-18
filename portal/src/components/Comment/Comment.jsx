@@ -10,6 +10,7 @@ import NewsCommentModel from "models/NewsCommentModel";
 import { useParams } from "react-router";
 import { getColumTable } from "./const";
 import { Modal, Button } from "antd";
+import "./style.css";
 layoutFullWidthHeight();
 function Comment() {
   let { id } = useParams();
@@ -27,12 +28,15 @@ function Comment() {
   const [dataComment, setDataComment] = useState([]);
   const [replyContent, setReplyContent] = useState("");
   const [commentId, setCommentId] = useState("");
-
+  const [alertReplyContent, setAlertReplyContent] = useState("");
+  const [commentUser, setCommentUser] = useState("");
   // config modal Reply
   const handleOk = async () => {
     if (replyContent == "") {
-      window._$g.dialogs.alert(window._$g._("Nội dung không được để trống"));
+      setAlertReplyContent("Nội dung trả lời không được để trống !");
     } else {
+      setAlertReplyContent("");
+
       try {
         let postData = {
           new_id: id,
@@ -41,8 +45,9 @@ function Comment() {
           replyToComment_id: commentId,
         };
         await _newsCommentModel.create(postData).then((data) => {
-          window._$g.toastr.show("Trả lời thành công", "success");
+          window._$g.toastr.show(`Trả lời bình luận của ${commentUser} thành công`, "success");
           setIsModalVisible(false);
+          _callAPI(query);
         });
       } catch (error) {
         console.log(error);
@@ -146,12 +151,13 @@ function Comment() {
     });
   };
   const handleReply = (comment_id) => {
-    // console.log(comment_id)
-    setCommentId(comment_id);
+    setCommentUser(comment_id.fullname);
+    setCommentId(comment_id.id);
     setIsModalVisible(true);
   };
   const handleReview = (comment_id) => {
-    setCommentId(comment_id);
+    setCommentUser(comment_id.fullname);
+    setCommentId(comment_id.id);
     setIsModalVisibleReview(true);
   };
 
@@ -210,10 +216,12 @@ function Comment() {
         </CardBody>
       </Card>
       <Modal
-        title="Nội dung"
+        wrapClassName="vertical-center-modal"
+        title={`Phản hồi bình luận của ${commentUser}`}
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
+        width={500}
         footer={[
           <Button key="back" onClick={handleCancel}>
             Đóng
@@ -231,9 +239,18 @@ function Comment() {
             setReplyContent(e.target.value);
           }}
         />
+        {alertReplyContent && (
+          <div className="field-validation-error alert alert-danger fade show" role="alert">
+            {alertReplyContent}
+          </div>
+        )}
       </Modal>
       <Modal
-        title="Duyệt"
+        wrapClassName="vertical-center-modal"
+
+        width={500}
+        
+        title="Duyệt bình luận"
         visible={isModalVisibleReview}
         onCancel={handleCancelReview}
         footer={[
@@ -247,7 +264,9 @@ function Comment() {
             Đồng ý duyệt
           </Button>,
         ]}
-      ></Modal>
+      >
+        <span>Bạn có muốn duyệt bình luận của {commentUser} không?</span>
+      </Modal>
     </div>
   );
 }
