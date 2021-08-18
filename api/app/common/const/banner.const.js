@@ -8,5 +8,7 @@ module.exports = {
         {id: 'INTRODUCE', name: 'Góc giới thiệu'},
         {id: 'PRODUCT_CATEGORY_LEFT', name: 'Bên trái danh mục góc độc giả'},
         {id: 'PRODUCT_CATEGORY_RIGHT', name: 'Bên phải danh mục góc độc giả'},
+        {id: 'NEWS_DETAIL_RIGHT_TOP', name: 'Bên phải tin tức trên'},
+        {id: 'NEWS_DETAIL_RIGHT_BOTTOM', name: 'Bên phải tin tức dưới'},
      ]
 }
