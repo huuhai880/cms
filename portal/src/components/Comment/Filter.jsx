@@ -168,7 +168,7 @@ function Filter({ handleSubmitFillter }) {
             </Col>
           </Col>
         </Row>
-        <div className="d-flex align-items-center mt-2">
+        <div className="d-flex align-items-center mt-3">
           <div className="d-flex flex-fill justify-content-end">
             <FormGroup className="mb-2 ml-2 mb-sm-0">
               <Button
