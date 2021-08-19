@@ -88,6 +88,7 @@ class DatePicker extends PureComponent {
           endDatePlaceholderText="dd/mm/yyyy"
           showDefaultInputIcon
           block
+          hideKeyboardShortcutsPanel 
         />
       );
     }
@@ -108,6 +109,7 @@ class DatePicker extends PureComponent {
         }}
         showDefaultInputIcon
         block
+        hideKeyboardShortcutsPanel 
       />
     );
   }

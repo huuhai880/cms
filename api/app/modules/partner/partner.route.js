@@ -21,10 +21,8 @@ routes
   .route('/:partner_id(\\d+)')
   .put(validate(rules.updatePartner), partnerController.updatePartner);
 
-// Detail 
-routes
-  .route('/:partner_id(\\d+)')
-  .get(partnerController.detailPartner);
+// Detail
+routes.route('/:partner_id(\\d+)').get(partnerController.detailPartner);
 
 module.exports = {
   prefix,

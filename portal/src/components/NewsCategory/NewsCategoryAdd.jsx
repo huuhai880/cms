@@ -20,6 +20,7 @@ import {
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import Loading from "../Common/Loading";
 import { FormSelectGroup } from "@widget";
+import './styles.scss'
 
 // Model(s)
 import NewsCategoryModel from "../../models/NewsCategoryModel";
@@ -339,7 +340,7 @@ export default class NewsCategoryAdd extends PureComponent {
                                       <Col xs={12}>
                                         <FormGroup row>
                                           <Label for="order_index" sm={2}>
-                                            Thứ tự hiện thị
+                                            Thứ tự hiển thị
                                           </Label>
                                           <Col sm={4}>
                                             <Field

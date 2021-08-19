@@ -449,7 +449,7 @@ export default class MenuAdd extends PureComponent {
                                     className="pull-left"
                                     onBlur={null}
                                     checked={values.is_active}
-                                    type="switch"
+                                    type="checkbox"
                                     id="is_active"
                                     label="Kích hoạt?"
                                     disabled={noEdit}
@@ -464,7 +464,7 @@ export default class MenuAdd extends PureComponent {
                                     className="pull-left"
                                     onBlur={null}
                                     checked={values.is_system}
-                                    type="switch"
+                                    type="checkbox"
                                     id="is_system"
                                     label="Hệ thống?"
                                     disabled={noEdit}
@@ -484,7 +484,7 @@ export default class MenuAdd extends PureComponent {
                                     className="pull-left"
                                     onBlur={null}
                                     checked={values.is_business}
-                                    type="switch"
+                                    type="checkbox"
                                     id="is_business"
                                     label="Business?"
                                     disabled={noEdit}
@@ -499,7 +499,7 @@ export default class MenuAdd extends PureComponent {
                                     className="pull-left"
                                     onBlur={null}
                                     checked={values.is_can_open_multi_windows}
-                                    type="switch"
+                                    type="checkbox"
                                     id="is_can_open_multi_windows"
                                     label="Mở nhiều cửa sổ?"
                                     disabled={noEdit}

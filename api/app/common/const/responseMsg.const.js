@@ -690,4 +690,16 @@ module.exports = {
     EXISTS_USER_NAME: 'Tài khoản đã tồn tại.',
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
   },
+  REVIEW: {
+    CREATE_SUCCESS: 'Thêm mới thành công.',
+    CREATE_FAILED: 'Thêm mới thất bại.',
+    UPDATE_SUCCESS: 'Cập nhật thành công.',
+    UPDATE_FAILED: 'Cập nhật thất bại.',
+    DELETE_SUCCESS: 'Xóa thành công.',
+    CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái thành công.',
+    CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
+    EXISTS_PARTNER_NAME: 'Tên công ty đã tồn tại.',
+    EXISTS_USER_NAME: 'Tài khoản đã tồn tại.',
+    SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
+  },
 };

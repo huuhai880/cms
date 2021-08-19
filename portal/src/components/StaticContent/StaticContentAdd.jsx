@@ -24,6 +24,7 @@ import RichEditor from "../Common/RichEditor";
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import "react-image-lightbox/style.css";
 import "../Products/styles.scss";
+import "./styles.scss"
 // Component(s)
 // Model(s)
 import StaticContentModel from "../../models/StaticContentModel";
@@ -505,9 +506,11 @@ export default class StaticContentAdd extends Component {
                                     <Input
                                       {...field}
                                       onBlur={null}
-                                      type="text"
+                                      type="number"
                                       placeholder=""
                                       disabled={noEdit}
+                                      min="1"
+                                      className="text-right"
                                     />
                                   )}
                                 />

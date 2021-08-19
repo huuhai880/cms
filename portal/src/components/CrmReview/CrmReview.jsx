@@ -1,148 +1,124 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import { Card, CardBody, CardHeader, Button } from "reactstrap";
+
 // Material
 import MUIDataTable from "mui-datatables";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import { CircularProgress } from "@material-ui/core";
+import CustomPagination from "../../utils/CustomPagination";
 
+// Component(s)
+import { CheckAccess } from "../../navigation/VerifyAccess";
+import CrmReviewFilter from "./CrmReviewFilter";
 // Util(s)
 import { layoutFullWidthHeight } from "../../utils/html";
 import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
-import FunctionGroupModel from "../../models/FunctionGroupModel";
-// Component(s)
-import { CheckAccess } from "../../navigation/VerifyAccess";
-import FunctionGroupsFilter from "./FunctionGroupsFilter";
-import CustomPagination from "../../utils/CustomPagination";
-import UserModel from "../../models/UserModel";
+import CrmReviewModel from "../../models/CrmReviewModel";
+
 // Set layout full-wh
 layoutFullWidthHeight();
 
-/** @var {Object} */
-const userAuth = window._$g.userAuth;
-
 /**
- * @class FunctionGroups
+ * @class Review
  */
-class FunctionGroups extends PureComponent {
+class CrmReview extends Component {
   /**
-   * @var {FunctionGroupModel}
+   * @var {Partner}
    */
-  _functionGroupModel;
+  _crmReviewModel;
 
   constructor(props) {
     super(props);
 
     // Init model(s)
-    this._functionGroupModel = new FunctionGroupModel();
-    this._userModel = new UserModel();
+    this._crmReviewModel = new CrmReviewModel();
+
+    // Bind method(s)
   }
+
   state = {
     toggleSearch: true,
+    isLoading: false,
     page: 0,
     count: 1,
     data: [],
-    isLoading: false,
     query: {
       itemsPerPage: 25,
       page: 1,
       is_active: 1,
-      is_system: 2,
     },
-    /** @var {Array} */
-    user: [{ name: "-- Chọn --", id: "" }],
   };
 
   componentDidMount() {
-    this.getData({ ...this.state.query });
-  }
-
-  // get data
-  getData = (query = {}) => {
+    // Get bundle data
     this.setState({ isLoading: true });
-    let bundle = this._getBundleData();
-    return this._functionGroupModel.list(query).then((res) => {
-      let data = [...res.items];
+    (async () => {
+      let bundle = await this._getBundleData();
+      let { data } = bundle;
+      let dataConfig = data ? data.items : [];
       let isLoading = false;
-      let count = res.totalItems;
-      let page = query["page"] - 1 || 0;
-      let { user = [] } = this.state;
-
-      user = user.concat(bundle.user || []);
+      let count = data ? data.totalItems : 0;
+      let page = 0;
       this.setState(
         {
           isLoading,
         },
         () => {
           this.setState({
-            data,
+            data: dataConfig,
             count,
             page,
-            query,
-            user,
           });
         }
       );
-    });
-  };
+    })();
+    //.end
+  }
 
   /**
    * Goi API, lay toan bo data lien quan, vd: chuc vu, phong ban, dia chi,...
    */
-  _getBundleData() {
+  async _getBundleData() {
     let bundle = {};
-    // let all = [
-    //   // @TODO:
-    //   this._userModel.getOptions()
-    //     .then(data => (bundle['user'] = data)),
-    // ]
+    let all = [
+      // @TODO:
+      this._crmReviewModel
+        .getList(this.state.query)
+        .then((data) => (bundle["data"] = data)),
+    ];
+    await Promise.all(all).catch((err) => {
+      window._$g.dialogs.alert(
+        window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
+        () => {
+          window.location.reload();
+        }
+      );
+    });
     return bundle;
   }
 
+  // get data
+  getData = (query = {}) => {
+    this.setState({ isLoading: true });
+    return this._crmReviewModel.getList(query).then((res) => {
+      let data = res.items;
+      let isLoading = false;
+      let count = res.totalItems;
+      let page = query["page"] - 1 || 0;
+      this.setState({
+        data,
+        isLoading,
+        count,
+        page,
+        query,
+      });
+    });
+  };
+
   handleClickAdd = () => {
-    window._$g.rdr("/function-groups/add");
+    window._$g.rdr("/review/add");
   };
 
-  handleActionItemClick = (type, id, rowIndex) => {
-    let routes = {
-      detail: "/function-groups/details/",
-      delete: "/function-groups/delete/",
-      edit: "/function-groups/edit/",
-    };
-    const route = routes[type];
-    if (type.match(/detail|edit/i)) {
-      window._$g.rdr(`${route}${id}`);
-    } else {
-      window._$g.dialogs.prompt(
-        "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
-        "Xóa",
-        (confirm) => this.handleDelete(confirm, id, rowIndex)
-      );
-    }
-  };
-
-  handleDelete = (confirm, id, rowIndex) => {
-    const { data } = this.state;
-    if (confirm) {
-      this._functionGroupModel
-        .delete(id)
-        .then(() => {
-          const cloneData = [...data];
-          cloneData.splice(rowIndex, 1);
-          const count = cloneData.length;
-          this.setState({
-            data: cloneData,
-            count,
-          });
-        })
-        .catch(() => {
-          window._$g.dialogs.alert(
-            window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
-          );
-        });
-    }
-  };
   handleChangeStatus = (status, id, rowIndex) => {
     window._$g.dialogs.prompt(
       "Bạn có chắc chắn muốn thay đổi trạng thái dữ liệu đang chọn?",
@@ -154,7 +130,7 @@ class FunctionGroups extends PureComponent {
   onChangeStatus = (confirm, status, id, idx) => {
     if (confirm) {
       let postData = { is_active: status ? 1 : 0 };
-      this._functionGroupModel
+      this._crmReviewModel
         .changeStatus(id, postData)
         .then(() => {
           const cloneData = [...this.state.data];
@@ -179,23 +155,55 @@ class FunctionGroups extends PureComponent {
         });
     }
   };
-  handleSubmitFilter = (
-    keyword,
-    is_active,
-    created_date_from,
-    created_date_to,
-    username
-  ) => {
+
+  handleActionItemClick(type, id, rowIndex) {
+    let routes = {
+      detail: "/review/detail/",
+      delete: "/review/delete/",
+      edit: "/review/edit/",
+    };
+    const route = routes[type];
+    if (type.match(/detail|edit/i)) {
+      window._$g.rdr(`${route}${id}`);
+    } else {
+      window._$g.dialogs.prompt(
+        "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
+        "Xóa",
+        (confirm) => this.handleClose(confirm, id, rowIndex)
+      );
+    }
+  }
+
+  handleClose(confirm, id, rowIndex) {
+    const { data } = this.state;
+    if (confirm) {
+      this._crmReviewModel
+        .delete(id)
+        .then(() => {
+          const cloneData = JSON.parse(JSON.stringify(data));
+          cloneData.splice(rowIndex, 1);
+          this.setState({
+            data: cloneData,
+          });
+        })
+        .catch(() => {
+          window._$g.dialogs.alert(
+            window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
+          );
+        });
+    }
+  }
+
+  handleSubmitFilter = (search, from_date, to_date, is_active) => {
     let query = { ...this.state.query };
     query.page = 1;
     query = Object.assign(query, {
-      keyword,
+      search,
+      from_date,
+      to_date,
       is_active,
-      created_date_from,
-      created_date_to,
-      username,
     });
-
+    
     this.getData(query).catch(() => {
       window._$g.dialogs.alert(
         window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
@@ -218,14 +226,10 @@ class FunctionGroups extends PureComponent {
 
   render() {
     const columns = [
-      configIDRowTable(
-        "function_group_id",
-        "/function-groups/details/",
-        this.state.query
-      ),
+      configIDRowTable("review_id", "/review/detail/", this.state.query),
       {
-        name: "function_group_name",
-        label: "Tên nhóm quyền",
+        name: "account_name",
+        label: "Khách hàng",
         options: {
           filter: false,
           sort: false,
@@ -245,8 +249,8 @@ class FunctionGroups extends PureComponent {
         },
       },
       {
-        name: "description",
-        label: "Mô tả",
+        name: "author_name",
+        label: "Chuyên gia",
         options: {
           filter: false,
           sort: false,
@@ -265,30 +269,30 @@ class FunctionGroups extends PureComponent {
           },
         },
       },
+      // {
+      //   name: "review_content",
+      //   label: "nội dung",
+      //   options: {
+      //     filter: false,
+      //     sort: false,
+      //     customHeadRender: (columnMeta, handleToggleColumn) => {
+      //       return (
+      //         <th
+      //           key={`head-th-${columnMeta.label}`}
+      //           className="MuiTableCell-root MuiTableCell-head"
+      //         >
+      //           <div className="text-center">{columnMeta.label}</div>
+      //         </th>
+      //       );
+      //     },
+      //     customBodyRender: (value, tableMeta, updateValue) => {
+      //       return <div className="text-left">{value}</div>;
+      //     },
+      //   },
+      // },
       {
-        name: "order_index",
-        label: "Thứ tự",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value) => {
-            return <span className="d-block text-right">{value || 0}</span>;
-          },
-        },
-      },
-      {
-        name: "create_date",
-        label: "Ngày tạo",
+        name: "review_date",
+        label: "ngày đánh giá",
         options: {
           filter: false,
           sort: false,
@@ -309,27 +313,7 @@ class FunctionGroups extends PureComponent {
       },
       {
         name: "is_active",
-        label: "Kích hoạt",
-        options: {
-          filter: true,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">{value ? "Có" : "Không"}</div>;
-          },
-        },
-      },
-      {
-        name: "is_system",
-        label: "Hệ thống",
+        label: "kích hoạt",
         options: {
           filter: false,
           sort: false,
@@ -357,7 +341,7 @@ class FunctionGroups extends PureComponent {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                <CheckAccess permission="SYS_FUNCTIONGROUP_EDIT">
+                <CheckAccess permission="CRM_REVIEW_EDIT">
                   <Button
                     color="primary"
                     title="Chỉnh sửa"
@@ -365,22 +349,15 @@ class FunctionGroups extends PureComponent {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "edit",
-                        this.state.data[tableMeta["rowIndex"]]
-                          .function_group_id,
+                        this.state.data[tableMeta["rowIndex"]].review_id,
                         tableMeta["rowIndex"]
-                      )
-                    }
-                    disabled={
-                      !(
-                        userAuth._isAdministrator() ||
-                        this.state.data[tableMeta["rowIndex"]].is_system === 0
                       )
                     }
                   >
                     <i className="fa fa-edit" />
                   </Button>
                 </CheckAccess>
-                <CheckAccess permission="SYS_FUNCTIONGROUP_DEL">
+                <CheckAccess permission="CRM_REVIEW_DEL">
                   <Button
                     color="danger"
                     title="Xóa"
@@ -388,15 +365,8 @@ class FunctionGroups extends PureComponent {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "delete",
-                        this.state.data[tableMeta["rowIndex"]]
-                          .function_group_id,
+                        this.state.data[tableMeta["rowIndex"]].review_id,
                         tableMeta["rowIndex"]
-                      )
-                    }
-                    disabled={
-                      !(
-                        userAuth._isAdministrator() ||
-                        this.state.data[tableMeta["rowIndex"]].is_system === 0
                       )
                     }
                   >
@@ -436,26 +406,26 @@ class FunctionGroups extends PureComponent {
           {this.state.toggleSearch && (
             <CardBody className="px-0 py-0">
               <div className="MuiPaper-filter__custom z-index-2">
-                <FunctionGroupsFilter
-                  userArr={this.state.user}
+                <CrmReviewFilter
                   handleSubmit={this.handleSubmitFilter}
-                  handleAdd={this.handleClickAdd}
                 />
               </div>
             </CardBody>
           )}
         </Card>
-        <CheckAccess permission="SYS_FUNCTIONGROUP_ADD">
-          <Button
-            className="col-12 max-w-110 mb-3 mobile-reset-width"
-            onClick={() => this.handleClickAdd()}
-            color="success"
-            size="sm"
-          >
-            <i className="fa fa-plus" />
-            <span className="ml-1">Thêm mới</span>
-          </Button>
-        </CheckAccess>
+        <div>
+          <CheckAccess permission="CRM_REVIEW_ADD">
+            <Button
+              className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
+              onClick={() => this.handleClickAdd()}
+              color="success"
+              size="sm"
+            >
+              <i className="fa fa-plus mr-1" />
+              Thêm mới
+            </Button>
+          </CheckAccess>
+        </div>
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-root__custom">
@@ -487,4 +457,4 @@ class FunctionGroups extends PureComponent {
   }
 }
 
-export default FunctionGroups;
+export default CrmReview;

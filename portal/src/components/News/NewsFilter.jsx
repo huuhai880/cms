@@ -246,7 +246,6 @@ class NewsFilter extends PureComponent {
                     className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                     onClick={(e) => {
                       e.preventDefault();
-                      console.log("🚀 ~ file: NewsFilter.jsx ~ line 249 ~ NewsFilter ~ render ~ e.preventDefault();", e.preventDefault())
                       handlePick();
                     }}
                     color="success"
