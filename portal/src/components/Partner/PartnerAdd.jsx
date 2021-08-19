@@ -23,7 +23,6 @@ import moment from "moment";
 // Component(s)
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import Loading from "../Common/Loading";
-import DatePicker from "../Common/DatePicker";
 
 // Model(s)
 import PartnerModel from "../../models/PartnerModel";

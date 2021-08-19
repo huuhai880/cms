@@ -393,9 +393,6 @@ class Users extends PureComponent {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                <Button color="warning" title="Chi tiết" className="mr-1" onClick={evt => this.handleActionItemClick('detail', this.state.data[tableMeta['rowIndex']].user_id, tableMeta['rowIndex'])}>
-                  <i className="fa fa-info" />
-                </Button>
                 <CheckAccess permission="SYS_USER_EDIT">
                   <Button color="primary" title="Chỉnh sửa" className="mr-1" onClick={evt => this.handleActionItemClick('edit', this.state.data[tableMeta['rowIndex']].user_id, tableMeta['rowIndex'])}>
                     <i className="fa fa-edit" />

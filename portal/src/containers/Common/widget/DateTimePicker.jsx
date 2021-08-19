@@ -14,6 +14,9 @@ const DateTimePicker = (props) => {
     inputsm = 8,
     isRequired = true,
     isEdit = true,
+    isDisabledTime = true,
+    isDisabledDate = true,
+    dayFirst = false,
   } = props;
 
   function range(start, end) {
@@ -40,39 +43,43 @@ const DateTimePicker = (props) => {
               return (
                 <DatePicker
                   style={{ width: "100% " }}
-                  defaultValue={values[name] ? moment(values[name]) : ""}
+                  defaultValue={values[name] ? moment(values[name], dayFirst? "DD/MM/YYYY HH:mm:ss": "YYYY/MM/DD HH:mm:ss") : ""}
                   showTime={{
                     format: "HH:mm",
                   }}
                   disabledTime={(date) => {
-                    let disabledHours = 0;
-                    let disabledMinutes = 0;
-                    if (date && date.day() === moment().day()) {
-                      disabledHours = moment().hour();
-                      if (date.hour() === moment().hour()) {
-                        disabledMinutes = moment().minute();
+                    if (isDisabledTime) {
+                      let disabledHours = 0;
+                      let disabledMinutes = 0;
+                      if (date && date.day() === moment().day()) {
+                        disabledHours = moment().hour();
+                        if (date.hour() === moment().hour()) {
+                          disabledMinutes = moment().minute();
+                        }
                       }
+                      return {
+                        disabledHours: () =>
+                          range(0, 24).splice(0, disabledHours),
+                        disabledMinutes: () => range(0, disabledMinutes),
+                      };
                     }
-                    return {
-                      disabledHours: () =>
-                        range(0, 24).splice(0, disabledHours),
-                      disabledMinutes: () => range(0, disabledMinutes),
-                    };
                   }}
                   format="DD/MM/YYYY HH:mm"
                   disabledDate={(current) => {
-                    if (current.year() < moment().year()) {
-                      return true;
-                    } else if (current.year() > moment().year()) {
-                      return false;
-                    } else if (current.month() < moment().month()) {
-                      return true;
-                    } else if (current.month() > moment().month()) {
-                      return false;
-                    } else if (current.date() < moment().date()) {
-                      return true;
-                    } else {
-                      return false;
+                    if (isDisabledDate) {
+                      if (current.year() < moment().year()) {
+                        return true;
+                      } else if (current.year() > moment().year()) {
+                        return false;
+                      } else if (current.month() < moment().month()) {
+                        return true;
+                      } else if (current.month() > moment().month()) {
+                        return false;
+                      } else if (current.date() < moment().date()) {
+                        return true;
+                      } else {
+                        return false;
+                      }
                     }
                   }}
                   onChange={(date, dstring) => {

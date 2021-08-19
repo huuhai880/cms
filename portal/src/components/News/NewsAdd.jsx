@@ -1549,7 +1549,6 @@ export default class NewsAdd extends Component {
           <Modal isOpen={true} size={"lg"} style={{maxWidth: "60rem"}}>
             {/* <ModalHeader>Duyệt bài viết</ModalHeader> */}
             <ModalBody className="p-0">
-              {console.log('this.formikProps', this.formikProps.values.related)}
               <News
                 isOpenNewsList={isOpenNewsList}
                 handlePick={this.handlePickNews}

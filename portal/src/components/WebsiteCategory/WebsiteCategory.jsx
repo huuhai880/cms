@@ -409,23 +409,9 @@ class WebsiteCategory extends Component {
             }
             return (
               <div className="text-center">
-                <Button
-                  color="warning"
-                  title="Chi tiết"
-                  className="mr-1"
-                  onClick={(evt) =>
-                    this.handleActionItemClick(
-                      "detail",
-                      this.state.data[tableMeta["rowIndex"]].web_category_id,
-                      tableMeta["rowIndex"]
-                    )
-                  }
-                >
-                  <i className="fa fa-info" />
-                </Button>
                 <CheckAccess permission="CMS_WEBSITECATE_EDIT">
                   <Button
-                    color="success"
+                    color="primary"
                     title="Chỉnh sửa"
                     className="mr-1"
                     onClick={(evt) =>
