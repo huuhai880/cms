@@ -51,7 +51,7 @@ export default class StaticContentModel extends Model {
     "meta_keywords": null,
     "meta_title": null,
     "seo_name": null,
-    "display_order": null,
+    "display_order": 1,
     "is_active": 1,
     "is_childrent":0
   });

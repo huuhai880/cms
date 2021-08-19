@@ -441,51 +441,27 @@ class Partner extends Component {
           },
         },
       },
-      // {
-      //   name: "is_active",
-      //   label: "Kích hoạt",
-      //   options: {
-      //     filter: false,
-      //     sort: false,
-      //     customHeadRender: (columnMeta, handleToggleColumn) => {
-      //       return (
-      //         <th
-      //           key={`head-th-${columnMeta.label}`}
-      //           className="MuiTableCell-root MuiTableCell-head"
-      //         >
-      //           <div className="text-center">{columnMeta.label}</div>
-      //         </th>
-      //       );
-      //     },
-      //     customBodyRender: (value, tableMeta, updateValue) => {
-      //       return (
-      //         <div className="text-center">
-      //           <CheckAccess permission="MD_PARTNER_EDIT">
-      //             <FormControlLabel
-      //               label={value ? "Có" : "Không"}
-      //               value={value ? "Có" : "Không"}
-      //               control={
-      //                 <Switch
-      //                   color="primary"
-      //                   checked={value === 1}
-      //                   value={value}
-      //                 />
-      //               }
-      //               onChange={(event) => {
-      //                 let checked = 1 * event.target.value === 1 ? 0 : 1;
-      //                 this.handleChangeStatus(
-      //                   checked,
-      //                   this.state.data[tableMeta["rowIndex"]].output_type_id,
-      //                   tableMeta["rowIndex"]
-      //                 );
-      //               }}
-      //             />
-      //           </CheckAccess>
-      //         </div>
-      //       );
-      //     },
-      //   },
-      // },
+      {
+        name: "is_active",
+        label: "Kích hoạt",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-center">{value ? "Có" : "Không"}</div>;
+          },
+        },
+      },
       {
         name: "Thao tác",
         options: {
@@ -495,20 +471,6 @@ class Partner extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                <Button
-                  color="warning"
-                  title="Chi tiết"
-                  className="mr-1"
-                  onClick={(evt) =>
-                    this.handleActionItemClick(
-                      "detail",
-                      this.state.data[tableMeta["rowIndex"]].partner_id,
-                      tableMeta["rowIndex"]
-                    )
-                  }
-                >
-                  <i className="fa fa-info" />
-                </Button>
                 <CheckAccess permission="MD_PARTNER_EDIT">
                   <Button
                     color="primary"

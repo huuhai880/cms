@@ -318,7 +318,7 @@ export default class FunctionAdd extends PureComponent {
                             className="pull-left"
                             onBlur={null}
                             checked={values.is_active}
-                            type="switch"
+                            type="checkbox"
                             id="is_active"
                             label="Kích hoạt"
                             disabled={noEdit}
@@ -334,7 +334,7 @@ export default class FunctionAdd extends PureComponent {
                             className="pull-left"
                             onBlur={null}
                             checked={values.is_system}
-                            type="switch"
+                            type="checkbox"
                             id="is_system"
                             label="Hệ thống"
                             disabled={noEdit}

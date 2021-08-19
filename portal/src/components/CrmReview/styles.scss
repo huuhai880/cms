@@ -1,0 +1,35 @@
+.DateRangePicker_picker,
+.css-26l3qy-menu {
+  z-index: 9999;
+}
+.se-container {
+  z-index: 0 !important;
+}
+
+.hove-color:hover hove-color {
+  color: #f6d049 !important;
+  background-color: #f6d049 !important;
+}
+
+.hover:hover {
+  background: #e4e7e7;
+  color: black;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.bl {
+  border-left: 1px solid #e4e7e7;
+}
+
+.focus {
+  background-color: #00a699;
+  color: white;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  margin-left: 20px;
+}

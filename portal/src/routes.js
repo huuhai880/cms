@@ -543,9 +543,26 @@ const PageSetting = React.lazy(() => import("./components/PageSetting/PageSettin
 //Partner
 const Partner = React.lazy(() => import("./components/Partner/Partner"));
 const PartnerAdd = React.lazy(() => import("./components/Partner/PartnerAdd"));
-const PartnerDetail = React.lazy(() => import("./components/Partner/PartnerDetail"));
-const PartnerEdit = React.lazy(() => import("./components/Partner/PartnerEdit"));
+const PartnerDetail = React.lazy(() =>
+  import("./components/Partner/PartnerDetail")
+);
+const PartnerEdit = React.lazy(() =>
+  import("./components/Partner/PartnerEdit")
+);
 //end#Partner
+
+//Review
+const Review = React.lazy(() => import("./components/CrmReview/CrmReview"));
+const ReviewAdd = React.lazy(() =>
+  import("./components/CrmReview/CrmReviewAdd")
+);
+const ReviewDetail = React.lazy(() =>
+  import("./components/CrmReview/CrmReviewDetail")
+);
+const ReviewEdit = React.lazy(() =>
+  import("./components/CrmReview/CrmReviewEdit")
+);
+//end#Review
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -2493,7 +2510,7 @@ const routes = [
   {
     path: "/partner",
     exact: true,
-    name: "Danh sách công ty",
+    name: "Danh sách đối tác",
     function: "MD_PARTNER_VIEW",
     component: Partner,
   },
@@ -2519,6 +2536,36 @@ const routes = [
     component: PartnerEdit,
   },
   // end#Partner
+  // Review
+  {
+    path: "/review",
+    exact: true,
+    name: "Đánh giá",
+    function: "CRM_REVIEW",
+    component: Review,
+  },
+  {
+    path: "/review/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "CRM_REVIEW_ADD",
+    component: ReviewAdd,
+  },
+  {
+    path: "/review/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "CRM_REVIEW_VIEW",
+    component: ReviewDetail,
+  },
+  {
+    path: "/review/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "CRM_REVIEW_EDIT",
+    component: ReviewEdit,
+  },
+  // end#Review
 ];
 
 export default routes;
