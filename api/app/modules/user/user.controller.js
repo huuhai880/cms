@@ -54,7 +54,7 @@ const createUser = async (req, res, next) => {
     // Check email exists
     const emailExist = await userService.findByEmail(req.body.email);
     if(emailExist) {
-      return next(new ValidationResponse('email', 'already  exists'));
+      return next(new ValidationResponse('email', 'đã tồn tại'));
     }
 
     const result = await userService.createUser(params);

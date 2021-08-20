@@ -100,9 +100,13 @@ export default class UserAdd extends PureComponent {
         ? undefined
         : Yup.string()
             .trim()
-            .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
+            .min(6, "Mật khẩu quá ngắn, ít nhất 6 ký tự!")
             .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!")
-            .required("Mật khẩu là bắt buộc."),
+            .required("Mật khẩu là bắt buộc.")
+            .matches(
+              /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+              "Mật khẩu tối thiểu 6 kí tự bao gồm chữ hoa, chữ thường, số và không dấu."
+            ),
       gender: Yup.string().required("Giới tính là bắt buộc."),
       email: Yup.string()
         .trim()
@@ -206,7 +210,7 @@ export default class UserAdd extends PureComponent {
         .getOptions()
         .then((data) => (bundle["positions"] = data)),
       this._departmentModel
-        .getOptions()
+        .getOptions({ is_active: 1 })
         .then((data) => (bundle["departments"] = data)),
     ];
     await Promise.all(all).catch((err) =>
@@ -591,7 +595,7 @@ export default class UserAdd extends PureComponent {
                                       *
                                     </span>
                                   </Label>
-                                  <Col sm={8}>
+                                  <Col sm={8} style={{ zIndex: "100" }}>
                                     <Field
                                       name="department_id"
                                       render={({ field /*, form */ }) => {
@@ -827,7 +831,7 @@ export default class UserAdd extends PureComponent {
                                           type="email"
                                           name="email"
                                           id="email"
-                                          placeholder="employee.0001@company.com"
+                                          placeholder="employee@gmail.com"
                                           disabled={noEdit}
                                         />
                                       )}
@@ -1251,7 +1255,7 @@ export default class UserAdd extends PureComponent {
                               <Col xs={12}>
                                 <FormGroup row>
                                   <Label for="address" sm={2}>
-                                    Thông tin
+                                    Địa chị cụ thể
                                     <span className="font-weight-bold red-text">
                                       *
                                     </span>
@@ -1266,7 +1270,7 @@ export default class UserAdd extends PureComponent {
                                           type="text"
                                           name="address"
                                           id="address"
-                                          placeholder="436/77/77/7 CMT8"
+                                          placeholder="Nhập địa chỉ"
                                           disabled={noEdit}
                                         />
                                       )}
@@ -1308,7 +1312,7 @@ export default class UserAdd extends PureComponent {
                                           min={0}
                                           minLength={10}
                                           maxLength={11}
-                                          placeholder="0777777777"
+                                          placeholder="Nhập số điện thoại"
                                           disabled={noEdit}
                                         />
                                       )}

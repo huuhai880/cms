@@ -1774,7 +1774,7 @@ const routes = [
   {
     path: "/news-category",
     exact: true,
-    name: "Chuyên mục bài viết",
+    name: "Chuyên mục tin tức",
     function: "NEWS_NEWSCATEGORY_VIEW",
     component: NewsCategory,
   },
@@ -2541,7 +2541,7 @@ const routes = [
     path: "/review",
     exact: true,
     name: "Đánh giá",
-    function: "CRM_REVIEW",
+    function: "CRM_REVIEW_VIEW",
     component: Review,
   },
   {

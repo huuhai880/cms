@@ -47,7 +47,7 @@ import {
   readImageAsBase64,
 } from "../../utils/html";
 // Model(s)
-import NewsModel from "../../models/NewsModel";
+import NewsModel from "../../models/NewsModel"; 
 import NewsCategoryModel from "../../models/NewsCategoryModel";
 import AuthorModel from "../../models/AuthorModel";
 import ProductModel from "../../models/ProductModel";
@@ -362,7 +362,8 @@ export default class NewsAdd extends Component {
         window._$g.toastr.show("Lưu thành công!", "success");
         if (this._btnType === "save_n_close") {
           willRedirect = true;
-          return window._$g.rdr("/news");
+          return this.setState({ activeTab: "RELATED" });
+          // return window._$g.rdr("/news");
         }
         // Chain
         return data;
@@ -535,9 +536,9 @@ export default class NewsAdd extends Component {
           related.unshift(news[key]);
         }
       });
-      
+
       setFieldValue("related", related);
-      this.setState({dataRelated: related})
+      this.setState({ dataRelated: related });
     });
   };
 
@@ -567,7 +568,7 @@ export default class NewsAdd extends Component {
       const cloneData = JSON.parse(JSON.stringify(related));
       cloneData.splice(index, 1);
       handleChange({ target: { name: "related", value: cloneData } });
-      this.setState({dataRelated: related})
+      this.setState({ dataRelated: related });
     }
   }
 
@@ -690,7 +691,7 @@ export default class NewsAdd extends Component {
                                           <Row>
                                             <Col xs={12}>
                                               <FormGroup row>
-                                                <Label for="news_title" sm={3}>
+                                                <Label for="news_title" sm={2}>
                                                   {" "}
                                                   Tiêu đề{" "}
                                                   <span className="font-weight-bold red-text">
@@ -698,7 +699,8 @@ export default class NewsAdd extends Component {
                                                     *{" "}
                                                   </span>
                                                 </Label>
-                                                <Col sm={9}>
+                                                {console.log(this.props.NewsEnt)}
+                                                <Col sm={10}>
                                                   <Field
                                                     name="news_title"
                                                     render={({ field }) => (
@@ -731,12 +733,11 @@ export default class NewsAdd extends Component {
                                           </Row>
                                           <Row>
                                             <FormSelectGroup
-                                              isRequired={true}
                                               label="Chuyên mục bài viết"
                                               name="news_category_id"
                                               // isObject
-                                              smColSelect={9}
-                                              smColLabel={3}
+                                              smColSelect={10}
+                                              smColLabel={2}
                                               isEdit={!noEdit}
                                               placeHolder={
                                                 "-- Chọn mục tin tức--"
@@ -749,11 +750,11 @@ export default class NewsAdd extends Component {
                                           <Row>
                                             <Col xs={12}>
                                               <FormGroup row>
-                                                <Label for="author_id" sm={3}>
+                                                <Label for="author_id" sm={2}>
                                                   {" "}
                                                   Tác giả{" "}
                                                 </Label>
-                                                <Col sm={9}>
+                                                <Col sm={10}>
                                                   <Field
                                                     name="author_id"
                                                     render={({
@@ -889,7 +890,7 @@ export default class NewsAdd extends Component {
                                           <Row>
                                             <Col xs={12} sm={12}>
                                               <FormGroup row>
-                                                <Label for="image_url" sm={3}>
+                                                <Label for="image_url" sm={2}>
                                                   {" "}
                                                   Hình ảnh{" "}
                                                   <span className="font-weight-bold red-text">
@@ -990,14 +991,14 @@ export default class NewsAdd extends Component {
                                           <Row>
                                             <Col sm={12}>
                                               <FormGroup row>
-                                                <Label for="news_date" sm={3}>
+                                                <Label for="news_date" sm={2}>
                                                   Ngày đăng tin
                                                 </Label>
                                                 <Col sm={9} className="pl-0">
                                                   <DateTimePicker
                                                     // label="Ngày đăng tin"
                                                     name="news_date"
-                                                    labelsm={3}
+                                                    labelsm={4}
                                                     inputsm={6}
                                                     isRequired={false}
                                                     isEdit={
@@ -1019,12 +1020,12 @@ export default class NewsAdd extends Component {
                                               <FormGroup row>
                                                 <Label
                                                   for="short_description"
-                                                  sm={3}
+                                                  sm={2}
                                                 >
                                                   {" "}
                                                   Mô tả ngắn
                                                 </Label>
-                                                <Col sm={9}>
+                                                <Col sm={10}>
                                                   <Field
                                                     name="short_description"
                                                     render={({
@@ -1048,11 +1049,11 @@ export default class NewsAdd extends Component {
                                           <Row>
                                             <Col xs={12}>
                                               <FormGroup row>
-                                                <Label for="seo_name" sm={3}>
+                                                <Label for="seo_name" sm={2}>
                                                   {" "}
                                                   Tên SEO
                                                 </Label>
-                                                <Col sm={9}>
+                                                <Col sm={10}>
                                                   <Field
                                                     name="seo_name"
                                                     render={({ field }) => (
@@ -1074,11 +1075,11 @@ export default class NewsAdd extends Component {
                                           <Row>
                                             <Col xs={12}>
                                               <FormGroup row>
-                                                <Label for="meta_title" sm={3}>
+                                                <Label for="meta_title" sm={2}>
                                                   {" "}
                                                   Meta keyword
                                                 </Label>
-                                                <Col sm={9}>
+                                                <Col sm={10}>
                                                   <Field
                                                     name="meta_title"
                                                     render={({
@@ -1101,14 +1102,14 @@ export default class NewsAdd extends Component {
                                           <Row>
                                             <Col sm={12}>
                                               <FormGroup row>
-                                                <Label for="content" sm={3}>
+                                                <Label for="content" sm={2}>
                                                   Nội dung{" "}
                                                   <span className="font-weight-bold red-text">
                                                     {" "}
                                                     *{" "}
                                                   </span>
                                                 </Label>
-                                                <Col sm={9} xs={12}>
+                                                <Col sm={10} xs={12}>
                                                   <Editor
                                                     apiKey={
                                                       "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
@@ -1122,10 +1123,11 @@ export default class NewsAdd extends Component {
                                                       height: "300px",
                                                       width: "100%",
                                                       menubar: false,
+                                                      branding: false,
                                                       plugins: [
                                                         "advlist autolink fullscreen lists link image charmap print preview anchor",
                                                         "searchreplace visualblocks code fullscreen ",
-                                                        "insertdatetime media table paste code help wordcount",
+                                                        "insertdatetime media table paste code help",
                                                         "image imagetools ",
                                                         "toc",
                                                       ],
@@ -1185,8 +1187,8 @@ export default class NewsAdd extends Component {
                                         <FormInput
                                           name="review_user"
                                           label="Người duyệt"
-                                          labelSm={3}
-                                          inputSm={9}
+                                          labelSm={2}
+                                          inputSm={10}
                                           isRequired={false}
                                           isEdit={false}
                                           labelClassName="text-right"
@@ -1194,8 +1196,8 @@ export default class NewsAdd extends Component {
                                         <FormInput
                                           name="review_date"
                                           label="Ngày duyệt"
-                                          labelSm={3}
-                                          inputSm={9}
+                                          labelSm={2}
+                                          inputSm={10}
                                           isRequired={false}
                                           isEdit={false}
                                           labelClassName="text-right"
@@ -1203,8 +1205,8 @@ export default class NewsAdd extends Component {
                                         <FormInput
                                           name="review_note"
                                           label="Ghi chú"
-                                          labelSm={3}
-                                          inputSm={9}
+                                          labelSm={2}
+                                          inputSm={10}
                                           isRequired={false}
                                           isEdit={false}
                                           labelClassName="text-right"
@@ -1231,9 +1233,9 @@ export default class NewsAdd extends Component {
                                     <Col xs={12} className="m-t-10 mb-2 mt-2">
                                       <FormGroup row>
                                         <Col
-                                          sm={3}
+                                          sm={2}
                                           xs={12}
-                                          className="offset-md-3 offset-xs-0"
+                                          className="offset-md-2 offset-xs-0"
                                         >
                                           <Field
                                             name="is_active"
@@ -1252,7 +1254,7 @@ export default class NewsAdd extends Component {
                                           />
                                         </Col>
                                         <Col
-                                          sm={3}
+                                          sm={2}
                                           xs={12}
                                           className="offset-xs-0"
                                         >
@@ -1273,7 +1275,7 @@ export default class NewsAdd extends Component {
                                           />
                                         </Col>
                                         <Col
-                                          sm={3}
+                                          sm={2}
                                           xs={12}
                                           className="offset-xs-0"
                                         >
@@ -1546,7 +1548,7 @@ export default class NewsAdd extends Component {
         </Modal>
         {/* Open modal News list here */}
         {isOpenNewsList ? (
-          <Modal isOpen={true} size={"lg"} style={{maxWidth: "60rem"}}>
+          <Modal isOpen={true} size={"lg"} style={{ maxWidth: "60rem" }}>
             {/* <ModalHeader>Duyệt bài viết</ModalHeader> */}
             <ModalBody className="p-0">
               <News
