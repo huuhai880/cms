@@ -616,6 +616,7 @@ class News extends Component {
             <CheckAccess permission="NEWS_NEWS_ADD">
               <Button
                 className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
+                style={{paddingTop: "6px", paddingBot: "6px"}}
                 onClick={() => this.handleClickAdd()}
                 color="success"
                 size="sm"

@@ -50,7 +50,7 @@ class NewsCategory extends Component {
     },
 
     /** @var {Array} */
-    newsOptions: [{ name: "Tất cả", id: "", value:"" }]
+    newsOptions: []
   };
 
   componentDidMount() {
@@ -474,6 +474,7 @@ class NewsCategory extends Component {
             <Button
               className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
               onClick={() => this.handleClickAdd()}
+              style={{paddingTop: "6px", paddingBot: "6px"}}
               color="success"
               size="sm"
             >

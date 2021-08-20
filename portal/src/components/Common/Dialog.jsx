@@ -1,21 +1,21 @@
-import React, { PureComponent } from 'react'
-import { Button } from 'reactstrap'
+import React, { PureComponent } from "react";
+import { Button } from "reactstrap";
 
 // Material
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Slide from '@material-ui/core/Slide'
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Slide from "@material-ui/core/Slide";
+import "./styles.scss";
 
 /**
  * @class Transition
  */
-class Transition extends PureComponent
-{
+class Transition extends PureComponent {
   render() {
-    return <Slide direction="down" {...this.props} />
+    return <Slide direction="down" {...this.props} />;
   }
 }
 
@@ -23,15 +23,13 @@ class Transition extends PureComponent
  * @class ModalDialog
  */
 export default class ModalDialog extends PureComponent {
-
   /** @var {Array} */
   _list = [];
 
   /** @var {String} */
-  static title = 'Cảnh báo';
+  static title = "Cảnh báo";
 
-  constructor(props)
-  {
+  constructor(props) {
     super(props);
 
     // Bind method(s)
@@ -43,25 +41,24 @@ export default class ModalDialog extends PureComponent {
     this._dialog = {
       _index: 0,
       open: !!props.open,
-      title: infos.title || '',
-      content: infos.content || '',
+      title: infos.title || "",
+      content: infos.content || "",
       handleClose: props.handleClose,
-      opts: {}
+      opts: {},
     };
     // +++
     this.state = {
       /** @var Array */
-      dialogs: []
+      dialogs: [],
     };
   }
 
   /**
    * @protected
    */
-  handleClose(_dialog, result)
-  {
+  handleClose(_dialog, result) {
     let { dialogs } = this.state;
-    let fIdx = dialogs.findIndex(item => item === _dialog);
+    let fIdx = dialogs.findIndex((item) => item === _dialog);
     if (fIdx >= 0) {
       let { handleClose } = _dialog;
       let _result = handleClose && handleClose(result);
@@ -84,18 +81,21 @@ export default class ModalDialog extends PureComponent {
    * @return void
    */
   alert(content, title, handleClose, opts = {}) {
-    if (typeof title === 'function' && undefined === handleClose) {
+    if (typeof title === "function" && undefined === handleClose) {
       handleClose = title;
       title = null;
     }
     // Case: jwt expired?!
-    if (content && content.match('(jwt expired)')) {
-      return console.log('!!!ignored [jwt expired] alert!!!');
+    if (content && content.match("(jwt expired)")) {
+      return console.log("!!!ignored [jwt expired] alert!!!");
     }
     //.end
     let { dialogs } = this.state;
     dialogs = dialogs.concat([
-      {...this._dialog, ...{ open: 'alert', title, content, handleClose, opts }}
+      {
+        ...this._dialog,
+        ...{ open: "alert", title, content, handleClose, opts },
+      },
     ]);
     this.setState({ dialogs });
   }
@@ -110,13 +110,16 @@ export default class ModalDialog extends PureComponent {
    * @return void
    */
   prompt(content, title, handleClose, opts = {}) {
-    if (typeof title === 'function' && !handleClose) {
+    if (typeof title === "function" && !handleClose) {
       handleClose = title;
       title = null;
     }
     let { dialogs } = this.state;
     dialogs = dialogs.concat([
-      {...this._dialog, ...{ open: 'prompt', title, content, handleClose, opts }}
+      {
+        ...this._dialog,
+        ...{ open: "prompt", title, content, handleClose, opts },
+      },
     ]);
     this.setState({ dialogs });
   }
@@ -128,17 +131,27 @@ export default class ModalDialog extends PureComponent {
 
       // Button components
       const btnComponents = [
-        (false === opts.btnYesLabel) ? null : <Button key="btn-yes" onClick={() => this.handleClose(_dialog, true)} color="primary">
-          {window._$g._(opts.btnYesLabel || 'Đồng ý')}
-        </Button>,
-        ('prompt' === open && (false !== opts.btnNoLabel)) ? <Button key="btn-no" onClick={() => this.handleClose(_dialog, false)}>
-          {window._$g._(opts.btnNoLabel || 'Hủy bỏ')}
-        </Button> : null
+        false === opts.btnYesLabel ? null : (
+          <Button
+            key="btn-yes"
+            onClick={() => this.handleClose(_dialog, true)}
+            color="primary"
+          >
+            {window._$g._(opts.btnYesLabel || "Đồng ý")}
+          </Button>
+        ),
+        "prompt" === open && false !== opts.btnNoLabel ? (
+          <Button key="btn-no" onClick={() => this.handleClose(_dialog, false)}>
+            {window._$g._(opts.btnNoLabel || "Hủy bỏ")}
+          </Button>
+        ) : null,
       ];
-      if ('function' === typeof opts.btnComponents) {
-        opts.btnComponents(btnComponents, { handleClose: (result) => {
-          this.handleClose(_dialog, result);
-        } });
+      if ("function" === typeof opts.btnComponents) {
+        opts.btnComponents(btnComponents, {
+          handleClose: (result) => {
+            this.handleClose(_dialog, result);
+          },
+        });
       }
 
       return (
@@ -151,16 +164,26 @@ export default class ModalDialog extends PureComponent {
           aria-describedby="alert-dialog-slide-description"
           {...opts.propsDialog}
         >
-          <DialogTitle id="alert-dialog-slide-title">
+          <div style={{width: "500px", height: "200px"}}>
+          <DialogTitle id="alert-dialog-slide-title" className="title">
+            <div className="wrap-fa">
+              <i class="fa fa-exclamation-triangle" />
+            </div>
             {window._$g._(title || _static.title)}
           </DialogTitle>
-          <DialogContent {...opts.propsDialogContent}>
-          {'string' === typeof(content)
-            ? <DialogContentText id="alert-dialog-slide-description">{content}</DialogContentText>
-            : content
-          }
+          <DialogContent style={{padding: "20px 15px 0 15px"}} {...opts.propsDialogContent}>
+            {"string" === typeof content ? (
+              <DialogContentText id="alert-dialog-slide-description" style={{color: "black"}}>
+                {content}
+              </DialogContentText>
+            ) : (
+              content
+            )}
           </DialogContent>
-          <DialogActions {...opts.propsDialogActions}>{btnComponents}</DialogActions>
+          <DialogActions style={{padding: "30px 15px 0 15px"}} {...opts.propsDialogActions}>
+            {btnComponents}
+          </DialogActions>
+          </div>
         </Dialog>
       );
     });

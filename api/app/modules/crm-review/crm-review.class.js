@@ -32,7 +32,9 @@ const detail = (Partner = []) => {
   return transform.transform(Partner, [
     'review_id',
     'member_id',
+    'account_name',
     'author_id',
+    'author_name',
     'review_date',
     'review_content',
     'order_index',
