@@ -39,7 +39,10 @@ class UserGroupsFilter extends PureComponent {
   onSubmit = () => {
     const { inputValue, selectedOption } = this.state;
     const { handleSubmit } = this.props;
-    handleSubmit(inputValue, selectedOption ? selectedOption.value : 2);
+    handleSubmit(
+      inputValue ? inputValue.trim() : "",
+      selectedOption ? selectedOption.value : 2
+    );
   };
 
   onClear = () => {
@@ -71,7 +74,7 @@ class UserGroupsFilter extends PureComponent {
                   autoComplete="nope"
                   type="text"
                   name="inputValue"
-                  placeholder="-- Tìm --"
+                  placeholder="Nhập tên nhóm"
                   value={this.state.inputValue}
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}

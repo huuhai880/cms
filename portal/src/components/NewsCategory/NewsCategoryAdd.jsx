@@ -208,15 +208,15 @@ export default class NewsCategoryAdd extends PureComponent {
   handleFormikReset() {
     this.setState((state) => ({
       _id: 1 + state._id,
-      ready: false,
+      ready: true,
       alerts: [],
-      clearImage: true,
+      clearImage: false,
     }));
 
-    (async () => {
-      let bundle = await this._getBundleData();
-      this.setState({ ...bundle, ready: true, clearImage: false });
-    })();
+    // (async () => {
+    //   let bundle = await this._getBundleData();
+    //   this.setState({ ...bundle, ready: true, clearImage: false });
+    // })();
     //.end
   }
 
@@ -241,7 +241,7 @@ export default class NewsCategoryAdd extends PureComponent {
                       ? "Chi tiết"
                       : "Chỉnh sửa"
                     : "Thêm mới"}{" "}
-                  chuyên mục bài viết{" "}
+                  chuyên mục tin tức{" "}
                   {NewsCategoryEnt ? NewsCategoryEnt.news_category_name : ""}
                 </b>
               </CardHeader>

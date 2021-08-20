@@ -214,7 +214,7 @@ class NewsFilter extends PureComponent {
                 </Col>
               </FormGroup>
             </Col>
-            <Col
+            {/* <Col
               xs={12}
               sm={4}
               className="d-flex align-items-end justify-content-end"
@@ -240,23 +240,25 @@ class NewsFilter extends PureComponent {
                   <span className="ml-1">Làm mới</span>
                 </Button>
               </FormGroup>
-              {handlePick ? (
-                <FormGroup className="mb-2 ml-2 mb-sm-0">
-                  <Button
-                    className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePick();
-                    }}
-                    color="success"
-                    size="sm"
-                  >
-                    <i className="fa fa-plus" />
-                    <span className="ml-1"> Chọn </span>
-                  </Button>
-                </FormGroup>
-              ) : null}
-            </Col>
+            </Col> */}
+            <Col xs={12} sm={4} className="mt-md-3">
+              <div className="d-flex align-items-end" style={{marginTop: 32}}>
+                <div className="d-flex flex-fill justify-content-end">
+                  <FormGroup className="mb-2 ml-2 mb-sm-0">
+                    <Button className="col-12 MuiPaper-filter__custom--button" onClick={this.onSubmit} color="primary" >
+                      <i className="fa fa-search" />
+                      <span className="ml-1">Tìm kiếm</span>
+                    </Button>
+                  </FormGroup>
+                  <FormGroup className="mb-2 ml-2 mb-sm-0">
+                    <Button className="mr-1 col-12 MuiPaper-filter__custom--button" onClick={this.onClear} >
+                      <i className="fa fa-refresh" />
+                      <span className="ml-1">Làm mới</span>
+                    </Button>
+                  </FormGroup>
+                </div>
+              </div>
+            </Col> 
           </Row>
         </Form>
       </div>

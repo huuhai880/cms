@@ -132,7 +132,7 @@ export default class CrmReviewAdd extends PureComponent {
         then: Yup.string().required("Chuyên gia đánh giá là bắt buộc."),
       }),
     review_content: Yup.string().nullable().required("Nội dung là bắt buộc."),
-    review_date: Yup.string().test(
+    review_date: Yup.string().required("Ngày đánh giá là bắt buộc.").test(
       "DOB",
       "Thời gian chọn phải nhỏ hơn hoặc bằng thời gian hiện tại.",
       (value) => {
@@ -263,7 +263,10 @@ export default class CrmReviewAdd extends PureComponent {
                       ? "Chi tiết"
                       : "Chỉnh sửa"
                     : "Thêm mới"}{" "}
-                  đánh giá {crmReviewEnt ? crmReviewEnt.review_id : ""}
+                  đánh giá{" "}
+                  {crmReviewEnt
+                    ? crmReviewEnt.account_name || crmReviewEnt.author_name
+                    : ""}
                 </b>
               </CardHeader>
               <CardBody>
@@ -324,7 +327,7 @@ export default class CrmReviewAdd extends PureComponent {
                                       render={({ field }) => (
                                         <CustomInput
                                           {...field}
-                                          className="pull-right"
+                                          className="pull-left"
                                           onBlur={null}
                                           checked={values.check_member}
                                           onChange={(event) => {
@@ -428,7 +431,7 @@ export default class CrmReviewAdd extends PureComponent {
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
-                                          className="pull-right"
+                                          className="pull-left"
                                           onBlur={null}
                                           checked={values.check_author}
                                           onChange={(event) => {
@@ -530,7 +533,7 @@ export default class CrmReviewAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label
                                     for="order_index"
-                                    className="text-right"
+                                    className="text-left"
                                     sm={4}
                                   >
                                     Thứ tự hiển thị
@@ -541,7 +544,7 @@ export default class CrmReviewAdd extends PureComponent {
                                       render={({ field /* _form */ }) => (
                                         <Input
                                           {...field}
-                                          className="text-right"
+                                          className="text-left"
                                           onBlur={null}
                                           type="number"
                                           id="order_index"
@@ -564,18 +567,16 @@ export default class CrmReviewAdd extends PureComponent {
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            </Row>
-                            <Row>
-                              <Col xs={6} style={{ padding: 0 }}>
+                              <Col xs={6} >
                                 <FormGroup row>
                                   <Label
                                     for="ower_phone_2"
-                                    className="text-right"
+                                    className="text-left"
                                     sm={4}
                                   >
                                     Ngày đánh giá
                                   </Label>
-                                  <Col sm={8}>
+                                  <Col sm={8} style={{ padding: 0 }}>
                                     <DateTimePicker
                                       style={{ padding: 0 }}
                                       name="review_date"
@@ -592,84 +593,9 @@ export default class CrmReviewAdd extends PureComponent {
                               </Col>
                             </Row>
                             <Row>
-                              <Col sm={12}>
-                                <Label
-                                  for="review_content"
-                                  sm={12}
-                                  className="pl-0 pr-0"
-                                >
-                                  Nội dung{" "}
-                                  <span className="font-weight-bold red-text">
-                                    {" "}
-                                    *{" "}
-                                  </span>
-                                </Label>
-                                <Col sm={4} className="pl-0">
-                                  <ErrorMessage
-                                    name="review_content"
-                                    component={({ children }) => (
-                                      <Alert
-                                        color="danger"
-                                        className="field-validation-error"
-                                      >
-                                        {" "}
-                                        {children}{" "}
-                                      </Alert>
-                                    )}
-                                  />
-                                </Col>
-                                <Col sm={12} xs={12} className="pl-0 pr-0">
-                                  <Editor
-                                    apiKey={
-                                      "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
-                                    }
-                                    scriptLoading={{
-                                      delay: 500,
-                                    }}
-                                    value={values.review_content}
-                                    disabled={noEdit}
-                                    init={{
-                                      height: "300px",
-                                      width: "100%",
-                                      menubar: false,
-                                      plugins: [
-                                        "advlist autolink fullscreen lists link image charmap print preview anchor",
-                                        "searchreplace visualblocks code fullscreen ",
-                                        "insertdatetime media table paste code help wordcount",
-                                        "image imagetools ",
-                                        "toc",
-                                      ],
-                                      menubar:
-                                        "file edit view insert format tools table tc help",
-                                      toolbar1:
-                                        "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
-                                        "alignleft aligncenter alignright alignjustify",
-                                      toolbar2:
-                                        "bullist numlist outdent indent | removeformat | help | image | toc",
-                                      file_picker_types: "image",
-                                      images_dataimg_filter: function (img) {
-                                        return img.hasAttribute(
-                                          "internal-blob"
-                                        );
-                                      },
-                                      images_upload_handler:
-                                        this.handleUploadImage,
-                                    }}
-                                    onEditorChange={(newValue) => {
-                                      formikProps.setFieldValue(
-                                        "review_content",
-                                        newValue
-                                      );
-                                    }}
-                                  />
-                                </Col>
-                              </Col>
-                            </Row>
-
-                            <Row>
-                              <Col sm={6} className="pt-3">
+                              <Col sm={6} >
                                 <FormGroup row>
-                                  <Label for="is_active" sm={2}></Label>
+                                  <Label for="is_active" sm={4}></Label>
                                   <Col sm={8}>
                                     <Field
                                       name="is_active"
@@ -712,7 +638,82 @@ export default class CrmReviewAdd extends PureComponent {
                               <Col sm={6}></Col>
                             </Row>
                             <Row>
-                              <Col sm={12} className="text-right">
+                              <Col sm={12}>
+                                <Label
+                                  for="review_content"
+                                  sm={12}
+                                  className="pl-0 pr-0"
+                                >
+                                  Nội dung{" "}
+                                  <span className="font-weight-bold red-text">
+                                    {" "}
+                                    *{" "}
+                                  </span>
+                                </Label>
+                                <Col sm={4} className="pl-0">
+                                  <ErrorMessage
+                                    name="review_content"
+                                    component={({ children }) => (
+                                      <Alert
+                                        color="danger"
+                                        className="field-validation-error"
+                                      >
+                                        {" "}
+                                        {children}{" "}
+                                      </Alert>
+                                    )}
+                                  />
+                                </Col>
+                                <Col sm={12} xs={12} className="pl-0 pr-0">
+                                  <Editor
+                                    apiKey={
+                                      "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
+                                    }
+                                    scriptLoading={{
+                                      delay: 500,
+                                    }}
+                                    value={values.review_content}
+                                    disabled={noEdit}
+                                    init={{
+                                      height: "300px",
+                                      width: "100%",
+                                      menubar: false,
+                                      branding: false,
+                                      plugins: [
+                                        "advlist autolink fullscreen lists link image charmap print preview anchor",
+                                        "searchreplace visualblocks code fullscreen ",
+                                        "insertdatetime media table paste code help",
+                                        "image imagetools ",
+                                        "toc",
+                                      ],
+                                      menubar:
+                                        "file edit view insert format tools table tc help",
+                                      toolbar1:
+                                        "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                                        "alignleft aligncenter alignright alignjustify",
+                                      toolbar2:
+                                        "bullist numlist outdent indent | removeformat | help | image | toc",
+                                      file_picker_types: "image",
+                                      images_dataimg_filter: function (img) {
+                                        return img.hasAttribute(
+                                          "internal-blob"
+                                        );
+                                      },
+                                      images_upload_handler:
+                                        this.handleUploadImage,
+                                    }}
+                                    onEditorChange={(newValue) => {
+                                      formikProps.setFieldValue(
+                                        "review_content",
+                                        newValue
+                                      );
+                                    }}
+                                  />
+                                </Col>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col sm={12} className="text-right mt-3">
                                 {noEdit ? (
                                   <CheckAccess permission="CRM_REVIEW_EDIT">
                                     <Button

@@ -6,7 +6,7 @@ class ValidationResponse extends BaseResponse {
    * Creates an API Message Response.
    * @param {object} errors - Error messages.
    */
-  constructor(field, message) {
+  constructor(field, message) {  
     super(null, 'Unprocessable Entity', httpStatus.UNPROCESSABLE_ENTITY, [
       {
         'field': field,
