@@ -308,7 +308,16 @@ const AccountChangePassword = React.lazy(() =>
 );
 const AccChangePassword = React.lazy(() => import("./components/Account/AccChangePassword"));
 //.End
-
+// Admin portal: Account
+const AccountNew = React.lazy(() => import("./components/AccountNew/Account"));
+const AccountNewAdd = React.lazy(() => import("./components/AccountNew/AccountAdd"));
+// const AccountNewDetail = React.lazy(() => import("./components/Account/AccountDetail"));
+const AccountNewEdit = React.lazy(() => import("./components/AccountNew/AccountEdit"));
+// const AccountNewChangePassword = React.lazy(() =>
+//   import("./components/Account/AccountChangePassword")
+// );
+// const AccNewChangePassword = React.lazy(() => import("./components/Account/AccChangePassword"));
+//.End
 // Admin Website: News
 const News = React.lazy(() => import("./components/News/News"));
 const NewsAdd = React.lazy(() => import("./components/News/NewsAdd"));
@@ -1652,7 +1661,50 @@ const routes = [
     component: AccChangePassword,
   },
   //.End
-
+// Admin portal: Account
+{
+  path: "/account-new",
+  exact: true,
+  name: "Danh sách sách khách hàng",
+  function: "CRM_ACCOUNT_VIEW",
+  component: AccountNew,
+},
+{
+  path: "/account-new/add",
+  exact: true,
+  name: "Thêm mới",
+  function: "CRM_ACCOUNT_ADD",
+  component: AccountNewAdd,
+},
+// {
+//   path: "/account/detail/:id",
+//   exact: true,
+//   name: "Chi tiết",
+//   function: "CRM_ACCOUNT_VIEW",
+//   component: AccountDetail,
+// },
+{
+  path: "/account-new/edit/:id",
+  exact: true,
+  name: "Chỉnh sửa",
+  function: "CRM_ACCOUNT_EDIT",
+  component: AccountNewEdit,
+},
+// {
+//   path: "/account/account-change-password/:id",
+//   exact: true,
+//   name: "Thay đổi mật khẩu",
+//   function: "SYS_ACCOUNT_PASSWORD",
+//   component: AccountChangePassword,
+// },
+// {
+//   path: "/acc-change-password",
+//   exact: true,
+//   name: "Thay đổi mật khẩu",
+//   function: null,
+//   component: AccChangePassword,
+// },
+//.End
   // Admin Website: News
   {
     path: "/news",

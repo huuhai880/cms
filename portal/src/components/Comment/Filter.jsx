@@ -7,8 +7,9 @@ import moment from "moment";
 
 function Filter({ handleSubmitFillter }) {
   const [isReview, setIsReview] = useState([
-    { name: "Chưa duyệt", id: "0" },
+    { name: "Chưa duyệt", id: "3" },
     { name: "Đã duyệt", id: "1" },
+    { name: "Không duyệt", id: "0" },
     { name: "Tất cả", id: "2" },
   ]);
   const [checkStartDate, setCheckStartDate] = useState(true);
@@ -22,35 +23,49 @@ function Filter({ handleSubmitFillter }) {
     startDate: null,
     endDate: null,
   });
+
   useEffect(() => {
     let pickerLeft = document.querySelector("#your_unique_start_date_id");
     pickerLeft.addEventListener("keyup", (e) => {
       if (e.target.value) {
-        checkStartDate =
+        var checkStartDate =
           /^(?:0?[1-9]?|[12]\d|3[01])(?:\/(?:0?[1-9]|1[012])?)\/\d{0,4}$|^\d{4}?$/.test(
             e.target.value
           );
       }
+
       setCheckStartDate(checkStartDate);
-      setDateToDate(e.target.value);
-      //   this.setState({ checkStartDate, dateFromDate: e.target.value });
+      setDateFromDate(e.target.value);
     });
 
     let pickerRight = document.querySelector("#your_unique_end_date_id");
     pickerRight.addEventListener("keyup", (e) => {
       if (e.target.value) {
-        checkEndDate =
+        var checkEndDate =
           /^(?:0?[1-9]?|[12]\d|3[01])(?:\/(?:0?[1-9]|1[012])?)\/\d{0,4}$|^\d{4}?$/.test(
             e.target.value
           );
       }
-      setCheckEndDate(checkStartDate);
-      setDateFromDate(e.target.value);
+      setCheckEndDate(checkEndDate);
+       setDateToDate(e.target.value);
     });
   }, []);
   const _handleSubmitFillter = () => {
     let { keyword, selectdReview, startDate, endDate } = searchValue;
-    
+    var mydate = moment(dateToDate, "DD/MM/YYYY");
+    var myStartDate = startDate ? startDate.format("DD/MM/YYYY") : "";
+    if (myStartDate) {
+      myStartDate = moment(myStartDate, "DD/MM/YYYY");
+    }
+    if (
+      checkStartDate == false ||
+      checkEndDate == false ||
+      (checkStartDate == false && checkEndDate == false)
+    ) {
+      window._$g.dialogs.alert(window._$g._(`Vui lòng nhập đúng định dạng ngày tạo.`), () => {
+        window.location.reload();
+      });
+    }
     let value = {
       keyword: keyword ? keyword : null,
       selectdReview: selectdReview ? selectdReview.value : null,
@@ -68,10 +83,10 @@ function Filter({ handleSubmitFillter }) {
       endDate: null,
     });
     let value = {
-      keyword:  null,
-      selectdReview:  null,
-      startDate:  null,
-      endDate:  null,
+      keyword: null,
+      selectdReview: null,
+      startDate: null,
+      endDate: null,
     };
 
     handleSubmitFillter(value);
@@ -172,7 +187,7 @@ function Filter({ handleSubmitFillter }) {
           <div className="d-flex flex-fill justify-content-end">
             <FormGroup className="mb-2 ml-2 mb-sm-0">
               <Button
-                className="col-12 MuiPaper-filter__custom--button"
+                className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                 onClick={_handleSubmitFillter}
                 color="primary"
                 size="sm"
@@ -183,7 +198,7 @@ function Filter({ handleSubmitFillter }) {
             </FormGroup>
             <FormGroup className="mb-2 ml-2 mb-sm-0">
               <Button
-                className="mr-1 col-12 MuiPaper-filter__custom--button"
+                className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                 onClick={handleClear}
                 size="sm"
               >

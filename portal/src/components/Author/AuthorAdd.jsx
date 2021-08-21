@@ -1366,6 +1366,7 @@ export default class AuthorAdd extends PureComponent {
                                               key={`province_of_${values.country_id}`}
                                               name="province_id"
                                               render={({ field, form }) => {
+                                                // console.log(values[field.name])
                                                 return (
                                                   <ProvinceComponent
                                                     id={field.name}
