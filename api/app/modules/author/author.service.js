@@ -13,6 +13,7 @@ const folderName = 'author';
 const config = require('../../../config/config');
 
 const getListAuthor = async (queryParams = {}) => {
+console.log("🚀 ~ file: author.service.js ~ line 16 ~ getListAuthor ~ queryParams", queryParams)
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);

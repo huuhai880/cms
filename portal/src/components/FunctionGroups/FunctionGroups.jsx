@@ -282,7 +282,7 @@ class FunctionGroups extends PureComponent {
             );
           },
           customBodyRender: (value) => {
-            return <span className="d-block text-right">{value || 0}</span>;
+            return <span className="d-block text-center">{value || 0}</span>;
           },
         },
       },

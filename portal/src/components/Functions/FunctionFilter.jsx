@@ -124,10 +124,10 @@ class FunctionFilter extends PureComponent {
                   placeholder={"-- Chọn --"}
                   onChange={(valuesItem/*, actionItem*/) => this.handleChangeFunctionGroup(valuesItem)}
                   value={this.state.functionGroup}
-                  defaultValue={{
-                    'label': functionGroup[0].name,
-                    'value': functionGroup[0].id,
-                  }}
+                  // defaultValue={{
+                  //   'label': functionGroup[0].name,
+                  //   'value': functionGroup[0].id,
+                  // }}
                   options={functionGroup.map(({ name: label, id: value }) => ({ value, label }))}
                   isMulti
                 />)}

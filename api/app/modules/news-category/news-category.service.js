@@ -122,7 +122,7 @@ const createNewsCategoryOrUpdate = async (bodyParams) => {
     if (!dataCheck.recordset || !dataCheck.recordset[0].RESULT) {
       return new ServiceResponse(false, RESPONSE_MSG.NEWSCATEGORY.EXISTS_NAME, null);
     }
-    //check orderindex
+    //check orderindexC
     // const dataCheckOrderIndex = await pool.request()
     //   .input('NEWSCATEGORYID', apiHelper.getValueFromObject(bodyParams, 'news_category_id'))
     //   .input('ORDERINDEX', apiHelper.getValueFromObject(bodyParams, 'order_index'))

@@ -67,9 +67,10 @@ class Functions extends PureComponent {
         },
         () => {
           const id = bundle.functionGroup[0].id;
-          const query = Object.assign(this.state.query, {
-            function_group_id: id,
-          });
+          const query = Object.assign(
+            this.state.query
+            // { function_group_id: id,}
+          );
           this.getData(query);
         }
       );
@@ -243,6 +244,19 @@ class Functions extends PureComponent {
         options: {
           filter: false,
           sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-left">{value}</div>;
+          },
         },
       },
       {
@@ -251,6 +265,19 @@ class Functions extends PureComponent {
         options: {
           filter: false,
           sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-left">{value}</div>;
+          },
         },
       },
       {
@@ -259,6 +286,19 @@ class Functions extends PureComponent {
         options: {
           filter: false,
           sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-left">{value}</div>;
+          },
         },
       },
       {
@@ -267,6 +307,19 @@ class Functions extends PureComponent {
         options: {
           filter: false,
           sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-left">{value}</div>;
+          },
         },
       },
       {
@@ -296,6 +349,19 @@ class Functions extends PureComponent {
         options: {
           filter: false,
           sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-center">{value}</div>;
+          },
         },
       },
       {

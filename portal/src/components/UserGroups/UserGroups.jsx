@@ -269,7 +269,7 @@ class UserGroups extends Component {
             )
           },
           customBodyRender: (value) => {
-            return <span className="d-block text-right">{value || 0}</span>;
+            return <span className="d-block text-center">{value || 0}</span>;
           }
         }
       },
@@ -303,7 +303,7 @@ class UserGroups extends Component {
             return (
               <div className="text-center">
                 <CheckAccess permission="SYS_USERGROUP_EDIT">
-                  <Button color="success" title="Chỉnh sửa" className="mr-1" onClick={evt => this.handleActionItemClick('edit', this.state.data[tableMeta['rowIndex']].user_group_id, tableMeta['rowIndex'])}
+                  <Button color="primary" title="Chỉnh sửa" className="mr-1" onClick={evt => this.handleActionItemClick('edit', this.state.data[tableMeta['rowIndex']].user_group_id, tableMeta['rowIndex'])}
                     disabled={!(userAuth._isAdministrator() || this.state.data[tableMeta['rowIndex']].is_system === 0)}
                   >
                     <i className="fa fa-edit" />
