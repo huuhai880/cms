@@ -321,7 +321,7 @@ export default class CrmReviewAdd extends PureComponent {
                             <Row>
                               <Col xs={6}>
                                 <FormGroup row>
-                                  <Col sm={4}>
+                                  <Col sm={4} className="d-flex align-items-center">
                                     <Field
                                       name="check_member"
                                       render={({ field }) => (
@@ -425,7 +425,7 @@ export default class CrmReviewAdd extends PureComponent {
                               </Col>
                               <Col xs={6}>
                                 <FormGroup row>
-                                  <Col sm={4}>
+                                  <Col sm={4} className="d-flex align-items-center">
                                     <Field
                                       name="check_author"
                                       render={({ field /* _form */ }) => (
@@ -474,7 +474,7 @@ export default class CrmReviewAdd extends PureComponent {
                                       )}
                                     />
                                   </Col>
-                                  <Col sm={8} style={{ zIndex: "10" }}>
+                                  <Col sm={8} style={{ zIndex: "10" }} >
                                     <Field
                                       name="author_id"
                                       render={({ field /* _form */ }) => {

@@ -50,7 +50,7 @@ class FunctionGroupsFilter extends PureComponent {
     const { inputValue, selectedOption,created_date_from, created_date_to, created_user } = this.state
     const { handleSubmit } = this.props
     handleSubmit(
-      inputValue,
+      inputValue? inputValue.trim(): "",
       selectedOption ? selectedOption.value : 2,
       created_date_from ? created_date_from.format('DD/MM/YYYY') : created_date_from,
       created_date_to ? created_date_to.format('DD/MM/YYYY') : created_date_to,

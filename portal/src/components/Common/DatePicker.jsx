@@ -90,6 +90,7 @@ class DatePicker extends PureComponent {
           block
           minimumNights={0}
           hideKeyboardShortcutsPanel 
+          minDate={moment().toDate()}
         />
       );
     }
