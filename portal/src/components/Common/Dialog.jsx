@@ -165,7 +165,7 @@ export default class ModalDialog extends PureComponent {
           {...opts.propsDialog}
         >
           <div style={{width: "500px", height: "200px"}}>
-          <DialogTitle id="alert-dialog-slide-title" className="title">
+          <DialogTitle style={{padding: "8px 20px"}} id="alert-dialog-slide-title" className="title">
             <div className="wrap-fa">
               <i class="fa fa-exclamation-triangle" />
             </div>
@@ -180,7 +180,7 @@ export default class ModalDialog extends PureComponent {
               content
             )}
           </DialogContent>
-          <DialogActions style={{padding: "30px 15px 0 15px"}} {...opts.propsDialogActions}>
+          <DialogActions style={{padding: "38px 15px 0 15px"}} {...opts.propsDialogActions}>
             {btnComponents}
           </DialogActions>
           </div>

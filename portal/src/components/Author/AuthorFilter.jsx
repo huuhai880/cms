@@ -48,7 +48,7 @@ class AuthorFilter extends PureComponent {
     const { inputValue, status, newsCategory } = this.state;
     const { handleSubmit } = this.props;
     handleSubmit(
-      inputValue,
+      inputValue? inputValue.trim(): "",
       status ? status.value : undefined,
       newsCategory ? newsCategory.value : undefined
     );
@@ -60,7 +60,7 @@ class AuthorFilter extends PureComponent {
       this.setState(
         {
           inputValue: "",
-          status: { name: "Tất cả", id: 2 },
+          status: { label: "Tất cả", value: 2 },
           newsCategory: { label: "Tất cả", value: "" },
         },
         () => {

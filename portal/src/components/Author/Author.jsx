@@ -91,7 +91,9 @@ class Author extends PureComponent {
     let bundle = {};
     let all = [
       // @TODO:
-      this._authorModel.getList().then((data) => (bundle["data"] = data)),
+      this._authorModel
+        .getList(this.state.query)
+        .then((data) => (bundle["data"] = data)),
       this._newsCategoryModel
         .getOptionsForAuthorPost({ is_author_post: 1, is_active: 1 })
         .then(
@@ -454,14 +456,14 @@ class Author extends PureComponent {
         </Card>
         <CheckAccess permission="CRM_AUTHOR_ADD">
           <Button
-            className="col-12 max-w-110 mb-3 mobile-reset-width"
+            className="col-12 max-w-110 mb-2 mobile-reset-width"
             style={{ paddingTop: "6px", paddingBot: "6px" }}
             onClick={() => this.handleClickAdd()}
             color="success"
             size="sm"
           >
-            <i className="fa fa-plus" />
-            <span className="ml-1">Thêm mới</span>
+            <i className="fa fa-plus ml-1" />
+            Thêm mới
           </Button>
         </CheckAccess>
         <Card className="animated fadeIn">

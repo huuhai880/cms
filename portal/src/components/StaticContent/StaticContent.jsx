@@ -16,6 +16,7 @@ import { layoutFullWidthHeight } from "../../utils/html";
 import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
 import StaticContentModel from "../../models/StaticContentModel";
+import './styles.scss'
 
 // Set layout full-wh
 layoutFullWidthHeight();
@@ -318,7 +319,7 @@ class StaticContent extends Component {
         },
       },
       {
-        name: "is_cate_video",
+        name: "is_childrent",
         label: "Là trang con",
         options: {
           filter: false,
@@ -336,7 +337,14 @@ class StaticContent extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                <input type="checkbox" defaultChecked={value} disabled={true} />
+                {/* <input type="checkbox" defaultChecked={value} 
+                disabled={true}
+                 /> */}
+                <div className="checkmark">
+                  <div className={`checkmark_circle ${value? "checkmark-active-bor": ""}`}></div>
+                  <div className={`checkmark_stem ${value? "checkmark-active-bg": ""}`}></div>
+                  <div className={`checkmark_kick ${value? "checkmark-active-bg": ""}`}></div>
+                </div>
               </div>
             );
           },
@@ -487,7 +495,7 @@ class StaticContent extends Component {
               <Button
                 className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
                 onClick={() => this.handleClickAdd()}
-                style={{paddingTop: "6px", paddingBot: "6px"}}
+                style={{ paddingTop: "6px", paddingBot: "6px" }}
                 color="success"
                 size="sm"
               >

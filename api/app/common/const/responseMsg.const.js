@@ -688,6 +688,7 @@ module.exports = {
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
     EXISTS_PARTNER_NAME: 'Tên công ty đã tồn tại.',
     EXISTS_USER_NAME: 'Tài khoản đã tồn tại.',
+    EXISTS_PHONE_NUMBER: 'Số điện thoại đối tác đã tồn tại.',
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
   },
   REVIEW: {
@@ -700,6 +701,7 @@ module.exports = {
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
     EXISTS_PARTNER_NAME: 'Tên công ty đã tồn tại.',
     EXISTS_USER_NAME: 'Tài khoản đã tồn tại.',
+    EXISTS_PHONE_NUMBER: 'Số điện thoại đối tác đã tồn tại.',
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
   },
 };

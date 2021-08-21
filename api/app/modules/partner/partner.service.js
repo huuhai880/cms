@@ -146,6 +146,25 @@ const createPartnerOrUpdate = async (bodyParams) => {
         );
       }
 
+      const dataCheckPhoneNumber = await pool
+        .request()
+        .input(
+          'PARTNERID',
+          apiHelper.getValueFromObject(bodyParams, 'partner_id')
+        )
+        .input(
+          'PHONENUMBER',
+          apiHelper.getValueFromObject(bodyParams, 'phone_number')
+        )
+        .execute(PROCEDURE_NAME.MD_PARTNER_CHECK_PHONENUMBER);
+      if (!dataCheckPhoneNumber.recordset || !dataCheckPhoneNumber.recordset[0].RESULT) {
+        return new ServiceResponse(
+          false,
+          RESPONSE_MSG.PARTNER.EXISTS_PHONE_NUMBER,
+          null
+        );
+      }
+
       const data = await pool
       .request()
       .input('PARTNERID', partner_id)

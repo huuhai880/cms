@@ -187,7 +187,7 @@ export default class PartnerAdd extends PureComponent {
   };
 
   formikValidationSchema = Yup.object().shape({
-    partner_name: Yup.string().required("Tên công ty là bắt buộc."),
+    partner_name: Yup.string().required("Tên đối tác là bắt buộc."),
     // company_type_id: Yup.string().required("Loại hình tổ chức là bắt buộc."),
     phone_number: Yup.string()
       .matches(/^\d{10,11}$/, "Số điện thoại không hợp lệ!")
@@ -210,6 +210,7 @@ export default class PartnerAdd extends PureComponent {
     ower_phone_1: Yup.string()
       .matches(/^\d{10,11}$/, "Số điện thoại không hợp lệ!")
       .required("Số điện thoại là bắt buộc."),
+    // email: Yup.string().matches(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, "Nhập cho đúng định dạng mail vào"),
   });
 
   handleFormikBeforeRender = ({ initialValues }) => {
@@ -334,7 +335,7 @@ export default class PartnerAdd extends PureComponent {
                       ? "Chi tiết"
                       : "Chỉnh sửa"
                     : "Thêm mới"}{" "}
-                  công ty {partnerEnt ? partnerEnt.partner_name : ""}
+                  đối tác {partnerEnt ? partnerEnt.partner_name : ""}
                 </b>
               </CardHeader>
               <CardBody>
@@ -382,14 +383,14 @@ export default class PartnerAdd extends PureComponent {
                       >
                         <Row className="mb15">
                           <Col xs={12}>
-                            <b className="underline">Thông tin công ty</b>
+                            <b className="underline">Thông tin đối tác</b>
                           </Col>
                         </Row>
                         <Row>
                           <Col xs={12}>
                             <FormGroup row>
                               <Label for="partner_name" sm={2}>
-                                Tên công ty
+                                Tên đối tác
                                 <span className="font-weight-bold red-text">
                                   *
                                 </span>
@@ -537,9 +538,9 @@ export default class PartnerAdd extends PureComponent {
                                         <Input
                                           {...field}
                                           onBlur={null}
-                                          type="text"
+                                          type="email"
                                           id="email"
-                                          placeholder="0001@company.com"
+                                          placeholder=""
                                           disabled={noEdit}
                                         />
                                       )}
@@ -796,7 +797,7 @@ export default class PartnerAdd extends PureComponent {
                             </Row>
                             <Row className="mb15">
                               <Col xs={12}>
-                                <b className="underline">Địa chỉ công ty</b>
+                                <b className="underline">Địa chỉ đối tác</b>
                               </Col>
                             </Row>
                             <Row>
@@ -1162,7 +1163,7 @@ export default class PartnerAdd extends PureComponent {
                                         <Input
                                           {...field}
                                           onBlur={null}
-                                          type="text"
+                                          type="email"
                                           id="ower_email"
                                           placeholder=""
                                           disabled={noEdit}

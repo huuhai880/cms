@@ -152,13 +152,15 @@ export default class AuthorAdd extends PureComponent {
       banner_image: Yup.string().required("Hình ảnh banner là bắt buộc."),
       introduce: Yup.string().required("Giới thiệu bản thân là bắt buộc."),
       education_career: Yup.string().required(
-        "Họ vấn và sự nghiệp là bắt buộc."
+        "Học vấn và sự nghiệp là bắt buộc."
       ),
       // news_category: Yup.string().required("Danh mục bài viết là bắt buộc."),
       order_index: Yup.number()
         .typeError("Thứ tự hiển thị phải là số.")
         .positive("Thứ tự hiển thị phải lớn hơn 0.")
         .required("Thứ tự hiển thị là bắt buộc."),
+      nickname: Yup.string().required("Biệt danh là bắt buộc."),
+      identity_number: Yup.string().matches(/^[0-9\b]+$/, "Số CMND/ Thẻ căn cước bắt buộc nhập là số."),
     });
   }
 
@@ -833,7 +835,7 @@ export default class AuthorAdd extends PureComponent {
                                           type="email"
                                           name="email"
                                           id="email"
-                                          placeholder="employee.0001@company.com"
+                                          placeholder="employee@company.com"
                                           disabled={noEdit}
                                         />
                                       )}
@@ -928,7 +930,7 @@ export default class AuthorAdd extends PureComponent {
                                           min={0}
                                           minLength={10}
                                           maxLength={11}
-                                          placeholder="0777777777"
+                                          placeholder="Nhập số điện thoại"
                                           disabled={noEdit}
                                         />
                                       )}
@@ -1106,7 +1108,7 @@ export default class AuthorAdd extends PureComponent {
                                         />
                                       )}
                                     />
-                                    {/* <ErrorMessage name="identity_number" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} /> */}
+                                    <ErrorMessage name="identity_number" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
                                   </Col>
                                 </FormGroup>
                               </Col>
@@ -1703,10 +1705,11 @@ export default class AuthorAdd extends PureComponent {
                                         height: "300px",
                                         width: "100%",
                                         menubar: false,
+                                        branding: false,
                                         plugins: [
                                           "advlist autolink fullscreen lists link image charmap print preview anchor",
                                           "searchreplace visualblocks code fullscreen ",
-                                          "insertdatetime media table paste code help wordcount",
+                                          "insertdatetime media table paste code help ",
                                           "image imagetools ",
                                         ],
                                         menubar:
@@ -1771,10 +1774,11 @@ export default class AuthorAdd extends PureComponent {
                                         height: "300px",
                                         width: "100%",
                                         menubar: false,
+                                        branding: false,
                                         plugins: [
                                           "advlist autolink fullscreen lists link image charmap print preview anchor",
                                           "searchreplace visualblocks code fullscreen ",
-                                          "insertdatetime media table paste code help wordcount",
+                                          "insertdatetime media table paste code help ",
                                           "image imagetools ",
                                         ],
                                         menubar:

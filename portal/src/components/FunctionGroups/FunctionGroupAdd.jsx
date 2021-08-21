@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Formik, Field, ErrorMessage } from 'formik';
+import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import {
   Alert,
@@ -14,12 +14,12 @@ import {
   Label,
   Input,
   CustomInput,
-  Table
+  Table,
 } from "reactstrap";
 
 // Component(s)
-import { CheckAccess } from '../../navigation/VerifyAccess'
-import Loading from '../Common/Loading';
+import { CheckAccess } from "../../navigation/VerifyAccess";
+import Loading from "../Common/Loading";
 
 // Util(s)
 // import { readFileAsBase64 } from '../../utils/html';
@@ -35,7 +35,6 @@ const userAuth = window._$g.userAuth;
  * @class FunctionGroupAdd
  */
 export default class FunctionGroupAdd extends PureComponent {
-
   /** @var {Object} */
   formikProps = null;
 
@@ -81,13 +80,13 @@ export default class FunctionGroupAdd extends PureComponent {
    * @return {Object}
    */
   getInitialValues() {
-    let  { funcGroupEnt } = this.props;
+    let { funcGroupEnt } = this.props;
     let values = Object.assign({}, this._functionGroupModel.fillable(), {});
     if (funcGroupEnt) {
       Object.assign(values, funcGroupEnt);
     }
     // Format
-    Object.keys(values).forEach(key => {
+    Object.keys(values).forEach((key) => {
       if (null === values[key]) {
         values[key] = "";
       }
@@ -103,24 +102,25 @@ export default class FunctionGroupAdd extends PureComponent {
     let { funcGroupEnt } = this.props;
     let bundle = {};
     let all = [
-      this._functionModel.getOptionsFull({
+      this._functionModel
+        .getOptionsFull({
           is_active: 1,
-          function_group_id: (funcGroupEnt && funcGroupEnt.id()) || undefined
+          function_group_id: (funcGroupEnt && funcGroupEnt.id()) || undefined,
         })
-        .then(data => (bundle['functions'] = data)),
+        .then((data) => (bundle["functions"] = data)),
     ];
-    await Promise.all(all)
-      .catch(err => window._$g.dialogs.alert(
+    await Promise.all(all).catch((err) =>
+      window._$g.dialogs.alert(
         window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
         () => window.location.reload()
-      ))
-    ;
+      )
+    );
     //
     Object.keys(bundle).forEach((key) => {
       let data = bundle[key];
       let stateValue = this.state[key];
       if (data instanceof Array && stateValue instanceof Array) {
-        data = [stateValue[0]].concat(data).filter(_i => !!_i);
+        data = [stateValue[0]].concat(data).filter((_i) => !!_i);
       }
       bundle[key] = data;
     });
@@ -130,10 +130,10 @@ export default class FunctionGroupAdd extends PureComponent {
   }
 
   formikValidationSchema = Yup.object().shape({
-    function_group_name: Yup.string()
-      .required("Tên nhóm quyền là bắt buộc."),
+    function_group_name: Yup.string().required("Tên nhóm quyền là bắt buộc."),
     //order_index: Yup.string().matches(/^[1-9][0-9]*/, 'Must be 5 or 9 digits')
-    order_index: Yup.number().min(0, "Thứ tự  bắt buộc lớn hơn hoặc bằng 0")
+    order_index: Yup.number()
+      .min(0, "Thứ tự  bắt buộc lớn hơn hoặc bằng 0")
       .required("Thứ tự là bắt buộc và lớn hơn hoặc bằng 0"),
   });
 
@@ -170,26 +170,25 @@ export default class FunctionGroupAdd extends PureComponent {
       }
     });
     let formData = Object.assign({}, values, {
-      functions
+      functions,
     });
-    Object.keys(formData).forEach(key => {
-      if (typeof(formData[key]) === 'boolean'){
+    Object.keys(formData).forEach((key) => {
+      if (typeof formData[key] === "boolean") {
         formData[key] = formData[key] ? 1 : 0;
       }
-      
     });
     // console.log('formData: ', formData);
     //
     let apiCall = funcGroupEnt
       ? this._functionGroupModel.update(funcGroupEnt.id(), formData)
-      : this._functionGroupModel.create(formData)
-    ;
+      : this._functionGroupModel.create(formData);
     apiCall
-      .then(data => { // OK
-        window._$g.toastr.show('Lưu thành công!', 'success');
-        if (this._btnType === 'save_n_close') {
+      .then((data) => {
+        // OK
+        window._$g.toastr.show("Lưu thành công!", "success");
+        if (this._btnType === "save_n_close") {
           willRedirect = true;
-          return window._$g.rdr('/function-groups');
+          return window._$g.rdr("/function-groups");
         }
         // Reset form (only when add new)
         if (!funcGroupEnt) {
@@ -198,18 +197,26 @@ export default class FunctionGroupAdd extends PureComponent {
         // Chain
         return data;
       })
-      .catch(apiData => { // NG
+      .catch((apiData) => {
+        // NG
         let { errors, statusText, message } = apiData;
-        let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join('<br/>');
+        let msg = [`<b>${statusText || message}</b>`]
+          .concat(errors || [])
+          .join("<br/>");
         alerts.push({ color: "danger", msg });
       })
       .finally(() => {
         // Submit form is done!
         setSubmitting(false);
         //
-        !willRedirect && this.setState(() => ({ alerts }), () => { window.scrollTo(0, 0); });
-      })
-    ;
+        !willRedirect &&
+          this.setState(
+            () => ({ alerts }),
+            () => {
+              window.scrollTo(0, 0);
+            }
+          );
+      });
   }
 
   handleChangeFunction(_function) {
@@ -226,16 +233,12 @@ export default class FunctionGroupAdd extends PureComponent {
   handleChangeOrderIndex(event) {
     let { value } = event.target;
     //value = Math.max(Number(min), Math.min(Number(max), Number(value)));
-    value = (value < 0) ? 0 : value;
+    value = value < 0 ? 0 : value;
     this.setState({ order_index: value });
-  };
+  }
 
   render() {
-    let {
-      ready,
-      alerts,
-      functions
-    } = this.state;
+    let { ready, alerts, functions } = this.state;
     let { funcGroupEnt, noEdit } = this.props;
     /** @var {Object} */
     let initialValues = this.getInitialValues();
@@ -251,239 +254,384 @@ export default class FunctionGroupAdd extends PureComponent {
           <Col xs={12}>
             <Card>
               <CardHeader>
-                <b>{funcGroupEnt ? (noEdit ? 'Chi tiết' : 'Chỉnh sửa') : 'Thêm mới'} nhóm quyền {funcGroupEnt ? `"${funcGroupEnt.function_group_name}"` : ''}</b>
+                <b>
+                  {funcGroupEnt
+                    ? noEdit
+                      ? "Chi tiết"
+                      : "Chỉnh sửa"
+                    : "Thêm mới"}{" "}
+                  nhóm quyền{" "}
+                  {funcGroupEnt ? `"${funcGroupEnt.function_group_name}"` : ""}
+                </b>
               </CardHeader>
               <CardBody>
                 {/* general alerts */}
                 {alerts.map(({ color, msg }, idx) => {
                   return (
-                    <Alert key={`alert-${idx}`} color={color} isOpen={true} toggle={() => this.setState({ alerts: [] })}>
+                    <Alert
+                      key={`alert-${idx}`}
+                      color={color}
+                      isOpen={true}
+                      toggle={() => this.setState({ alerts: [] })}
+                    >
                       <span dangerouslySetInnerHTML={{ __html: msg }} />
                     </Alert>
                   );
                 })}
                 <Formik
                   initialValues={initialValues}
-                   validationSchema={this.formikValidationSchema}
+                  validationSchema={this.formikValidationSchema}
                   // validate={this.handleFormikValidate}
                   onSubmit={this.handleFormikSubmit}
-                >{(formikProps) => {
-                  let {
-                    values,
-                    // errors, status,
-                    // touched, handleChange, handleBlur,
-                    submitForm, resetForm,
-                    handleSubmit,
-                    handleReset,
-                    // isValidating,
-                    isSubmitting,
-                    /* and other goodies */
-                  } = (this.formikProps = formikProps);
-                  // [Event]
-                  this.handleFormikBeforeRender({ initialValues });
-                  // Render
-                  return (
-                    <Form id="form1st" onSubmit={handleSubmit} onReset={handleReset}>
-                      <Row>
-                        <Col xs={12}>
-                          <Row>
-                            <Col xs={12}>
-                              <FormGroup row>
-                                <Label for="function_group_name" sm={3}>
-                                  Tên nhóm quyền<span className="font-weight-bold red-text">*</span>
-                                </Label>
-                                <Col sm={9}>
-                                  <Field
-                                    name="function_group_name"
-                                    render={({ field /* _form */ }) => <Input
-                                      {...field}
-                                      onBlur={null}
-                                      type="text"
+                >
+                  {(formikProps) => {
+                    let {
+                      values,
+                      // errors, status,
+                      // touched, handleChange, handleBlur,
+                      submitForm,
+                      resetForm,
+                      handleSubmit,
+                      handleReset,
+                      // isValidating,
+                      isSubmitting,
+                      /* and other goodies */
+                    } = (this.formikProps = formikProps);
+                    // [Event]
+                    this.handleFormikBeforeRender({ initialValues });
+                    // Render
+                    return (
+                      <Form
+                        id="form1st"
+                        onSubmit={handleSubmit}
+                        onReset={handleReset}
+                      >
+                        <Row>
+                          <Col xs={12}>
+                            <Row>
+                              <Col xs={12}>
+                                <FormGroup row>
+                                  <Label for="function_group_name" sm={3}>
+                                    Tên nhóm quyền
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
+                                  </Label>
+                                  <Col sm={9}>
+                                    <Field
                                       name="function_group_name"
-                                      id="function_group_name"
-                                      placeholder=""
-                                      disabled={noEdit}
-                                    />}
-                                  />
-                                   <ErrorMessage name="function_group_name" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
-                                </Col>
-                              </FormGroup>
-                             
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col xs={12}>
-                              <FormGroup row>
-                                <Label for="order_index" sm={3}>
-                                  Thứ tự<span className="font-weight-bold red-text">*</span>
-                                </Label>
-                                <Col sm={3}>
-                                  <Field
-                                    name="order_index"
-                                    render={({ field /* _form */ }) => <Input
-                                      {...field}
-                                      onBlur={null}
-                                      type="number"
+                                      render={({ field /* _form */ }) => (
+                                        <Input
+                                          {...field}
+                                          onBlur={null}
+                                          type="text"
+                                          name="function_group_name"
+                                          id="function_group_name"
+                                          placeholder=""
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                    <ErrorMessage
+                                      name="function_group_name"
+                                      component={({ children }) => (
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
+                                          {children}
+                                        </Alert>
+                                      )}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col xs={12}>
+                                <FormGroup row>
+                                  <Label for="order_index" sm={3}>
+                                    Thứ tự
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
+                                  </Label>
+                                  <Col sm={3}>
+                                    <Field
                                       name="order_index"
-                                      id="order_index"
-                                      placeholder="0"
-                                      className="text-right"
-                                      disabled={noEdit}
-                                      min={0}
-                                     // value={this.state.order_index} 
-                                      //onChange={changeValue =>
-                                      //  this.handleChangeOrderIndex(
-                                      //    changeValue
-                                     //   )
-                                     // }
-                                    />}
-                                  />
-                                  <ErrorMessage name="order_index" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
-                                </Col>
-                              </FormGroup>
-                              
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col xs={12}>
-                              <FormGroup row>
-                                <Label for="description" sm={3}>
-                                  Mô tả
-                                </Label>
-                                <Col sm={9}>
-                                  <Field
-                                    name="description"
-                                    render={({ field /* _form */ }) => <Input
-                                      {...field}
-                                      onBlur={null}
-                                      type="textarea"
+                                      render={({ field /* _form */ }) => (
+                                        <Input
+                                          {...field}
+                                          onBlur={null}
+                                          type="number"
+                                          name="order_index"
+                                          id="order_index"
+                                          placeholder="0"
+                                          className="text-right"
+                                          disabled={noEdit}
+                                          min={0}
+                                          // value={this.state.order_index}
+                                          //onChange={changeValue =>
+                                          //  this.handleChangeOrderIndex(
+                                          //    changeValue
+                                          //   )
+                                          // }
+                                        />
+                                      )}
+                                    />
+                                    <ErrorMessage
+                                      name="order_index"
+                                      component={({ children }) => (
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
+                                          {children}
+                                        </Alert>
+                                      )}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col xs={12}>
+                                <FormGroup row>
+                                  <Label for="description" sm={3}>
+                                    Mô tả
+                                  </Label>
+                                  <Col sm={9}>
+                                    <Field
                                       name="description"
-                                      id="description"
-                                      disabled={noEdit}
-                                    />}
-                                  />
-                                </Col>
-                              </FormGroup>
-                              <ErrorMessage name="description" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col xs={12}>
-                              <FormGroup row>
-                                <Label for="" sm={3}>Quyền</Label>
-                                <Col xs={12}>
-                                  <Table size="sm" bordered striped hover responsive>
-                                    <thead>
-                                      <tr>
-                                        <th className="text-center" style={{ width: '1%' }}>#</th>
-                                        <th className="text-center">Tên quyền</th>
-                                        <th className="text-center">Code</th>
-                                        <th className="text-center" style={{ width: '%' }}>Xoá</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>{functions.map((item, idx) => {
-                                      return (
-                                        <tr key={`function-${idx}`}>
-                                          <th scope="row" className="text-center">{idx + 1}</th>
-                                          <td>{item.function_name}</td>
-                                          <td>{item.function_alias}</td>
-                                          <td className="text-center">
-                                            <Field
-                                              // name="_functions"
-                                              render={( /*{ field, _form } */) => <CustomInput
-                                                // {...field}
-                                                id={`function-${idx}`}
-                                                name="functions"
-                                                // onBlur={null}
-                                                onChange={() => this.handleChangeFunction(item)}
-                                                type="checkbox"
-                                                label=""
-                                                defaultChecked={item.function_group_is_check}
-                                                disabled={noEdit}
-                                              />}
-                                            />
-                                          </td>
+                                      render={({ field /* _form */ }) => (
+                                        <Input
+                                          {...field}
+                                          onBlur={null}
+                                          type="textarea"
+                                          name="description"
+                                          id="description"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                                <ErrorMessage
+                                  name="description"
+                                  component={({ children }) => (
+                                    <Alert
+                                      color="danger"
+                                      className="field-validation-error"
+                                    >
+                                      {children}
+                                    </Alert>
+                                  )}
+                                />
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col xs={12}>
+                                <FormGroup row>
+                                  <Label for="" sm={3}>
+                                    Quyền
+                                  </Label>
+                                  <Col xs={12}>
+                                    <Table
+                                      size="sm"
+                                      bordered
+                                      striped
+                                      hover
+                                      responsive
+                                    >
+                                      <thead>
+                                        <tr>
+                                          <th
+                                            className="text-center"
+                                            style={{ width: "1%" }}
+                                          >
+                                            #
+                                          </th>
+                                          <th className="text-center">
+                                            Tên quyền
+                                          </th>
+                                          <th className="text-center">Code</th>
+                                          <th
+                                            className="text-center"
+                                            style={{ width: "%" }}
+                                          >
+                                            Xoá
+                                          </th>
                                         </tr>
-                                      );
-                                    })}</tbody>
-                                    {/*<tfoot>
+                                      </thead>
+                                      <tbody>
+                                      {console.log("functions", functions)}
+                                        {functions.map((item, idx) => {
+                                          return (
+                                            <tr key={`function-${idx}`}>
+                                              <th
+                                                scope="row"
+                                                className="text-center"
+                                              >
+                                                {idx + 1}
+                                              </th>
+                                              <td>{item.function_name}</td>
+                                              <td>{item.function_alias}</td>
+                                              <td className="text-center">
+                                                <Field
+                                                  // name="_functions"
+                                                  render={
+                                                    (/*{ field, _form } */) => (
+                                                      <CustomInput
+                                                        // {...field}
+                                                        id={`function-${idx}`}
+                                                        name="functions"
+                                                        // onBlur={null}
+                                                        onChange={() =>
+                                                          this.handleChangeFunction(
+                                                            item
+                                                          )
+                                                        }
+                                                        type="checkbox"
+                                                        label=""
+                                                        defaultChecked={
+                                                          item.function_group_is_check
+                                                        }
+                                                        disabled={noEdit}
+                                                      />
+                                                    )
+                                                  }
+                                                />
+                                              </td>
+                                            </tr>
+                                          );
+                                        })}
+                                      </tbody>
+                                      {/*<tfoot>
                                       <tr><td colSpan={4}></td></tr>
                                     </tfoot>*/}
-                                  </Table>
-                                </Col>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col xs={12}>
-                              <FormGroup row>
-                                <Label for="is_active" sm={1}></Label>
-                                <Col xs={6} sm={4}>
-                                  <Field
-                                    name="is_active"
-                                    render={({ field /* _form */ }) => <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_active}
-                                      type="checkbox"
-                                      id="is_active"
-                                      label="Kích hoạt?"
-                                      disabled={noEdit}
-                                    />}
-                                  />
-                                  
-                                </Col>
-                                <Col xs={6} sm={5}>
-                                  <Field
-                                    name="is_system"
-                                    render={({ field /* _form */ }) => <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_system}
-                                      type="checkbox"
-                                      id="is_system"
-                                      label="Hệ thống?"
-                                      disabled={noEdit}
-                                    />}
-                                  />
-                                </Col>
-                                
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col sm={12} className="text-right">
-                              {
-                                noEdit?(
+                                    </Table>
+                                  </Col>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col xs={12}>
+                                <FormGroup row>
+                                  <Label for="is_active" sm={1}></Label>
+                                  <Col xs={6} sm={4}>
+                                    <Field
+                                      name="is_active"
+                                      render={({ field /* _form */ }) => (
+                                        <CustomInput
+                                          {...field}
+                                          className="pull-left"
+                                          onBlur={null}
+                                          checked={values.is_active}
+                                          type="checkbox"
+                                          id="is_active"
+                                          label="Kích hoạt?"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                  </Col>
+                                  <Col xs={6} sm={5}>
+                                    <Field
+                                      name="is_system"
+                                      render={({ field /* _form */ }) => (
+                                        <CustomInput
+                                          {...field}
+                                          className="pull-left"
+                                          onBlur={null}
+                                          checked={values.is_system}
+                                          type="checkbox"
+                                          id="is_system"
+                                          label="Hệ thống?"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col sm={12} className="text-right">
+                                {noEdit ? (
                                   <CheckAccess permission="SYS_FUNCTIONGROUP_EDIT">
-                                    <Button color="primary" className="mr-2 btn-block-sm" onClick={() => window._$g.rdr(`/function-groups/edit/${funcGroupEnt.function_group_id}`)}
-                                      disabled={(!userAuth._isAdministrator() && funcGroupEnt.is_system !== 0)}
+                                    <Button
+                                      color="primary"
+                                      className="mr-2 btn-block-sm"
+                                      onClick={() =>
+                                        window._$g.rdr(
+                                          `/function-groups/edit/${funcGroupEnt.function_group_id}`
+                                        )
+                                      }
+                                      disabled={
+                                        !userAuth._isAdministrator() &&
+                                        funcGroupEnt.is_system !== 0
+                                      }
                                     >
-                                      <i className="fa fa-edit mr-1" />Chỉnh sửa
+                                      <i className="fa fa-edit mr-1" />
+                                      Chỉnh sửa
                                     </Button>
                                   </CheckAccess>
-                                ):
-                                [
-                                  <Button key="buttonSave" type="submit" color="primary" disabled={isSubmitting} onClick={(event) => this.handleSubmit('save', { submitForm, resetForm, event })} className="mr-2 btn-block-sm">
-                                    <i className="fa fa-save mr-2" />Lưu
-                                  </Button>,
-                                  <Button key="buttonSaveClose" type="submit" color="success" disabled={isSubmitting} onClick={(event) => this.handleSubmit('save_n_close', { submitForm, resetForm, event })} className="mr-2 btn-block-sm mt-md-0 mt-sm-2">
-                                    <i className="fa fa-save mr-2" />Lưu &amp; Đóng
-                                  </Button>
-                                ]
-                              }
-                              <Button disabled={isSubmitting} onClick={() => window._$g.rdr('/function-groups')} className="btn-block-sm mt-md-0 mt-sm-2">
-                                <i className="fa fa-times-circle mr-1" />Đóng
-                              </Button>
-                            </Col>
-                          </Row>
-                        </Col>
-                      </Row>
-                    </Form>
-                  );
-                }}</Formik>
+                                ) : (
+                                  [
+                                    <Button
+                                      key="buttonSave"
+                                      type="submit"
+                                      color="primary"
+                                      disabled={isSubmitting}
+                                      onClick={(event) =>
+                                        this.handleSubmit("save", {
+                                          submitForm,
+                                          resetForm,
+                                          event,
+                                        })
+                                      }
+                                      className="mr-2 btn-block-sm"
+                                    >
+                                      <i className="fa fa-save mr-2" />
+                                      Lưu
+                                    </Button>,
+                                    <Button
+                                      key="buttonSaveClose"
+                                      type="submit"
+                                      color="success"
+                                      disabled={isSubmitting}
+                                      onClick={(event) =>
+                                        this.handleSubmit("save_n_close", {
+                                          submitForm,
+                                          resetForm,
+                                          event,
+                                        })
+                                      }
+                                      className="mr-2 btn-block-sm mt-md-0 mt-sm-2"
+                                    >
+                                      <i className="fa fa-save mr-2" />
+                                      Lưu &amp; Đóng
+                                    </Button>,
+                                  ]
+                                )}
+                                <Button
+                                  disabled={isSubmitting}
+                                  onClick={() =>
+                                    window._$g.rdr("/function-groups")
+                                  }
+                                  className="btn-block-sm mt-md-0 mt-sm-2"
+                                >
+                                  <i className="fa fa-times-circle mr-1" />
+                                  Đóng
+                                </Button>
+                              </Col>
+                            </Row>
+                          </Col>
+                        </Row>
+                      </Form>
+                    );
+                  }}
+                </Formik>
               </CardBody>
             </Card>
           </Col>

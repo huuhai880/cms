@@ -14,7 +14,7 @@ import {
   FormGroup,
   Label,
   Input,
-  CustomInput
+  CustomInput,
 } from "reactstrap";
 import Select from "react-select";
 
@@ -24,12 +24,15 @@ import RichEditor from "../Common/RichEditor";
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import "react-image-lightbox/style.css";
 import "../Products/styles.scss";
-import "./styles.scss"
+import "./styles.scss";
 // Component(s)
 // Model(s)
 import StaticContentModel from "../../models/StaticContentModel";
 // Util(s)
-import { mapDataOptions4Select, readImageBase64CallBack } from "../../utils/html";
+import {
+  mapDataOptions4Select,
+  readImageBase64CallBack,
+} from "../../utils/html";
 /** @var {Object} */
 /**
  * @class StaticContentAdd
@@ -73,7 +76,7 @@ export default class StaticContentAdd extends Component {
   formikValidationSchema = Yup.object().shape({
     static_title: Yup.string().required("Tiêu đề là bắt buộc."),
     static_content: Yup.string().required("Nội dung là bắt buộc."),
-    system_name: Yup.string().required("Tên hệ thống là bắt buộc.")
+    system_name: Yup.string().required("Tên hệ thống là bắt buộc."),
   });
 
   /** @var {String} */
@@ -86,7 +89,7 @@ export default class StaticContentAdd extends Component {
       Object.assign(values, StaticContentEnt);
     }
     // Format
-    Object.keys(values).forEach(key => {
+    Object.keys(values).forEach((key) => {
       if (null === values[key]) {
         values[key] = "";
       }
@@ -102,19 +105,19 @@ export default class StaticContentAdd extends Component {
   async _getBundleData() {
     let bundle = {};
     let all = [
-      this._StaticContentModel.getOptions({ is_active: 1 }).then(data => {
+      this._StaticContentModel.getOptions({ is_active: 1 }).then((data) => {
         return (bundle["StaticContentOptions"] = mapDataOptions4Select(data));
-      })
+      }),
     ];
 
-    await Promise.all(all).catch(err =>
+    await Promise.all(all).catch((err) =>
       window._$g.dialogs.alert(
         window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
         () => window.location.reload()
       )
     );
     //
-    Object.keys(bundle).forEach(key => {
+    Object.keys(bundle).forEach((key) => {
       let data = bundle[key];
       let stateValue = this.state[key];
       if (data instanceof Array && stateValue instanceof Array) {
@@ -125,7 +128,7 @@ export default class StaticContentAdd extends Component {
     return bundle;
   }
   ChangeAlias = (val) => {
-    var str = (val);
+    var str = val;
     str = str.toLowerCase();
     str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
     str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
@@ -134,12 +137,15 @@ export default class StaticContentAdd extends Component {
     str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
     str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
     str = str.replace(/đ/g, "d");
-    str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, " ");
+    str = str.replace(
+      /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+      " "
+    );
     str = str.replace(/ + /g, "-");
     str = str.replace(/[ ]/g, "-");
     str = str.trim();
     return str;
-  }
+  };
 
   handleSubmit(btnType) {
     let { submitForm } = this.formikProps;
@@ -150,7 +156,7 @@ export default class StaticContentAdd extends Component {
 
   handleFormikValidate(values) {
     // Trim string values,...
-    Object.keys(values).forEach(prop => {
+    Object.keys(values).forEach((prop) => {
       typeof values[prop] === "string" && (values[prop] = values[prop].trim());
     });
     //.end
@@ -170,7 +176,7 @@ export default class StaticContentAdd extends Component {
       webcategory_id:
         1 * values.webcategory_id > 0
           ? 1 * values.webcategory_id
-          : 1 * values.webcategory_id.value || 0
+          : 1 * values.webcategory_id.value || 0,
     });
     let _StaticContentId =
       (StaticContentEnt && StaticContentEnt.static_content_id) ||
@@ -179,7 +185,7 @@ export default class StaticContentAdd extends Component {
       ? this._StaticContentModel.update(_StaticContentId, formData)
       : this._StaticContentModel.create(formData);
     apiCall
-      .then(async data => {
+      .then(async (data) => {
         // OK
         // Fire callback?
         if (handleFormikSubmitSucceed) {
@@ -198,7 +204,7 @@ export default class StaticContentAdd extends Component {
         // Chain
         return data;
       })
-      .catch(apiData => {
+      .catch((apiData) => {
         // NG
         let { errors, statusText, message } = apiData;
         let msg = [`<b>${statusText || message}</b>`]
@@ -223,10 +229,10 @@ export default class StaticContentAdd extends Component {
   }
 
   handleFormikReset() {
-    this.setState(state => ({
+    this.setState((state) => ({
       _id: 1 + state._id,
       ready: true,
-      alerts: []
+      alerts: [],
     }));
   }
 
@@ -274,13 +280,11 @@ export default class StaticContentAdd extends Component {
                   validate={this.handleFormikValidate}
                   onSubmit={this.handleFormikSubmit}
                 >
-                  {formikProps => {
-                    let {
-                      values,
-                      handleSubmit,
-                      handleReset,
-                      isSubmitting
-                    } = (this.formikProps = window._formikProps = formikProps);
+                  {(formikProps) => {
+                    let { values, handleSubmit, handleReset, isSubmitting } =
+                      (this.formikProps =
+                      window._formikProps =
+                        formikProps);
                     // Render
                     return (
                       <Form
@@ -293,7 +297,10 @@ export default class StaticContentAdd extends Component {
                             <FormGroup row>
                               <Label sm={2}>
                                 Tiêu đề{" "}
-                                <span className="font-weight-bold red-text"> {" "}*{" "} </span>
+                                <span className="font-weight-bold red-text">
+                                  {" "}
+                                  *{" "}
+                                </span>
                               </Label>
                               <Col sm={10}>
                                 <Field
@@ -327,17 +334,16 @@ export default class StaticContentAdd extends Component {
                         <Row>
                           <Col xs={12}>
                             <FormGroup row>
-                              <Label sm={2}>
-                                Danh mục website
-                              </Label>
+                              <Label sm={2}>Danh mục website</Label>
                               <Col sm={4}>
                                 <Field
                                   name="webcategory_id"
                                   render={({ field /*, form*/ }) => {
-                                    let defaultValue = StaticContentOptions.find(
-                                      ({ value }) =>
-                                        1 * value === 1 * field.value
-                                    );
+                                    let defaultValue =
+                                      StaticContentOptions.find(
+                                        ({ value }) =>
+                                          1 * value === 1 * field.value
+                                      );
                                     let placeholder =
                                       (StaticContentOptions[0] &&
                                         StaticContentOptions[0].label) ||
@@ -350,8 +356,8 @@ export default class StaticContentAdd extends Component {
                                             target: {
                                               type: "select",
                                               name: field.name,
-                                              value
-                                            }
+                                              value,
+                                            },
                                           })
                                         }
                                         isSearchable={true}
@@ -376,9 +382,9 @@ export default class StaticContentAdd extends Component {
                                   )}
                                 />
                               </Col>
-                              <Label sm={2}>
+                              <Label sm={2} style={{ paddingLeft: "5%" }}>
                                 Tên seo
-                                </Label>
+                              </Label>
                               <Col sm={4}>
                                 <Field
                                   name="seo_name"
@@ -388,8 +394,7 @@ export default class StaticContentAdd extends Component {
                                       onBlur={null}
                                       type="text"
                                       placeholder=""
-                                     // value={this.ChangeAlias(values.static_title, this)}
-                                     
+                                      // value={this.ChangeAlias(values.static_title, this)}
                                     />
                                   )}
                                 />
@@ -419,9 +424,9 @@ export default class StaticContentAdd extends Component {
                                   )}
                                 />
                               </Col>
-                              <Label sm={2}>
+                              <Label sm={2} style={{ paddingLeft: "5%" }}>
                                 Meta Title
-                                </Label>
+                              </Label>
                               <Col sm={4}>
                                 <Field
                                   name="meta_title"
@@ -445,7 +450,10 @@ export default class StaticContentAdd extends Component {
                             <FormGroup row>
                               <Label sm={2}>
                                 Tên hệ thống{" "}
-                                <span className="font-weight-bold red-text"> {" "}*{" "} </span>
+                                <span className="font-weight-bold red-text">
+                                  {" "}
+                                  *{" "}
+                                </span>
                               </Label>
                               <Col sm={4}>
                                 <Field
@@ -472,9 +480,9 @@ export default class StaticContentAdd extends Component {
                                   )}
                                 />
                               </Col>
-                              <Label sm={2}>
+                              <Label sm={2} style={{ paddingLeft: "5%" }}>
                                 Meta Keywords
-                                </Label>
+                              </Label>
                               <Col sm={4}>
                                 <Field
                                   name="meta_keywords"
@@ -496,9 +504,7 @@ export default class StaticContentAdd extends Component {
                         <Row>
                           <Col xs={12}>
                             <FormGroup row>
-                              <Label sm={2}>
-                                Thứ tự hiển thị
-                                </Label>
+                              <Label sm={2}>Thứ tự hiển thị</Label>
                               <Col sm={4}>
                                 <Field
                                   name="display_order"
@@ -515,18 +521,26 @@ export default class StaticContentAdd extends Component {
                                   )}
                                 />
                               </Col>
-                              <Label for="meta_data_scriptions" sm={2}>Meta Description</Label>
+                              <Label
+                                for="meta_data_scriptions"
+                                style={{ paddingLeft: "5%" }}
+                                sm={2}
+                              >
+                                Meta Description
+                              </Label>
                               <Col sm={4}>
                                 <Field
                                   name="meta_data_scriptions"
-                                  render={({ field /* _form */ }) => <Input
-                                    {...field}
-                                    onBlur={null}
-                                    type="textarea"
-                                    id="meta_data_scriptions"
-                                    disabled={noEdit}
-                                    maxLength={400}
-                                  />}
+                                  render={({ field /* _form */ }) => (
+                                    <Input
+                                      {...field}
+                                      onBlur={null}
+                                      type="textarea"
+                                      id="meta_data_scriptions"
+                                      disabled={noEdit}
+                                      maxLength={400}
+                                    />
+                                  )}
                                 />
                               </Col>
                             </FormGroup>
@@ -540,14 +554,19 @@ export default class StaticContentAdd extends Component {
                                 Nội dung trang tĩnh{" "}
                                 <span className="font-weight-bold red-text">
                                   {" "}
-                                    *{" "}
+                                  *{" "}
                                 </span>
                               </Label>
                               <Col sm={10}>
                                 <RichEditor
                                   disable={noEdit}
                                   setContents={values.static_content}
-                                  onChange={(content) => formikProps.setFieldValue("static_content", content)}
+                                  onChange={(content) =>
+                                    formikProps.setFieldValue(
+                                      "static_content",
+                                      content
+                                    )
+                                  }
                                 />
                                 <ErrorMessage
                                   name="static_content"
@@ -603,60 +622,60 @@ export default class StaticContentAdd extends Component {
                                         className="mr-2 btn-block-sm"
                                         onClick={() =>
                                           window._$g.rdr(
-                                            `/static-content/edit/${StaticContentEnt &&
-                                            StaticContentEnt.id()}`
+                                            `/static-content/edit/${
+                                              StaticContentEnt &&
+                                              StaticContentEnt.id()
+                                            }`
                                           )
                                         }
                                       >
                                         <i className="fa fa-edit mr-1" />
-                                          Chỉnh sửa
-                                        </Button>
+                                        Chỉnh sửa
+                                      </Button>
                                     </CheckAccess>
                                   ) : (
-                                      [
-                                        false !==
-                                          this.props.handleActionSave ? (
-                                            <Button
-                                              key="buttonSave"
-                                              type="submit"
-                                              color="primary"
-                                              disabled={isSubmitting}
-                                              onClick={() =>
-                                                this.handleSubmit("save")
-                                              }
-                                              className="ml-3"
-                                            >
-                                              <i className="fa fa-save mr-2" />{" "}
-                                              <span className="ml-1">Lưu</span>
-                                            </Button>
-                                          ) : null,
-                                        false !==
-                                          this.props.handleActionSaveAndClose ? (
-                                            <Button
-                                              key="buttonSaveClose"
-                                              type="submit"
-                                              color="success"
-                                              disabled={isSubmitting}
-                                              onClick={() =>
-                                                this.handleSubmit("save_n_close")
-                                              }
-                                              className="ml-3"
-                                            >
-                                              <i className="fa fa-save mr-2" />{" "}
-                                              <span className="ml-1">
-                                                {" "}
-                                              Lưu &amp; Đóng{" "}
-                                              </span>
-                                            </Button>
-                                          ) : null
-                                      ]
-                                    )}
+                                    [
+                                      false !== this.props.handleActionSave ? (
+                                        <Button
+                                          key="buttonSave"
+                                          type="submit"
+                                          color="primary"
+                                          disabled={isSubmitting}
+                                          onClick={() =>
+                                            this.handleSubmit("save")
+                                          }
+                                          className="ml-3"
+                                        >
+                                          <i className="fa fa-save mr-2" />{" "}
+                                          <span className="ml-1">Lưu</span>
+                                        </Button>
+                                      ) : null,
+                                      false !==
+                                      this.props.handleActionSaveAndClose ? (
+                                        <Button
+                                          key="buttonSaveClose"
+                                          type="submit"
+                                          color="success"
+                                          disabled={isSubmitting}
+                                          onClick={() =>
+                                            this.handleSubmit("save_n_close")
+                                          }
+                                          className="ml-3"
+                                        >
+                                          <i className="fa fa-save mr-2" />{" "}
+                                          <span className="ml-1">
+                                            {" "}
+                                            Lưu &amp; Đóng{" "}
+                                          </span>
+                                        </Button>
+                                      ) : null,
+                                    ]
+                                  )}
                                   <Button
                                     disabled={isSubmitting}
                                     onClick={
                                       this.props.handleActionClose ||
-                                      (() =>
-                                        window._$g.rdr("/static-content"))
+                                      (() => window._$g.rdr("/static-content"))
                                     }
                                     className="ml-3"
                                   >
@@ -668,7 +687,6 @@ export default class StaticContentAdd extends Component {
                             </FormGroup>
                           </Col>
                         </Row>
-
                       </Form>
                     );
                   }}
