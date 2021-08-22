@@ -1124,6 +1124,7 @@ export default class NewsAdd extends Component {
                                                       width: "100%",
                                                       menubar: false,
                                                       branding: false,
+                                                      statusbar : false,
                                                       plugins: [
                                                         "advlist autolink fullscreen lists link image charmap print preview anchor",
                                                         "searchreplace visualblocks code fullscreen ",
