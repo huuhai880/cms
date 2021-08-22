@@ -110,7 +110,7 @@ export default class UserAdd extends PureComponent {
       gender: Yup.string().required("Giới tính là bắt buộc."),
       email: Yup.string()
         .trim()
-        .email("Email không hợp lệ")
+        // .email("Email không hợp lệ")
         .required("Email là bắt buộc."),
       birthday: Yup.string()
         .trim()
@@ -831,7 +831,7 @@ export default class UserAdd extends PureComponent {
                                           type="email"
                                           name="email"
                                           id="email"
-                                          placeholder="employee@gmail.com"
+                                          placeholder=""
                                           disabled={noEdit}
                                         />
                                       )}
@@ -1349,7 +1349,7 @@ export default class UserAdd extends PureComponent {
                                           min={0}
                                           minLength={10}
                                           maxLength={11}
-                                          placeholder="0777777777"
+                                          placeholder="Nhập số điện thoại"
                                           disabled={noEdit}
                                         />
                                       )}

@@ -507,7 +507,7 @@ export default class PartnerAdd extends PureComponent {
                                           onBlur={null}
                                           type="text"
                                           id="phone_number"
-                                          placeholder="0123456789"
+                                          placeholder="Nhập số điện thoại"
                                           disabled={noEdit}
                                         />
                                       )}
@@ -1309,7 +1309,7 @@ export default class PartnerAdd extends PureComponent {
                                           onBlur={null}
                                           type="text"
                                           id="ower_phone_1"
-                                          placeholder=""
+                                          placeholder="Nhập số điện thoại"
                                           disabled={noEdit}
                                         />
                                       )}
@@ -1342,7 +1342,7 @@ export default class PartnerAdd extends PureComponent {
                                           onBlur={null}
                                           type="text"
                                           id="ower_phone_2"
-                                          placeholder=""
+                                          placeholder="Nhập số điện thoại"
                                           disabled={noEdit}
                                         />
                                       )}

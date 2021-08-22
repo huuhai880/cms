@@ -4,9 +4,14 @@ import { Input, Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
 import Select from "react-select";
 
 // Component(s)
-import DatePicker from "../Common/DatePicker";
+// import DatePicker from "../Common/DatePicker";
+// import { DatePicker } from "antd";
+import RangePicker from "../../containers/Common/widget/RangeTimePicker";
+import "antd/dist/antd.css";
+import "moment/locale/vi";
 import { FormSelectGroup } from "../../containers/Common/widget";
 import { mapDataOptions4Select } from "../../utils/html";
+import moment from "moment";
 
 //import BusinessModel from '../../models/ ';
 class NewsFilter extends PureComponent {
@@ -45,7 +50,7 @@ class NewsFilter extends PureComponent {
   };
 
   onSubmit = (isReset = false) => {
-    const {
+    let {
       inputValue,
       newsCategory,
       selectedActive,
@@ -60,8 +65,12 @@ class NewsFilter extends PureComponent {
       inputValue ? inputValue.trim() : null,
       selectedActive ? selectedActive.value : 2,
       newsCategory ? newsCategory.value : null,
-      startDate ? startDate.format("DD/MM/YYYY") : startDate,
-      endDate ? endDate.format("DD/MM/YYYY") : endDate,
+      moment(startDate).isValid()
+        ? moment(startDate, "DD/MM/YYYY").format("DD/MM/YYYY")
+        : null,
+      moment(endDate).isValid()
+        ? moment(endDate, "DD/MM/YYYY").format("DD/MM/YYYY")
+        : null,
       startDateCreateDate
         ? startDateCreateDate.format("DD/MM/YYYY")
         : startDateCreateDate,
@@ -178,15 +187,13 @@ class NewsFilter extends PureComponent {
                   Ngày đăng
                 </Label>
                 <Col className="pl-0 pr-0">
-                  <DatePicker
-                    startDate={this.state.startDate}
-                    startDateId="your_unique_start_date_id"
-                    endDate={this.state.endDate}
-                    endDateId="your_unique_end_date_id"
-                    onDatesChange={({ startDate, endDate }) =>
+                  <RangePicker
+                    setId="date1"
+                    startDateValue={this.state.startDate}
+                    endDateValue={this.state.endDate}
+                    handleDateValue={(startDate, endDate) =>
                       this.setState({ startDate, endDate })
                     }
-                    isMultiple
                   />
                 </Col>
               </FormGroup>
@@ -198,7 +205,7 @@ class NewsFilter extends PureComponent {
                   Ngày tạo
                 </Label>
                 <Col className="pl-0 pr-0">
-                  <DatePicker
+                  {/* <DatePicker
                     startDate={this.state.startDateCreateDate}
                     startDateId="your_unique_start_date_id"
                     endDate={this.state.endDateCreateDate}
@@ -210,6 +217,18 @@ class NewsFilter extends PureComponent {
                       })
                     }
                     isMultiple
+                    onChange={(value, e) => this.handleChangeDate(value, e)}
+                  /> */}
+                  <RangePicker
+                    setId="date2"
+                    startDateValue={this.state.startDateCreateDate}
+                    endDateValue={this.state.endDateCreateDate}
+                    handleDateValue={(startDate, endDate) =>
+                      this.setState({
+                        startDateCreateDate: startDate,
+                        endDateCreateDate: endDate,
+                      })
+                    }
                   />
                 </Col>
               </FormGroup>
@@ -242,23 +261,30 @@ class NewsFilter extends PureComponent {
               </FormGroup>
             </Col> */}
             <Col xs={12} sm={4} className="mt-md-3">
-              <div className="d-flex align-items-end" style={{marginTop: 32}}>
+              <div className="d-flex align-items-end" style={{ marginTop: 32 }}>
                 <div className="d-flex flex-fill justify-content-end">
                   <FormGroup className="mb-2 ml-2 mb-sm-0">
-                    <Button className="col-12 MuiPaper-filter__custom--button" onClick={this.onSubmit} color="primary" >
+                    <Button
+                      className="col-12 MuiPaper-filter__custom--button"
+                      onClick={this.onSubmit}
+                      color="primary"
+                    >
                       <i className="fa fa-search" />
                       <span className="ml-1">Tìm kiếm</span>
                     </Button>
                   </FormGroup>
                   <FormGroup className="mb-2 ml-2 mb-sm-0">
-                    <Button className="mr-1 col-12 MuiPaper-filter__custom--button" onClick={this.onClear} >
+                    <Button
+                      className="mr-1 col-12 MuiPaper-filter__custom--button"
+                      onClick={this.onClear}
+                    >
                       <i className="fa fa-refresh" />
                       <span className="ml-1">Làm mới</span>
                     </Button>
                   </FormGroup>
                 </div>
               </div>
-            </Col> 
+            </Col>
           </Row>
         </Form>
       </div>
