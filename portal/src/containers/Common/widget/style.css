@@ -3,3 +3,29 @@
     background-color: #f0f3f5;
     cursor: pointer;
 }
+
+.ant-picker-input input::placeholder {
+    text-align: center;
+  }
+  
+  .ant-picker-input > input {
+    text-align: center !important;
+  }
+  
+  .ant-picker-focused {
+    background-color: #fff;
+    border-color: #8ad4ee !important;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem #20a8d840;
+  }
+  
+  .ant-picker-content thead tr th {
+    background-color: #50bbcc;
+    color: white;
+    border: 1px solid white;
+  }
+
+  .ant-picker-cell-inner {
+      width: 100% !important;
+  }
+  
