@@ -72,6 +72,7 @@ const createBannerOrUpdate = async (bodyParams) => {
       picture_url = path_picture_url;
     }
   }
+  console.log(picture_url)
   try {
     const pool = await mssql.pool;
     const data = await pool.request()
