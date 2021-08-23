@@ -379,9 +379,10 @@ class Banner extends Component {
         <div>
           <CheckAccess permission="CMS_BANNER_ADD">
             <Button
-              className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
+              // className="col-12 max-w-110 mb-3 mobile-reset-width mr-2"
+              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
               onClick={() => this.handleClickAdd()}
-              style={{ paddingTop: "6px", paddingBot: "6px" }}
+              // style={{ paddingTop: "6px", paddingBot: "6px" }}
               color="success"
               size="sm"
             >

@@ -21,38 +21,58 @@ const config = require('../../../config/config');
  * @returns ServiceResponse
  */
 const getListCRMAccount = async (queryParams = {}) => {
+  // console.log(queryParams)
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
     const keyword = apiHelper.getSearch(queryParams);
 
     const pool = await mssql.pool;
-    const data = await pool.request()
+    const data = await pool
+      .request()
       .input('PageSize', itemsPerPage)
       .input('PageIndex', currentPage)
       .input('KEYWORD', keyword)
-      .input('COUNTRYID', apiHelper.getValueFromObject(queryParams, 'country_id'))
-      .input('PROVINCEID', apiHelper.getValueFromObject(queryParams, 'province_id'))
-      .input('DISTRICTID', apiHelper.getValueFromObject(queryParams, 'district_id'))
+      .input(
+        'COUNTRYID',
+        apiHelper.getValueFromObject(queryParams, 'country_id')
+      )
+      .input(
+        'PROVINCEID',
+        apiHelper.getValueFromObject(queryParams, 'province_id')
+      )
+      .input(
+        'DISTRICTID',
+        apiHelper.getValueFromObject(queryParams, 'district_id')
+      )
       .input('WARDID', apiHelper.getValueFromObject(queryParams, 'ward_id'))
-      .input('FROMBIRTHDAY', apiHelper.getValueFromObject(queryParams, 'from_birth_day'))
-      .input('TOBIRTHDAY', apiHelper.getValueFromObject(queryParams, 'to_birth_day'))
+      .input(
+        'FROMBIRTHDAY',
+        apiHelper.getValueFromObject(queryParams, 'from_birth_day')
+      )
+      .input(
+        'TOBIRTHDAY',
+        apiHelper.getValueFromObject(queryParams, 'to_birth_day')
+      )
       .input('GENDER', apiHelper.getValueFromObject(queryParams, 'gender'))
-      .input('TYPEREGISTER', apiHelper.getValueFromObject(queryParams, 'type_register'))
+      .input(
+        'TYPEREGISTER',
+        apiHelper.getValueFromObject(queryParams, 'type_register')
+      )
       .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'is_active'))
       .execute(PROCEDURE_NAME.CRM_ACCOUNT_GETLIST_ADMINWEB);
 
     const Account = data.recordset;
 
     return new ServiceResponse(true, '', {
-      'data': crmAccountClass.list(Account),
-      'page': currentPage,
-      'limit': itemsPerPage,
-      'total': apiHelper.getTotalData(Account),
+      data: crmAccountClass.list(Account),
+      page: currentPage,
+      limit: itemsPerPage,
+      total: apiHelper.getTotalData(Account),
     });
   } catch (e) {
     logger.error(e, {
-      'function': 'AccountService.getListCRMAccount',
+      function: 'AccountService.getListCRMAccount',
     });
 
     return new ServiceResponse(true, '', {});
@@ -69,80 +89,78 @@ const updateCRMAccount = async (body = {}, member_id) => {
 
 const createCRMAccountOrUpdate = async (body = {}) => {
   let image_avatar = apiHelper.getValueFromObject(body, 'image_avatar');
+  let id_front = apiHelper.getValueFromObject(body, 'id_card_front_image');
+  let id_back = apiHelper.getValueFromObject(body, 'id_card_back_image');
+  let live_image = apiHelper.getValueFromObject(body, 'live_image');
+
   if (image_avatar) {
     const path_image_avatar = await saveFile(image_avatar, folderName);
     if (path_image_avatar) {
       image_avatar = path_image_avatar;
     }
   }
+  if (id_front) {
+    const path_id_front = await saveFile(id_front, folderName);
+    if (path_id_front) {
+      id_front = path_id_front;
+    }
+  }
+  if (id_back) {
+    const path_id_back = await saveFile(id_back, folderName);
+    if (path_id_back) {
+      id_back = path_id_back;
+    }
+  }
+  if (live_image) {
+    const path_live_image = await saveFile(live_image, folderName);
+    if (path_live_image) {
+      live_image = path_live_image;
+    }
+  }
+  // console.log(body)
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
   try {
     await transaction.begin();
-    let data_leads_id = '';
-    const requestCheck = new sql.Request(transaction);
-    const resultCheck = await requestCheck
-      .input('PHONENUMBER', apiHelper.getValueFromObject(body, 'phone_number'))
-      .execute(PROCEDURE_NAME.CRM_CUSTOMERDATALEADS_CHECKEXISTS_ADMINWEB);
-    if (resultCheck.recordset.lenght > 0 && resultCheck.recordset[0].DATALEADSID) {
-      data_leads_id = resultCheck.recordset[0].DATALEADSID;
-    } else {
-      const requestCustomer = new sql.Request(transaction);
-      const resultCustomer = await requestCustomer
-        .input('DATALEADSID', 'WE')
-        .input('FULLNAME', apiHelper.getValueFromObject(body, 'full_name'))
-        .input('BIRTHDAY', apiHelper.getValueFromObject(body, 'birth_day'))
-        .input('GENDER', apiHelper.getValueFromObject(body, 'gender'))
-        .input('PHONENUMBER', apiHelper.getValueFromObject(body, 'phone_number'))
-        .input('EMAIL', apiHelper.getValueFromObject(body, 'email'))
-        .input('MARITALSTATUS', apiHelper.getValueFromObject(body, 'marital_status'))
-        .input('IDCARD', apiHelper.getValueFromObject(body, 'id_card'))
-        .input('IDCARDDATE', apiHelper.getValueFromObject(body, 'id_card_date'))
-        .input('IDCARDPLACE', apiHelper.getValueFromObject(body, 'id_card_place'))
-        .input('ADDRESS', apiHelper.getValueFromObject(body, 'address'))
-        .input('PROVINCEID', apiHelper.getValueFromObject(body, 'province_id'))
-        .input('DISTRICTID', apiHelper.getValueFromObject(body, 'district_id'))
-        .input('COUNTRYID', apiHelper.getValueFromObject(body, 'country_id'))
-        .input('WARDID', apiHelper.getValueFromObject(body, 'ward_id'))
-        .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
-        .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-        .execute(PROCEDURE_NAME.CRM_CUSTOMERDATALEADS_CREATEORUPDATE_ADMINWEB);
-      data_leads_id = resultCustomer.recordset[0].RESULT;
-    }
-    const is_change_password = apiHelper.getValueFromObject(body, 'is_change_password');
-    let password = apiHelper.getValueFromObject(body, 'password');
-    if (is_change_password)
-      password = stringHelper.hashPassword(password);
-    // Save CRM_ACCOUNT
+    let password = apiHelper.getValueFromObject(body, 'pass_word');
+    password = stringHelper.hashPassword(password);
+    // Save create
     const requestAccount = new sql.Request(transaction);
     const resultAccount = await requestAccount
       .input('MEMBERID', apiHelper.getValueFromObject(body, 'member_id'))
       .input('USERNAME', apiHelper.getValueFromObject(body, 'user_name'))
-      .input('DATALEADSID', data_leads_id)
       .input('PASSWORD', password)
-      .input('IMAGEAVATAR', image_avatar)
-      .input('FULLNAME', apiHelper.getValueFromObject(body, 'full_name'))
       .input('BIRTHDAY', apiHelper.getValueFromObject(body, 'birth_day'))
+      .input(
+        'CUSTOMERCODE',
+        apiHelper.getValueFromObject(body, 'customer_code')
+      )
       .input('GENDER', apiHelper.getValueFromObject(body, 'gender'))
-      .input('MARITALSTATUS', apiHelper.getValueFromObject(body, 'marital_status'))
+      .input('FULLNAME', apiHelper.getValueFromObject(body, 'full_name'))
+      .input('NICKNAME', apiHelper.getValueFromObject(body, 'nick_name'))
+      .input('IMAGEAVATAR', image_avatar)
       .input('PHONENUMBER', apiHelper.getValueFromObject(body, 'phone_number'))
       .input('EMAIL', apiHelper.getValueFromObject(body, 'email'))
+      .input(
+        'MARITALSTATUS',
+        apiHelper.getValueFromObject(body, 'marital_status')
+      )
       .input('IDCARD', apiHelper.getValueFromObject(body, 'id_card'))
       .input('IDCARDDATE', apiHelper.getValueFromObject(body, 'id_card_date'))
       .input('IDCARDPLACE', apiHelper.getValueFromObject(body, 'id_card_place'))
+      .input('IDCARDFRONTSIDE', id_front)
+      .input('IDCARDBACKSIDE', id_back)
+      .input('IDCARDBACKSIDE', id_back)
+      .input('LIVEIMAGE', live_image)
       .input('ADDRESS', apiHelper.getValueFromObject(body, 'address'))
       .input('PROVINCEID', apiHelper.getValueFromObject(body, 'province_id'))
-      .input('DISTRICTID', apiHelper.getValueFromObject(body, 'district_id'))
-      .input('COUNTRYID', apiHelper.getValueFromObject(body, 'country_id'))
       .input('WARDID', apiHelper.getValueFromObject(body, 'ward_id'))
-      .input('ISCONFIRM', apiHelper.getValueFromObject(body, 'is_confirm'))
-      .input('ISCANSMSORPHONE', apiHelper.getValueFromObject(body, 'is_can_sms_or_phone'))
-      .input('ISCANEMAIL', apiHelper.getValueFromObject(body, 'is_can_email'))
-      .input('ISCANEMAIL', apiHelper.getValueFromObject(body, 'is_can_email'))
-      .input('ISSYSTEM', apiHelper.getValueFromObject(body, 'is_system'))
+      .input('DISTRICTID', apiHelper.getValueFromObject(body, 'district_id'))
+      .input('FACEBOOKURL', apiHelper.getValueFromObject(body, 'facebook'))
+      .input('TWITTERURL', apiHelper.getValueFromObject(body, 'twitter'))
       .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
       .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-      .execute(PROCEDURE_NAME.CRM_ACCOUNT_CREATEORUPDATE_ADMINWEB);
+      .execute('CRM_ACCOUNT_CreateOrUpdate_Portal');
     const member_id = resultAccount.recordset[0].RESULT;
     if (member_id > 0) {
       removeCacheOptions();
@@ -151,7 +169,7 @@ const createCRMAccountOrUpdate = async (body = {}) => {
     return new ServiceResponse(true, '', member_id);
   } catch (error) {
     logger.error(error, {
-      'function': 'AccountService.createCRMAccountOrUpdate',
+      function: 'AccountService.createCRMAccountOrUpdate',
     });
     console.error('AccountService.createCRMAccountOrUpdate', error);
     return new ServiceResponse(false, e.message);
@@ -162,17 +180,19 @@ const detailCRMAccount = async (memberid) => {
   try {
     const pool = await mssql.pool;
 
-    const data = await pool.request()
+    const data = await pool
+      .request()
       .input('MEMBERID', memberid)
       .execute(PROCEDURE_NAME.CRM_ACCOUNT_GETBYID_ADMINWEB);
     const Account = data.recordset[0];
+    // console.log(Account)
     if (Account) {
       return new ServiceResponse(true, '', crmAccountClass.detail(Account));
     }
     return new ServiceResponse(false, '', null);
   } catch (e) {
     logger.error(e, {
-      'function': 'AccountService.detailAccount',
+      function: 'AccountService.detailAccount',
     });
 
     return new ServiceResponse(false, e.message);
@@ -183,7 +203,8 @@ const deleteCRMAccount = async (memberid, authName) => {
   const pool = await mssql.pool;
   try {
     // Delete user group
-    await pool.request()
+    await pool
+      .request()
       .input('MEMBERID', memberid)
       .input('UPDATEDUSER', authName)
       .execute(PROCEDURE_NAME.CRM_ACCOUNT_DELETE_ADMINWEB);
@@ -194,7 +215,7 @@ const deleteCRMAccount = async (memberid, authName) => {
     return new ServiceResponse(true);
   } catch (e) {
     logger.error(e, {
-      'function': 'AccountService.deleteAccount',
+      function: 'AccountService.deleteAccount',
     });
 
     // Return failed
@@ -205,7 +226,8 @@ const deleteCRMAccount = async (memberid, authName) => {
 const changeStatusCRMAccount = async (memberid, authName, isActive) => {
   try {
     const pool = await mssql.pool;
-    await pool.request()
+    await pool
+      .request()
       .input('MEMBERID', memberid)
       .input('ISACTIVE', isActive)
       .input('UPDATEDUSER', authName)
@@ -214,7 +236,7 @@ const changeStatusCRMAccount = async (memberid, authName, isActive) => {
     return new ServiceResponse(true);
   } catch (e) {
     logger.error(e, {
-      'function': 'AccountService.changeStatusCRMAccount',
+      function: 'AccountService.changeStatusCRMAccount',
     });
 
     return new ServiceResponse(false);
@@ -227,21 +249,25 @@ const saveFile = async (base64, folderName) => {
     if (fileHelper.isBase64(base64)) {
       const extension = fileHelper.getExtensionFromBase64(base64);
       const guid = createGuid();
-      url = await fileHelper.saveBase64(folderName, base64, `${guid}.${extension}`);
+      url = await fileHelper.saveBase64(
+        folderName,
+        base64,
+        `${guid}.${extension}`
+      );
     } else {
       url = base64.split(config.domain_cdn)[1];
     }
   } catch (e) {
     logger.error(e, {
-      'function': 'AccountService.saveFile',
+      function: 'AccountService.saveFile',
     });
   }
   return url;
 };
 const createGuid = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    var r = Math.random() * 16 | 0,
-      v = c === 'x' ? r : (r & 0x3 | 0x8);
+    var r = (Math.random() * 16) | 0,
+      v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });
 };
@@ -251,11 +277,13 @@ const removeCacheOptions = () => {
 };
 
 const changePassCRMAccount = async (memberid, body = {}) => {
+  // console.log(body)
   try {
     const pool = await mssql.pool;
     let password = apiHelper.getValueFromObject(body, 'password');
     password = stringHelper.hashPassword(password);
-    await pool.request()
+    await pool
+      .request()
       .input('MEMBERID', memberid)
       .input('PASSWORD', password)
       .input('UPDATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
@@ -264,13 +292,34 @@ const changePassCRMAccount = async (memberid, body = {}) => {
     return new ServiceResponse(true);
   } catch (e) {
     logger.error(e, {
-      'function': 'AccountService.changePassCRMAccount',
+      function: 'AccountService.changePassCRMAccount',
     });
 
     return new ServiceResponse(false);
   }
 };
+const genCode = async () => {
+  try {
+    const pool = await mssql.pool;
 
+    const data = await pool
+      .request()
+      .execute(PROCEDURE_NAME.CRM_ACCOUNT_GENCODE_PORTAL);
+    const Account = data.recordset[0];
+    // console.log(Account)
+    if (Account) {
+      return new ServiceResponse(true, '', Account);
+    }
+
+    return new ServiceResponse(false, '', null);
+  } catch (e) {
+    logger.error(e, {
+      function: 'AccountService.genCode',
+    });
+
+    return new ServiceResponse(false, e.message);
+  }
+};
 module.exports = {
   getListCRMAccount,
   createCRMAccount,
@@ -279,4 +328,5 @@ module.exports = {
   deleteCRMAccount,
   changeStatusCRMAccount,
   changePassCRMAccount,
+  genCode,
 };

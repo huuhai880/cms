@@ -17,6 +17,7 @@ import {
 } from "reactstrap";
 import Select from "react-select";
 import { DropzoneArea } from "material-ui-dropzone";
+import Upload from "../Common/Antd/Upload";
 
 // Component(s)
 import { CheckAccess } from "../../navigation/VerifyAccess";
@@ -26,6 +27,7 @@ import BannerModel from "../../models/BannerModel";
 import ConfigModel from "../../models/ConfigModel";
 // Util(s)
 import { mapDataOptions4Select } from "../../utils/html";
+import "./styles.scss";
 
 /**
  * @class BannerAdd
@@ -103,9 +105,7 @@ export default class BannerAdd extends PureComponent {
     ];
 
     await Promise.all(all).catch((err) =>
-      window._$g.dialogs.alert(
-        window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`)
-      )
+      window._$g.dialogs.alert(window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`))
     );
 
     if (BannerEnt && BannerEnt.picture_url) {
@@ -147,8 +147,7 @@ export default class BannerAdd extends PureComponent {
       is_active: 1 * values.is_active || 0,
     });
 
-    let BannerID =
-      (BannerEnt && BannerEnt.banner_id) || formData[this._BannerModel];
+    let BannerID = (BannerEnt && BannerEnt.banner_id) || formData[this._BannerModel];
 
     let apiCall = BannerID
       ? this._BannerModel.update(BannerID, formData)
@@ -172,9 +171,7 @@ export default class BannerAdd extends PureComponent {
       .catch((apiData) => {
         // NG
         let { errors, statusText, message } = apiData;
-        let msg = [`<b>${statusText || message}</b>`]
-          .concat(errors || [])
-          .join("<br/>");
+        let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
         alerts.push({ color: "danger", msg });
       })
       .finally(() => {
@@ -212,22 +209,22 @@ export default class BannerAdd extends PureComponent {
     //.end
   }
 
-  onDropImage(files, field) {
-    const reader = new FileReader();
-    reader.readAsDataURL(files);
-    reader.onload = (event) => {
-      field.onChange({
-        target: { type: "text", name: field.name, value: event.target.result },
-      });
-    };
-  }
+  // onDropImage(files, field) {
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(files);
+  //   reader.onload = (event) => {
+  //     field.onChange({
+  //       target: { type: "text", name: field.name, value: event.target.result },
+  //     });
+  //   };
+  // }
 
   render() {
     let { _id, ready, alerts, placementOpts } = this.state;
 
     let { BannerEnt, noEdit } = this.props;
     let initialValues = this.getInitialValues();
-
+    console.log(initialValues)
     // Ready?
     if (!ready) {
       return <Loading />;
@@ -239,10 +236,7 @@ export default class BannerAdd extends PureComponent {
           <Col xs={12}>
             <Card>
               <CardHeader>
-                <b>
-                  {BannerEnt ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"}{" "}
-                  banner
-                </b>
+                <b>{BannerEnt ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} banner</b>
               </CardHeader>
               <CardBody>
                 {/* general alerts */}
@@ -271,18 +265,12 @@ export default class BannerAdd extends PureComponent {
                         formikProps);
                     // Render
                     return (
-                      <Form
-                        id="form1st"
-                        onSubmit={handleSubmit}
-                        onReset={handleReset}
-                      >
+                      <Form id="form1st" onSubmit={handleSubmit} onReset={handleReset}>
                         <Row className="d-flex justify-content-center">
                           <Col xs={12}>
                             <Row className="mb-4">
                               <Col xs={8} className="mx-auto">
-                                <b className="title_page_h1 text-primary">
-                                  Thông tin banner
-                                </b>
+                                <b className="title_page_h1 text-primary">Thông tin banner</b>
                               </Col>
                             </Row>
                             <Row>
@@ -292,33 +280,23 @@ export default class BannerAdd extends PureComponent {
                                     <FormGroup row>
                                       <Label sm={3}>
                                         Vị trí đặt banner{" "}
-                                        <span className="font-weight-bold red-text">
-                                          {" "}
-                                          *{" "}
-                                        </span>
+                                        <span className="font-weight-bold red-text"> * </span>
                                       </Label>
                                       <Col sm={6}>
                                         <Field
                                           name="placement"
                                           render={({ field /*, form*/ }) => {
-                                            let defaultValue =
-                                              placementOpts.find(
-                                                ({ value }) =>
-                                                  value == field.value
-                                              );
+                                            let defaultValue = placementOpts.find(
+                                              ({ value }) => value == field.value
+                                            );
                                             let placeholder =
-                                              (placementOpts[0] &&
-                                                placementOpts[0].label) ||
-                                              "";
-                                            if (!defaultValue)
-                                              defaultValue = placementOpts[0];
+                                              (placementOpts[0] && placementOpts[0].label) || "";
+                                            if (!defaultValue) defaultValue = placementOpts[0];
                                             return (
                                               <Select
                                                 id="placement"
                                                 name="placement"
-                                                menuPortalTarget={document.querySelector(
-                                                  "body"
-                                                )}
+                                                menuPortalTarget={document.querySelector("body")}
                                                 styles={{
                                                   menuPortal: (base) => ({
                                                     ...base,
@@ -364,10 +342,7 @@ export default class BannerAdd extends PureComponent {
                                       <Label sm={3}>
                                         {" "}
                                         Ảnh banner{" "}
-                                        <span className="font-weight-bold red-text">
-                                          {" "}
-                                          *{" "}
-                                        </span>{" "}
+                                        <span className="font-weight-bold red-text"> * </span>{" "}
                                       </Label>
                                       <Col xs={12} sm={9}>
                                         {!this.state.clearImage && (
@@ -375,46 +350,62 @@ export default class BannerAdd extends PureComponent {
                                             name="picture_url"
                                             render={({ field }) => {
                                               // render image edit
-                                              if (this.state.urlImageEdit) {
-                                                return (
-                                                  <div className="tl-render-image">
-                                                    <img
-                                                      src={
-                                                        this.state.urlImageEdit
-                                                      }
-                                                      alt="images"
-                                                    />
-                                                    {!noEdit ? (
-                                                      <button
-                                                        onClick={() =>
-                                                          this.setState({
-                                                            urlImageEdit: "",
-                                                          })
-                                                        }
-                                                      >
-                                                        <i
-                                                          className="fa fa-trash"
-                                                          aria-hidden="true"
-                                                        ></i>
-                                                      </button>
-                                                    ) : null}
-                                                  </div>
-                                                );
-                                              }
-
+                                              // if (this.state.urlImageEdit) {
+                                              //   return (
+                                              //     <div className="tl-render-image">
+                                              //       <img
+                                              //         src={
+                                              //           this.state.urlImageEdit
+                                              //         }
+                                              //         alt="images"
+                                              //       />
+                                              //       {!noEdit ? (
+                                              //         <button
+                                              //           onClick={() =>
+                                              //             this.setState({
+                                              //               urlImageEdit: "",
+                                              //             })
+                                              //           }
+                                              //         >
+                                              //           <i
+                                              //             className="fa fa-trash"
+                                              //             aria-hidden="true"
+                                              //           ></i>
+                                              //         </button>
+                                              //       ) : null}
+                                              //     </div>
+                                              //   );
+                                              // }
+                                              // console.log(field);
                                               return (
-                                                <div className="tl-drop-image">
-                                                  <DropzoneArea
+                                                <div className="banner-upload">
+                                                  <Upload
+                                                    onChange={(img) =>
+                                                      field.onChange({
+                                                        target: {
+                                                          name: field.name,
+                                                          value: img,
+                                                        },
+                                                      })
+                                                    }
+                                                    imageUrl={field.value}
+                                                    accept="image/*"
+                                                    disabled={noEdit}
+                                                  />
+                                                  {/* <DropzoneArea
                                                     {...field}
                                                     acceptedFiles={["image/*"]}
                                                     filesLimit={1}
                                                     dropzoneText=""
                                                     disabled={noEdit}
                                                     onDrop={(files) =>
-                                                      this.onDropImage(
-                                                        files,
-                                                        field
-                                                      )
+                                                      // this.onDropImage(
+                                                      //   files,
+                                                      //   field
+                                                      // )
+                                                      {
+                                                        // console.log(files)
+                                                      }
                                                     }
                                                     onDelete={() =>
                                                       field.onChange({
@@ -425,7 +416,7 @@ export default class BannerAdd extends PureComponent {
                                                         },
                                                       })
                                                     }
-                                                  ></DropzoneArea>
+                                                  ></DropzoneArea> */}
                                                 </div>
                                               );
                                             }}
@@ -526,10 +517,7 @@ export default class BannerAdd extends PureComponent {
                                         ) : (
                                           [
                                             <CheckAccess
-                                              permission={[
-                                                "CMS_BANNER_EDIT",
-                                                "CMS_BANNER_ADD",
-                                              ]}
+                                              permission={["CMS_BANNER_EDIT", "CMS_BANNER_ADD"]}
                                               any
                                               key={1}
                                             >
@@ -538,9 +526,7 @@ export default class BannerAdd extends PureComponent {
                                                 type="submit"
                                                 color="primary"
                                                 disabled={isSubmitting}
-                                                onClick={() =>
-                                                  this.handleSubmit("save")
-                                                }
+                                                onClick={() => this.handleSubmit("save")}
                                                 className="mr-2 btn-block-sm"
                                               >
                                                 <i className="fa fa-save mr-2" />
@@ -548,10 +534,7 @@ export default class BannerAdd extends PureComponent {
                                               </Button>
                                             </CheckAccess>,
                                             <CheckAccess
-                                              permission={[
-                                                "CMS_BANNER_EDIT",
-                                                "CMS_BANNER_ADD",
-                                              ]}
+                                              permission={["CMS_BANNER_EDIT", "CMS_BANNER_ADD"]}
                                               any
                                               key={2}
                                             >
@@ -560,11 +543,7 @@ export default class BannerAdd extends PureComponent {
                                                 type="submit"
                                                 color="success"
                                                 disabled={isSubmitting}
-                                                onClick={() =>
-                                                  this.handleSubmit(
-                                                    "save_n_close"
-                                                  )
-                                                }
+                                                onClick={() => this.handleSubmit("save_n_close")}
                                                 className="mr-2 btn-block-sm mt-md-0 mt-sm-2"
                                               >
                                                 <i className="fa fa-save mr-2" />
@@ -575,9 +554,7 @@ export default class BannerAdd extends PureComponent {
                                         )}
                                         <Button
                                           disabled={isSubmitting}
-                                          onClick={() =>
-                                            window._$g.rdr("/banner")
-                                          }
+                                          onClick={() => window._$g.rdr("/banner")}
                                           className="btn-block-sm mt-md-0 mt-sm-2"
                                         >
                                           <i className="fa fa-times-circle mr-1" />

@@ -87,6 +87,7 @@ class DatePicker extends PureComponent {
           startDatePlaceholderText="dd/mm/yyyy"
           endDatePlaceholderText="dd/mm/yyyy"
           showDefaultInputIcon
+          minimumNights={0}
           block
           minimumNights={0}
           hideKeyboardShortcutsPanel 
