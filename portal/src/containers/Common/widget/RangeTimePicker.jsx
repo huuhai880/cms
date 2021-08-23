@@ -42,9 +42,12 @@ const RangeTimePicker = (props) => {
         moment(typeLeft.value, allowedDateFormats, true).isValid() &&
         typeRight !== "Invalid date"
       ) {
+        console.log("typeRight.value", typeRight.value);
         startDate = moment(typeLeft.value, allowedDateFormats);
-        endDate = typeRight.value
+        endDate = moment(typeRight.value, allowedDateFormats, true).isValid()
           ? moment(typeRight.value, allowedDateFormats)
+          : typeRight.value === ""
+          ? startDate
           : null;
         handleDateValue(startDate, endDate);
         return;
