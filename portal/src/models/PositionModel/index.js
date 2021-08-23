@@ -1,44 +1,43 @@
 //
-import Model from '../Model';
+import Model from "../Model";
 // Entities
-import PositionEntity from '../PositionEntity';
+import PositionEntity from "../PositionEntity";
 
 /**
  * @class Position
  */
-export default class PositionModel extends Model
-{
+export default class PositionModel extends Model {
   /** @var {String} redux store::state key */
-  _stateKeyName = 'position';
+  _stateKeyName = "position";
 
   /** @var {Ref} */
   _entity = PositionEntity;
 
   /** @var {String} */
-  static API_POSITION_LIST = 'position';
+  static API_POSITION_LIST = "position";
   /** @var {String} */
-  static API_POSITION_OPTS = 'position/get-options';
+  static API_POSITION_OPTS = "position/get-options";
   /** @var {String} */
-  static API_POSITION_CREATE = 'position';
+  static API_POSITION_CREATE = "position";
   /** @var {String} */
-  static API_POSITION_UPDATE = 'position/:id'; // PUT
+  static API_POSITION_UPDATE = "position/:id"; // PUT
   /** @var {String} */
-  static API_POSITION_READ = 'position/:id'; // GET
+  static API_POSITION_READ = "position/:id"; // GET
   /** @var {String} */
-  static API_POSITION_DELETE = 'position/:id'; // DELETE
+  static API_POSITION_DELETE = "position/:position_id/delete"; // DELETE
   /** @var {String} */
-  static API_POSITION_CHANGE_PASSWORD = 'position/:id/change-password'; // PUT
+  static API_POSITION_CHANGE_PASSWORD = "position/:id/change-password"; // PUT
 
   /**
    * @var {String} Primary Key
    */
-  primaryKey = 'position_id';
+  primaryKey = "position_id";
 
   /**
    * Column datafield prefix
    * @var {String}
    */
-  static columnPrefix = '';
+  static columnPrefix = "";
 
   /**
    * jqx's grid columns & datafields!
@@ -56,28 +55,30 @@ export default class PositionModel extends Model
    * @param {Object} opts Options
    * @return {Array}
    */
-  static jqxGridProps(opts)
-  {
+  static jqxGridProps(opts) {
     let _self = new _static();
 
     // Get, format options
-    opts = Object.assign({
-      prefix: _static.columnPrefix,
-      // events
-      // +++ format (mapping) API data before render
-      postBeforeProcessing: (data) => {
-        (data.items || []).forEach((item) => {
-          // ...
-        });
-      }
-    }, opts);
+    opts = Object.assign(
+      {
+        prefix: _static.columnPrefix,
+        // events
+        // +++ format (mapping) API data before render
+        postBeforeProcessing: (data) => {
+          (data.items || []).forEach((item) => {
+            // ...
+          });
+        },
+      },
+      opts
+    );
 
     //
     let props = Model.jqxGridProps(_static._jqxGridColumns, opts);
     // +++
     Object.assign(props.source, {
       url: _static.apiClass.buildApiUri(_static.API_POSITION_LIST),
-      id: _self.primaryKey
+      id: _self.primaryKey,
     });
 
     // Return;
@@ -88,13 +89,12 @@ export default class PositionModel extends Model
    * Get options (list opiton)
    * @returns Promise
    */
-  getOptions()
-  {
+  getOptions() {
     return this._api.get(_static.API_POSITION_OPTS, {});
   }
 
   /**
-   * 
+   *
    * @param {object} data
    */
   // constructor(data) { super(data); }
@@ -102,8 +102,7 @@ export default class PositionModel extends Model
   /**
    * @return {Promise}
    */
-  create(_data = {})
-  {
+  create(_data = {}) {
     // Validate data?!
     let data = Object.assign({}, this.fillable(), _data);
     // console.log('Position#create: ', data);
@@ -114,44 +113,46 @@ export default class PositionModel extends Model
   /**
    * @return {Promise}
    */
-  readVer1(id, _data = {})
-  {
+  readVer1(id, _data = {}) {
     // Validate data?!
     let data = Object.assign({}, _data);
     //
-    return this._api.get(_static.API_POSITION_READ.replace(':id', id), data);
+    return this._api.get(_static.API_POSITION_READ.replace(":id", id), data);
   }
 
   /**
    * @return {Promise}
    */
-  read(id, _opts = {})
-  {
+  read(id, _opts = {}) {
     // Validate data?!
-    return this.getOptions(_opts)
-      .then(items => (items || []).find(item => ('' + item.id) === ('' + id)));
+    return this.getOptions(_opts).then((items) =>
+      (items || []).find((item) => "" + item.id === "" + id)
+    );
   }
 
   /**
    * @return {Promise}
    */
-  update(id, _data = {})
-  {
+  getList(_data = {}) {
+    let data = Object.assign({}, _data);
+    return this._api.get(_static.API_POSITION_LIST, data);
+  }
+  update(id, _data = {}) {
     // Validate data?!
     let data = Object.assign({}, _data);
     //
-    return this._api.put(_static.API_POSITION_UPDATE.replace(':id', id), data);
+    return this._api.put(_static.API_POSITION_UPDATE.replace(":id", id), data);
   }
 
   /**
    * @return {Promise}
    */
-  delete(id, _data = {})
-  {
+  delete(id, _data = {}) {
     // Validate data?!
+    // console.log(id)
     let data = Object.assign({}, _data);
     //
-    return this._api.delete(_static.API_POSITION_DELETE.replace(':id', id), data);
+    return this._api.put(_static.API_POSITION_DELETE.replace(":position_id", id), data);
   }
 }
 // Make alias

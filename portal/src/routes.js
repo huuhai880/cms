@@ -192,7 +192,12 @@ const TaskCustomerDataLeadDetail = React.lazy(() =>
   import("./components/Task/TaskCustomerDataLeadDetail")
 );
 //.end#Task
-
+// Position
+const Position = React.lazy(() => import("./components/Position/Position"));
+const PositionAdd = React.lazy(() => import("./components/Position/PositionAdd"));
+// const TaskDetail = React.lazy(() => import("./components/Task/TaskDetail"));
+const PositonEdit = React.lazy(() => import("./components/Position/PositonEdit"));
+//.end#Positions
 // BusinessUser
 const BusinessUser = React.lazy(() => import("./components/BusinessUser/BusinessUser"));
 const BusinessUserAdd = React.lazy(() => import("./components/BusinessUser/BusinessUserAdd"));
@@ -2618,6 +2623,36 @@ const routes = [
     component: ReviewEdit,
   },
   // end#Review
+    // Review
+    {
+      path: "/position",
+      exact: true,
+      name: "Chức vụ",
+      function: "MD_POSITION_VIEW",
+      component: Position,
+    },
+    {
+      path: "/position/add",
+      exact: true,
+      name: "Thêm mới",
+      function: "MD_POSITION_ADD",
+      component: PositionAdd,
+    },
+    // {
+    //   path: "/review/detail/:id",
+    //   exact: true,
+    //   name: "Chi tiết",
+    //   function: "MD_POSITION_VIEW",
+    //   component: ReviewDetail,
+    // },
+    {
+      path: "/position/edit/:id",
+      exact: true,
+      name: "Chỉnh sửa",
+      function: "MD_POSITION_EDIT",
+      component: PositonEdit,
+    },
+    // end#Review
 ];
 
 export default routes;

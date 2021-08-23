@@ -19,7 +19,7 @@ const getListUser = async (req) => {
   try {
     const page = apiHelper.getPage(req);
     const limit = apiHelper.getLimit(req);
-
+// console.log(req)
     const query = `${PROCEDURE_NAME.SYS_USER_GETLIST} 
       @PageSize=:PageSize,
       @PageIndex=:PageIndex,
