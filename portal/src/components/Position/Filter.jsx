@@ -129,7 +129,7 @@ function Filter({ handleSubmitFillter }) {
               }}
             >
               <Label for="" className="mr-sm-2 font-weight-bold">
-                Ngày bình luận
+                Ngày tạo
               </Label>
               <Col className="pl-0 pr-0">
                 <DatePicker

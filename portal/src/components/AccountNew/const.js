@@ -24,7 +24,7 @@ export const initialValues = {
   nick_name: "",
   birth_day: "",
   gender: 1,
-  marital_status: 0,
+  marital_status: "",
   phone_number: "",
   email: "",
   id_card: "",
@@ -33,9 +33,9 @@ export const initialValues = {
   id_card_front_image: "",
   id_card_back_image: "",
   live_image: "",
-  country_id: "",
-  province_id: "",
-  district_id: "",
+  country_id: 0,
+  province_id: 0,
+  district_id: 0,
   ward_id: "",
   address: "",
   facebook: "",
@@ -47,41 +47,22 @@ export const initialPassword = {
   password_confirm: "",
 };
 ///// validate
-export const validationPassword = yup.object().shape({
-  password: yup.string()
-    .trim()
-    .required("Mật khẩu là bắt buộc.")
-    .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
-    .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!"),
-  password_confirm: yup.string()
-    .trim()
-    .required("Mật khẩu mới là bắt buộc.")
-    .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
-    .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!"),
-});
+// export const validationPassword = yup.object().shape({
+//   password: yup
+//     .string()
+//     .trim()
+//     .required("Mật khẩu là bắt buộc.")
+//     .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
+//     .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!"),
+//   password_confirm: yup
+//     .string()
+//     .trim()
+//     .required("Mật khẩu mới là bắt buộc.")
+//     .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
+//     .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!"),
+// });
 ///// validate
-export const validationSchema = yup.object().shape({
-  user_name: yup
-    .string()
-    .required("Tên đăng nhập không được để trống !")
-    .nullable()
-    .email("Vui lòng nhập tên đăng nhập theo đinh dạng email"),
-  pass_word: yup.string().required("Mật khẩu không được để trống !").nullable(),
-  full_name: yup.string().required("Họ và tên khai sinh không được để trống !").nullable(),
-  nick_name: yup.string().required("Họ và tên không được để trống !").nullable(),
-  birth_day: yup.string().required("Ngày sinh không được để trống !").nullable(),
-  email: yup.string().required("Ngày sinh không được để trống !").nullable(),
-  id_card: yup.string().required("Số CMND/CCCD không được để trống !").nullable(),
-  id_card_place: yup.string().required("Nơi cấp không được để trống !").nullable(),
-  id_card_date: yup.string().required("Ngày cấp không được để trống !").nullable(),
-  ward_id: yup.string().required("Phường/ Xã không được để trống !").nullable(),
-  province_id: yup.string().required("Tỉnh/ Thành phố không được để trống !").nullable(),
-  district_id: yup.string().required("Quận/ Huyện không được để trống !").nullable(),
-  phone_number: yup
-    .string()
-    .required("Số điện thoại không được để trống !")
-    .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ"),
-});
+ 
 
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   // console.log(data);
@@ -135,13 +116,26 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           let result = null;
           switch ("" + value) {
             case "0":
-              result = <span>Nữ</span>;
+              result = (
+                <div className="text-center">
+                  <span>Nữ</span>
+                </div>
+              );
               break;
             case "1":
-              result = <span>Nam</span>;
+              result = (
+                <div className="text-center">
+                  <span>Nam</span>
+                </div>
+              );
               break;
             default:
-              result = <span>Khác</span>;
+              result = (
+                <div className="text-center">
+                  {" "}
+                  <span>Khác</span>
+                </div>
+              );
           }
           return result;
         },
@@ -207,7 +201,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
         },
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
-            <div className="text-left">{value == 1 ? "Có" : value == 0 ? "Không" : "Không"}</div>
+            <div className="text-center">{value == 1 ? "Có" : value == 0 ? "Không" : "Không"}</div>
           );
         },
       },

@@ -27,7 +27,7 @@ export default class PositionModel extends Model {
   static API_POSITION_DELETE = "position/:position_id/delete"; // DELETE
   /** @var {String} */
   static API_POSITION_CHANGE_PASSWORD = "position/:id/change-password"; // PUT
-
+  static API_POSITION_CHECK = "position/check-name";
   /**
    * @var {String} Primary Key
    */
@@ -153,6 +153,12 @@ export default class PositionModel extends Model {
     let data = Object.assign({}, _data);
     //
     return this._api.put(_static.API_POSITION_DELETE.replace(":position_id", id), data);
+  }
+  check(_data = {}) {
+    // Validate data?!
+    let data = Object.assign({}, _data);
+    // console.log(id, data)
+    return this._api.get(_static.API_POSITION_CHECK, data);
   }
 }
 // Make alias

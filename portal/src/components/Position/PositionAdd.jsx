@@ -49,20 +49,27 @@ function PositionAdd() {
   //// create account
   const handleCreateOrUpdateAcount = async (values) => {
     try {
-      await _positionModel.create(values).then((data) => {
-        if (btnType == "save") {
-          _initDataDetail();
-          window._$g.toastr.show("Lưu thành công!", "success");
-        } else if (btnType == "save&quit") {
-          window._$g.toastr.show("Lưu thành công!", "success");
-          setDataPosition(initialValues);
-          return window._$g.rdr("/position");
+      await _positionModel.check({ name: values.position_name }).then((data) => {
+        console.log(data)
+        if (data.POSITIONID) {
+          // setalert("Email đã tồn tại!");
+          formik.setFieldError("position_name", "Tên thuộc tính đã tồn tại!");
+          window.scrollTo(0, 0);
+        } else {
+          _positionModel.create(values).then((data) => {
+            if (btnType == "save") {
+              // _initData();
+              window._$g.toastr.show("Lưu thành công!", "success");
+            } else if (btnType == "save&quit") {
+              window._$g.toastr.show("Lưu thành công!", "success");
+              setDataPosition(initialValues);
+              return window._$g.rdr("/position");
+            }
+            // console.log(data);
+          });
         }
       });
-    } catch (error) {
-      console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
-    }
+    } catch (error) {}
   };
   //// data detail
   const _initDataDetail = async () => {
