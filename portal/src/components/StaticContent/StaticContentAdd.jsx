@@ -417,6 +417,7 @@ export default class StaticContentAdd extends Component {
                                   )}
                                 />
                               </Col>
+                              
                             </FormGroup>
                           </Col>
                         </Row>

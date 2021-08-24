@@ -119,15 +119,22 @@ export default class AcccountAddress extends Component {
                           <Label for="" className="mr-sm-2">
                             Quận/ Huyện
                           </Label>
+                          {formik.values.province_id ? (
+                            <DistrictComponent
+                              className="MuiPaper-filter__custom--select"
+                              id="district_id"
+                              name="district_id"
+                              onChange={this.handleChangeDistrict}
+                              mainValue={formik.values.province_id}
+                              value={formik.values.district_id}
+                            />
+                          ) : (
+                            <Select
+                              className="MuiPaper-filter__custom--select"
+                              placeholder={"-- Quận/Huyện --"}
+                            />
+                          )}
 
-                          <DistrictComponent
-                            className="MuiPaper-filter__custom--select"
-                            id="district_id"
-                            name="district_id"
-                            onChange={this.handleChangeDistrict}
-                            mainValue={formik.values.province_id}
-                            value={formik.values.district_id}
-                          />
                           {formik.errors.district_id && (
                             <div
                               className="field-validation-error alert alert-danger fade show"
@@ -143,15 +150,21 @@ export default class AcccountAddress extends Component {
                           <Label for="" className="mr-sm-2">
                             Phường/ Xã
                           </Label>
-
-                          <WardComponent
-                            className="MuiPaper-filter__custom--select"
-                            id="ward_id"
-                            name="ward_id"
-                            onChange={this.handleChangeWard}
-                            mainValue={formik.values.district_id}
-                            value={formik.values.ward_id}
-                          />
+                          {formik.values.district_id ? (
+                            <WardComponent
+                              className="MuiPaper-filter__custom--select"
+                              id="ward_id"
+                              name="ward_id"
+                              onChange={this.handleChangeWard}
+                              mainValue={formik.values.district_id}
+                              value={formik.values.ward_id}
+                            />
+                          ) : (
+                            <Select
+                              className="MuiPaper-filter__custom--select"
+                              placeholder={"-- Phường/ Xã --"}
+                            />
+                          )}
 
                           {formik.errors.ward_id && (
                             <div

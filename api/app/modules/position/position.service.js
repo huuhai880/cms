@@ -25,15 +25,22 @@ const getListPosition = async (queryParams = {}) => {
       .request()
       .input('PageSize', itemsPerPage)
       .input('PageIndex', currentPage)
-      .input('KEYWORD', keyword)
+      .input('KEYWORD', apiHelper.getValueFromObject(queryParams, 'keyword'))
+      .input(
+        'CREATEDDATEFROM',
+        apiHelper.getValueFromObject(queryParams, 'startDate')
+      )
+      .input(
+        'CREATEDDATETO',
+        apiHelper.getValueFromObject(queryParams, 'endDate')
+      )
       .input(
         'ISACTIVE',
         apiHelper.getFilterBoolean(queryParams, 'selectdActive')
       )
-      .execute('MD_POSITION_GetAll');
-
+      .execute('MD_POSITION_GetAll_AdminWeb');
+    console.log(queryParams);
     const result = data.recordset;
-    // console.log(data)
 
     return new ServiceResponse(true, '', {
       data: PositionClass.list(result),
@@ -49,6 +56,26 @@ const getListPosition = async (queryParams = {}) => {
     return new ServiceResponse(true, '', {});
   }
 };
+/////////check name
+
+const checkName = async (name) => {
+  // console.log(email)
+  try {
+    const pool = await mssql.pool;
+    const data = await pool
+      .request()
+      .input('NAME', name)
+      .execute('MD_POSITION_CheckName_AdminWeb');
+    const res = data.recordset[0];
+    if (res) {
+      return new ServiceResponse(true, '', res);
+    }
+    return new ServiceResponse(true, '', '');
+  } catch (error) {
+    return new ServiceResponse(false, error.message);
+  }
+};
+//////create or update
 const createOrUpdatePosition = async (body = {}) => {
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
@@ -64,7 +91,7 @@ const createOrUpdatePosition = async (body = {}) => {
       )
       .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
       .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-      .execute('MD_POSITION_CreateOrUpdate');
+      .execute('MD_POSITION_CreateOrUpdate_AdminWeb');
     const position_id = resultPosition.recordset[0].RESULT;
     if (position_id > 0) {
       //   removeCacheOptions();
@@ -86,7 +113,7 @@ const detailPosition = async (memberid) => {
     const data = await pool
       .request()
       .input('POSITIONID', memberid)
-      .execute('MD_POSITION_GetById');
+      .execute('MD_POSITION_GetById_AdminWeb');
     const Position = data.recordset[0];
     // console.log(Account)
     if (Position) {
@@ -102,7 +129,7 @@ const detailPosition = async (memberid) => {
   }
 };
 const deletePosition = async (position_id, body) => {
-    // console.log(position_id, authName)
+  // console.log(position_id, authName)
   const pool = await mssql.pool;
   try {
     // Delete user group
@@ -110,12 +137,12 @@ const deletePosition = async (position_id, body) => {
       .request()
       .input('POSITIONID', position_id)
       .input('DELETEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-      .execute('MD_POSITION_delete');
+      .execute('MD_POSITION_delete_AdminWeb');
 
     // removeCacheOptions();
-// console.log(ServiceResponse(true))
+    // console.log(ServiceResponse(true))
     // Return ok
-    return new ServiceResponse(true,'');
+    return new ServiceResponse(true, '');
   } catch (e) {
     logger.error(e, {
       function: 'PositionService.deletePosition',
@@ -130,4 +157,5 @@ module.exports = {
   createOrUpdatePosition,
   detailPosition,
   deletePosition,
+  checkName,
 };

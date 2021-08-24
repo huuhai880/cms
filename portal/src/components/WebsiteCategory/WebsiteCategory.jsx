@@ -275,7 +275,7 @@ class WebsiteCategory extends Component {
       ),
       {
         name: "category_name",
-        label: "Tên doanh mục",
+        label: "Tên danh mục",
         options: {
           filter: false,
           sort: false,
@@ -312,6 +312,48 @@ class WebsiteCategory extends Component {
           },
           customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
+          },
+        },
+      },
+      {
+        name: "position",
+        label: "Vị trí áp dụng",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value) => {
+            return <span className="d-block text-left">{value || ""}</span>;
+          },
+        },
+      },
+      {
+        name: "is_static_content",
+        label: "Áp dụng cho trang tĩnh",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value) => {
+            return <span className="d-block text-center">{value?'Có':'Không'}</span>;
           },
         },
       },
