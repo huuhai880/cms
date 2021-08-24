@@ -699,7 +699,6 @@ export default class NewsAdd extends Component {
                                                     *{" "}
                                                   </span>
                                                 </Label>
-                                                {console.log(this.props.NewsEnt)}
                                                 <Col sm={10}>
                                                   <Field
                                                     name="news_title"
@@ -1240,7 +1239,7 @@ export default class NewsAdd extends Component {
                                         >
                                           <Field
                                             name="is_active"
-                                            render={({ field }) => (
+                                            render={({ field, form }) => (
                                               <CustomInput
                                                 {...field}
                                                 className="pull-left"
@@ -1248,6 +1247,13 @@ export default class NewsAdd extends Component {
                                                 checked={values.is_active}
                                                 type="checkbox"
                                                 id="is_active"
+                                                onChange={(e) => {
+                                                  form.setFieldValue(
+                                                    field.name,
+                                                    e.target.checked
+                                                  );
+                                                }}
+          
                                                 label="Kích hoạt"
                                                 disabled={noEdit}
                                               />
@@ -1268,6 +1274,15 @@ export default class NewsAdd extends Component {
                                                 onBlur={null}
                                                 checked={values.is_high_light}
                                                 type="checkbox"
+                                                onChange={(event) => {
+                                                  const { target } = event;
+                                                  field.onChange({
+                                                    target: {
+                                                      name: field.name,
+                                                      value: target.checked,
+                                                    },
+                                                  });
+                                                }}
                                                 id="is_high_light"
                                                 label="Tin nổi bật"
                                                 disabled={noEdit}
@@ -1288,6 +1303,15 @@ export default class NewsAdd extends Component {
                                                 className="pull-left"
                                                 onBlur={null}
                                                 checked={values.is_hot_news}
+                                                onChange={(event) => {
+                                                  const { target } = event;
+                                                  field.onChange({
+                                                    target: {
+                                                      name: field.name,
+                                                      value: target.checked,
+                                                    },
+                                                  });
+                                                }}
                                                 type="checkbox"
                                                 id="is_hot_news"
                                                 label="Tin hot"

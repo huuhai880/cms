@@ -108,7 +108,7 @@ class UserGroupsFilter extends PureComponent {
               sm={4}
               className="d-flex align-items-end justify-content-end"
             >
-              <FormGroup className="mb-2 mb-sm-0 mt-3">
+              <FormGroup className="mb-2 mb-sm-0">
                 <Button
                   className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                   onClick={this.onSubmit}

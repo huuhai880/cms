@@ -3,12 +3,13 @@
   cursor: pointer;
 }
 
-.ant-picker-input input::placeholder {
+.ant-picker-range > .ant-picker-input input::placeholder {
   text-align: center;
 }
 
-.ant-picker-input > input {
-  text-align: center !important;
+.ant-picker-range > .ant-picker-input > input {
+  text-align: center;
+  height: 100%;
 }
 
 .ant-picker-focused {
@@ -26,4 +27,12 @@
 
 .ant-picker-cell-inner {
   width: 100% !important;
+}
+.ant-picker-range > .ant-picker-input {
+  height: 38px;
+}
+
+.ant-picker-range {
+  padding-top: 0;
+  padding-bottom: 0; 
 }

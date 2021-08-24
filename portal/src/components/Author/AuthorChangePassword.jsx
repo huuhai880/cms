@@ -172,7 +172,7 @@ export default class AuthorChangePassword extends PureComponent {
                   );
                 })}
                 <Row>
-                  <Col xs={9}>
+                  <Col xs={6}>
                     <Formik
                       initialValues={this.getInitialValues()}
                       validationSchema={this.formikValidationSchema}
@@ -187,12 +187,12 @@ export default class AuthorChangePassword extends PureComponent {
                             <FormGroup row>
                               <Label
                                 for="AuthorName"
-                                sm={4}
+                                sm={3}
                                 className="font-weight-bold"
                               >
                                 Tài khoản
                               </Label>
-                              <Col sm={8}>
+                              <Col sm={9}>
                                 <b>{`${authorEnt._fullname()} [${
                                   authorEnt.author_name
                                 }]`}</b>
@@ -201,7 +201,7 @@ export default class AuthorChangePassword extends PureComponent {
                             <FormGroup row>
                               <Label
                                 for="password"
-                                sm={4}
+                                sm={3}
                                 className="font-weight-bold"
                               >
                                 Mật khẩu{" "}
@@ -209,7 +209,7 @@ export default class AuthorChangePassword extends PureComponent {
                                   *
                                 </span>
                               </Label>
-                              <Col sm={8}>
+                              <Col sm={9}>
                                 <Field
                                   name="password"
                                   render={({ field /* _form */ }) => (
@@ -236,10 +236,10 @@ export default class AuthorChangePassword extends PureComponent {
                                 />
                               </Col>
                             </FormGroup>
-                            <FormGroup row>
+                            <FormGroup className="mb-0" row>
                               <Label
                                 for="password_confirm"
-                                sm={4}
+                                sm={3}
                                 className="font-weight-bold"
                               >
                                 Xác nhận mật khẩu{" "}
@@ -247,7 +247,7 @@ export default class AuthorChangePassword extends PureComponent {
                                   *
                                 </span>
                               </Label>
-                              <Col sm={8}>
+                              <Col sm={9}>
                                 <Field
                                   validate={(values) =>
                                     this.validationComfirmPassword(values)
@@ -278,26 +278,35 @@ export default class AuthorChangePassword extends PureComponent {
                               </Col>
                             </FormGroup>
                             <FormGroup row>
-                              <Col sm={{ size: 3, offset: 4 }}>
-                                <Button
-                                  type="submit"
-                                  color="primary"
-                                  block
-                                  disabled={isSubmitting}
-                                  onClick={() => this.handleSubmit("save")}
-                                >
-                                  <i className="fa fa-edit" />
-                                  <span className="ml-1">Xác nhận</span>
-                                </Button>
-                              </Col>
-                              <Col sm={{ size: 3 }}>
-                                <Button
-                                  onClick={() => window._$g.rdr("/author")}
-                                  block
-                                >
-                                  <i className="fa fa-close" />
-                                  <span className="ml-1">Đóng</span>
-                                </Button>
+                              <Label sm={3}></Label>
+                              <Col
+                                sm={9}
+                                className="d-flex flex-fill justify-content-start"
+                              >
+                                <FormGroup className="mb-2 mb-sm-0">
+                                  <Button
+                                    className="pl-0 pr-0"
+                                    style={{ width: "100px", height: "34px" }}
+                                    type="submit"
+                                    color="primary"
+                                    block
+                                    disabled={isSubmitting}
+                                    onClick={() => this.handleSubmit("save")}
+                                  >
+                                    <i className="fa fa-edit" />
+                                    <span className="ml-1">Xác nhận</span>
+                                  </Button>
+                                </FormGroup>
+                                <FormGroup className="mb-2 ml-2 mb-sm-0">
+                                  <Button
+                                    style={{ width: "100px", height: "34px" }}
+                                    onClick={() => window._$g.rdr("/author")}
+                                    block
+                                  >
+                                    <i className="fa fa-close" />
+                                    <span className="ml-1">Đóng</span>
+                                  </Button>
+                                </FormGroup>
                               </Col>
                             </FormGroup>
                           </Form>

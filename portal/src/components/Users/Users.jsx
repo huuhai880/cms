@@ -1,22 +1,22 @@
-import React, { PureComponent } from 'react'
-import { Card, CardBody, CardHeader, Button } from 'reactstrap'
+import React, { PureComponent } from "react";
+import { Card, CardBody, CardHeader, Button } from "reactstrap";
 
 // Material
-import MUIDataTable from 'mui-datatables'
-import { CircularProgress } from '@material-ui/core'
-import CustomPagination from '../../utils/CustomPagination';
+import MUIDataTable from "mui-datatables";
+import { CircularProgress } from "@material-ui/core";
+import CustomPagination from "../../utils/CustomPagination";
 
 // Component(s)
-import { CheckAccess } from '../../navigation/VerifyAccess';
-import UserFilter from './UserFilter'
+import { CheckAccess } from "../../navigation/VerifyAccess";
+import UserFilter from "./UserFilter";
 
 // Util(s)
 // import { layoutFullWidthHeight } from '../../utils/html'
-import { configTableOptions, configIDRowTable } from '../../utils/index'
+import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
-import UserModel from '../../models/UserModel'
-import PositionModel from '../../models/PositionModel'
-import DepartmentModel from '../../models/DepartmentModel'
+import UserModel from "../../models/UserModel";
+import PositionModel from "../../models/PositionModel";
+import DepartmentModel from "../../models/DepartmentModel";
 
 // Set layout full-wh
 // layoutFullWidthHeight()
@@ -28,15 +28,15 @@ class Users extends PureComponent {
   /**
    * @var {UserModel}
    */
-  _userModel
+  _userModel;
 
   constructor(props) {
-    super(props)
+    super(props);
 
     // Init model(s)
-    this._userModel = new UserModel()
-    this._positionModel = window._positionModel = new PositionModel()
-    this._departmentModel = window._departmentModel = new DepartmentModel()
+    this._userModel = new UserModel();
+    this._positionModel = window._positionModel = new PositionModel();
+    this._departmentModel = window._departmentModel = new DepartmentModel();
     // Bind method(s)
   }
 
@@ -51,16 +51,12 @@ class Users extends PureComponent {
     },
     isLoading: false,
     isOpenSnackbar: false,
-    snackbarMsg: '',
-    snackBarClss: 'info',
+    snackbarMsg: "",
+    snackBarClss: "info",
     /** @var {Array} */
-    positions: [
-      { name: "-- Chọn --", id: "" },
-    ],
+    positions: [{ name: "-- Chọn --", id: "" }],
     /** @var {Array} */
-    departments: [
-      { name: "-- Chọn --", id: "" },
-    ],
+    departments: [{ name: "-- Chọn --", id: "" }],
     /** @var {Array} */
     roles: [
       { name: "Role 1", value: "1" },
@@ -68,7 +64,7 @@ class Users extends PureComponent {
       { name: "Role 3", value: "3" },
       { name: "Role 4", value: "4" },
     ],
-  }
+  };
 
   componentDidMount() {
     // Get bundle data
@@ -79,25 +75,26 @@ class Users extends PureComponent {
       let dataConfig = data.items || [];
       let isLoading = false;
       let count = data.totalItems;
-      let page = 0
-      let {
-        positions = [],
-        departments = [],
-      } = this.state;
+      let page = 0;
+      let { positions = [], departments = [] } = this.state;
       //
       positions = positions.concat(bundle.positions || []);
       departments = departments.concat(bundle.departments || []);
       //
-      this.setState({
-        isLoading
-      }, () => {
-        this.setState({
-          data: dataConfig,
-          count, page,
-          positions,
-          departments,
-        });
-      })
+      this.setState(
+        {
+          isLoading,
+        },
+        () => {
+          this.setState({
+            data: dataConfig,
+            count,
+            page,
+            positions,
+            departments,
+          });
+        }
+      );
     })();
     //.end
   }
@@ -106,111 +103,118 @@ class Users extends PureComponent {
    * Goi API, lay toan bo data lien quan, vd: chuc vu, phong ban, dia chi,...
    */
   async _getBundleData() {
-    let bundle = {}
+    let bundle = {};
     let all = [
       // @TODO:
-      this._userModel.list()
-        .then(data => (bundle['data'] = data)),
-      this._positionModel.getOptions()
-        .then(data => (bundle['positions'] = data)),
-      this._departmentModel.getOptions({is_active: 1})
-        .then(data => (bundle['departments'] = data)),
-    ]
-    await Promise.all(all)
-      .catch(err => {
-        window._$g.dialogs.alert(
-          window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
-          () => {
-            window.location.reload();
-          }
-        )
-      })
+      this._userModel.list().then((data) => (bundle["data"] = data)),
+      this._positionModel
+        .getOptions()
+        .then((data) => (bundle["positions"] = data)),
+      this._departmentModel
+        .getOptions({ is_active: 1 })
+        .then((data) => (bundle["departments"] = data)),
+    ];
+    await Promise.all(all).catch((err) => {
+      window._$g.dialogs.alert(
+        window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
+        () => {
+          window.location.reload();
+        }
+      );
+    });
     // console.log('bundle: ', bundle);
-    return bundle
+    return bundle;
   }
 
   // get data
-  getData = ( query = {} ) => {
+  getData = (query = {}) => {
     this.setState({ isLoading: true });
-    return this._userModel.list(query)
-    .then(res => {
+    return this._userModel.list(query).then((res) => {
       let data = res.items;
       let isLoading = false;
       let count = res.totalItems;
-      let page = query['page'] -1 || 0;
+      let page = query["page"] - 1 || 0;
       this.setState({
-        data, isLoading,
-        count, page, query
-      })
-    })
-  }
+        data,
+        isLoading,
+        count,
+        page,
+        query,
+      });
+    });
+  };
 
   handleClickAdd = () => {
-    window._$g.rdr('/users/add')
-  }
+    window._$g.rdr("/users/add");
+  };
 
   handleActionItemClick(type, id, rowIndex) {
     let routes = {
-      detail: '/users/detail/',
-      delete: '/users/delete/',
-      edit: '/users/edit/',
-      changePassword: '/users/change-password/',
-    }
-    const route = routes[type]
+      detail: "/users/detail/",
+      delete: "/users/delete/",
+      edit: "/users/edit/",
+      changePassword: "/users/change-password/",
+    };
+    const route = routes[type];
     if (type.match(/detail|edit|changePassword/i)) {
-      window._$g.rdr(`${route}${id}`)
+      window._$g.rdr(`${route}${id}`);
     } else {
       window._$g.dialogs.prompt(
-        'Bạn có chắc chắn muốn xóa dữ liệu đang chọn?',
-        'Xóa',
+        "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
+        "Xóa",
         (confirm) => this.handleClose(confirm, id, rowIndex)
-      )
+      );
     }
   }
 
   handleClose(confirm, id, rowIndex) {
-    const { data } = this.state
+    const { data } = this.state;
     if (confirm) {
-      this._userModel.delete(id)
-      .then(() => {
-        const cloneData = JSON.parse(JSON.stringify(data))
-        cloneData.splice(rowIndex, 1)
-        this.setState({
-          data: cloneData,
+      this._userModel
+        .delete(id)
+        .then(() => {
+          const cloneData = JSON.parse(JSON.stringify(data));
+          cloneData.splice(rowIndex, 1);
+          this.setState({
+            data: cloneData,
+          });
         })
-      })
-      .catch(() => {
-        window._$g.dialogs.alert(
-          window._$g._('Bạn vui lòng chọn dòng dữ liệu cần thao tác!')
-        )
-      })
+        .catch(() => {
+          window._$g.dialogs.alert(
+            window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
+          );
+        });
     }
   }
 
   handleSubmitFilter = (search, department_id, position_id, gender) => {
-    let query = {...this.state.query}
-    query.page = 1
-    query = Object.assign(query, {search, department_id, position_id, gender})
-    this.getData(query)
-    .catch(() => {
+    let query = { ...this.state.query };
+    query.page = 1;
+    query = Object.assign(query, {
+      search,
+      department_id,
+      position_id,
+      gender,
+    });
+    this.getData(query).catch(() => {
       window._$g.dialogs.alert(
-        window._$g._('Bạn vui lòng chọn dòng dữ liệu cần thao tác!')
-      )
-    })
-  }
+        window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
+      );
+    });
+  };
 
-  handleChangeRowsPerPage = (event ) => {
-    let query = {...this.state.query};
+  handleChangeRowsPerPage = (event) => {
+    let query = { ...this.state.query };
     query.itemsPerPage = event.target.value;
     query.page = 1;
     this.getData(query);
-  }
+  };
 
   handleChangePage = (event, newPage) => {
-    let query = {...this.state.query};
+    let query = { ...this.state.query };
     query.page = newPage + 1;
     this.getData(query);
-  }
+  };
 
   render() {
     const columns = [
@@ -231,10 +235,10 @@ class Users extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-right">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "full_name",
@@ -252,10 +256,10 @@ class Users extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "department_name",
@@ -273,10 +277,10 @@ class Users extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "position_name",
@@ -294,10 +298,10 @@ class Users extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "gender",
@@ -307,19 +311,19 @@ class Users extends PureComponent {
           sort: false,
           customBodyRender: (value, tableMeta, updateValue) => {
             let result = null;
-            switch ('' + value) {
-              case '0':
-                result = (<span className="d-block text-center">Nữ</span>);
+            switch ("" + value) {
+              case "0":
+                result = <span className="d-block text-center">Nữ</span>;
                 break;
-              case '1':
-                result = (<span className="d-block text-center">Nam</span>);
+              case "1":
+                result = <span className="d-block text-center">Nam</span>;
                 break;
               default:
-                result = (<span className="d-block text-center">Khác</span>);
+                result = <span className="d-block text-center">Khác</span>;
             }
             return result;
-          }
-        }
+          },
+        },
       },
       {
         name: "phone_number",
@@ -337,10 +341,10 @@ class Users extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-center">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "address_full",
@@ -358,10 +362,10 @@ class Users extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "email",
@@ -379,10 +383,10 @@ class Users extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "Thao tác",
@@ -394,44 +398,81 @@ class Users extends PureComponent {
             return (
               <div className="text-center">
                 <CheckAccess permission="SYS_USER_EDIT">
-                  <Button color="primary" title="Chỉnh sửa" className="mr-1" onClick={evt => this.handleActionItemClick('edit', this.state.data[tableMeta['rowIndex']].user_id, tableMeta['rowIndex'])}>
+                  <Button
+                    color="primary"
+                    title="Chỉnh sửa"
+                    className="mr-1"
+                    onClick={(evt) =>
+                      this.handleActionItemClick(
+                        "edit",
+                        this.state.data[tableMeta["rowIndex"]].user_id,
+                        tableMeta["rowIndex"]
+                      )
+                    }
+                  >
                     <i className="fa fa-edit" />
                   </Button>
                 </CheckAccess>
                 <CheckAccess permission="SYS_USER_PASSWORD">
-                  <Button color="success" title="Thay đổi mật khẩu" className="mr-1" onClick={evt => this.handleActionItemClick('changePassword', this.state.data[tableMeta['rowIndex']].user_id, tableMeta['rowIndex'])}>
-                  <i className="fa fa-lock"></i>
+                  <Button
+                    color="success"
+                    title="Thay đổi mật khẩu"
+                    className="mr-1"
+                    onClick={(evt) =>
+                      this.handleActionItemClick(
+                        "changePassword",
+                        this.state.data[tableMeta["rowIndex"]].user_id,
+                        tableMeta["rowIndex"]
+                      )
+                    }
+                  >
+                    <i className="fa fa-lock"></i>
                   </Button>
                 </CheckAccess>
                 <CheckAccess permission="SYS_USER_DEL">
-                  <Button color="danger" title="Xóa" className="" onClick={evt => this.handleActionItemClick('delete', this.state.data[tableMeta['rowIndex']].user_id, tableMeta['rowIndex'])}>
+                  <Button
+                    color="danger"
+                    title="Xóa"
+                    className=""
+                    onClick={(evt) =>
+                      this.handleActionItemClick(
+                        "delete",
+                        this.state.data[tableMeta["rowIndex"]].user_id,
+                        tableMeta["rowIndex"]
+                      )
+                    }
+                  >
                     <i className="fa fa-trash" />
                   </Button>
                 </CheckAccess>
               </div>
             );
-          }
-        }
+          },
+        },
       },
-    ]
+    ];
 
-    const {count, page, query} = this.state;
-    const options = configTableOptions(count, page, query)
+    const { count, page, query } = this.state;
+    const options = configTableOptions(count, page, query);
 
     return (
       <div>
         <Card className="animated fadeIn z-index-222 mb-3">
           <CardHeader className="d-flex">
-            <div className="flex-fill font-weight-bold">
-              Thông tin tìm kiếm
-            </div>
+            <div className="flex-fill font-weight-bold">Thông tin tìm kiếm</div>
             <div
               className="minimize-icon cur-pointer"
-              onClick={() => this.setState(prevState => ({
-                toggleSearch: !prevState.toggleSearch
-              }))}
+              onClick={() =>
+                this.setState((prevState) => ({
+                  toggleSearch: !prevState.toggleSearch,
+                }))
+              }
             >
-              <i className={`fa ${this.state.toggleSearch ? 'fa-minus' : 'fa-plus'}`} />
+              <i
+                className={`fa ${
+                  this.state.toggleSearch ? "fa-minus" : "fa-plus"
+                }`}
+              />
             </div>
           </CardHeader>
           {this.state.toggleSearch && (
@@ -446,44 +487,48 @@ class Users extends PureComponent {
             </CardBody>
           )}
         </Card>
-        <CheckAccess permission="SYS_USER_ADD">
-          <Button className="col-12 max-w-110 mb-3 mobile-reset-width" onClick={() => this.handleClickAdd()} color="success" size="sm">
-            <i className="fa fa-plus" />
-            <span className="ml-1">Thêm mới</span>
-          </Button>
-        </CheckAccess>
+        <div>
+          <CheckAccess permission="SYS_USER_ADD">
+            <Button
+              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
+              onClick={() => this.handleClickAdd()}
+              color="success"
+              size="sm"
+            >
+              <i className="fa fa-plus mr-1" />
+              Thêm mới
+            </Button>
+          </CheckAccess>
+        </div>
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-root__custom MuiPaper-user">
-              {this.state.isLoading
-                ? (
-                  <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
-                    <CircularProgress />
-                  </div>
-                )
-                : (
-                  <div>
-                    <MUIDataTable
-                      data={this.state.data}
-                      columns={columns}
-                      options={options}
-                    />
-                    <CustomPagination
-                      count={count}
-                      rowsPerPage={query.itemsPerPage}
-                      page={page}
-                      onChangePage={this.handleChangePage}
-                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    />
-                  </div>
-                )
-              }
+              {this.state.isLoading ? (
+                <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                  <CircularProgress />
+                </div>
+              ) : (
+                <div>
+                  <MUIDataTable
+                    data={this.state.data}
+                    columns={columns}
+                    options={options}
+                  />
+                  <CustomPagination
+                    count={count}
+                    rowsPerPage={query.itemsPerPage}
+                    page={page}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                  />
+                </div>
+              )}
             </div>
           </CardBody>
         </Card>
       </div>
-    )
+    );
   }
 }
 
-export default Users
+export default Users;

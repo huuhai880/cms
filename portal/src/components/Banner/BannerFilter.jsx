@@ -1,82 +1,95 @@
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
-import {
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Col,
-  Row,
-} from 'reactstrap'
-import Select from 'react-select'
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import { Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
+import Select from "react-select";
 
 // Component(s)
-import DatePicker from '../Common/DatePicker'
+import DatePicker from "../Common/DatePicker";
 
 // Model(s)
-import BannerModel from '../../models/BannerModel';
+import BannerModel from "../../models/BannerModel";
 
 class BannerFilter extends PureComponent {
   constructor(props) {
-    super(props)
+    super(props);
     this.onSubmit = this.onSubmit.bind(this);
     this._BannerModel = new BannerModel();
 
     this.state = {
       selectedIsActive: { label: "Có", value: 1 },
-      selectedPlacement: { label: 'Tất cả', value: ''},
+      selectedPlacement: { label: "Tất cả", value: "" },
       /** @var {Array} */
       isActives: [
         { name: "Tất cả", id: 2 },
         { name: "Có", id: 1 },
         { name: "Không", id: 0 },
       ],
-    }
+    };
   }
 
-
-  handleChange = event => {
+  handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
-  }
+  };
 
-  handleChangeActive = selectedIsActive => {
-    this.setState({ selectedIsActive })
-  }
+  handleChangeActive = (selectedIsActive) => {
+    this.setState({ selectedIsActive });
+  };
 
-  handleChangePlacement = selectedPlacement => {
-    this.setState({ selectedPlacement })
-  }
+  handleChangePlacement = (selectedPlacement) => {
+    this.setState({ selectedPlacement });
+  };
 
-  handleKeyDown = event => {
-    if ((1 * event.keyCode) === 13) {
-      event.preventDefault()
-      this.onSubmit()
+  handleKeyDown = (event) => {
+    if (1 * event.keyCode === 13) {
+      event.preventDefault();
+      this.onSubmit();
     }
-  }
+  };
 
   onSubmit() {
-    const { create_date_from, create_date_to, selectedIsActive, selectedPlacement} = this.state
-    const { handleSubmit } = this.props
+    const {
+      create_date_from,
+      create_date_to,
+      selectedIsActive,
+      selectedPlacement,
+    } = this.state;
+    const { handleSubmit } = this.props;
     handleSubmit(
-      create_date_from ? create_date_from.format('DD/MM/YYYY') : create_date_from,
-      create_date_to ? create_date_to.format('DD/MM/YYYY') : create_date_to,
+      create_date_from
+        ? create_date_from.format("DD/MM/YYYY")
+        : create_date_from,
+      create_date_to ? create_date_to.format("DD/MM/YYYY") : create_date_to,
       selectedIsActive ? selectedIsActive.value : 2,
-      selectedPlacement ? selectedPlacement.value : '' );
+      selectedPlacement ? selectedPlacement.value : ""
+    );
   }
 
   onClear = () => {
-    const { create_date_from, create_date_to, selectedIsActive, selectedPlacement } = this.state
-    if (create_date_from || create_date_to || selectedIsActive || selectedPlacement) {
-      this.setState({
-        create_date_from: null,
-        create_date_to: null,
-        selectedIsActive: { label: "Có", value: 1 },
-        selectedPlacement: { label: 'Tất cả', value: ''},
-      }, () => {
-        this.onSubmit(true)
-      })
+    const {
+      create_date_from,
+      create_date_to,
+      selectedIsActive,
+      selectedPlacement,
+    } = this.state;
+    if (
+      create_date_from ||
+      create_date_to ||
+      selectedIsActive ||
+      selectedPlacement
+    ) {
+      this.setState(
+        {
+          create_date_from: null,
+          create_date_to: null,
+          selectedIsActive: { label: "Có", value: 1 },
+          selectedPlacement: { label: "Tất cả", value: "" },
+        },
+        () => {
+          this.onSubmit(true);
+        }
+      );
     }
-  }
+  };
 
   render() {
     const { placementOpts } = this.props;
@@ -86,7 +99,9 @@ class BannerFilter extends PureComponent {
           <Row>
             <Col xs={12} sm={3}>
               <FormGroup className="mb-2 mb-sm-0">
-                <Label for="" className="mr-sm-2">Vị trí đặt banner</Label>
+                <Label for="" className="mr-sm-2">
+                  Vị trí đặt banner
+                </Label>
                 <Select
                   className="MuiPaper-filter__custom--select"
                   id="placement"
@@ -102,14 +117,21 @@ class BannerFilter extends PureComponent {
             </Col>
             <Col xs={12} sm={4}>
               <FormGroup className="mb-2 mb-sm-0">
-                <Label for="" className="mr-sm-2">Ngày tạo</Label>
+                <Label for="" className="mr-sm-2">
+                  Ngày tạo
+                </Label>
                 <Col className="pl-0 pr-0">
-                <DatePicker
+                  <DatePicker
                     startDate={this.state.create_date_from}
                     startDateId="your_unique_start_date_id"
                     endDate={this.state.create_date_to}
                     endDateId="your_unique_end_date_id"
-                    onDatesChange={({ startDate, endDate }) => this.setState({ create_date_from: startDate, create_date_to: endDate })} // PropTypes.func.isRequired,
+                    onDatesChange={({ startDate, endDate }) =>
+                      this.setState({
+                        create_date_from: startDate,
+                        create_date_to: endDate,
+                      })
+                    } // PropTypes.func.isRequired,
                     isMultiple
                   />
                 </Col>
@@ -117,7 +139,9 @@ class BannerFilter extends PureComponent {
             </Col>
             <Col xs={12} sm={3}>
               <FormGroup className="mb-2 mb-sm-0">
-                <Label for="" className="mr-sm-2">Kích hoạt</Label>
+                <Label for="" className="mr-sm-2">
+                  Kích hoạt
+                </Label>
                 <Select
                   className="MuiPaper-filter__custom--select"
                   id="isActives"
@@ -126,20 +150,35 @@ class BannerFilter extends PureComponent {
                   isSearchable={true}
                   placeholder={"-- Chọn --"}
                   value={this.state.selectedIsActive}
-                  options={this.state.isActives.map(({ name: label, id: value }) => ({ value, label }))}
+                  options={this.state.isActives.map(
+                    ({ name: label, id: value }) => ({ value, label })
+                  )}
                   {...this.props.controlIsActiveProps}
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={2} className="d-flex align-items-end justify-content-end">
+            <Col
+              xs={12}
+              sm={2}
+              className="d-flex align-items-end justify-content-end"
+            >
               <FormGroup className="mb-2 mb-sm-0">
-                <Button className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button" onClick={this.onSubmit} color="primary" size="sm">
+                <Button
+                  className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={this.onSubmit}
+                  color="primary"
+                  size="sm"
+                >
                   <i className="fa fa-search" />
                   <span className="ml-1">Tìm kiếm</span>
                 </Button>
               </FormGroup>
               <FormGroup className="mb-2 ml-2 mb-sm-0">
-                <Button className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button" onClick={this.onClear} size="sm">
+                <Button
+                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={this.onClear}
+                  size="sm"
+                >
                   <i className="fa fa-refresh" />
                   <span className="ml-1">Làm mới</span>
                 </Button>
@@ -148,13 +187,12 @@ class BannerFilter extends PureComponent {
           </Row>
         </Form>
       </div>
-    )
+    );
   }
 }
 
 BannerFilter.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
-}
+};
 
-export default BannerFilter
-
+export default BannerFilter;

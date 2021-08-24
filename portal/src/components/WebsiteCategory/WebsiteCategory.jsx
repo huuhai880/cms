@@ -503,7 +503,7 @@ class WebsiteCategory extends Component {
           <div>
             <CheckAccess permission="CMS_WEBSITECATE_ADD">
               <Button
-                className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
                 onClick={() => this.handleClickAdd()}
                 color="success"
                 size="sm"

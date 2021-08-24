@@ -17,10 +17,10 @@ import {
   CustomInput,
 } from "reactstrap";
 import Select from "react-select";
+import { Editor } from "@tinymce/tinymce-react";
 
 // Component(s)
 import Loading from "../Common/Loading";
-import RichEditor from "../Common/RichEditor";
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import "react-image-lightbox/style.css";
 import "../Products/styles.scss";
@@ -558,15 +558,48 @@ export default class StaticContentAdd extends Component {
                                 </span>
                               </Label>
                               <Col sm={10}>
-                                <RichEditor
-                                  disable={noEdit}
-                                  setContents={values.static_content}
-                                  onChange={(content) =>
+                                <Editor
+                                  apiKey={
+                                    "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
+                                  }
+                                  scriptLoading={{
+                                    delay: 500,
+                                  }}
+                                  value={values.static_content}
+                                  disabled={noEdit}
+                                  init={{
+                                    height: "300px",
+                                    width: "100%",
+                                    menubar: false,
+                                    branding: false,
+                                    statusbar: false,
+                                    plugins: [
+                                      "advlist autolink fullscreen lists link image charmap print preview anchor",
+                                      "searchreplace visualblocks code fullscreen ",
+                                      "insertdatetime media table paste code help",
+                                      "image imagetools ",
+                                      "toc",
+                                    ],
+                                    menubar:
+                                      "file edit view insert format tools table tc help",
+                                    toolbar1:
+                                      "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                                      "alignleft aligncenter alignright alignjustify",
+                                    toolbar2:
+                                      "bullist numlist outdent indent | removeformat | help | image | toc",
+                                    file_picker_types: "image",
+                                    images_dataimg_filter: function (img) {
+                                      return img.hasAttribute("internal-blob");
+                                    },
+                                    images_upload_handler:
+                                      this.handleUploadImage,
+                                  }}
+                                  onEditorChange={(newValue) => {
                                     formikProps.setFieldValue(
                                       "static_content",
-                                      content
-                                    )
-                                  }
+                                      newValue
+                                    );
+                                  }}
                                 />
                                 <ErrorMessage
                                   name="static_content"
@@ -600,6 +633,15 @@ export default class StaticContentAdd extends Component {
                                       type="checkbox"
                                       id="is_active"
                                       label="Kích hoạt"
+                                      onChange={(event) => {
+                                        const { target } = event;
+                                        field.onChange({
+                                          target: {
+                                            name: field.name,
+                                            value: target.checked,
+                                          },
+                                        });
+                                      }}
                                       disabled={noEdit}
                                     />
                                   )}

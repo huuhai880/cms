@@ -16,7 +16,7 @@ import { layoutFullWidthHeight } from "../../utils/html";
 import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
 import StaticContentModel from "../../models/StaticContentModel";
-import './styles.scss'
+import "./styles.scss";
 
 // Set layout full-wh
 layoutFullWidthHeight();
@@ -341,12 +341,45 @@ class StaticContent extends Component {
                 disabled={true}
                  /> */}
                 <div className="checkmark">
-                  <div className={`checkmark_circle ${value? "checkmark-active-bor": ""}`}></div>
-                  <div className={`checkmark_stem ${value? "checkmark-active-bg": ""}`}></div>
-                  <div className={`checkmark_kick ${value? "checkmark-active-bg": ""}`}></div>
+                  <div
+                    className={`checkmark_circle ${
+                      value ? "checkmark-active-bor" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_stem ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_kick ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
                 </div>
               </div>
             );
+          },
+        },
+      },
+      {
+        name: "create_date",
+        label: "Ngày tạo",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-center">{value}</div>;
           },
         },
       },
@@ -377,6 +410,16 @@ class StaticContent extends Component {
           filter: false,
           sort: false,
           empty: true,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
           customBodyRender: (value, tableMeta, updateValue) => {
             if (handlePick) {
               return (
@@ -493,9 +536,8 @@ class StaticContent extends Component {
           <div>
             <CheckAccess permission="CMS_STATICCONTENT_ADD">
               <Button
-                className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
                 onClick={() => this.handleClickAdd()}
-                style={{ paddingTop: "6px", paddingBot: "6px" }}
                 color="success"
                 size="sm"
               >

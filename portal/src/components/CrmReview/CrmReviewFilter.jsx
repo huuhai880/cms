@@ -4,9 +4,10 @@ import PropTypes from "prop-types";
 import { Input, Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
 import Select from "react-select";
 import moment from "moment";
+import RangePicker from "../../containers/Common/widget/RangeTimePicker";
+import "antd/dist/antd.css";
 
 // Component(s)
-import DatePicker from "../Common/DatePicker";
 import { FormSelectGroup } from "../../containers/Common/widget";
 import { mapDataOptions4Select } from "../../utils/html";
 import "./styles.scss";
@@ -21,7 +22,6 @@ function CrmReviewFilter(props) {
       { name: "Có", id: 1 },
       { name: "Không", id: 0 },
     ],
-    nameTag: "Chọn ngày",
   });
 
   const handleChange = (event) => {
@@ -39,96 +39,11 @@ function CrmReviewFilter(props) {
     }
   };
 
-  const renderCalendarInfo = () => {
-    let data = [
-      "Hôm nay",
-      "Hôm qua",
-      "Tuần này",
-      "Tuần trước",
-      "Tháng này",
-      "Tháng trước",
-      "Chọn ngày",
-    ];
-    return (
-      <Col style={{ width: "150px" }} sm={12} className="pl-0 pr-0 bl">
-        {data.map((item) => {
-          return (
-            <Col
-              sm={12}
-              onClick={() => calendar(item)}
-              className={`pt-3 pb-1 hover cursor-pointer ${
-                state.nameTag === item ? "focus" : ""
-              }`}
-            >
-              <Label className="cursor-pointer">{item}</Label>
-            </Col>
-          );
-        })}
-      </Col>
-    );
-  };
-
-  const calendar = (key) => {
-    switch (key) {
-      case "Hôm nay":
-        setState({
-          ...state,
-          startDate: moment(),
-          endDate: moment(),
-          nameTag: "Hôm nay",
-        });
-        break;
-      case "Hôm qua":
-        setState({
-          ...state,
-          startDate: moment().subtract(1, "days"),
-          endDate: moment().subtract(1, "days"),
-          nameTag: "Hôm qua",
-        });
-        break;
-      case "Tuần này":
-        setState({
-          ...state,
-          startDate: moment().startOf("week").add(1, "days"),
-          endDate: moment(),
-          nameTag: "Tuần này",
-        });
-        break;
-      case "Tuần trước":
-        setState({
-          ...state,
-          startDate: moment()
-            .subtract(1, "week")
-            .startOf("week")
-            .add(1, "days"),
-          endDate: moment().subtract(1, "week").endOf("week").add(1, "days"),
-          nameTag: "Tuần trước",
-        });
-        break;
-      case "Tháng này":
-        setState({
-          ...state,
-          startDate: moment().startOf("month"),
-          endDate: moment(),
-          nameTag: "Tháng này",
-        });
-        break;
-      case "Tháng trước":
-        setState({
-          ...state,
-          startDate: moment().subtract(1, "month").startOf("month"),
-          endDate: moment().subtract(1, "month").endOf("month"),
-          nameTag: "Tháng trước",
-        });
-        break;
-    }
-  };
-
   const onSubmit = (isReset = false) => {
     const { inputValue, startDate, endDate, selectedActive } = state;
     const { handleSubmit } = props;
     if (isReset == true) {
-      handleSubmit();
+      handleSubmit("", "", "", 1);
     } else {
       handleSubmit(
         inputValue ? inputValue.trim() : null,
@@ -184,22 +99,12 @@ function CrmReviewFilter(props) {
                 Ngày đánh giá
               </Label>
               <Col className="pl-0 pr-0">
-                <DatePicker
-                  startDate={state.startDate}
-                  startDateId="your_unique_start_date_id"
-                  endDate={state.endDate}
-                  endDateId="your_unique_end_date_id"
-                  onDatesChange={({ startDate, endDate }) =>
-                    setState({
-                      ...state,
-                      startDate,
-                      endDate,
-                      nameTag: "Chọn ngày",
-                    })
+                <RangePicker
+                  startDateValue={state.startDate}
+                  endDateValue={state.endDate}
+                  handleDateValue={(startDate, endDate) =>
+                    setState({ ...state, startDate, endDate })
                   }
-                  isMultiple
-                  calendarInfoPosition="after"
-                  renderCalendarInfo={() => renderCalendarInfo()}
                 />
               </Col>
             </FormGroup>
@@ -224,33 +129,32 @@ function CrmReviewFilter(props) {
               />
             </FormGroup>
           </Col>
-          <Col xs={12} sm={3} className="mt-md-3">
-            <div
-              className="d-flex align-items-center mt-2"
-              style={{ height: "100%" }}
-            >
-              <div className="d-flex flex-fill justify-content-end">
-                <FormGroup className="mb-2 ml-2 mb-sm-0">
-                  <Button
-                    className="col-12 MuiPaper-filter__custom--button"
-                    onClick={onSubmit}
-                    color="primary"
-                  >
-                    <i className="fa fa-search" />
-                    <span className="ml-1">Tìm kiếm</span>
-                  </Button>
-                </FormGroup>
-                <FormGroup className="mb-2 ml-2 mb-sm-0">
-                  <Button
-                    className="mr-1 col-12 MuiPaper-filter__custom--button"
-                    onClick={() => onClear()}
-                  >
-                    <i className="fa fa-refresh" />
-                    <span className="ml-1">Làm mới</span>
-                  </Button>
-                </FormGroup>
-              </div>
-            </div>
+          <Col
+            xs={12}
+            sm={3}
+            className="d-flex align-items-end justify-content-end"
+          >
+            <FormGroup className="mb-2 mb-sm-0">
+              <Button
+                className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                onClick={onSubmit}
+                color="primary"
+                size="sm"
+              >
+                <i className="fa fa-search" />
+                <span className="ml-1">Tìm kiếm</span>
+              </Button>
+            </FormGroup>
+            <FormGroup className="mb-2 ml-2 mb-sm-0">
+              <Button
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                onClick={() => onClear()}
+                size="sm"
+              >
+                <i className="fa fa-refresh" />
+                <span className="ml-1">Làm mới</span>
+              </Button>
+            </FormGroup>
           </Col>
         </Row>
       </Form>

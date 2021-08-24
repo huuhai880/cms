@@ -547,6 +547,7 @@ module.exports = {
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái thất bại.',
     EXISTS_PARENT:
       'Vui lòng xóa danh mục cấp con trước khi xóa danh mục cấp cha.',
+    EXISTS_NAME: 'Tên danh mục đã tồn tại.',
   },
   CANDIDATE: {
     CREATE_SUCCESS: 'Thêm mới thành công.',

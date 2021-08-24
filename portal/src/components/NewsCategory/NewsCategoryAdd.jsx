@@ -20,7 +20,7 @@ import {
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import Loading from "../Common/Loading";
 import { FormSelectGroup } from "@widget";
-import './styles.scss'
+import "./styles.scss";
 
 // Model(s)
 import NewsCategoryModel from "../../models/NewsCategoryModel";
@@ -90,7 +90,6 @@ export default class NewsCategoryAdd extends PureComponent {
         values[key] = "";
       }
     });
-
     // Return;
     return values;
   }
@@ -148,14 +147,19 @@ export default class NewsCategoryAdd extends PureComponent {
     let { setSubmitting, resetForm } = formProps;
 
     let willRedirect = false;
+    console.log("values", values);
     let alerts = [];
     // Build form data
     let formData = Object.assign({}, values, {
       is_active: 1 * values.is_active || 0,
       // is_author_post: 1 * values.is_author_post || 0,
       is_system: 1 * values.is_system || 0,
-      is_cate_video: 1 * values.is_cate_video || 0,
+      // is_cate_video: 1 * values.is_cate_video || 0,
     });
+    console.log(
+      "🚀 ~ file: NewsCategoryAdd.jsx ~ line 159 ~ NewsCategoryAdd ~ handleFormikSubmit ~ formData",
+      formData
+    );
 
     //return false;
     let newsCategoryID =
@@ -211,13 +215,14 @@ export default class NewsCategoryAdd extends PureComponent {
       ready: true,
       alerts: [],
       clearImage: false,
+      parent_list: [],
     }));
 
-    // (async () => {
-    //   let bundle = await this._getBundleData();
-    //   this.setState({ ...bundle, ready: true, clearImage: false });
-    // })();
-    //.end
+    (async () => {
+      let bundle = await this._getBundleData();
+      this.setState({ ...bundle, ready: true, clearImage: false });
+    })();
+    // .end
   }
 
   render() {
@@ -455,7 +460,7 @@ export default class NewsCategoryAdd extends PureComponent {
                                   </Col>
                                   <Col sm={12}>
                                     <FormGroup row>
-                                      <Label for="is_show_with_parent" sm={2}></Label>
+                                      <Label sm={2}></Label>
                                       <Col sm={4}>
                                         <Field
                                           name="is_show_with_parent"
@@ -464,7 +469,18 @@ export default class NewsCategoryAdd extends PureComponent {
                                               {...field}
                                               className="pull-left"
                                               onBlur={null}
-                                              checked={values.is_show_with_parent}
+                                              checked={
+                                                values.is_show_with_parent
+                                              }
+                                              onChange={(event) => {
+                                                const { target } = event;
+                                                field.onChange({
+                                                  target: {
+                                                    name: field.name,
+                                                    value: target.checked,
+                                                  },
+                                                });
+                                              }}
                                               type="checkbox"
                                               id="is_show_with_parent"
                                               label="Hiển thị cùng với chuyên mục cha"
@@ -475,15 +491,24 @@ export default class NewsCategoryAdd extends PureComponent {
                                       </Col>
                                       <Col sm={4}>
                                         <Field
-                                          name="is_author_post"
+                                          name="is_show_home"
                                           render={({ field }) => (
                                             <CustomInput
                                               {...field}
                                               className="pull-left"
                                               onBlur={null}
-                                              checked={values.is_author_post}
+                                              checked={values.is_show_home}
                                               type="checkbox"
-                                              id="is_author_post"
+                                              id="is_show_home"
+                                              onChange={(event) => {
+                                                const { target } = event;
+                                                field.onChange({
+                                                  target: {
+                                                    name: field.name,
+                                                    value: target.checked,
+                                                  },
+                                                });
+                                              }}
                                               label="Hiển thị trang chủ"
                                               disabled={noEdit}
                                             />
@@ -506,6 +531,15 @@ export default class NewsCategoryAdd extends PureComponent {
                                               checked={values.is_active}
                                               type="checkbox"
                                               id="is_active"
+                                              onChange={(event) => {
+                                                const { target } = event;
+                                                field.onChange({
+                                                  target: {
+                                                    name: field.name,
+                                                    value: target.checked,
+                                                  },
+                                                });
+                                              }}
                                               label="Kích hoạt"
                                               disabled={noEdit}
                                             />

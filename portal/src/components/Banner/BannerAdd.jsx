@@ -224,7 +224,6 @@ export default class BannerAdd extends PureComponent {
 
     let { BannerEnt, noEdit } = this.props;
     let initialValues = this.getInitialValues();
-    console.log(initialValues)
     // Ready?
     if (!ready) {
       return <Loading />;
@@ -486,6 +485,15 @@ export default class BannerAdd extends PureComponent {
                                               checked={values.is_active}
                                               type="checkbox"
                                               id="is_active"
+                                              onChange={(event) => {
+                                                const { target } = event;
+                                                field.onChange({
+                                                  target: {
+                                                    name: field.name,
+                                                    value: target.checked,
+                                                  },
+                                                });
+                                              }}
                                               label="Kích hoạt"
                                               disabled={noEdit}
                                             />
