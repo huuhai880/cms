@@ -26,6 +26,7 @@ export default class StaticContentModel extends Model {
   static API_STATIC_CONTENT_CHANGE_STATUS = 'static-content/:id/change-status';
   /** @var {String} */
   static API_STATIC_CONTENT_OPTS = 'website-category/get-options';
+  static API_STATIC_CONTENT_WEBSITECATEGORY_OPTS = 'website-category/get-options-static-content';
   /**
    * @var {String} Primary Key
    */
@@ -79,6 +80,16 @@ export default class StaticContentModel extends Model {
   getOptions(_opts = {}) {
     let opts = Object.assign({}, _opts);
     return this._api.get(_static.API_STATIC_CONTENT_OPTS, opts);
+  }
+
+
+  /**
+   * Get options (list opiton)
+   * @returns Promise
+   */
+   getOptionsStaticContent(_opts = {}) {
+    let opts = Object.assign({}, _opts);
+    return this._api.get(_static.API_STATIC_CONTENT_WEBSITECATEGORY_OPTS, opts);
   }
 
   /**

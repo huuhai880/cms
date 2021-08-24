@@ -48,6 +48,18 @@ const getListAllWebsite = async (req, res, next) => {
   }
 };
 
+
+const getListWebsiteCategoryForStaticContent = async (req, res, next) => {
+  try {
+    const serviceRes = await websiteCategoryService.getListWebsiteCategoryForStaticContent(
+      req.query
+    );
+    const { data } = serviceRes.getData();
+    return res.json(new SingleResponse(data));
+  } catch (error) {
+    return next(error);
+  }
+};
 /**
  * Get list all MD_STORE
  */
@@ -235,6 +247,7 @@ module.exports = {
   deleteWebsiteCategory,
   changeStatusWebsiteCategory,
   getListAllWebsiteCategory,
+  getListWebsiteCategoryForStaticContent,
   getListAllParent,
   getListAllWebsite,
   detailWebsite,

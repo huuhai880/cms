@@ -23,6 +23,11 @@ routes
   .route('/get-options-parent')
   .get(websiteCategoryController.getListAllParent);
 
+// Get option static content
+routes
+  .route('/get-options-static-content')
+  .get(websiteCategoryController.getListWebsiteCategoryForStaticContent);
+
 // Detail a area
 routes
   .route('/:websiteCategoryId(\\d+)')
