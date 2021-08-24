@@ -51,44 +51,44 @@ function AccountAdd({ noEdit }) {
   const [password, setPassword] = useState("");
   const [password_confirm, setPasswordconfirm] = useState("");
   const [alerPassword, setAlerPassword] = useState("");
-  // const validationSchema = yup.object().shape({
-  //   user_name: yup
-  //     .string()
-  //     .required("Tên đăng nhập không được để trống !")
-  //     .nullable()
-  //     .email("Vui lòng nhập tên đăng nhập theo đinh dạng email"),
-  //   pass_word: id
-  //     ? undefined
-  //     : yup
-  //         .string()
-  //         .required("Mật khẩu là bắt buộc.")
-  //         .matches(
-  //           /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*[0-9]){1})((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
-  //           "Mật khẩu tối thiêu 8 ký tự, 1 ký tự thường, 1 ký tự hoa và 1 số ."
-  //         ),
-  //   full_name: yup.string().required("Họ và tên khai sinh không được để trống !").nullable(),
-  //   nick_name: yup.string().required("Họ và tên không được để trống !").nullable(),
-  //   birth_day: yup.string().required("Ngày sinh không được để trống !").nullable(),
-  //   email: yup
-  //     .string()
-  //     .required("Email không được để trống !")
-  //     .nullable()
-  //     .email("Vui lòng nhập tên đăng nhập theo đinh dạng email"),
-  //   id_card: yup.string().required("Số CMND/CCCD không được để trống !").nullable(),
-  //   id_card_place: yup.string().required("Nơi cấp không được để trống !").nullable(),
-  //   id_card_date: yup.string().required("Ngày cấp không được để trống !").nullable(),
-  //   // ward_id: yup.string().required("Phường/ Xã không được để trống !").nullable(),
-  //   // province_id: yup.string().required("Tỉnh/ Thành phố không được để trống !").nullable(),
-  //   // district_id: yup.string().required("Quận/ Huyện không được để trống !").nullable(),
-  //   phone_number: yup
-  //     .string()
-  //     .required("Số điện thoại không được để trống !")
-  //     .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ"),
-  // });
+  const validationSchema = yup.object().shape({
+    user_name: yup
+      .string()
+      .required("Tên đăng nhập không được để trống !")
+      .nullable()
+      .email("Vui lòng nhập tên đăng nhập theo đinh dạng email"),
+    pass_word: id
+      ? undefined
+      : yup
+          .string()
+          .required("Mật khẩu là bắt buộc.")
+          .matches(
+            /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*[0-9]){1})((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+            "Mật khẩu tối thiêu 8 ký tự, 1 ký tự thường, 1 ký tự hoa và 1 số ."
+          ),
+    full_name: yup.string().required("Họ và tên khai sinh không được để trống !").nullable(),
+    nick_name: yup.string().required("Họ và tên không được để trống !").nullable(),
+    birth_day: yup.string().required("Ngày sinh không được để trống !").nullable(),
+    email: yup
+      .string()
+      .required("Email không được để trống !")
+      .nullable()
+      .email("Vui lòng nhập tên đăng nhập theo đinh dạng email"),
+    id_card: yup.string().required("Số CMND/CCCD không được để trống !").nullable(),
+    id_card_place: yup.string().required("Nơi cấp không được để trống !").nullable(),
+    id_card_date: yup.string().required("Ngày cấp không được để trống !").nullable(),
+    // ward_id: yup.string().required("Phường/ Xã không được để trống !").nullable(),
+    // province_id: yup.string().required("Tỉnh/ Thành phố không được để trống !").nullable(),
+    // district_id: yup.string().required("Quận/ Huyện không được để trống !").nullable(),
+    phone_number: yup
+      .string()
+      .required("Số điện thoại không được để trống !")
+      .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ"),
+  });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: dataAccount,
-    // validationSchema,
+    validationSchema,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: (values) => {
