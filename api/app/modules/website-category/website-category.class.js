@@ -12,6 +12,10 @@ const template = {
   'user': '{{#? USER}}',
   'create_date': '{{#? CREATEDDATE}}',
   'is_active': '{{ISACTIVE ? 1 : 0}}',
+  'is_header': '{{ISHEADER ? 1 : 0}}',
+  'is_footer': '{{ISFOOTER ? 1 : 0}}',
+  'is_static_content': '{{ISSTATICCONTENT ? 1 : 0}}',
+  'position': '{{#? POSITION}}',
 };
 
 const templateOption = {
@@ -31,13 +35,13 @@ let transform = new Transform(template);
 
 const detail = (area) => {
   return transform.transform(area, [
-    'web_category_id','category_name','cate_parent_id','website_id','website_name','url_category','description','is_active',
+    'web_category_id','category_name','cate_parent_id','website_id','website_name','url_category','description','is_active', 'is_header', 'is_footer', 'is_static_content'
   ]);
 };
 
 const list = (areas = []) => {
   return transform.transform(areas, [
-    'web_category_id','category_name','cate_parent_name','website_name','url_category','is_active','create_date','user',
+    'web_category_id','category_name','cate_parent_name','website_name','url_category','is_active','create_date','user', 'position', 'is_static_content'
   ]);
 };
 

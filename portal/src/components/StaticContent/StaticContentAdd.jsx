@@ -105,9 +105,11 @@ export default class StaticContentAdd extends Component {
   async _getBundleData() {
     let bundle = {};
     let all = [
-      this._StaticContentModel.getOptions({ is_active: 1 }).then((data) => {
-        return (bundle["StaticContentOptions"] = mapDataOptions4Select(data));
-      }),
+      this._StaticContentModel
+        .getOptionsStaticContent({ is_active: 1, is_static_content: 1 })
+        .then((data) => {
+          return (bundle["StaticContentOptions"] = mapDataOptions4Select(data));
+        }),
     ];
 
     await Promise.all(all).catch((err) =>
@@ -302,7 +304,7 @@ export default class StaticContentAdd extends Component {
                                   *{" "}
                                 </span>
                               </Label>
-                              <Col sm={10}>
+                              <Col sm={4}>
                                 <Field
                                   name="static_title"
                                   render={({ field }) => (
@@ -327,14 +329,9 @@ export default class StaticContentAdd extends Component {
                                   )}
                                 />
                               </Col>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-
-                        <Row>
-                          <Col xs={12}>
-                            <FormGroup row>
-                              <Label sm={2}>Danh mục website</Label>
+                              <Label sm={2} style={{ paddingLeft: "5%" }}>
+                                Danh mục website
+                              </Label>
                               <Col sm={4}>
                                 <Field
                                   name="webcategory_id"
@@ -382,9 +379,13 @@ export default class StaticContentAdd extends Component {
                                   )}
                                 />
                               </Col>
-                              <Label sm={2} style={{ paddingLeft: "5%" }}>
-                                Tên seo
-                              </Label>
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col xs={12}>
+                            <FormGroup row>
+                              <Label sm={2}>Tên seo</Label>
                               <Col sm={4}>
                                 <Field
                                   name="seo_name"
@@ -395,31 +396,6 @@ export default class StaticContentAdd extends Component {
                                       type="text"
                                       placeholder=""
                                       // value={this.ChangeAlias(values.static_title, this)}
-                                    />
-                                  )}
-                                />
-                              </Col>
-                            </FormGroup>
-                          </Col>
-                        </Row>
-
-                        <Row>
-                          <Col xs={12}>
-                            <FormGroup row>
-                              <Label for="is_childrent" sm={2}></Label>
-                              <Col sm={4}>
-                                <Field
-                                  name="is_childrent"
-                                  render={({ field }) => (
-                                    <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_childrent}
-                                      type="checkbox"
-                                      id="is_childrent"
-                                      label="Là trang con"
-                                      disabled={noEdit}
                                     />
                                   )}
                                 />

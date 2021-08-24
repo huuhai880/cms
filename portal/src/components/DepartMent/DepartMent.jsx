@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardHeader, Button } from "reactstrap";
+import { Card, CardBody, CardHeader, Button, Col, FormGroup } from "reactstrap";
 import fileDownload from "js-file-download";
 import moment from "moment";
 // Material
@@ -447,30 +447,39 @@ class DepartMent extends Component {
             </CardBody>
           )}
         </Card>
-        <div>
+        <Col
+          xs={12}
+          sm={4}
+          className="d-flex align-items-end mb-3"
+          style={{ padding: 0 }}
+        >
           <CheckAccess permission="MD_DEPARTMENT_ADD">
-            <Button
-              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
-              onClick={() => this.handleClickAdd()}
-              color="success"
-              size="sm"
-            >
-              <i className="fa fa-plus mr-1" />
-              Thêm mới
-            </Button>
+            <FormGroup className="mb-2 mb-sm-0">
+              <Button
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                onClick={() => this.handleClickAdd()}
+                color="success"
+                size="sm"
+              >
+                <i className="fa fa-plus mr-1" />
+                Thêm mới
+              </Button>
+            </FormGroup>
           </CheckAccess>
           <CheckAccess permission="MD_DEPARTMENT_EXPORT">
-            <Button
-              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
-              onClick={() => this.handleExport()}
-              color="excel"
-              size="sm"
-            >
-              <i className="fa fa-download mr-1" />
-              Xuất excel
-            </Button>
+            <FormGroup className="ml-2 mb-2 mb-sm-0">
+              <Button
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                onClick={() => this.handleExport()}
+                color="excel"
+                size="sm"
+              >
+                <i className="fa fa-download mr-1" />
+                Xuất excel
+              </Button>
+            </FormGroup>
           </CheckAccess>
-        </div>
+        </Col>
 
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">

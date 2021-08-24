@@ -100,12 +100,12 @@ export default class UserAdd extends PureComponent {
         ? undefined
         : Yup.string()
             .trim()
-            .min(6, "Mật khẩu quá ngắn, ít nhất 6 ký tự!")
+            .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
             .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!")
             .required("Mật khẩu là bắt buộc.")
             .matches(
-              /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-              "Mật khẩu tối thiểu 6 kí tự bao gồm chữ hoa, chữ thường, số và không dấu."
+              /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()\-_=+{};:,<.>])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/,
+              "Mật khẩu bao gồm chữ hoa, chữ thường, ký tự đặc biết và số ."
             ),
       gender: Yup.string().required("Giới tính là bắt buộc."),
       email: Yup.string()

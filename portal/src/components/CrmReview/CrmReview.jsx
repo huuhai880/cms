@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardHeader, Button } from "reactstrap";
+import { Card, CardBody, CardHeader, Button, Col, FormGroup } from "reactstrap";
 
 // Material
 import MUIDataTable from "mui-datatables";
@@ -228,8 +228,8 @@ class CrmReview extends Component {
     const columns = [
       configIDRowTable("review_id", "/review/detail/", this.state.query),
       {
-        name: "account_name",
-        label: "Khách hàng",
+        name: "review_name",
+        label: "Người đánh giá",
         options: {
           filter: false,
           sort: false,
@@ -249,8 +249,8 @@ class CrmReview extends Component {
         },
       },
       {
-        name: "author_name",
-        label: "Chuyên gia",
+        name: "review_content",
+        label: "nội dung",
         options: {
           filter: false,
           sort: false,
@@ -269,27 +269,6 @@ class CrmReview extends Component {
           },
         },
       },
-      // {
-      //   name: "review_content",
-      //   label: "nội dung",
-      //   options: {
-      //     filter: false,
-      //     sort: false,
-      //     customHeadRender: (columnMeta, handleToggleColumn) => {
-      //       return (
-      //         <th
-      //           key={`head-th-${columnMeta.label}`}
-      //           className="MuiTableCell-root MuiTableCell-head"
-      //         >
-      //           <div className="text-center">{columnMeta.label}</div>
-      //         </th>
-      //       );
-      //     },
-      //     customBodyRender: (value, tableMeta, updateValue) => {
-      //       return <div className="text-left">{value}</div>;
-      //     },
-      //   },
-      // },
       {
         name: "review_date",
         label: "ngày đánh giá",
@@ -411,19 +390,26 @@ class CrmReview extends Component {
             </CardBody>
           )}
         </Card>
-        <div>
+        <Col
+          xs={12}
+          sm={4}
+          className="d-flex align-items-end mb-3"
+          style={{ padding: 0 }}
+        >
           <CheckAccess permission="CRM_REVIEW_ADD">
-            <Button
-              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
-              onClick={() => this.handleClickAdd()}
-              color="success"
-              size="sm"
-            >
-              <i className="fa fa-plus mr-1" />
-              Thêm mới
-            </Button>
+            <FormGroup className="mb-2 mb-sm-0">
+              <Button
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                onClick={() => this.handleClickAdd()}
+                color="success"
+                size="sm"
+              >
+                <i className="fa fa-plus mr-1" />
+                Thêm mới
+              </Button>
+            </FormGroup>
           </CheckAccess>
-        </div>
+        </Col>
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-root__custom">

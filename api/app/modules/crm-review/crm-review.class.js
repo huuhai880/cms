@@ -3,10 +3,9 @@ const config = require('../../../config/config');
 const template = {
   review_id: '{{#? REVIEWID}}',
   member_id: '{{#? MEMBERID}}',
-  account_name: '{{#? ACCOUNTNAME}}',
+  review_name: '{{#? REVIEWNAME}}',
   check_member: '{{#? CHECKMEMBER}}',
   author_id: '{{#? AUTHORID}}',
-  author_name: '{{#? AUTHORNAME}}',
   check_author: '{{#? CHECKAUTHOR}}',
   order_index: '{{#? ORDERINDEX}}',
   is_active: '{{#? ISACTIVE}}',
@@ -20,11 +19,11 @@ const list = (Partner = []) => {
   return transform.transform(Partner, [
     'review_id',
     'member_id',
-    'account_name',
+    'review_name',
     'author_id',
-    'author_name',
     'review_date',
     'is_active',
+    'review_content',
   ]);
 };
 
@@ -32,9 +31,8 @@ const detail = (Partner = []) => {
   return transform.transform(Partner, [
     'review_id',
     'member_id',
-    'account_name',
+    'review_name',
     'author_id',
-    'author_name',
     'review_date',
     'review_content',
     'order_index',

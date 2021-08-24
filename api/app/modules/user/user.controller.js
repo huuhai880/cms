@@ -4,6 +4,7 @@ const SingleResponse = require('../../common/responses/single.response');
 const ListResponse = require('../../common/responses/list.response');
 const ErrorResponse = require('../../common/responses/error.response');
 const RESPONSE_MSG = require('../../common/const/responseMsg.const');
+const ServiceResponse = require('../../common/responses/service.response');
 const ValidationResponse = require('../../common/responses/validation.response');
 const optionService = require('../../common/services/options.service');
 const apiHelper = require('../../common/helpers/api.helper');
@@ -54,7 +55,7 @@ const createUser = async (req, res, next) => {
     // Check email exists
     const emailExist = await userService.findByEmail(req.body.email);
     if(emailExist) {
-      return next(new ValidationResponse('email', 'đã tồn tại'));
+      return next(new ErrorResponse(null, null, RESPONSE_MSG.USER.CHECK_EMAIL));
     }
 
     const result = await userService.createUser(params);

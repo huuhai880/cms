@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardHeader, Button } from "reactstrap";
+import { Card, CardBody, CardHeader, Button, Col, FormGroup } from "reactstrap";
 
 // Material
 import MUIDataTable from "mui-datatables";
@@ -500,19 +500,26 @@ class WebsiteCategory extends Component {
           </div>
         ) : null}
         {!handlePick ? (
-          <div>
+          <Col
+            xs={12}
+            sm={4}
+            className="d-flex align-items-end mb-3"
+            style={{ padding: 0 }}
+          >
             <CheckAccess permission="CMS_WEBSITECATE_ADD">
-              <Button
-                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
-                onClick={() => this.handleClickAdd()}
-                color="success"
-                size="sm"
-              >
-                <i className="fa fa-plus mr-1" />
-                Thêm mới
-              </Button>
+              <FormGroup className="mb-2 mb-sm-0">
+                <Button
+                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={() => this.handleClickAdd()}
+                  color="success"
+                  size="sm"
+                >
+                  <i className="fa fa-plus mr-1" />
+                  Thêm mới
+                </Button>
+              </FormGroup>
             </CheckAccess>
-          </div>
+          </Col>
         ) : null}
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">

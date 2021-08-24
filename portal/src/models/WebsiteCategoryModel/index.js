@@ -62,7 +62,10 @@ export default class WebsiteCategoryModel extends Model {
     "url_category": "",
     "is_active": 1,
     "created_date": null,
-    "user": ""
+    "user": "",
+    "is_footer": 1,
+    "is_header": 1,
+    "is_static_content": 0
   });
 
   /**
