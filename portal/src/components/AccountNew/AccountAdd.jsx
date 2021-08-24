@@ -25,7 +25,7 @@ import {
 import { useParams } from "react-router";
 import { layoutFullWidthHeight } from "../../utils/html";
 import { useFormik } from "formik";
-import { validationSchema, initialValues, initialPassword, validationPassword } from "./const";
+import { initialValues } from "./const";
 import { readFileAsBase64 } from "../../utils/html";
 import AccountModel from "../../models/AccountModel";
 import DatePicker from "../Common/DatePicker";
@@ -36,6 +36,7 @@ import AcccountAddress from "./AcccountAddress";
 import { Modal } from "antd";
 import "./styles.scss";
 import "./style.css";
+import * as yup from "yup";
 
 layoutFullWidthHeight();
 function AccountAdd({ noEdit }) {
@@ -50,10 +51,44 @@ function AccountAdd({ noEdit }) {
   const [password, setPassword] = useState("");
   const [password_confirm, setPasswordconfirm] = useState("");
   const [alerPassword, setAlerPassword] = useState("");
+  // const validationSchema = yup.object().shape({
+  //   user_name: yup
+  //     .string()
+  //     .required("Tên đăng nhập không được để trống !")
+  //     .nullable()
+  //     .email("Vui lòng nhập tên đăng nhập theo đinh dạng email"),
+  //   pass_word: id
+  //     ? undefined
+  //     : yup
+  //         .string()
+  //         .required("Mật khẩu là bắt buộc.")
+  //         .matches(
+  //           /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*[0-9]){1})((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+  //           "Mật khẩu tối thiêu 8 ký tự, 1 ký tự thường, 1 ký tự hoa và 1 số ."
+  //         ),
+  //   full_name: yup.string().required("Họ và tên khai sinh không được để trống !").nullable(),
+  //   nick_name: yup.string().required("Họ và tên không được để trống !").nullable(),
+  //   birth_day: yup.string().required("Ngày sinh không được để trống !").nullable(),
+  //   email: yup
+  //     .string()
+  //     .required("Email không được để trống !")
+  //     .nullable()
+  //     .email("Vui lòng nhập tên đăng nhập theo đinh dạng email"),
+  //   id_card: yup.string().required("Số CMND/CCCD không được để trống !").nullable(),
+  //   id_card_place: yup.string().required("Nơi cấp không được để trống !").nullable(),
+  //   id_card_date: yup.string().required("Ngày cấp không được để trống !").nullable(),
+  //   // ward_id: yup.string().required("Phường/ Xã không được để trống !").nullable(),
+  //   // province_id: yup.string().required("Tỉnh/ Thành phố không được để trống !").nullable(),
+  //   // district_id: yup.string().required("Quận/ Huyện không được để trống !").nullable(),
+  //   phone_number: yup
+  //     .string()
+  //     .required("Số điện thoại không được để trống !")
+  //     .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ"),
+  // });
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: dataAccount,
-    validationSchema,
+    // validationSchema,
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: (values) => {
@@ -67,38 +102,53 @@ function AccountAdd({ noEdit }) {
   //// update account
   const handleUpdateAcount = async (values) => {
     try {
-      await _accountModel.update(id, values).then((data) => {
-        if (btnType == "save") {
-          _initData();
-          window._$g.toastr.show("Lưu thành công!", "success");
-        } else if (btnType == "save&quit") {
-          window._$g.toastr.show("Lưu thành công!", "success");
-          setDataAccount(initialValues);
-          return window._$g.rdr("/account-new");
+      await _accountModel.check({ email: values.email }).then((data) => {
+        // console.log(data)
+        if (data.MEMBERID) {
+          // setalert("Email đã tồn tại!");
+          formik.setFieldError("email", "Email đã tồn tại!");
+          window.scrollTo(0, 0);
+        } else {
+          _accountModel.update(id, values).then((data) => {
+            if (btnType == "save") {
+              _initData();
+              window._$g.toastr.show("Lưu thành công!", "success");
+            } else if (btnType == "save&quit") {
+              window._$g.toastr.show("Lưu thành công!", "success");
+              setDataAccount(initialValues);
+              return window._$g.rdr("/account-new");
+            }
+            // console.log(data);
+          });
+          // console.log(data);
         }
       });
-    } catch (error) {
-      console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
-    }
+    } catch (error) {}
   };
   //// create account
   const handleCreateAcount = async (values) => {
     try {
-      await _accountModel.create(values).then((data) => {
-        if (btnType == "save") {
-          _initData();
-          window._$g.toastr.show("Lưu thành công!", "success");
-        } else if (btnType == "save&quit") {
-          window._$g.toastr.show("Lưu thành công!", "success");
-          setDataAccount(initialValues);
-          return window._$g.rdr("/account-new");
+      await _accountModel.check({ email: values.email }).then((data) => {
+        // console.log(data)
+        if (data.MEMBERID) {
+          // setalert("Email đã tồn tại!");
+          formik.setFieldError("email", "Email đã tồn tại!");
+          window.scrollTo(0, 0);
+        } else {
+          _accountModel.create(values).then((data) => {
+            if (btnType == "save") {
+              _initData();
+              window._$g.toastr.show("Lưu thành công!", "success");
+            } else if (btnType == "save&quit") {
+              window._$g.toastr.show("Lưu thành công!", "success");
+              setDataAccount(initialValues);
+              return window._$g.rdr("/account-new");
+            }
+            // console.log(data);
+          });
         }
       });
-    } catch (error) {
-      console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
-    }
+    } catch (error) {}
   };
   //// scroll to error
   useEffect(() => {
@@ -279,9 +329,12 @@ function AccountAdd({ noEdit }) {
                                     id="user_name"
                                     type="text"
                                     placeholder="Tên đăng nhập"
-                                    disabled={noEdit}
+                                    disabled={id}
                                     value={formik.values.user_name}
-                                    onChange={formik.handleChange}
+                                    onChange={(e) => {
+                                      formik.setFieldValue("user_name", e.target.value);
+                                      formik.setFieldValue("email", e.target.value);
+                                    }}
                                   />
                                   {formik.errors.user_name && (
                                     <div
@@ -415,7 +468,7 @@ function AccountAdd({ noEdit }) {
                                     name="nick_name"
                                     id="nick_name"
                                     type="text"
-                                    placeholder=" Họ và tên"
+                                    placeholder="Họ và tên đệm"
                                     disabled={noEdit}
                                     value={formik.values.nick_name}
                                     onChange={formik.handleChange}
@@ -442,7 +495,7 @@ function AccountAdd({ noEdit }) {
                                     name="full_name"
                                     id="full_name"
                                     type="text"
-                                    placeholder=" Họ và tên khai sinh"
+                                    placeholder="Tên khai sinh"
                                     disabled={noEdit}
                                     value={formik.values.full_name}
                                     onChange={formik.handleChange}
@@ -571,7 +624,7 @@ function AccountAdd({ noEdit }) {
                                     id="email"
                                     type="text"
                                     placeholder="email"
-                                    disabled={noEdit}
+                                    // disabled={noEdit}
                                     value={formik.values.email}
                                     onChange={formik.handleChange}
                                   />
@@ -585,6 +638,13 @@ function AccountAdd({ noEdit }) {
                                   )}
                                 </Col>
                               </FormGroup>
+                              {id ? (
+                                <Label for="email">
+                                  <span className="red-text pd-0">
+                                    * Thay đổi email là thay đổi tài khoản đang nhập
+                                  </span>
+                                </Label>
+                              ) : null}
                             </Col>
                           </Row>
                           <Row className="mb15">
@@ -880,11 +940,12 @@ function AccountAdd({ noEdit }) {
           </FormGroup>
         </Col>
         <Col>
-        {alerPassword && (
-          <div className="field-validation-error alert alert-danger fade show" role="alert">
-            {alerPassword}
-          </div>
-        )}</Col>
+          {alerPassword && (
+            <div className="field-validation-error alert alert-danger fade show" role="alert">
+              {alerPassword}
+            </div>
+          )}
+        </Col>
         <Col className=" text-right">
           <button type="button" onClick={handleCancel} className=" btn-block-sm btn btn-secondary">
             Đóng

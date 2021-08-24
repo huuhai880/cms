@@ -207,6 +207,25 @@ const detailCRMAccount = async (req, res, next) => {
     );
   }
 };
+const checkEmail = async (req, res, next) => {
+  // console.log()
+  try {
+    // Check ACCOUNT exists
+    const serviceRes = await crmAccountService.checkEmail(req.query.email);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+};
 /**
  * change status a AM_BUSINESS
  *
@@ -290,4 +309,5 @@ module.exports = {
   changeStatusCRMAccount,
   changePassCRMAccount,
   genCode,
+  checkEmail,
 };

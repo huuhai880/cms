@@ -89,6 +89,25 @@ const detailPosition = async (req, res, next) => {
     );
   }
 };
+const checkName = async (req, res, next) => {
+  // console.log()
+  try {
+    // Check ACCOUNT exists
+    const serviceRes = await PositonService.checkName(req.query.name);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+};
 const deletePosition = async (req, res, next) => {
   try {
     const position_id = req.params.position_id;
@@ -114,5 +133,5 @@ module.exports = {
   getListPosition,
   createOrUpdatePosition,
   detailPosition,
-  deletePosition,
+  deletePosition,checkName
 };

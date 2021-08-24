@@ -87,6 +87,23 @@ const updateCRMAccount = async (body = {}, member_id) => {
   return await createCRMAccountOrUpdate(body);
 };
 
+const checkEmail = async (email) => {
+  // console.log(email)
+  try {
+    const pool = await mssql.pool;
+    const data = await pool
+      .request()
+      .input('EMAIL',email)
+      .execute('CRM_ACCOUNT_CheckEmail_AdminWeb');
+    const res = data.recordset[0];
+    if (res) {
+      return new ServiceResponse(true, '', res);
+    }
+    return new ServiceResponse(true, '', '');
+  } catch (error) {
+    return new ServiceResponse(false, error.message);
+  }
+};
 const createCRMAccountOrUpdate = async (body = {}) => {
   let image_avatar = apiHelper.getValueFromObject(body, 'image_avatar');
   let id_front = apiHelper.getValueFromObject(body, 'id_card_front_image');
@@ -124,7 +141,8 @@ const createCRMAccountOrUpdate = async (body = {}) => {
     await transaction.begin();
     let password = apiHelper.getValueFromObject(body, 'pass_word');
     password = stringHelper.hashPassword(password);
-    // Save create
+
+    /////create;
     const requestAccount = new sql.Request(transaction);
     const resultAccount = await requestAccount
       .input('MEMBERID', apiHelper.getValueFromObject(body, 'member_id'))
@@ -160,7 +178,7 @@ const createCRMAccountOrUpdate = async (body = {}) => {
       .input('TWITTERURL', apiHelper.getValueFromObject(body, 'twitter'))
       .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
       .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-      .execute('CRM_ACCOUNT_CreateOrUpdate_Portal');
+      .execute('CRM_ACCOUNT_CreateOrUpdate_AdminWeb');
     const member_id = resultAccount.recordset[0].RESULT;
     if (member_id > 0) {
       removeCacheOptions();
@@ -207,7 +225,7 @@ const deleteCRMAccount = async (memberid, authName) => {
       .request()
       .input('MEMBERID', memberid)
       .input('UPDATEDUSER', authName)
-      .execute(PROCEDURE_NAME.CRM_ACCOUNT_DELETE_ADMINWEB);
+      .execute('CRM_ACCOUNT_Delete_AdminWeb');
 
     removeCacheOptions();
 
@@ -231,7 +249,7 @@ const changeStatusCRMAccount = async (memberid, authName, isActive) => {
       .input('MEMBERID', memberid)
       .input('ISACTIVE', isActive)
       .input('UPDATEDUSER', authName)
-      .execute(PROCEDURE_NAME.CRM_ACCOUNT_UPDATESTATUS_ADMINWEB);
+      .execute('CRM_ACCOUNT_UpdateStatus_AdminWeb');
     removeCacheOptions();
     return new ServiceResponse(true);
   } catch (e) {
@@ -329,4 +347,5 @@ module.exports = {
   changeStatusCRMAccount,
   changePassCRMAccount,
   genCode,
+  checkEmail,
 };
