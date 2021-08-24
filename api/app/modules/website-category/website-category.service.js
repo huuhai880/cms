@@ -62,6 +62,23 @@ const getListAllWebsiteCategory = async (queryParams = {}) => {
   }
 };
 
+const getListWebsiteCategoryForStaticContent = async (queryParams = {}) => {
+  try {
+    const pool = await mssql.pool;
+    const data = await pool.request()
+      .execute(PROCEDURE_NAME.CMS_WEBSITECATEGORY_GETLISTSTATICCONTENT_ADMINWEB);
+
+    const stores = data.recordset;
+
+    return new ServiceResponse(true, '', {
+      'data': websiteCategoryClass.listAll(stores),
+    });
+  } catch (e) {
+    logger.error(e, {'function': 'websiteCategoryService.getListWebsiteCategoryForStaticContent'});
+    return new ServiceResponse(true, '', {});
+  }
+};
+
 
 const detailWebsiteCategory = async (websiteCategoryId) => {
   try {
@@ -112,6 +129,9 @@ const createWebsiteCategoryOrUpdate = async (bodyParams) => {
       .input('URLCATEGORY', apiHelper.getValueFromObject(bodyParams, 'url_category'))
       .input('DESCRIPTION', apiHelper.getValueFromObject(bodyParams, 'description'))
       .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active'))
+      .input('ISHEADER', apiHelper.getValueFromObject(bodyParams, 'is_header'))
+      .input('ISFOOTER', apiHelper.getValueFromObject(bodyParams, 'is_footer'))
+      .input('ISSTATICCONTENT', apiHelper.getValueFromObject(bodyParams, 'is_static_content'))
       .input('USER', apiHelper.getValueFromObject(bodyParams, 'auth_name'))
       .execute(PROCEDURE_NAME.CMS_WEBSITECATEGORY_CREATEORUPDATE_ADMINWEB);
     const websiteCategoryId = data.recordset[0].RESULT;
@@ -285,6 +305,7 @@ module.exports = {
   deleteWebsiteCategory,
   changeStatusWebsiteCategory,
   getListAllWebsiteCategory,
+  getListWebsiteCategoryForStaticContent,
   getListAllWebsite,
   getListAllParent,
   detailWebsite,

@@ -96,6 +96,7 @@ export default class WebsiteCategoryAdd extends Component {
 
   getInitialValues() {
     let { WebsiteCategoryEnt } = this.props;
+    const { WebsiteCategoryOptions } = this.state;
     let values = Object.assign({}, this._websiteCategoryModel.fillable());
 
     if (WebsiteCategoryEnt) {
@@ -138,6 +139,9 @@ export default class WebsiteCategoryAdd extends Component {
         newscategoryname: newscategoryDataName,
         manufacturename: manufacturenameDataName,
       });
+    }
+    else if(WebsiteCategoryOptions && WebsiteCategoryOptions.length >= 2){
+      values.website_id = WebsiteCategoryOptions[1].value;
     }
     // Format
     Object.keys(values).forEach((key) => {
@@ -217,6 +221,11 @@ export default class WebsiteCategoryAdd extends Component {
     Object.keys(values).forEach((prop) => {
       typeof values[prop] === "string" && (values[prop] = values[prop].trim());
     });
+    let errors = {};
+    if(!values.is_footer && !values.is_header){
+      errors.position = 'Vị trí áp dụng là bắt buộc.'
+    }
+    return errors;
     //.end
   }
 
@@ -229,6 +238,9 @@ export default class WebsiteCategoryAdd extends Component {
     // Build form data
     let formData = Object.assign({}, values, {
       is_active: 1 * values.is_active,
+      is_header: values.is_header ? 1 : 0,
+      is_footer: values.is_footer ? 1 : 0,
+      is_static_content: values.is_static_content ? 1 : 0,
       website_id:
         1 * values.website_id > 0
           ? 1 * values.website_id
@@ -437,11 +449,12 @@ export default class WebsiteCategoryAdd extends Component {
                 <Formik
                   initialValues={initialValues}
                   validationSchema={this.formikValidationSchema}
-                  // validate={this.handleFormikValidate}
+                  enableReinitialize={true}
+                  validate={this.handleFormikValidate}
                   onSubmit={this.handleFormikSubmit}
                 >
                   {(formikProps) => {
-                    let { values, handleSubmit, handleReset, isSubmitting } =
+                    let { values, handleSubmit, handleReset, isSubmitting, errors } =
                       (this.formikProps =
                       window._formikProps =
                         formikProps);
@@ -493,6 +506,7 @@ export default class WebsiteCategoryAdd extends Component {
                                 </Col>
                               </FormGroup>
                             </Col>
+                            
 
                             <Col xs={12}>
                               <FormGroup row>
@@ -598,7 +612,7 @@ export default class WebsiteCategoryAdd extends Component {
                                 </Col>
                               </FormGroup>
                             </Col>
-
+                            
                             <Col xs={12}>
                               <FormGroup row>
                                 <Label for="url_category" sm={3}>
@@ -640,8 +654,72 @@ export default class WebsiteCategoryAdd extends Component {
                                 </Col>
                               </FormGroup>
                             </Col>
-
                             <Col xs={12}>
+                              <FormGroup row>
+                                <Label for="website_id" sm={3}>
+                                  Vị trí áp dụng
+                                  <span className="font-weight-bold red-text">
+                                    {" "}
+                                    *{" "}
+                                  </span>
+                                </Label>
+                                <Col sm={9}>
+                                  <Row>
+                                  <Col sm={4}>
+                                    <Field
+                                      name="is_header"
+                                      render={({ field }) => (
+                                        <CustomInput
+                                          {...field}
+                                          className="pull-left"
+                                          onBlur={null}
+                                          checked={values.is_header}
+                                          onChange={e => 
+                                            field.onChange({ target: { name: field.name, value: e.target.checked ? 1 : 0 } })
+                                          }
+                                          type="checkbox"
+                                          id="is_header"
+                                          label="Trên header"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                  </Col>
+                                    <Col sm={4}>
+                                    <Field
+                                      name="is_footer"
+                                      render={({ field }) => (
+                                        <CustomInput
+                                          {...field}
+                                          className="pull-left"
+                                          onBlur={null}
+                                          checked={values.is_footer}
+                                          onChange={e => 
+                                            field.onChange({ target: { name: field.name, value: e.target.checked ? 1 : 0 } })
+                                          }
+                                          type="checkbox"
+                                          id="is_footer"
+                                          label="Dưới footer"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                  </Col>
+                                  
+                                  </Row>
+                                  {
+                                    errors.position &&  <Alert
+                                    color="danger"
+                                    className="field-validation-error"
+                                  >
+                                    {errors.position}
+                                  </Alert>
+                                  }
+                                </Col>
+                              </FormGroup>
+                            </Col>
+
+                            {/* <Col xs={12}>
                               <FormGroup row>
                                 <Label for="categoryname" sm={3}>
                                   Danh mục sản phẩm
@@ -689,9 +767,9 @@ export default class WebsiteCategoryAdd extends Component {
                                   />
                                 </Col>
                               </FormGroup>
-                            </Col>
+                            </Col> */}
 
-                            <Col xs={12}>
+                            {/* <Col xs={12}>
                               <FormGroup row>
                                 <Label for="newscategoryname" sm={3}>
                                   Danh mục tin tức
@@ -699,7 +777,7 @@ export default class WebsiteCategoryAdd extends Component {
                                 <Col sm={9}>
                                   <Field
                                     name="newscategoryname"
-                                    render={({ field /*, form*/ }) => {
+                                    render={({ field  }) => {
                                       let placeholder =
                                         (NewsCategoryOptions[0] &&
                                           NewsCategoryOptions[0].label) ||
@@ -743,7 +821,7 @@ export default class WebsiteCategoryAdd extends Component {
                                   />
                                 </Col>
                               </FormGroup>
-                            </Col>
+                            </Col> */}
                             {/* <Col xs={12} >
                               <FormGroup row>
                                 <Label for="manufacturename" sm={3}>
@@ -819,9 +897,32 @@ export default class WebsiteCategoryAdd extends Component {
                                         className="pull-left"
                                         onBlur={null}
                                         checked={values.is_active}
+                                        onChange={e => 
+                                          field.onChange({ target: { name: field.name, value: e.target.checked ? 1 : 0 } })
+                                        }
                                         type="checkbox"
                                         id="is_active"
                                         label="Kích hoạt"
+                                        disabled={noEdit}
+                                      />
+                                    )}
+                                  />
+                                </Col>
+                                <Col sm={4}>
+                                  <Field
+                                    name="is_static_content"
+                                    render={({ field }) => (
+                                      <CustomInput
+                                        {...field}
+                                        className="pull-left"
+                                        onBlur={null}
+                                        checked={field.value}
+                                        onChange={e => 
+                                          field.onChange({ target: { name: field.name, value: e.target.checked ? 1 : 0 } })
+                                        }
+                                        type="checkbox"
+                                        id="is_static_content"
+                                        label="Áp dụng cho trang tĩnh"
                                         disabled={noEdit}
                                       />
                                     )}
