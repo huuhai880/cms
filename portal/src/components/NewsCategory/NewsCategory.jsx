@@ -46,11 +46,11 @@ class NewsCategory extends Component {
     query: {
       itemsPerPage: 25,
       page: 1,
-      is_active: 1
+      is_active: 1,
     },
 
     /** @var {Array} */
-    newsOptions: []
+    newsOptions: [],
   };
 
   componentDidMount() {
@@ -69,14 +69,14 @@ class NewsCategory extends Component {
 
       this.setState(
         {
-          isLoading
+          isLoading,
         },
         () => {
           this.setState({
             data: dataConfig,
             newsOptions,
             count,
-            page
+            page,
           });
         }
       );
@@ -93,12 +93,12 @@ class NewsCategory extends Component {
       // @TODO:
       this._newsCategoryModel
         .getList(this.state.query)
-        .then(data => (bundle["data"] = data)),
+        .then((data) => (bundle["data"] = data)),
       this._newsCategoryModel
         .getOptions(0)
-        .then(data => (bundle["newsOptions"] = data))
+        .then((data) => (bundle["newsOptions"] = data)),
     ];
-    await Promise.all(all).catch(err => {
+    await Promise.all(all).catch((err) => {
       // window._$g.dialogs.alert(
       //   window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
       //   () => {
@@ -112,7 +112,7 @@ class NewsCategory extends Component {
   // get data
   getData = (query = {}) => {
     this.setState({ isLoading: true });
-    return this._newsCategoryModel.getList(query).then(res => {
+    return this._newsCategoryModel.getList(query).then((res) => {
       let data = res.items;
       let isLoading = false;
       let count = res.totalItems;
@@ -122,7 +122,7 @@ class NewsCategory extends Component {
         isLoading,
         count,
         page,
-        query
+        query,
       });
     });
   };
@@ -135,7 +135,7 @@ class NewsCategory extends Component {
     window._$g.dialogs.prompt(
       "Bạn có chắc chắn muốn thay đổi trạng thái dữ liệu đang chọn?",
       "Cập nhật",
-      confirm => this.onChangeStatus(confirm, status, id, rowIndex)
+      (confirm) => this.onChangeStatus(confirm, status, id, rowIndex)
     );
   };
 
@@ -149,7 +149,7 @@ class NewsCategory extends Component {
           cloneData[idx].is_active = status;
           this.setState(
             {
-              data: cloneData
+              data: cloneData,
             },
             () => {
               window._$g.toastr.show(
@@ -172,7 +172,7 @@ class NewsCategory extends Component {
     let routes = {
       detail: "/news-category/detail/",
       delete: "/news-category/delete/",
-      edit: "/news-category/edit/"
+      edit: "/news-category/edit/",
     };
     const route = routes[type];
     if (type.match(/detail|edit/i)) {
@@ -181,7 +181,7 @@ class NewsCategory extends Component {
       window._$g.dialogs.prompt(
         "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
         "Xóa",
-        confirm => this.handleClose(confirm, id, rowIndex)
+        (confirm) => this.handleClose(confirm, id, rowIndex)
       );
     }
   }
@@ -191,7 +191,7 @@ class NewsCategory extends Component {
     if (confirm) {
       this._newsCategoryModel
         .checkParent(id)
-        .then(res => {
+        .then((res) => {
           if (1 * res === 1) {
             this._newsCategoryModel
               .delete(id)
@@ -199,7 +199,7 @@ class NewsCategory extends Component {
                 let cloneData = JSON.parse(JSON.stringify(data));
                 cloneData.splice(rowIndex, 1);
                 this.setState({
-                  data: cloneData
+                  data: cloneData,
                 });
               })
               .catch(() => {
@@ -236,7 +236,7 @@ class NewsCategory extends Component {
     });
   };
 
-  handleChangeRowsPerPage = event => {
+  handleChangeRowsPerPage = (event) => {
     let query = { ...this.state.query };
     query.itemsPerPage = event.target.value;
     query.page = 1;
@@ -272,7 +272,7 @@ class NewsCategory extends Component {
               </th>
             );
           },
-        }
+        },
       },
       {
         name: "parent_name",
@@ -290,7 +290,7 @@ class NewsCategory extends Component {
               </th>
             );
           },
-        }
+        },
       },
       {
         name: "user",
@@ -308,10 +308,10 @@ class NewsCategory extends Component {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
-        }
+          },
+        },
       },
       {
         name: "create_date",
@@ -330,13 +330,9 @@ class NewsCategory extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return (
-              <div className="text-center">
-                {value}
-              </div>
-            );
-          }
-        }
+            return <div className="text-center">{value}</div>;
+          },
+        },
       },
       {
         name: "is_author_post",
@@ -355,13 +351,9 @@ class NewsCategory extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return (
-              <div className="text-center">
-                {value?'Có':'Không'}
-              </div>
-            );
-          }
-        }
+            return <div className="text-center">{value ? "Có" : "Không"}</div>;
+          },
+        },
       },
       {
         name: "is_active",
@@ -380,13 +372,9 @@ class NewsCategory extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return (
-              <div className="text-center">
-                {value?'Có':'Không'}
-              </div>
-            );
-          }
-        }
+            return <div className="text-center">{value ? "Có" : "Không"}</div>;
+          },
+        },
       },
       {
         name: "Thao tác",
@@ -402,7 +390,7 @@ class NewsCategory extends Component {
                     color="primary"
                     title="Chỉnh sửa"
                     className="mr-1"
-                    onClick={evt =>
+                    onClick={(evt) =>
                       this.handleActionItemClick(
                         "edit",
                         this.state.data[tableMeta["rowIndex"]].news_category_id,
@@ -418,7 +406,7 @@ class NewsCategory extends Component {
                     color="danger"
                     title="Xóa"
                     className=""
-                    onClick={evt =>
+                    onClick={(evt) =>
                       this.handleActionItemClick(
                         "delete",
                         this.state.data[tableMeta["rowIndex"]].news_category_id,
@@ -431,9 +419,9 @@ class NewsCategory extends Component {
                 </CheckAccess>
               </div>
             );
-          }
-        }
-      }
+          },
+        },
+      },
     ];
     const { count, page, query } = this.state;
     const options = configTableOptions(count, page, query);
@@ -446,8 +434,8 @@ class NewsCategory extends Component {
             <div
               className="minimize-icon cur-pointer"
               onClick={() =>
-                this.setState(prevState => ({
-                  toggleSearch: !prevState.toggleSearch
+                this.setState((prevState) => ({
+                  toggleSearch: !prevState.toggleSearch,
                 }))
               }
             >
@@ -469,12 +457,12 @@ class NewsCategory extends Component {
             </CardBody>
           )}
         </Card>
+
         <div>
           <CheckAccess permission="NEWS_NEWSCATEGORY_ADD">
             <Button
-              className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
+              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
               onClick={() => this.handleClickAdd()}
-              style={{paddingTop: "6px", paddingBot: "6px"}}
               color="success"
               size="sm"
             >

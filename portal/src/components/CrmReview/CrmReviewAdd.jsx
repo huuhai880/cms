@@ -132,13 +132,17 @@ export default class CrmReviewAdd extends PureComponent {
         then: Yup.string().required("Chuyên gia đánh giá là bắt buộc."),
       }),
     review_content: Yup.string().nullable().required("Nội dung là bắt buộc."),
-    review_date: Yup.string().required("Ngày đánh giá là bắt buộc.").test(
-      "DOB",
-      "Thời gian chọn phải nhỏ hơn hoặc bằng thời gian hiện tại.",
-      (value) => {
-        return moment().diff(moment(value, "DD/MM/YYYY hh:mm"), "minutes") > 0;
-      }
-    ),
+    review_date: Yup.string()
+      .required("Ngày đánh giá là bắt buộc.")
+      .test(
+        "DOB",
+        "Thời gian chọn phải nhỏ hơn hoặc bằng thời gian hiện tại.",
+        (value) => {
+          return (
+            moment().diff(moment(value, "DD/MM/YYYY hh:mm"), "minutes") > 0
+          );
+        }
+      ),
   });
 
   handleFormikBeforeRender = ({ initialValues }) => {
@@ -321,7 +325,10 @@ export default class CrmReviewAdd extends PureComponent {
                             <Row>
                               <Col xs={6}>
                                 <FormGroup row>
-                                  <Col sm={4} className="d-flex align-items-center">
+                                  <Col
+                                    sm={4}
+                                    className="d-flex align-items-center"
+                                  >
                                     <Field
                                       name="check_member"
                                       render={({ field }) => (
@@ -425,7 +432,10 @@ export default class CrmReviewAdd extends PureComponent {
                               </Col>
                               <Col xs={6}>
                                 <FormGroup row>
-                                  <Col sm={4} className="d-flex align-items-center">
+                                  <Col
+                                    sm={4}
+                                    className="d-flex align-items-center"
+                                  >
                                     <Field
                                       name="check_author"
                                       render={({ field /* _form */ }) => (
@@ -474,7 +484,7 @@ export default class CrmReviewAdd extends PureComponent {
                                       )}
                                     />
                                   </Col>
-                                  <Col sm={8} style={{ zIndex: "10" }} >
+                                  <Col sm={8} style={{ zIndex: "10" }}>
                                     <Field
                                       name="author_id"
                                       render={({ field /* _form */ }) => {
@@ -567,7 +577,7 @@ export default class CrmReviewAdd extends PureComponent {
                                   </Col>
                                 </FormGroup>
                               </Col>
-                              <Col xs={6} >
+                              <Col xs={6}>
                                 <FormGroup row>
                                   <Label
                                     for="ower_phone_2"
@@ -580,6 +590,7 @@ export default class CrmReviewAdd extends PureComponent {
                                     <DateTimePicker
                                       style={{ padding: 0 }}
                                       name="review_date"
+                                      placeholder="dd/mm/yyyy  hh:mm"
                                       // labelsm={3}
                                       inputsm={12}
                                       isRequired={false}
@@ -593,7 +604,7 @@ export default class CrmReviewAdd extends PureComponent {
                               </Col>
                             </Row>
                             <Row>
-                              <Col sm={6} >
+                              <Col sm={6}>
                                 <FormGroup row>
                                   <Label for="is_active" sm={4}></Label>
                                   <Col sm={8}>
@@ -616,7 +627,7 @@ export default class CrmReviewAdd extends PureComponent {
                                           }}
                                           type="checkbox"
                                           id="is_active"
-                                          label="Kích hoạt?"
+                                          label="Kích hoạt"
                                           disabled={noEdit}
                                         />
                                       )}
@@ -679,6 +690,7 @@ export default class CrmReviewAdd extends PureComponent {
                                       width: "100%",
                                       menubar: false,
                                       branding: false,
+                                      statusbar: false,
                                       plugins: [
                                         "advlist autolink fullscreen lists link image charmap print preview anchor",
                                         "searchreplace visualblocks code fullscreen ",

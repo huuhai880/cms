@@ -27,6 +27,18 @@ const RangeTimePicker = (props) => {
     setId = "CustomId", // gán id với nhiều hơn 1 range picker
   } = props;
 
+  let allowedDateFormats = [
+    "DD/MM/YYYY",
+    "DDMMYYYY",
+    "DD-MM-YYYY",
+    "D/MM/YYYY",
+    "DD/M/YYYY",
+    "D/M/YYYY",
+    "DD-M-YYYY",
+    "D-MM-YYYY",
+    "D-M-YYYY",
+  ];
+
   function onClose(open) {
     let startDate = null;
     let endDate = null;
@@ -36,13 +48,11 @@ const RangeTimePicker = (props) => {
     let typeRight = document.querySelector(
       `#${setId} .ant-picker-range > .ant-picker-input:nth-child(3) > input `
     );
-    let allowedDateFormats = ["DD/MM/YYYY", "DDMMYYYY", "DD-MM-YYYY"];
     if (!open) {
       if (
         moment(typeLeft.value, allowedDateFormats, true).isValid() &&
         typeRight !== "Invalid date"
       ) {
-        console.log("typeRight.value", typeRight.value);
         startDate = moment(typeLeft.value, allowedDateFormats);
         endDate = moment(typeRight.value, allowedDateFormats, true).isValid()
           ? moment(typeRight.value, allowedDateFormats)
@@ -62,8 +72,7 @@ const RangeTimePicker = (props) => {
     <div id={setId}>
       <RangePicker
         size="default"
-        format={["DD/MM/YYYY", "DDMMYYYY", "DD-MM-YYYY"]}
-        className="text-center date-picker"
+        format={allowedDateFormats}
         dropdownClassName="dp-drop-down"
         placeholder={["dd/mm/yyyy", "dd/mm/yyyy"]}
         allowClear={false}

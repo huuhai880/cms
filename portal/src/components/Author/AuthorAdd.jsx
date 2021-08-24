@@ -1543,7 +1543,7 @@ export default class AuthorAdd extends PureComponent {
                                           type="text"
                                           name="address"
                                           id="address"
-                                          placeholder="436/77/77/7 CMT8"
+                                          placeholder="Nhập địa chỉ cụ thể"
                                           disabled={noEdit}
                                         />
                                       )}
@@ -1707,6 +1707,7 @@ export default class AuthorAdd extends PureComponent {
                                         width: "100%",
                                         menubar: false,
                                         branding: false,
+                                        statusbar : false,
                                         plugins: [
                                           "advlist autolink fullscreen lists link image charmap print preview anchor",
                                           "searchreplace visualblocks code fullscreen ",
@@ -1776,6 +1777,7 @@ export default class AuthorAdd extends PureComponent {
                                         width: "100%",
                                         menubar: false,
                                         branding: false,
+                                        statusbar : false,
                                         plugins: [
                                           "advlist autolink fullscreen lists link image charmap print preview anchor",
                                           "searchreplace visualblocks code fullscreen ",
@@ -1865,6 +1867,15 @@ export default class AuthorAdd extends PureComponent {
                                             type="checkbox"
                                             id="is_review_news"
                                             label="Tự động duyệt bài"
+                                            onChange={(event) => {
+                                              const { target } = event;
+                                              field.onChange({
+                                                target: {
+                                                  name: field.name,
+                                                  value: target.checked,
+                                                },
+                                              });
+                                            }}
                                             disabled={noEdit}
                                           />
                                         )}
@@ -1885,6 +1896,15 @@ export default class AuthorAdd extends PureComponent {
                                             type="checkbox"
                                             id="is_active"
                                             label="Kích hoạt"
+                                            onChange={(event) => {
+                                              const { target } = event;
+                                              field.onChange({
+                                                target: {
+                                                  name: field.name,
+                                                  value: target.checked,
+                                                },
+                                              });
+                                            }}
                                             disabled={noEdit}
                                           />
                                         )}

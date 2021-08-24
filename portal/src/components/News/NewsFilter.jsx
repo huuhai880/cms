@@ -180,7 +180,26 @@ class NewsFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-
+            <Col xs={12} sm={4} className="mt-md-3">
+              <FormGroup className="mb-2 mb-sm-0">
+                <Label for="" className="mr-sm-2">
+                  Ngày tạo
+                </Label>
+                <Col className="pl-0 pr-0">
+                  <RangePicker
+                    setId="date2"
+                    startDateValue={this.state.startDateCreateDate}
+                    endDateValue={this.state.endDateCreateDate}
+                    handleDateValue={(startDate, endDate) =>
+                      this.setState({
+                        startDateCreateDate: startDate,
+                        endDateCreateDate: endDate,
+                      })
+                    }
+                  />
+                </Col>
+              </FormGroup>
+            </Col>
             <Col xs={12} sm={4} className="mt-md-3">
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
@@ -198,42 +217,7 @@ class NewsFilter extends PureComponent {
                 </Col>
               </FormGroup>
             </Col>
-
-            <Col xs={12} sm={4} className="mt-md-3">
-              <FormGroup className="mb-2 mb-sm-0">
-                <Label for="" className="mr-sm-2">
-                  Ngày tạo
-                </Label>
-                <Col className="pl-0 pr-0">
-                  {/* <DatePicker
-                    startDate={this.state.startDateCreateDate}
-                    startDateId="your_unique_start_date_id"
-                    endDate={this.state.endDateCreateDate}
-                    endDateId="your_unique_end_date_id"
-                    onDatesChange={({ startDate, endDate }) =>
-                      this.setState({
-                        startDateCreateDate: startDate,
-                        endDateCreateDate: endDate,
-                      })
-                    }
-                    isMultiple
-                    onChange={(value, e) => this.handleChangeDate(value, e)}
-                  /> */}
-                  <RangePicker
-                    setId="date2"
-                    startDateValue={this.state.startDateCreateDate}
-                    endDateValue={this.state.endDateCreateDate}
-                    handleDateValue={(startDate, endDate) =>
-                      this.setState({
-                        startDateCreateDate: startDate,
-                        endDateCreateDate: endDate,
-                      })
-                    }
-                  />
-                </Col>
-              </FormGroup>
-            </Col>
-            {/* <Col
+            <Col
               xs={12}
               sm={4}
               className="d-flex align-items-end justify-content-end"
@@ -259,31 +243,6 @@ class NewsFilter extends PureComponent {
                   <span className="ml-1">Làm mới</span>
                 </Button>
               </FormGroup>
-            </Col> */}
-            <Col xs={12} sm={4} className="mt-md-3">
-              <div className="d-flex align-items-end" style={{ marginTop: 32 }}>
-                <div className="d-flex flex-fill justify-content-end">
-                  <FormGroup className="mb-2 ml-2 mb-sm-0">
-                    <Button
-                      className="col-12 MuiPaper-filter__custom--button"
-                      onClick={this.onSubmit}
-                      color="primary"
-                    >
-                      <i className="fa fa-search" />
-                      <span className="ml-1">Tìm kiếm</span>
-                    </Button>
-                  </FormGroup>
-                  <FormGroup className="mb-2 ml-2 mb-sm-0">
-                    <Button
-                      className="mr-1 col-12 MuiPaper-filter__custom--button"
-                      onClick={this.onClear}
-                    >
-                      <i className="fa fa-refresh" />
-                      <span className="ml-1">Làm mới</span>
-                    </Button>
-                  </FormGroup>
-                </div>
-              </div>
             </Col>
           </Row>
         </Form>

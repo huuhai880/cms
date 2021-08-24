@@ -63,7 +63,7 @@ export default class NewsCategoryModel extends Model {
     is_active: 1,
     is_cate_video: 0,
     is_system: 0,
-    is_author_post: 0,
+    is_show_home: 0,
     is_show_with_parent: 0,
     // "is_author_post": 0
   });

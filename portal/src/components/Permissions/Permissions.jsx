@@ -487,21 +487,19 @@ export default class Permissions extends PureComponent {
                     );
                   })()}
                 </Col>
-                <Col xs={12} sm={4} className="text-right mt-2">
+                <Col xs={12} sm={4} className="text-right">
                   <Label for="" className="font-weight-bold">&nbsp;</Label>
-                  <div>
+                  <div style={{ height: "100p%J"}}>
                     <Button
                       color="info"
-                      className="ml-2 mb-2"
-                      size="sm"
+                      className="ml-2 MuiPaper-filter__custom--button"
                       disabled={isSubmitting}
                       onClick={this.handleSubmitFilter}
                     >
                       <i className="fa fa-search" /><span className="ml-1">Tìm kiếm</span>
                     </Button>
                     <Button
-                      className="ml-2 mb-2"
-                      size="sm"
+                      className="ml-2"
                       disabled={isSubmitting}
                       onClick={this.handleResetFilter}
                     >
@@ -510,8 +508,7 @@ export default class Permissions extends PureComponent {
                     <Button
                       color="primary"
                       type="submit"
-                      size="sm"
-                      className="ml-2 mb-2"
+                      className="ml-2 "
                       disabled={isSubmitting}
                     >
                       <i className="fa fa-edit" /><span className="ml-1">Lưu thông tin</span>

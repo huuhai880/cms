@@ -122,7 +122,9 @@ class News extends Component {
       this._newsModel
         .getList({ ...this.state.query, author_id })
         .then((data) => (bundle["data"] = data)),
-      this._newsCategoryModel.getOptions({}).then((data) => (bundle["newsCategoryArr"] = data)),
+      this._newsCategoryModel
+        .getOptions({})
+        .then((data) => (bundle["newsCategoryArr"] = data)),
     ];
     await Promise.all(all).catch((err) => {
       window._$g.dialogs.alert(
@@ -183,12 +185,18 @@ class News extends Component {
               data: cloneData,
             },
             () => {
-              window._$g.toastr.show("Cập nhật trạng thái thành công.", "success");
+              window._$g.toastr.show(
+                "Cập nhật trạng thái thành công.",
+                "success"
+              );
             }
           );
         })
         .catch(() => {
-          window._$g.toastr.show("Cập nhật trạng thái không thành công.", "error");
+          window._$g.toastr.show(
+            "Cập nhật trạng thái không thành công.",
+            "error"
+          );
         });
     }
   };
@@ -205,8 +213,10 @@ class News extends Component {
     if (type.match(/detail|edit|comment/i)) {
       window._$g.rdr(`${route}${id}`);
     } else {
-      window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "Xóa", (confirm) =>
-        this.handleClose(confirm, id, rowIndex)
+      window._$g.dialogs.prompt(
+        "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
+        "Xóa",
+        (confirm) => this.handleClose(confirm, id, rowIndex)
       );
     }
   }
@@ -224,7 +234,9 @@ class News extends Component {
           });
         })
         .catch(() => {
-          window._$g.dialogs.alert(window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!"));
+          window._$g.dialogs.alert(
+            window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
+          );
         });
     }
   }
@@ -256,7 +268,9 @@ class News extends Component {
       create_date_to,
     });
     this.getData(query).catch(() => {
-      window._$g.dialogs.alert(window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!"));
+      window._$g.dialogs.alert(
+        window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
+      );
     });
   };
 
@@ -431,7 +445,11 @@ class News extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                {value == 1 ? "Đã duyệt" : value == 2 ? "Chưa duyệt" : "Không duyệt"}
+                {value == 1
+                  ? "Đã duyệt"
+                  : value == 2
+                  ? "Chưa duyệt"
+                  : "Không duyệt"}
               </div>
             );
           },
@@ -501,12 +519,20 @@ class News extends Component {
                 <CheckAccess permission="NEWS_NEWS_REVIEW ">
                   <Button
                     color={
-                      this.state.data[tableMeta["rowIndex"]].is_review !== 2 ? "success" : "dark"
+                      this.state.data[tableMeta["rowIndex"]].is_review !== 2
+                        ? "success"
+                        : "dark"
                     }
                     title="Duyệt"
                     className="mr-1"
-                    onClick={(evt) => this.handleOpenReview(this.state.data[tableMeta["rowIndex"]])}
-                    disabled={this.state.data[tableMeta["rowIndex"]].is_review !== 2}
+                    onClick={(evt) =>
+                      this.handleOpenReview(
+                        this.state.data[tableMeta["rowIndex"]]
+                      )
+                    }
+                    disabled={
+                      this.state.data[tableMeta["rowIndex"]].is_review !== 2
+                    }
                   >
                     <i className="fa fa-check" />
                   </Button>
@@ -594,7 +620,11 @@ class News extends Component {
                   }))
                 }
               >
-                <i className={`fa ${this.state.toggleSearch ? "fa-minus" : "fa-plus"}`} />
+                <i
+                  className={`fa ${
+                    this.state.toggleSearch ? "fa-minus" : "fa-plus"
+                  }`}
+                />
               </div>
             )}
           </CardHeader>
@@ -615,8 +645,7 @@ class News extends Component {
           <div>
             <CheckAccess permission="NEWS_NEWS_ADD">
               <Button
-                className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
-                style={{paddingTop: "6px", paddingBot: "6px"}}
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 max-h-35 mb-3 mobile-reset-width mr-2"
                 onClick={() => this.handleClickAdd()}
                 color="success"
                 size="sm"
@@ -631,7 +660,9 @@ class News extends Component {
           className="animated fadeIn"
           style={{ marginBottom: handlePick ? 0 : "1.5rem", border: "none" }}
         >
-          <CardBody className={`py-0 ${!this.props.isOpenNewsList ? "px-0" : ""}`}>
+          <CardBody
+            className={`py-0 ${!this.props.isOpenNewsList ? "px-0" : ""}`}
+          >
             <div className="MuiPaper-root__custom MuiPaper-user">
               {this.state.isLoading ? (
                 <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
@@ -639,12 +670,18 @@ class News extends Component {
                 </div>
               ) : (
                 <div>
-                  <MUIDataTable data={this.state.data} columns={columns} options={options} />
+                  <MUIDataTable
+                    data={this.state.data}
+                    columns={columns}
+                    options={options}
+                  />
                   <CustomPagination
                     count={count}
                     rowsPerPage={query.itemsPerPage}
                     page={page}
-                    rowsPerPageOptions={handlePick ? [10, 25, 50, 75, 100] : [25, 50, 75, 100]}
+                    rowsPerPageOptions={
+                      handlePick ? [10, 25, 50, 75, 100] : [25, 50, 75, 100]
+                    }
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                   />
@@ -653,7 +690,10 @@ class News extends Component {
             </div>
           </CardBody>
         </Card>
-        <Modal isOpen={this.state.isOpenReview} toggle={() => this.toggleOpenReview()}>
+        <Modal
+          isOpen={this.state.isOpenReview}
+          toggle={() => this.toggleOpenReview()}
+        >
           <ModalHeader>Duyệt bài viết</ModalHeader>
           <ModalBody>
             <span>
@@ -675,10 +715,16 @@ class News extends Component {
             </Row>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={() => this.handleReivewAction(true)}>
+            <Button
+              color="primary"
+              onClick={() => this.handleReivewAction(true)}
+            >
               Đồng ý duyệt
             </Button>
-            <Button color="success" onClick={() => this.handleReivewAction(false)}>
+            <Button
+              color="success"
+              onClick={() => this.handleReivewAction(false)}
+            >
               không duyệt
             </Button>
             <Button color="secondary" onClick={() => this.toggleOpenReview()}>

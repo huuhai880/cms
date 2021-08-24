@@ -230,9 +230,9 @@ class PartnerFilter extends PureComponent {
             <Col
               xs={12}
               sm={6}
-              className="d-flex align-items-end justify-content-end"
+              className="d-flex align-items-end justify-content-end mt-3 pl-0 pr-0"
             >
-              <FormGroup className="mb-2 mb-sm-0 mt-3">
+              <FormGroup className="mb-2 mb-sm-0">
                 <Button
                   className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                   onClick={this.onSubmit}

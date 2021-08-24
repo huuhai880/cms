@@ -48,7 +48,7 @@ class AuthorFilter extends PureComponent {
     const { inputValue, status, newsCategory } = this.state;
     const { handleSubmit } = this.props;
     handleSubmit(
-      inputValue? inputValue.trim(): "",
+      inputValue ? inputValue.trim() : "",
       status ? status.value : undefined,
       newsCategory ? newsCategory.value : undefined
     );
@@ -97,7 +97,7 @@ class AuthorFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
+            {/* <Col xs={12} sm={3}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Danh mục bài viết
@@ -114,8 +114,8 @@ class AuthorFilter extends PureComponent {
                   isObject
                 />
               </FormGroup>
-            </Col>
-            <Col xs={12} sm={2}>
+            </Col> */}
+            <Col xs={12} sm={4}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Kích hoạt
@@ -135,33 +135,32 @@ class AuthorFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3} className="mt-md-3">
-              <div
-                className="d-flex align-items-center mt-2"
-                style={{ height: "100%" }}
-              >
-                <div className="d-flex flex-fill justify-content-end">
-                  <FormGroup className="mb-2 ml-2 mb-sm-0">
-                    <Button
-                      className="col-12 MuiPaper-filter__custom--button"
-                      onClick={this.onSubmit}
-                      color="primary"
-                    >
-                      <i className="fa fa-search" />
-                      <span className="ml-1">Tìm kiếm</span>
-                    </Button>
-                  </FormGroup>
-                  <FormGroup className="mb-2 ml-2 mb-sm-0">
-                    <Button
-                      className="mr-1 col-12 MuiPaper-filter__custom--button"
-                      onClick={this.onClear}
-                    >
-                      <i className="fa fa-refresh" />
-                      <span className="ml-1">Làm mới</span>
-                    </Button>
-                  </FormGroup>
-                </div>
-              </div>
+            <Col
+              xs={12}
+              sm={4}
+              className="d-flex align-items-end justify-content-end"
+            >
+              <FormGroup className="mb-2 mb-sm-0">
+                <Button
+                  className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={this.onSubmit}
+                  color="primary"
+                  size="sm"
+                >
+                  <i className="fa fa-search" />
+                  <span className="ml-1">Tìm kiếm</span>
+                </Button>
+              </FormGroup>
+              <FormGroup className="mb-2 ml-2 mb-sm-0">
+                <Button
+                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={this.onClear}
+                  size="sm"
+                >
+                  <i className="fa fa-refresh" />
+                  <span className="ml-1">Làm mới</span>
+                </Button>
+              </FormGroup>
             </Col>
           </Row>
         </Form>
