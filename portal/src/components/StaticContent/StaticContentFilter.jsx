@@ -2,9 +2,10 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
 import Select from "react-select";
+import RangePicker from "../../containers/Common/widget/RangeTimePicker";
+import "antd/dist/antd.css";
 
 // Component(s)
-import DatePicker from "../Common/DatePicker";
 // Model(s)
 
 class StaticContentFilter extends PureComponent {
@@ -125,18 +126,15 @@ class StaticContentFilter extends PureComponent {
                   Ngày tạo
                 </Label>
                 <Col className="pl-0 pr-0">
-                  <DatePicker
-                    startDate={this.state.create_date_from}
-                    startDateId="your_unique_start_date_id"
-                    endDate={this.state.create_date_to}
-                    endDateId="your_unique_end_date_id"
-                    onDatesChange={({ startDate, endDate }) =>
+                  <RangePicker
+                    startDateValue={this.state.create_date_from}
+                    endDateValue={this.state.create_date_to}
+                    handleDateValue={(startDate, endDate) =>
                       this.setState({
                         create_date_from: startDate,
                         create_date_to: endDate,
                       })
-                    } // PropTypes.func.isRequired,
-                    isMultiple
+                    }
                   />
                 </Col>
               </FormGroup>
@@ -161,30 +159,32 @@ class StaticContentFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3} className="mt-md-3">
-              <div className="d-flex align-items-center mt-2" style={{height: "100%"}}>
-                <div className="d-flex flex-fill justify-content-end">
-                  <FormGroup className="mb-2 ml-2 mb-sm-0">
-                    <Button
-                      className="col-12 MuiPaper-filter__custom--button"
-                      onClick={this.onSubmit}
-                      color="primary"
-                    >
-                      <i className="fa fa-search" />
-                      <span className="ml-1">Tìm kiếm</span>
-                    </Button>
-                  </FormGroup>
-                  <FormGroup className="mb-2 ml-2 mb-sm-0">
-                    <Button
-                      className="mr-1 col-12 MuiPaper-filter__custom--button"
-                      onClick={this.onClear}
-                    >
-                      <i className="fa fa-refresh" />
-                      <span className="ml-1">Làm mới</span>
-                    </Button>
-                  </FormGroup>
-                </div>
-              </div>
+            <Col
+              xs={12}
+              sm={3}
+              className="d-flex align-items-end justify-content-end"
+            >
+              <FormGroup className="mb-2 mb-sm-0">
+                <Button
+                  className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={this.onSubmit}
+                  color="primary"
+                  size="sm"
+                >
+                  <i className="fa fa-search" />
+                  <span className="ml-1">Tìm kiếm</span>
+                </Button>
+              </FormGroup>
+              <FormGroup className="mb-2 ml-2 mb-sm-0">
+                <Button
+                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={this.onClear}
+                  size="sm"
+                >
+                  <i className="fa fa-refresh" />
+                  <span className="ml-1">Làm mới</span>
+                </Button>
+              </FormGroup>
             </Col>
           </Row>
         </Form>

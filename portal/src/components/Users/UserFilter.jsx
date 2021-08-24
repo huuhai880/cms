@@ -162,11 +162,15 @@ class UserFilter extends PureComponent {
             </Col>
           </Row>
         </Form>
-        <div className="d-flex align-items-center mt-3">
-          <div className="d-flex flex-fill justify-content-end">
-            <FormGroup className="mb-2 ml-2 mb-sm-0">
+        <div>
+          <Col
+            xs={12}
+            sm={12}
+            className="d-flex align-items-centerflex-fill  justify-content-end mt-3 pl-0 pr-0"
+          >
+            <FormGroup className="mb-2 mb-sm-0">
               <Button
-                className="col-12 MuiPaper-filter__custom--button"
+                className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                 onClick={this.onSubmit}
                 color="primary"
                 size="sm"
@@ -177,7 +181,7 @@ class UserFilter extends PureComponent {
             </FormGroup>
             <FormGroup className="mb-2 ml-2 mb-sm-0">
               <Button
-                className="mr-1 col-12 MuiPaper-filter__custom--button"
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                 onClick={this.onClear}
                 size="sm"
               >
@@ -185,7 +189,7 @@ class UserFilter extends PureComponent {
                 <span className="ml-1">Làm mới</span>
               </Button>
             </FormGroup>
-          </div>
+          </Col>
         </div>
       </div>
     );

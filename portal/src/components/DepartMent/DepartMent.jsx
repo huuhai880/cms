@@ -447,11 +447,10 @@ class DepartMent extends Component {
             </CardBody>
           )}
         </Card>
-
         <div>
           <CheckAccess permission="MD_DEPARTMENT_ADD">
             <Button
-              className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
+              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
               onClick={() => this.handleClickAdd()}
               color="success"
               size="sm"
@@ -462,7 +461,7 @@ class DepartMent extends Component {
           </CheckAccess>
           <CheckAccess permission="MD_DEPARTMENT_EXPORT">
             <Button
-              className="col-12 max-w-110 mb-2 mobile-reset-width"
+              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
               onClick={() => this.handleExport()}
               color="excel"
               size="sm"

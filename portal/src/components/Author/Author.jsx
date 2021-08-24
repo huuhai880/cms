@@ -454,18 +454,19 @@ class Author extends PureComponent {
             </CardBody>
           )}
         </Card>
-        <CheckAccess permission="CRM_AUTHOR_ADD">
-          <Button
-            className="col-12 max-w-110 mb-2 mobile-reset-width"
-            style={{ paddingTop: "6px", paddingBot: "6px" }}
-            onClick={() => this.handleClickAdd()}
-            color="success"
-            size="sm"
-          >
-            <i className="fa fa-plus ml-1" />
-            Thêm mới
-          </Button>
-        </CheckAccess>
+        <div>
+          <CheckAccess permission="CRM_AUTHOR_ADD">
+            <Button
+              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
+              onClick={() => this.handleClickAdd()}
+              color="success"
+              size="sm"
+            >
+              <i className="fa fa-plus mr-1" />
+              Thêm mới
+            </Button>
+          </CheckAccess>
+        </div>
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-root__custom MuiPaper-author">

@@ -1,22 +1,14 @@
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
-import {
-  Input,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Col,
-  Row,
- } from 'reactstrap'
- import Select from 'react-select'
+import React, { PureComponent } from "react";
+import PropTypes from "prop-types";
+import { Input, Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
+import Select from "react-select";
 
 // Material
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles } from "@material-ui/core/styles";
 
-const styles = theme => ({
+const styles = (theme) => ({
   button: {
-    display: 'block',
+    display: "block",
     marginTop: 16,
     paddingTop: 0,
     paddingBottom: 0,
@@ -29,12 +21,12 @@ const styles = theme => ({
   formControlBtn: {
     margin: 8,
     minWidth: 80,
-  }
-})
+  },
+});
 
 class MenuFilter extends PureComponent {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       /** @var {Array} */
       is_actives: [
@@ -42,49 +34,60 @@ class MenuFilter extends PureComponent {
         { name: "Có", id: "1" },
         { name: "Không", id: "0" },
       ],
-      selectedOption: {label: "Có", value: 1},
-    }
+      selectedOption: { label: "Có", value: 1 },
+    };
   }
 
-  handleChange = event => {
+  handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
-  }
-  handleChangeSelect = selectedOption => {
-    this.setState({ selectedOption })
-  }
-  handleKeyDown = event => {
-    if ((1 * event.keyCode) === 13) {
-      event.preventDefault()
-      this.onSubmit()
+  };
+  handleChangeSelect = (selectedOption) => {
+    this.setState({ selectedOption });
+  };
+  handleKeyDown = (event) => {
+    if (1 * event.keyCode === 13) {
+      event.preventDefault();
+      this.onSubmit();
     }
-  }
+  };
 
   onSubmit = () => {
-    const { inputValue, inputFunction, selectedOption, is_bussiness, is_system } = this.state;
-   
+    const {
+      inputValue,
+      inputFunction,
+      selectedOption,
+      is_bussiness,
+      is_system,
+    } = this.state;
+
     const { handleSubmit } = this.props;
-    handleSubmit(inputValue, 
-      inputFunction, 
-      selectedOption ? selectedOption.value : 2, 
-      is_bussiness, 
-      is_system)
-  }
+    handleSubmit(
+      inputValue,
+      inputFunction,
+      selectedOption ? selectedOption.value : 2,
+      is_bussiness,
+      is_system
+    );
+  };
 
   onClear = () => {
-    this.setState({
-      inputValue: '',
-      inputFunction: '',
-      selectedOption: {label: "Có", value: 1},
-      is_bussiness: undefined,
-      is_system: undefined,
-    }, () => {
-      this.onSubmit()
-    })
-  }
+    this.setState(
+      {
+        inputValue: "",
+        inputFunction: "",
+        selectedOption: { label: "Có", value: 1 },
+        is_bussiness: undefined,
+        is_system: undefined,
+      },
+      () => {
+        this.onSubmit();
+      }
+    );
+  };
 
   render() {
     return (
-      <div  className="ml-3 mr-3 mb-3 mt-3">
+      <div className="ml-3 mr-3 mb-3 mt-3">
         <Form autoComplete="nope" className="zoom-scale-9">
           <Row>
             <Col xs={12} sm={4}>
@@ -102,7 +105,7 @@ class MenuFilter extends PureComponent {
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}
                   inputprops={{
-                    name: 'inputValue',
+                    name: "inputValue",
                   }}
                 />
               </FormGroup>
@@ -123,7 +126,7 @@ class MenuFilter extends PureComponent {
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}
                   inputprops={{
-                    name: 'inputFunction',
+                    name: "inputFunction",
                   }}
                 />
               </FormGroup>
@@ -153,7 +156,9 @@ class MenuFilter extends PureComponent {
             </FormGroup> */}
             <Col xs={12} sm={4}>
               <FormGroup className="mb-2 mb-sm-0">
-                <Label for="" className="mr-sm-2">Kích hoạt</Label>
+                <Label for="" className="mr-sm-2">
+                  Kích hoạt
+                </Label>
                 <Select
                   className="MuiPaper-filter__custom--select"
                   id="is_active"
@@ -162,7 +167,9 @@ class MenuFilter extends PureComponent {
                   isSearchable={true}
                   placeholder={this.state.is_actives[0].name}
                   value={this.state.selectedOption}
-                  options={this.state.is_actives.map(({ name: label, id: value }) => ({ value, label }))}
+                  options={this.state.is_actives.map(
+                    ({ name: label, id: value }) => ({ value, label })
+                  )}
                 />
               </FormGroup>
             </Col>
@@ -191,25 +198,35 @@ class MenuFilter extends PureComponent {
             </FormGroup> */}
           </Row>
         </Form>
-
-        <div className="d-flex align-items-center mt-3">
-          <div className="d-flex flex-fill justify-content-end">
-            <FormGroup className="mb-2 ml-2 mb-sm-0">
-              <Button className="col-12 MuiPaper-filter__custom--button" onClick={this.onSubmit} color="primary" size="sm">
-                <i className="fa fa-search" />
-                <span className="ml-1">Tìm kiếm</span>
-              </Button>
-            </FormGroup>
-            <FormGroup className="mb-2 ml-2 mb-sm-0">
-              <Button className="mr-1 col-12 MuiPaper-filter__custom--button" onClick={this.onClear} size="sm">
-                <i className="fa fa-refresh" />
-                <span className="ml-1">Làm mới</span>
-              </Button>
-            </FormGroup>
-          </div>
-        </div>
+        <Col
+          xs={12}
+          sm={12}
+          className="d-flex align-items-end justify-content-end mt-3 pl-0 pr-0"
+        >
+          <FormGroup className="mb-2 mb-sm-0">
+            <Button
+              className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+              onClick={this.onSubmit}
+              color="primary"
+              size="sm"
+            >
+              <i className="fa fa-search" />
+              <span className="ml-1">Tìm kiếm</span>
+            </Button>
+          </FormGroup>
+          <FormGroup className="mb-2 ml-2 mb-sm-0">
+            <Button
+              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+              onClick={this.onClear}
+              size="sm"
+            >
+              <i className="fa fa-refresh" />
+              <span className="ml-1">Làm mới</span>
+            </Button>
+          </FormGroup>
+        </Col>
       </div>
-    )
+    );
   }
 }
 
@@ -218,5 +235,4 @@ MenuFilter.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(MenuFilter)
-
+export default withStyles(styles)(MenuFilter);

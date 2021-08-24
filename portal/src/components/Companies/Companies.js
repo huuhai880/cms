@@ -325,9 +325,9 @@ class Companies extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
+          },
         },
       },
       {
@@ -346,9 +346,9 @@ class Companies extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
+          },
         },
       },
       {
@@ -367,9 +367,9 @@ class Companies extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-right">{value || ""}</span>;
-          }
+          },
         },
       },
       {
@@ -388,9 +388,9 @@ class Companies extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
+          },
         },
       },
       {
@@ -409,9 +409,9 @@ class Companies extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
+          },
         },
       },
       {
@@ -430,9 +430,9 @@ class Companies extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
+          },
         },
       },
       {
@@ -451,9 +451,9 @@ class Companies extends PureComponent {
               </th>
             );
           },
-          customBodyRender: value => {
+          customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
-          }
+          },
         },
       },
       {
@@ -573,7 +573,7 @@ class Companies extends PureComponent {
         <div>
           <CheckAccess permission="AM_COMPANY_ADD">
             <Button
-              className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
+              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
               onClick={() => this.handleClickAdd()}
               color="success"
               size="sm"
@@ -584,7 +584,7 @@ class Companies extends PureComponent {
           </CheckAccess>
           <CheckAccess permission="AM_COMPANY_EXPORT">
             <Button
-              className="col-12 max-w-110 mb-2 mobile-reset-width"
+              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
               onClick={() => this.handleExport()}
               color="excel"
               size="sm"

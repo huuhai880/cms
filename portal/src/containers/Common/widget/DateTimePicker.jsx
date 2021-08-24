@@ -17,6 +17,7 @@ const DateTimePicker = (props) => {
     isDisabledTime = true,
     isDisabledDate = true,
     dayFirst = false,
+    placeholder = "Select Date",
   } = props;
 
   function range(start, end) {
@@ -43,7 +44,16 @@ const DateTimePicker = (props) => {
               return (
                 <DatePicker
                   style={{ width: "100% " }}
-                  defaultValue={values[name] ? moment(values[name], dayFirst? "DD/MM/YYYY HH:mm:ss": "YYYY/MM/DD HH:mm:ss") : ""}
+                  defaultValue={
+                    values[name]
+                      ? moment(
+                          values[name],
+                          dayFirst
+                            ? "DD/MM/YYYY HH:mm:ss"
+                            : "YYYY/MM/DD HH:mm:ss"
+                        )
+                      : ""
+                  }
                   showTime={{
                     format: "HH:mm",
                   }}
@@ -64,6 +74,7 @@ const DateTimePicker = (props) => {
                       };
                     }
                   }}
+                  placeholder={placeholder}
                   format="DD/MM/YYYY HH:mm"
                   disabledDate={(current) => {
                     if (isDisabledDate) {

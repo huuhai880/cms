@@ -20,6 +20,7 @@ const template = {
   'is_cate_video': '{{ISCATEVIDEO ? 1 : 0}}',
   'is_system': '{{ISSYSTEM ? 1 : 0}}',
   'is_show_with_parent': '{{ISSHOWWITHPARENT ? 1 : 0}}',
+  'is_show_home': '{{ISSHOWHOME ? 1 : 0}}',
   'is_author_post': '{{ISAUTHORPOST ? 1 : 0}}',
 };
 
@@ -35,7 +36,7 @@ let transform = new Transform(template);
 const detail = (area) => {
   return transform.transform(area, [
     'news_category_id','parent_id','news_category_name','category_level','pictures','image_file_id','description','meta_key_words',
-    'meta_descriptions','meta_title', 'seo_name', 'order_index','create_date','is_active','is_cate_video','is_system','is_author_post', 'is_show_with_parent'
+    'meta_descriptions','meta_title', 'seo_name', 'order_index','create_date','is_active','is_cate_video','is_system','is_author_post', 'is_show_with_parent', 'is_show_home'
   ]);
 };
 

@@ -104,6 +104,7 @@ const savePicture = async (base64) => {
 };
 
 const createNewsCategoryOrUpdate = async (bodyParams) => {
+console.log("🚀 ~ file: news-category.service.js ~ line 107 ~ createNewsCategoryOrUpdate ~ bodyParams", bodyParams)
   try {
     const pool = await mssql.pool;
 
@@ -147,7 +148,7 @@ const createNewsCategoryOrUpdate = async (bodyParams) => {
       .input('ORDERINDEX', apiHelper.getValueFromObject(bodyParams, 'order_index', 0))
       .input('ISSHOWWITHPARENT', apiHelper.getValueFromObject(bodyParams, 'is_show_with_parent'))
       .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active'))
-      .input('ISAUTHORPOST', apiHelper.getValueFromObject(bodyParams, 'is_author_post'))
+      .input('ISSHOWHOME', apiHelper.getValueFromObject(bodyParams, 'is_show_home'))
       .input('ISSYSTEM', apiHelper.getValueFromObject(bodyParams, 'is_system'))
       .input('USER', apiHelper.getValueFromObject(bodyParams, 'auth_name'))
       .execute(PROCEDURE_NAME.NEWS_NEWSCATEGORY_CREATEORUPDATE_ADMINWEB);
