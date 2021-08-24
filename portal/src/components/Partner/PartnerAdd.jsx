@@ -206,10 +206,18 @@ export default class PartnerAdd extends PureComponent {
           .trim()
           .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
           .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!")
-          .required("Mật khẩu là bắt buộc."),
+          .required("Mật khẩu là bắt buộc.")
+          .matches(
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()\-_=+{};:,<.>])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/,
+            "Mật khẩu bao gồm chữ hoa, chữ thường, ký tự đặc biết và số ."
+          ),
     ower_phone_1: Yup.string()
       .matches(/^\d{10,11}$/, "Số điện thoại không hợp lệ!")
       .required("Số điện thoại là bắt buộc."),
+    ower_phone_2: Yup.string().matches(
+      /^\d{10,11}$/,
+      "Số điện thoại không hợp lệ!"
+    ),
     // email: Yup.string().matches(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, "Nhập cho đúng định dạng mail vào"),
   });
 

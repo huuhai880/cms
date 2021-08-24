@@ -281,7 +281,7 @@ export default class AuthorChangePassword extends PureComponent {
                               <Label sm={3}></Label>
                               <Col
                                 sm={9}
-                                className="d-flex flex-fill justify-content-start"
+                                className="mt-3 d-flex flex-fill justify-content-start"
                               >
                                 <FormGroup className="mb-2 mb-sm-0">
                                   <Button

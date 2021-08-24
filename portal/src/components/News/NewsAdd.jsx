@@ -331,9 +331,8 @@ export default class NewsAdd extends Component {
     let { news_date } = values;
     let newsDate =
       (news_date &&
-        moment(news_date, "DD/MM/YYYY HH:MM").format("DD/MM/YYYY HH:MM")) ||
+        moment(news_date, "DD/MM/YYYY HH:MM").format("YYYY/MM/DD HH:MM")) ||
       "";
-
     let formData = Object.assign({}, values, {
       image_url: usrImgBase64,
       is_video: values.is_video == true ? 1 : 0,
@@ -345,7 +344,7 @@ export default class NewsAdd extends Component {
       news_tag: "",
       meta_key_words: "",
       image_file_id: 0,
-      news_date: values.news_date || "",
+      news_date: newsDate || "",
       seo_name: seo_name != "" ? seo_name : values.seo_name,
       is_active: values.is_active == true ? 1 : 0,
       // is_qrcode: values.is_qrcode == true ? 1 : 0,
@@ -394,6 +393,7 @@ export default class NewsAdd extends Component {
         );
       });
   }
+
 
   handleFormikReset() {
     this.setState((state) => ({
@@ -1001,14 +1001,16 @@ export default class NewsAdd extends Component {
                                                     inputsm={6}
                                                     isRequired={false}
                                                     isEdit={
-                                                      !(
-                                                        NewsEnt &&
-                                                        NewsEnt.news_date &&
-                                                        moment(
-                                                          NewsEnt.news_date
-                                                        ) < moment()
+                                                      !(noEdit
+                                                        // NewsEnt &&
+                                                        // NewsEnt.news_date 
+                                                        // &&
+                                                        // moment(
+                                                        //   NewsEnt.news_date
+                                                        // ) < moment()
                                                       )
                                                     }
+                                                    isDisabledDate={noEdit}
                                                   />
                                                 </Col>
                                               </FormGroup>

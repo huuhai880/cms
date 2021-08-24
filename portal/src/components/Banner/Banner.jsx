@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardHeader, Button } from "reactstrap";
+import { Card, CardBody, CardHeader, Button, Col, FormGroup } from "reactstrap";
 
 // Material
 import MUIDataTable from "mui-datatables";
@@ -13,10 +13,10 @@ import { CheckAccess } from "../../navigation/VerifyAccess";
 import BannerFilter from "./BannerFilter";
 // Util(s)
 import { layoutFullWidthHeight, mapDataOptions4Select } from "../../utils/html";
-import { configTableOptions, configIDRowTable} from "../../utils/index";
+import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
 import BannerModel from "../../models/BannerModel";
-import ConfigModel from '../../models/ConfigModel';
+import ConfigModel from "../../models/ConfigModel";
 
 // Set layout full-wh
 layoutFullWidthHeight();
@@ -45,11 +45,11 @@ class Banner extends Component {
     page: 0,
     count: 1,
     data: [],
-    placementOpts: [{value: '', label: 'Tất cả'}],
+    placementOpts: [{ value: "", label: "Tất cả" }],
     query: {
       itemsPerPage: 25,
       page: 1,
-      is_active: 1
+      is_active: 1,
     },
   };
 
@@ -73,7 +73,7 @@ class Banner extends Component {
             data: dataConfig,
             count,
             page,
-            placementOpts
+            placementOpts,
           });
         }
       );
@@ -93,7 +93,9 @@ class Banner extends Component {
         .then((data) => (bundle["data"] = data)),
       this._configModel
         .getListPlacementForBanner()
-        .then(data => (bundle['placementOpts'] = mapDataOptions4Select(data)))
+        .then(
+          (data) => (bundle["placementOpts"] = mapDataOptions4Select(data))
+        ),
     ];
     await Promise.all(all).catch((err) => {
       window._$g.dialogs.alert(
@@ -163,14 +165,19 @@ class Banner extends Component {
     }
   }
 
-  handleSubmitFilter = (create_date_from, create_date_to, is_active, placement) => {
+  handleSubmitFilter = (
+    create_date_from,
+    create_date_to,
+    is_active,
+    placement
+  ) => {
     let query = { ...this.state.query };
     query.page = 1;
     query = Object.assign(query, {
       create_date_from,
       create_date_to,
       is_active,
-      placement
+      placement,
     });
     this.getData(query).catch(() => {
       window._$g.dialogs.alert(
@@ -206,16 +213,16 @@ class Banner extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
-                style={{maxWidth: 200}}
+                style={{ maxWidth: 200 }}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
-            ); 
+            );
           },
           customBodyRender: (value) => {
             return (
-              <div class="text-left" style={{width: 200}}>
-                {value?value.name:''}
+              <div class="text-left" style={{ width: 200 }}>
+                {value ? value.name : ""}
               </div>
             );
           },
@@ -263,11 +270,7 @@ class Banner extends Component {
             );
           },
           customBodyRender: (value) => {
-            return (
-              <div class="text-center" >
-                {value}
-              </div>
-            );
+            return <div class="text-center">{value}</div>;
           },
         },
       },
@@ -371,26 +374,34 @@ class Banner extends Component {
           {this.state.toggleSearch && (
             <CardBody className="px-0 py-0">
               <div className="MuiPaper-filter__custom z-index-2">
-                <BannerFilter handleSubmit={this.handleSubmitFilter} placementOpts={placementOpts} />
+                <BannerFilter
+                  handleSubmit={this.handleSubmitFilter}
+                  placementOpts={placementOpts}
+                />
               </div>
             </CardBody>
           )}
         </Card>
-        <div>
+        <Col
+          xs={12}
+          sm={4}
+          className="d-flex align-items-end mb-3"
+          style={{ padding: 0 }}
+        >
           <CheckAccess permission="CMS_BANNER_ADD">
-            <Button
-              // className="col-12 max-w-110 mb-3 mobile-reset-width mr-2"
-              className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
-              onClick={() => this.handleClickAdd()}
-              // style={{ paddingTop: "6px", paddingBot: "6px" }}
-              color="success"
-              size="sm"
-            >
-              <i className="fa fa-plus mr-1" />
-              Thêm mới
-            </Button>
+            <FormGroup className="mb-2 mb-sm-0">
+              <Button
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button "
+                onClick={() => this.handleClickAdd()}
+                color="success"
+                size="sm"
+              >
+                <i className="fa fa-plus mr-1" />
+                Thêm mới
+              </Button>
+            </FormGroup>
           </CheckAccess>
-        </div>
+        </Col>
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-root__custom">

@@ -70,6 +70,14 @@ export default class FunctionGroupAdd extends PureComponent {
     // Get bundle data --> ready data
     (async () => {
       let bundle = await this._getBundleData();
+      let { funcGroupEnt } = this.props;
+      let { functions } = bundle;
+      if (!funcGroupEnt) {
+        functions = functions.map((item) => {
+          item.function_group_is_check = 0;
+          return item;
+        });
+      }
       this.setState({ ...bundle, ready: true });
     })();
     //.end
@@ -177,7 +185,6 @@ export default class FunctionGroupAdd extends PureComponent {
         formData[key] = formData[key] ? 1 : 0;
       }
     });
-    // console.log('formData: ', formData);
     //
     let apiCall = funcGroupEnt
       ? this._functionGroupModel.update(funcGroupEnt.id(), formData)
@@ -228,6 +235,7 @@ export default class FunctionGroupAdd extends PureComponent {
       Object.assign(_func, { function_group_is_check });
     }
     this.setState({ functions: functions.concat([]) });
+    // console.log("🚀 ~ file: FunctionGroupAdd.jsx ~ line 227 ~ FunctionGroupAdd ~ handleChangeFunction ~ functions", functions)
   }
 
   handleChangeOrderIndex(event) {
@@ -459,12 +467,11 @@ export default class FunctionGroupAdd extends PureComponent {
                                             className="text-center"
                                             style={{ width: "%" }}
                                           >
-                                            Xoá
+                                            Chọn
                                           </th>
                                         </tr>
                                       </thead>
                                       <tbody>
-                                      {console.log("functions", functions)}
                                         {functions.map((item, idx) => {
                                           return (
                                             <tr key={`function-${idx}`}>

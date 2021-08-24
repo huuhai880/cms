@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardHeader, Button } from "reactstrap";
+import { Card, CardBody, CardHeader, Button, Col, FormGroup } from "reactstrap";
 
 // Material
 import MUIDataTable from "mui-datatables";
@@ -318,50 +318,50 @@ class StaticContent extends Component {
           },
         },
       },
-      {
-        name: "is_childrent",
-        label: "Là trang con",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return (
-              <div className="text-center">
-                {/* <input type="checkbox" defaultChecked={value} 
-                disabled={true}
-                 /> */}
-                <div className="checkmark">
-                  <div
-                    className={`checkmark_circle ${
-                      value ? "checkmark-active-bor" : ""
-                    }`}
-                  ></div>
-                  <div
-                    className={`checkmark_stem ${
-                      value ? "checkmark-active-bg" : ""
-                    }`}
-                  ></div>
-                  <div
-                    className={`checkmark_kick ${
-                      value ? "checkmark-active-bg" : ""
-                    }`}
-                  ></div>
-                </div>
-              </div>
-            );
-          },
-        },
-      },
+      // {
+      //   name: "is_childrent",
+      //   label: "Là trang con",
+      //   options: {
+      //     filter: false,
+      //     sort: false,
+      //     customHeadRender: (columnMeta, handleToggleColumn) => {
+      //       return (
+      //         <th
+      //           key={`head-th-${columnMeta.label}`}
+      //           className="MuiTableCell-root MuiTableCell-head"
+      //         >
+      //           <div className="text-center">{columnMeta.label}</div>
+      //         </th>
+      //       );
+      //     },
+      //     customBodyRender: (value, tableMeta, updateValue) => {
+      //       return (
+      //         <div className="text-center">
+      //           {/* <input type="checkbox" defaultChecked={value}
+      //           disabled={true}
+      //            /> */}
+      //           <div className="checkmark">
+      //             <div
+      //               className={`checkmark_circle ${
+      //                 value ? "checkmark-active-bor" : ""
+      //               }`}
+      //             ></div>
+      //             <div
+      //               className={`checkmark_stem ${
+      //                 value ? "checkmark-active-bg" : ""
+      //               }`}
+      //             ></div>
+      //             <div
+      //               className={`checkmark_kick ${
+      //                 value ? "checkmark-active-bg" : ""
+      //               }`}
+      //             ></div>
+      //           </div>
+      //         </div>
+      //       );
+      //     },
+      //   },
+      // },
       {
         name: "create_date",
         label: "Ngày tạo",
@@ -533,19 +533,26 @@ class StaticContent extends Component {
           </div>
         ) : null}
         {!handlePick ? (
-          <div>
+          <Col
+            xs={12}
+            sm={4}
+            className="d-flex align-items-end mb-3"
+            style={{ padding: 0 }}
+          >
             <CheckAccess permission="CMS_STATICCONTENT_ADD">
-              <Button
-                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button max-w-110 mb-3 mobile-reset-width mr-2"
-                onClick={() => this.handleClickAdd()}
-                color="success"
-                size="sm"
-              >
-                <i className="fa fa-plus mr-1" />
-                Thêm mới
-              </Button>
+              <FormGroup className="mb-2 mb-sm-0">
+                <Button
+                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={() => this.handleClickAdd()}
+                  color="success"
+                  size="sm"
+                >
+                  <i className="fa fa-plus mr-1" />
+                  Thêm mới
+                </Button>
+              </FormGroup>
             </CheckAccess>
-          </div>
+          </Col>
         ) : null}
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">

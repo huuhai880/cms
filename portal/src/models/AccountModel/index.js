@@ -25,6 +25,8 @@ export default class AccountModel extends Model {
   static API_ACCOUNT_GEN_CODE = "account/gen-code";
   /** @var {String} */
   static API_ACCOUNT_DETAIL = "account/:id";
+  static API_ACCOUNT_CHECK = "account/check-email";
+
   /** @var {String} */
   static API_ACCOUNT_OPTS = "account/get-options";
   /** @var {String} */
@@ -323,7 +325,12 @@ export default class AccountModel extends Model {
       .get(_static.API_ACCOUNT_DETAIL.replace(":id", id), data)
       .then((data) => new AccountEntity(data));
   }
-
+  check(_data = {}) {
+    // Validate data?!
+    let data = Object.assign({}, _data);
+    // console.log(id, data)
+    return this._api.get(_static.API_ACCOUNT_CHECK, data);
+  }
   /**
    *
    */

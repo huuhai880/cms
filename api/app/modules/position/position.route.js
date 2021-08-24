@@ -21,6 +21,10 @@ routes
 routes.route('/:position_id(\\d+)').get(positionController.detailPosition);
 ////////detelte position
 routes.route('/:position_id/delete').put(positionController.deletePosition);
+// check name
+routes
+  .route('/check-name')
+  .get(positionController.checkName);
 module.exports = {
   prefix,
   routes,

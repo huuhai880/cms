@@ -184,6 +184,7 @@ const getLastItemNews = async (newsId) => {
 };
 
 const createNewsOrUpdate = async (bodyParams) => {
+console.log("🚀 ~ file: news.service.js ~ line 187 ~ createNewsOrUpdate ~ bodyParams", bodyParams.new_date)
   try {
     const id = apiHelper.getValueFromObject(bodyParams, 'news_id');
     const params = bodyParams;

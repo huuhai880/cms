@@ -30,7 +30,10 @@ routes.route('/:member_id(\\d+)').delete(crmAccountController.deleteCRMAccount);
 
 // Detail a crm-account
 routes.route('/:member_id(\\d+)').get(crmAccountController.detailCRMAccount);
-
+// check email
+routes
+  .route('/check-email')
+  .get(crmAccountController.checkEmail);
 // Change pass crm-account
 routes
   .route('/:member_id/change-password')
