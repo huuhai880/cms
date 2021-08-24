@@ -112,9 +112,10 @@ export default class UserAdd extends PureComponent {
         .trim()
         // .email("Email không hợp lệ")
         .required("Email là bắt buộc."),
-      birthday: Yup.string()
-        .trim()
+      birthday: Yup.date()
+        // .trim()
         .nullable(true)
+        .typeError('Sai định dạng ngày')
         .required("Ngày sinh là bắt buộc."),
       first_name: Yup.string().trim().required("Họ là bắt buộc."),
       last_name: Yup.string().trim().required("Tên là bắt buộc."),
