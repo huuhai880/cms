@@ -52,6 +52,7 @@ module.exports = {
     UPDATE_PASSWORD_SUCCESS: 'Update password success.',
     GENERATE_USERNAME_SUCCESS: 'Generate username success.',
     OLD_PASSWORD_WRONG: 'Mật khẩu cũ không chính xác.',
+    CHECK_EMAIL: 'Email đã tồn tại.',
   },
   USER_GROUP: {
     CREATE_SUCCESS: 'Create user group success.',

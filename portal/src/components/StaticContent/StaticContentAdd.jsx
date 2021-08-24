@@ -105,9 +105,11 @@ export default class StaticContentAdd extends Component {
   async _getBundleData() {
     let bundle = {};
     let all = [
-      this._StaticContentModel.getOptionsStaticContent({ is_active: 1, is_static_content: 1 }).then((data) => {
-        return (bundle["StaticContentOptions"] = mapDataOptions4Select(data));
-      }),
+      this._StaticContentModel
+        .getOptionsStaticContent({ is_active: 1, is_static_content: 1 })
+        .then((data) => {
+          return (bundle["StaticContentOptions"] = mapDataOptions4Select(data));
+        }),
     ];
 
     await Promise.all(all).catch((err) =>
@@ -327,7 +329,9 @@ export default class StaticContentAdd extends Component {
                                   )}
                                 />
                               </Col>
-                              <Label sm={2} style={{ paddingLeft: "5%" }}>Danh mục website</Label>
+                              <Label sm={2} style={{ paddingLeft: "5%" }}>
+                                Danh mục website
+                              </Label>
                               <Col sm={4}>
                                 <Field
                                   name="webcategory_id"
@@ -381,9 +385,7 @@ export default class StaticContentAdd extends Component {
                         <Row>
                           <Col xs={12}>
                             <FormGroup row>
-                            <Label sm={2}>
-                                Tên seo
-                              </Label>
+                              <Label sm={2}>Tên seo</Label>
                               <Col sm={4}>
                                 <Field
                                   name="seo_name"

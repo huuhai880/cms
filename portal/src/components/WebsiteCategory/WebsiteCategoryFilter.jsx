@@ -183,7 +183,7 @@ class WebsiteCategoryFilter extends PureComponent {
           <Col
             xs={12}
             sm={12}
-            className="d-flex align-items-end justify-content-end mt-3 pl-0 pr-0"
+            className="d-flex align-items-end justify-content-end mt-3 pl-0"
           >
             <FormGroup className="mb-2 mb-sm-0">
               <Button
