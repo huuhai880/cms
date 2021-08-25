@@ -101,12 +101,10 @@ export default class UserAdd extends PureComponent {
         ? undefined
         : Yup.string()
             .trim()
-            .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
-            .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!")
             .required("Mật khẩu là bắt buộc.")
             .matches(
               /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()\-_=+{};:,<.>])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/,
-              "Mật khẩu bao gồm chữ hoa, chữ thường, ký tự đặc biết và số ."
+              "Mật khẩu yêu cầu 8 kí tự bao gồm chữ hoa , chữ thường, số, và kí tự đặc biệt."
             ),
       gender: Yup.string().required("Giới tính là bắt buộc."),
       email: Yup.string()
@@ -174,10 +172,10 @@ export default class UserAdd extends PureComponent {
       }
       // values[key] += '';
       // birthday
-      if (key === "birthday") {
-        let bdArr = values[key].match(/(\d{2})[/-](\d{2})[/-](\d{4})/);
-        bdArr && (values[key] = `${bdArr[3]}-${bdArr[2]}-${bdArr[1]}`);
-      }
+      // if (key === "birthday") {
+      //   let bdArr = values[key].match(/(\d{2})[/-](\d{2})[/-](\d{4})/);
+      //   bdArr && (values[key] = `${bdArr[3]}-${bdArr[2]}-${bdArr[1]}`);
+      // }
       // user_groups
       if (key === "user_groups") {
         values[key] = values[key] || [];
@@ -346,7 +344,7 @@ export default class UserAdd extends PureComponent {
     // Build form data
     // +++
     let { birthday } = values;
-    let bdArr = (birthday && moment(birthday).format("DD/MM/YYYY")) || [];
+    let bdArr = (birthday && moment(birthday, "YYYY/MM/DD").format("DD/MM/YYYY")) || [];
     // +++
     let formData = Object.assign({}, values, {
       default_picture_url: usrImgBase64,
@@ -802,6 +800,7 @@ export default class UserAdd extends PureComponent {
                                             <DatePicker
                                               size="default"
                                               id="bdpicker"
+                                              allowClear={false}
                                               startDate={
                                                 values.birthday ? moment(values.birthday) : null
                                               }
@@ -820,21 +819,23 @@ export default class UserAdd extends PureComponent {
                                               onOpenChange={(open) => {
                                                 let startDate = null;
                                                 let typeLeft = document.querySelector(
-                                                  `#birthday > .ant-picker > .ant-picker-input > #bdpicker `
+                                                  `#bdpicker `
                                                 ).value;
-
-                                                startDate = moment(typeLeft, "DD-MM-YYYY");
-
-                                                setFieldValue(
-                                                  "birthday",
-                                                  startDate.format("DD-MM-YYYY")
-                                                );
+                                                
+                                                if(!open) {
+                                                  startDate = moment(typeLeft, "DD/MM/YYYY")
+                                                  setFieldValue(
+                                                    "birthday",
+                                                    startDate
+                                                  );
+                                                }
                                               }}
                                               // handleDateValue={(date) => {
                                               //   setFieldValue("birthday", date);
                                               // }}
                                               disabled={noEdit}
                                               maxToday
+                                              value={values.birthday}
                                             />
                                           </div>
                                         );

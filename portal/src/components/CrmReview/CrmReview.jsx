@@ -225,6 +225,7 @@ class CrmReview extends Component {
   };
 
   render() {
+    let { data } = this.state;
     const columns = [
       configIDRowTable("review_id", "/review/detail/", this.state.query),
       {
@@ -244,7 +245,16 @@ class CrmReview extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-left">{value}</div>;
+            return (
+              <div className="d-flex flex-fill, align-items-center justify-content-start">
+                <img
+                  className="mr-2"
+                  style={{ width: 40, height: 40 }}
+                  src={data[tableMeta["rowIndex"]].review_avatar}
+                />
+                <div className="text-left">{value}</div>
+              </div>
+            );
           },
         },
       },

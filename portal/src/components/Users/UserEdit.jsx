@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 // Component(s)
 import Loading from '../Common/Loading';
 import UserAdd from './UserAdd';
+import moment from "moment";
 
 // Model(s)
 import UserModel from "../../models/UserModel";
@@ -33,6 +34,7 @@ export default class UserEdit extends PureComponent {
           setTimeout(() => window._$g.rdr('/404'));
         })
       ;
+      userEnt.birthday = moment(userEnt.birthday, "DD/MM/YYYY")
       userEnt && this.setState({ userEnt });
     })();
     //.end

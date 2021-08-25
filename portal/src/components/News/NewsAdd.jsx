@@ -47,7 +47,7 @@ import {
   readImageAsBase64,
 } from "../../utils/html";
 // Model(s)
-import NewsModel from "../../models/NewsModel"; 
+import NewsModel from "../../models/NewsModel";
 import NewsCategoryModel from "../../models/NewsCategoryModel";
 import AuthorModel from "../../models/AuthorModel";
 import ProductModel from "../../models/ProductModel";
@@ -329,10 +329,11 @@ export default class NewsAdd extends Component {
     // +++
     let today = new Date();
     let { news_date } = values;
-    let newsDate =
-      (news_date &&
-        moment(news_date, "DD/MM/YYYY HH:MM").format("YYYY/MM/DD HH:MM")) ||
-      "";
+    let newsDate = news_date
+      ? moment(news_date, "DD/MM/YYYY HH:mm", true).isValid()
+        ? moment(news_date, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm")
+        : moment(news_date, "YYYY-MM-DD HH:mm").format("YYYY-MM-DD HH:mm")
+      : "";
     let formData = Object.assign({}, values, {
       image_url: usrImgBase64,
       is_video: values.is_video == true ? 1 : 0,
@@ -350,6 +351,7 @@ export default class NewsAdd extends Component {
       // is_qrcode: values.is_qrcode == true ? 1 : 0,
       news_category_id: values.news_category_id * 1,
     });
+
     //
     let newsId = (NewsEnt && NewsEnt.news_id) || formData[this._newsModel];
     let apiCall = newsId
@@ -393,7 +395,6 @@ export default class NewsAdd extends Component {
         );
       });
   }
-
 
   handleFormikReset() {
     this.setState((state) => ({
@@ -1001,9 +1002,10 @@ export default class NewsAdd extends Component {
                                                     inputsm={6}
                                                     isRequired={false}
                                                     isEdit={
-                                                      !(noEdit
+                                                      !(
+                                                        noEdit
                                                         // NewsEnt &&
-                                                        // NewsEnt.news_date 
+                                                        // NewsEnt.news_date
                                                         // &&
                                                         // moment(
                                                         //   NewsEnt.news_date
@@ -1125,7 +1127,7 @@ export default class NewsAdd extends Component {
                                                       width: "100%",
                                                       menubar: false,
                                                       branding: false,
-                                                      statusbar : false,
+                                                      statusbar: false,
                                                       plugins: [
                                                         "advlist autolink fullscreen lists link image charmap print preview anchor",
                                                         "searchreplace visualblocks code fullscreen ",
@@ -1255,7 +1257,6 @@ export default class NewsAdd extends Component {
                                                     e.target.checked
                                                   );
                                                 }}
-          
                                                 label="Kích hoạt"
                                                 disabled={noEdit}
                                               />
