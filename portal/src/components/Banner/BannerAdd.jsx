@@ -162,6 +162,8 @@ export default class BannerAdd extends PureComponent {
         }
 
         if (this._btnType === "save" && !BannerID) {
+          // this.setState({ placementOpts: [{ value: "", label: "-- Chọn --" } ]});
+          // this._getBundleData()
           resetForm();
         }
 
@@ -224,7 +226,7 @@ export default class BannerAdd extends PureComponent {
 
     let { BannerEnt, noEdit } = this.props;
     let initialValues = this.getInitialValues();
-    console.log(initialValues)
+    console.log(initialValues);
     // Ready?
     if (!ready) {
       return <Loading />;
@@ -307,16 +309,17 @@ export default class BannerAdd extends PureComponent {
                                                   field.onChange({
                                                     target: {
                                                       name: "placement",
-                                                      value: placement?.value,
+                                                      value: placement.value,
                                                     },
                                                   })
                                                 }
                                                 isSearchable={true}
                                                 isClearable={true}
                                                 placeholder={placeholder}
-                                                defaultValue={defaultValue}
+                                                // defaultValue={defaultValue}
                                                 options={placementOpts}
                                                 isDisabled={noEdit}
+                                                value={defaultValue}
                                               />
                                             );
                                           }}
