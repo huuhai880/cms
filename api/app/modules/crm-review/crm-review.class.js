@@ -10,6 +10,7 @@ const template = {
   order_index: '{{#? ORDERINDEX}}',
   is_active: '{{#? ISACTIVE}}',
   review_content: '{{#? REVIEWCONTENT}}',
+  review_avatar: '{{#? REVIEWAVATAR}}',
   review_date: '{{#? REVIEWDATE}}',
 };
 
@@ -24,6 +25,7 @@ const list = (Partner = []) => {
     'review_date',
     'is_active',
     'review_content',
+    'review_avatar'
   ]);
 };
 
