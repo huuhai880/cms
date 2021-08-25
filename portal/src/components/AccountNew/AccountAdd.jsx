@@ -104,7 +104,7 @@ function AccountAdd({ noEdit }) {
     try {
       await _accountModel.check({ email: values.email }).then((data) => {
         // console.log(data)
-        if (data.MEMBERID) {
+        if (data.MEMBERID && formik.values.email != dataAccount.email) {
           // setalert("Email đã tồn tại!");
           formik.setFieldError("email", "Email đã tồn tại!");
           // window.scrollTo(0, 0);
