@@ -275,7 +275,7 @@ function AccountAdd({ noEdit }) {
                         <Col xs={12} sm={3}>
                           <FormGroup row>
                             <Col sm={12}>
-                              <div className="hidden ps-relative">
+                              <div className="ps-relative">
                                 {formik.values.image_avatar ? (
                                   <Media
                                     object
