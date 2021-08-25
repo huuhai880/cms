@@ -677,7 +677,7 @@ export default class WebsiteCategoryAdd extends Component {
                                           onChange={e => 
                                             field.onChange({ target: { name: field.name, value: e.target.checked ? 1 : 0 } })
                                           }
-                                          type="checkbox"
+                                          type="checkbox" 
                                           id="is_header"
                                           label="Trên header"
                                           disabled={noEdit}
