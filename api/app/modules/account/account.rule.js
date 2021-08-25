@@ -9,7 +9,7 @@ const ruleCreateOrUpdate = {
   full_name: Joi.string().required(),
   birth_day: Joi.string().required(),
   gender: Joi.number().required(),
-  marital_status: Joi.number().allow('', null),
+  // marital_status: Joi.number().allow('', null),
   phone_number: Joi.string().required(),
   email: Joi.string().allow('', null),
   id_card: Joi.string().allow('', null),
