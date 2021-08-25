@@ -203,13 +203,10 @@ export default class PartnerAdd extends PureComponent {
     password: this.props.partnerEnt
       ? undefined
       : Yup.string()
-          .trim()
-          .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
-          .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!")
-          .required("Mật khẩu là bắt buộc.")
+          .trim()          .required("Mật khẩu là bắt buộc.")
           .matches(
             /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()\-_=+{};:,<.>])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/,
-            "Mật khẩu bao gồm chữ hoa, chữ thường, ký tự đặc biết và số ."
+            "Mật khẩu yêu cầu 8 kí tự bao gồm chữ hoa , chữ thường, số, và kí tự đặc biệt."
           ),
     ower_phone_1: Yup.string()
       .matches(/^\d{10,11}$/, "Số điện thoại không hợp lệ!")
