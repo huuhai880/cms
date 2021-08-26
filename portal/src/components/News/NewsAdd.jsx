@@ -31,6 +31,7 @@ import Select from "react-select";
 import moment from "moment";
 import "react-image-lightbox/style.css"; // This only needs to be imported once in your app
 import { Editor } from "@tinymce/tinymce-react";
+import NumberFormat from "../Common/NumberFormat";
 
 // Assets
 import "../Products/styles.scss";
@@ -41,11 +42,7 @@ import { FormSelectGroup, DateTimePicker } from "@widget";
 import urlFriendly from "@utils/urlFriendly";
 import News from "./News";
 // Util(s)
-import {
-  mapDataOptions4Select,
-  readFileAsBase64,
-  readImageAsBase64,
-} from "../../utils/html";
+import { mapDataOptions4Select, readFileAsBase64, readImageAsBase64 } from "../../utils/html";
 // Model(s)
 import NewsModel from "../../models/NewsModel";
 import NewsCategoryModel from "../../models/NewsCategoryModel";
@@ -171,8 +168,7 @@ export default class NewsAdd extends Component {
       const { product_id, author_id, publishing_company_id } = modal;
       // if (product_id) values.product_id = product_id;
       if (author_id) values.author_id = author_id;
-      if (publishing_company_id)
-        values.publishing_company_id = publishing_company_id;
+      if (publishing_company_id) values.publishing_company_id = publishing_company_id;
     }
     // Return;
     return values;
@@ -184,9 +180,7 @@ export default class NewsAdd extends Component {
       // @TODO
       this._newsCategoryModel
         .getOptionsForCreate({ is_active: 1 })
-        .then(
-          (data) => (bundle["newsCategoryOpts"] = mapDataOptions4Select(data))
-        ),
+        .then((data) => (bundle["newsCategoryOpts"] = mapDataOptions4Select(data))),
       this._authorModel
         .getOptions({ is_active: 1 })
         .then((data) => (bundle["authorOpts"] = mapDataOptions4Select(data))),
@@ -195,10 +189,7 @@ export default class NewsAdd extends Component {
       //   .then((data) => (bundle["productOpts"] = mapDataOptions4Select(data))),
       this._publishingCompanyModel
         .getOptions({ is_active: 1 })
-        .then(
-          (data) =>
-            (bundle["publishsingCompanyOpts"] = mapDataOptions4Select(data))
-        ),
+        .then((data) => (bundle["publishsingCompanyOpts"] = mapDataOptions4Select(data))),
     ];
     await Promise.all(all).catch((err) =>
       window._$g.dialogs.alert(
@@ -258,9 +249,7 @@ export default class NewsAdd extends Component {
 
   updateURLNews = (item, seoName) => {
     if (seoName.length == 0) {
-      let news_name_change = item.target.value
-        ? this.ChangeAlias(item.target.value)
-        : "";
+      let news_name_change = item.target.value ? this.ChangeAlias(item.target.value) : "";
       this.setState({ seo_name: news_name_change });
     }
   };
@@ -372,9 +361,7 @@ export default class NewsAdd extends Component {
       .catch((apiData) => {
         // NG
         let { errors, statusText, message } = apiData;
-        let msg = [`<b>${statusText || message}</b>`]
-          .concat(errors || [])
-          .join("<br/>");
+        let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
         alerts.push({ color: "danger", msg });
       })
       .finally(() => {
@@ -545,10 +532,8 @@ export default class NewsAdd extends Component {
 
   // Remove news item
   handleRemoveItem = (index) => {
-    window._$g.dialogs.prompt(
-      "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
-      "Xóa",
-      (confirm) => this.handleSubmitRemoveItem(confirm, index)
+    window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "Xóa", (confirm) =>
+      this.handleSubmitRemoveItem(confirm, index)
     );
   };
 
@@ -561,10 +546,7 @@ export default class NewsAdd extends Component {
     if (confirm) {
       if (newsSelected.parent_id && NewsEnt) {
         // Call api remove news related
-        await this._newsModel.deleteRelated(
-          NewsEnt.news_id,
-          newsSelected.news_id
-        );
+        await this._newsModel.deleteRelated(NewsEnt.news_id, newsSelected.news_id);
       }
       const cloneData = JSON.parse(JSON.stringify(related));
       cloneData.splice(index, 1);
@@ -609,8 +591,8 @@ export default class NewsAdd extends Component {
               {!isModal && (
                 <CardHeader>
                   <b>
-                    {NewsEnt ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"}{" "}
-                    bài viết {NewsEnt ? NewsEnt.news_title : ""}
+                    {NewsEnt ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} bài viết{" "}
+                    {NewsEnt ? NewsEnt.news_title : ""}
                   </b>
                 </CardHeader>
               )}
@@ -646,42 +628,27 @@ export default class NewsAdd extends Component {
                     } = (this.formikProps = window._formikProps = formikProps);
                     // Render
                     return (
-                      <Form
-                        id="form1st"
-                        onSubmit={handleSubmit}
-                        onReset={handleReset}
-                      >
+                      <Form id="form1st" onSubmit={handleSubmit} onReset={handleReset}>
                         <Row>
                           <Nav tabs>
                             <NavItem>
                               <NavLink
-                                className={`${
-                                  activeTab === "INFO" ? "active" : ""
-                                }`}
-                                onClick={() =>
-                                  this.setState({ activeTab: "INFO" })
-                                }
+                                className={`${activeTab === "INFO" ? "active" : ""}`}
+                                onClick={() => this.setState({ activeTab: "INFO" })}
                               >
                                 Thông tin bài viết
                               </NavLink>
                             </NavItem>
                             <NavItem>
                               <NavLink
-                                className={`${
-                                  activeTab === "RELATED" ? "active" : ""
-                                }`}
-                                onClick={() =>
-                                  this.setState({ activeTab: "RELATED" })
-                                }
+                                className={`${activeTab === "RELATED" ? "active" : ""}`}
+                                onClick={() => this.setState({ activeTab: "RELATED" })}
                               >
                                 Danh sách bài viết liên quan
                               </NavLink>
                             </NavItem>
                           </Nav>
-                          <TabContent
-                            activeTab={activeTab}
-                            style={{ width: "100%" }}
-                          >
+                          <TabContent activeTab={activeTab} style={{ width: "100%" }}>
                             <TabPane tabId={"INFO"}>
                               <Row>
                                 <Col xs={12}>
@@ -715,9 +682,7 @@ export default class NewsAdd extends Component {
                                                   />
                                                   <ErrorMessage
                                                     name="news_title"
-                                                    component={({
-                                                      children,
-                                                    }) => (
+                                                    component={({ children }) => (
                                                       <Alert
                                                         color="danger"
                                                         className="field-validation-error"
@@ -739,9 +704,7 @@ export default class NewsAdd extends Component {
                                               smColSelect={10}
                                               smColLabel={2}
                                               isEdit={!noEdit}
-                                              placeHolder={
-                                                "-- Chọn mục tin tức--"
-                                              }
+                                              placeHolder={"-- Chọn mục tin tức--"}
                                               list={newsCategoryOpts}
                                               isTarget={false}
                                             />
@@ -757,26 +720,17 @@ export default class NewsAdd extends Component {
                                                 <Col sm={10}>
                                                   <Field
                                                     name="author_id"
-                                                    render={({
-                                                      field /*, form*/,
-                                                    }) => {
-                                                      let defaultValue =
-                                                        authorOpts.find(
-                                                          ({ value }) =>
-                                                            1 * value ===
-                                                            1 * field.value
-                                                        );
+                                                    render={({ field /*, form*/ }) => {
+                                                      let defaultValue = authorOpts.find(
+                                                        ({ value }) => 1 * value === 1 * field.value
+                                                      );
                                                       let placeholder =
-                                                        (authorOpts[0] &&
-                                                          authorOpts[0]
-                                                            .label) ||
+                                                        (authorOpts[0] && authorOpts[0].label) ||
                                                         "";
                                                       return (
                                                         <Select
                                                           name={field.name}
-                                                          onChange={({
-                                                            value,
-                                                          }) => {
+                                                          onChange={({ value }) => {
                                                             field.onChange({
                                                               target: {
                                                                 type: "select",
@@ -789,9 +743,7 @@ export default class NewsAdd extends Component {
                                                             // );
                                                           }}
                                                           isSearchable={true}
-                                                          placeholder={
-                                                            placeholder
-                                                          }
+                                                          placeholder={placeholder}
                                                           value={defaultValue}
                                                           options={authorOpts}
                                                           isDisabled={noEdit}
@@ -801,9 +753,7 @@ export default class NewsAdd extends Component {
                                                   />
                                                   <ErrorMessage
                                                     name="author_id"
-                                                    component={({
-                                                      children,
-                                                    }) => (
+                                                    component={({ children }) => (
                                                       <Alert
                                                         color="danger"
                                                         className="field-validation-error"
@@ -903,8 +853,7 @@ export default class NewsAdd extends Component {
                                                     <Media
                                                       object
                                                       src={
-                                                        usrImgBase64 ||
-                                                        NewsModel.defaultImgBase64
+                                                        usrImgBase64 || NewsModel.defaultImgBase64
                                                       }
                                                       alt="User image"
                                                       className="user-imgage"
@@ -913,18 +862,13 @@ export default class NewsAdd extends Component {
                                                       type="file"
                                                       id="image_url"
                                                       className="input-overlay"
-                                                      onChange={
-                                                        this
-                                                          .handleUserImageChange
-                                                      }
+                                                      onChange={this.handleUserImageChange}
                                                       disabled={noEdit}
                                                     />
                                                   </div>
                                                   <ErrorMessage
                                                     name="image_url"
-                                                    component={({
-                                                      children,
-                                                    }) => (
+                                                    component={({ children }) => (
                                                       <Alert
                                                         color="danger"
                                                         className="field-validation-error"
@@ -935,10 +879,7 @@ export default class NewsAdd extends Component {
                                                     )}
                                                   />
                                                 </Col>
-                                                <Col
-                                                  sm={4}
-                                                  className="d-flex flex-column"
-                                                >
+                                                <Col sm={4} className="d-flex flex-column">
                                                   {/* <Field
                                                     name="is_qrcode"
                                                     render={({ field }) => (
@@ -965,19 +906,13 @@ export default class NewsAdd extends Component {
                                                   NewsEnt.news_id ? (
                                                     <div className="mt-2">
                                                       <QRCode
-                                                        value={`${
-                                                          process.env
-                                                            .REACT_APP_WEBSITE
-                                                        }/${
+                                                        value={`${process.env.REACT_APP_WEBSITE}/${
                                                           NewsEnt
                                                             ? `${
-                                                                process.env
-                                                                  .REACT_APP_WEBSITE
+                                                                process.env.REACT_APP_WEBSITE
                                                               }chi-tiet-tin-tuc/${urlFriendly(
                                                                 NewsEnt.news_title
-                                                              )}-qr${
-                                                                NewsEnt.news_id
-                                                              }`
+                                                              )}-qr${NewsEnt.news_id}`
                                                             : ""
                                                         }`}
                                                         size={170}
@@ -1021,19 +956,66 @@ export default class NewsAdd extends Component {
                                           <Row>
                                             <Col xs={12}>
                                               <FormGroup row>
-                                                <Label
-                                                  for="short_description"
-                                                  sm={2}
-                                                >
+                                                <Label for="order_index" sm={2}>
+                                                  {" "}
+                                                  Vị trí hiển thị{" "}
+                                                  <span className="font-weight-bold red-text">
+                                                    {" "}
+                                                    *{" "}
+                                                  </span>
+                                                </Label>
+                                                <Col sm={10}>
+                                                  <Field
+                                                    name="order_index"
+                                                    render={({ field }) => (
+                                                      <NumberFormat
+                                                        name={field.name}
+                                                        onValueChange={({ value }) =>
+                                                          field.onChange({
+                                                            target: { name: field.name, value },
+                                                          })
+                                                        }
+                                                        value={1 * values[field.name]}
+                                                        max={
+                                                          values.order_index
+                                                            ? 99999
+                                                            : undefined
+                                                        }
+                                                        min={1}
+                                                        decimalScale={
+                                                          values.order_index ? 2 : 0
+                                                        }
+                                                        disabled={noEdit}
+                                                      />
+                                                    )}
+                                                  />
+                                                  <ErrorMessage
+                                                    name="order_index"
+                                                    component={({ children }) => (
+                                                      <Alert
+                                                        color="danger"
+                                                        className="field-validation-error"
+                                                      >
+                                                        {" "}
+                                                        {children}{" "}
+                                                      </Alert>
+                                                    )}
+                                                  />
+                                                </Col>
+                                              </FormGroup>
+                                            </Col>
+                                          </Row>
+                                          <Row>
+                                            <Col xs={12}>
+                                              <FormGroup row>
+                                                <Label for="short_description" sm={2}>
                                                   {" "}
                                                   Mô tả ngắn
                                                 </Label>
                                                 <Col sm={10}>
                                                   <Field
                                                     name="short_description"
-                                                    render={({
-                                                      field /* _form */,
-                                                    }) => (
+                                                    render={({ field /* _form */ }) => (
                                                       <Input
                                                         {...field}
                                                         onBlur={null}
@@ -1085,9 +1067,7 @@ export default class NewsAdd extends Component {
                                                 <Col sm={10}>
                                                   <Field
                                                     name="meta_title"
-                                                    render={({
-                                                      field /* _form */,
-                                                    }) => (
+                                                    render={({ field /* _form */ }) => (
                                                       <Input
                                                         {...field}
                                                         onBlur={null}
@@ -1142,20 +1122,13 @@ export default class NewsAdd extends Component {
                                                         "alignleft aligncenter alignright alignjustify",
                                                       toolbar2:
                                                         "bullist numlist outdent indent | removeformat | help | image | toc",
-                                                      file_picker_types:
-                                                        "image",
-                                                      images_dataimg_filter:
-                                                        function (img) {
-                                                          return img.hasAttribute(
-                                                            "internal-blob"
-                                                          );
-                                                        },
-                                                      images_upload_handler:
-                                                        this.handleUploadImage,
+                                                      file_picker_types: "image",
+                                                      images_dataimg_filter: function (img) {
+                                                        return img.hasAttribute("internal-blob");
+                                                      },
+                                                      images_upload_handler: this.handleUploadImage,
                                                     }}
-                                                    onEditorChange={(
-                                                      newValue
-                                                    ) => {
+                                                    onEditorChange={(newValue) => {
                                                       formikProps.setFieldValue(
                                                         "content",
                                                         newValue
@@ -1164,9 +1137,7 @@ export default class NewsAdd extends Component {
                                                   />
                                                   <ErrorMessage
                                                     name="content"
-                                                    component={({
-                                                      children,
-                                                    }) => (
+                                                    component={({ children }) => (
                                                       <Alert
                                                         color="danger"
                                                         className="field-validation-error"
@@ -1219,15 +1190,11 @@ export default class NewsAdd extends Component {
                                       <div className="d-flex justify-content-end">
                                         <CheckAccess permission="NEWS_NEWS_REVIEW">
                                           <Button
-                                            onClick={() =>
-                                              this.handleOpenReview(NewsEnt)
-                                            }
+                                            onClick={() => this.handleOpenReview(NewsEnt)}
                                             disabled={NewsEnt.is_review !== 2}
                                           >
                                             <i className="fa fa-check-circle mr-1" />{" "}
-                                            <span className="ml-1">
-                                              Duyệt bài viết
-                                            </span>
+                                            <span className="ml-1">Duyệt bài viết</span>
                                           </Button>
                                         </CheckAccess>
                                       </div>
@@ -1236,11 +1203,7 @@ export default class NewsAdd extends Component {
                                   <Row>
                                     <Col xs={12} className="m-t-10 mb-2 mt-2">
                                       <FormGroup row>
-                                        <Col
-                                          sm={2}
-                                          xs={12}
-                                          className="offset-md-2 offset-xs-0"
-                                        >
+                                        <Col sm={2} xs={12} className="offset-md-2 offset-xs-0">
                                           <Field
                                             name="is_active"
                                             render={({ field, form }) => (
@@ -1252,10 +1215,7 @@ export default class NewsAdd extends Component {
                                                 type="checkbox"
                                                 id="is_active"
                                                 onChange={(e) => {
-                                                  form.setFieldValue(
-                                                    field.name,
-                                                    e.target.checked
-                                                  );
+                                                  form.setFieldValue(field.name, e.target.checked);
                                                 }}
                                                 label="Kích hoạt"
                                                 disabled={noEdit}
@@ -1263,11 +1223,7 @@ export default class NewsAdd extends Component {
                                             )}
                                           />
                                         </Col>
-                                        <Col
-                                          sm={2}
-                                          xs={12}
-                                          className="offset-xs-0"
-                                        >
+                                        <Col sm={2} xs={12} className="offset-xs-0">
                                           <Field
                                             name="is_high_light"
                                             render={({ field }) => (
@@ -1293,11 +1249,7 @@ export default class NewsAdd extends Component {
                                             )}
                                           />
                                         </Col>
-                                        <Col
-                                          sm={2}
-                                          xs={12}
-                                          className="offset-xs-0"
-                                        >
+                                        <Col sm={2} xs={12} className="offset-xs-0">
                                           <Field
                                             name="is_hot_news"
                                             render={({ field }) => (
@@ -1341,9 +1293,7 @@ export default class NewsAdd extends Component {
                                     <Col xs={12} sm={6} className="text-right">
                                       <Button
                                         size="md"
-                                        onClick={(e) =>
-                                          this.handleOpenModalNewsList(e)
-                                        }
+                                        onClick={(e) => this.handleOpenModalNewsList(e)}
                                         color="secondary"
                                       >
                                         <i className="fa fa-plus mr-2" />
@@ -1354,88 +1304,57 @@ export default class NewsAdd extends Component {
                                 </Col>
                                 <Col xs={12}>
                                   {
-                                    <Table
-                                      bordered
-                                      className="table-news-related"
-                                      striped
-                                    >
+                                    <Table bordered className="table-news-related" striped>
                                       <thead>
-                                        <th
-                                          style={{ width: 50 }}
-                                          className="text-center"
-                                        >
+                                        <th style={{ width: 50 }} className="text-center">
                                           STT
                                         </th>
                                         <th className="text-center">Tiêu đề</th>
-                                        <th className="text-center">
-                                          Chuyên mục
-                                        </th>
-                                        <th
-                                          style={{ width: 150 }}
-                                          className="text-center"
-                                        >
+                                        <th className="text-center">Chuyên mục</th>
+                                        <th style={{ width: 150 }} className="text-center">
                                           Ngày đăng
                                         </th>
-                                        <th
-                                          style={{ width: 100 }}
-                                          className="text-center"
-                                        >
+                                        <th style={{ width: 100 }} className="text-center">
                                           Thao tác
                                         </th>
                                       </thead>
                                       <tbody>
-                                        {!values.related ||
-                                        !values.related.length ? (
+                                        {!values.related || !values.related.length ? (
                                           <tr>
-                                            <td
-                                              className="text-center"
-                                              colSpan={5}
-                                            >
+                                            <td className="text-center" colSpan={5}>
                                               Không có bài viết liên quan
                                             </td>
                                           </tr>
                                         ) : (
-                                          (values.related || []).map(
-                                            (news, index) => (
-                                              <tr key={index}>
-                                                <td className="text-center">
-                                                  {index + 1}
-                                                </td>
-                                                <td>
-                                                  <a
-                                                    target="_blank"
-                                                    href={`/news/detail/${news.news_id}`}
-                                                  >
-                                                    {news.news_title}
-                                                  </a>
-                                                </td>
-                                                <td>
-                                                  {news.news_category_name}
-                                                </td>
-                                                <td className="text-center">
-                                                  {news.create_date}
-                                                </td>
-                                                <td className="text-center">
-                                                  <Button
-                                                    color="danger"
-                                                    style={{
-                                                      width: 24,
-                                                      height: 24,
-                                                      padding: 0,
-                                                    }}
-                                                    onClick={(e) =>
-                                                      this.handleRemoveItem(
-                                                        index
-                                                      )
-                                                    }
-                                                    title="Xóa"
-                                                  >
-                                                    <i className="fa fa-minus-circle" />
-                                                  </Button>
-                                                </td>
-                                              </tr>
-                                            )
-                                          )
+                                          (values.related || []).map((news, index) => (
+                                            <tr key={index}>
+                                              <td className="text-center">{index + 1}</td>
+                                              <td>
+                                                <a
+                                                  target="_blank"
+                                                  href={`/news/detail/${news.news_id}`}
+                                                >
+                                                  {news.news_title}
+                                                </a>
+                                              </td>
+                                              <td>{news.news_category_name}</td>
+                                              <td className="text-center">{news.create_date}</td>
+                                              <td className="text-center">
+                                                <Button
+                                                  color="danger"
+                                                  style={{
+                                                    width: 24,
+                                                    height: 24,
+                                                    padding: 0,
+                                                  }}
+                                                  onClick={(e) => this.handleRemoveItem(index)}
+                                                  title="Xóa"
+                                                >
+                                                  <i className="fa fa-minus-circle" />
+                                                </Button>
+                                              </td>
+                                            </tr>
+                                          ))
                                         )}
                                       </tbody>
                                     </Table>
@@ -1457,11 +1376,7 @@ export default class NewsAdd extends Component {
                                         color="primary"
                                         className="mr-2 btn-block-sm"
                                         onClick={() =>
-                                          window._$g.rdr(
-                                            `/news/edit/${
-                                              NewsEnt && NewsEnt.id()
-                                            }`
-                                          )
+                                          window._$g.rdr(`/news/edit/${NewsEnt && NewsEnt.id()}`)
                                         }
                                       >
                                         <i className="fa fa-edit mr-1" />
@@ -1469,39 +1384,30 @@ export default class NewsAdd extends Component {
                                       </Button>
                                     ) : (
                                       [
-                                        false !==
-                                        this.props.handleActionSave ? (
+                                        false !== this.props.handleActionSave ? (
                                           <Button
                                             key="buttonSave"
                                             type="submit"
                                             color="primary"
                                             disabled={isSubmitting}
-                                            onClick={() =>
-                                              this.handleSubmit("savnpme")
-                                            }
+                                            onClick={() => this.handleSubmit("savnpme")}
                                             className="ml-3"
                                           >
                                             <i className="fa fa-save mr-2" />{" "}
                                             <span className="ml-1">Lưu</span>
                                           </Button>
                                         ) : null,
-                                        false !==
-                                        this.props.handleActionSaveAndClose ? (
+                                        false !== this.props.handleActionSaveAndClose ? (
                                           <Button
                                             key="buttonSaveClose"
                                             type="submit"
                                             color="success"
                                             disabled={isSubmitting}
-                                            onClick={() =>
-                                              this.handleSubmit("save_n_close")
-                                            }
+                                            onClick={() => this.handleSubmit("save_n_close")}
                                             className="ml-3"
                                           >
                                             <i className="fa fa-save mr-2" />{" "}
-                                            <span className="ml-1">
-                                              {" "}
-                                              Lưu &amp; Đóng{" "}
-                                            </span>
+                                            <span className="ml-1"> Lưu &amp; Đóng </span>
                                           </Button>
                                         ) : null,
                                       ]
@@ -1532,10 +1438,7 @@ export default class NewsAdd extends Component {
           </Col>
         </Row>
 
-        <Modal
-          isOpen={this.state.isOpenReview}
-          toggle={() => this.toggleOpenReview()}
-        >
+        <Modal isOpen={this.state.isOpenReview} toggle={() => this.toggleOpenReview()}>
           <ModalHeader>Duyệt bài viết</ModalHeader>
           <ModalBody>
             <span>
@@ -1557,16 +1460,10 @@ export default class NewsAdd extends Component {
             </Row>
           </ModalBody>
           <ModalFooter>
-            <Button
-              color="primary"
-              onClick={() => this.handleReivewAction(true)}
-            >
+            <Button color="primary" onClick={() => this.handleReivewAction(true)}>
               Đồng ý duyệt
             </Button>
-            <Button
-              color="success"
-              onClick={() => this.handleReivewAction(false)}
-            >
+            <Button color="success" onClick={() => this.handleReivewAction(false)}>
               không duyệt
             </Button>
             <Button color="secondary" onClick={() => this.toggleOpenReview()}>

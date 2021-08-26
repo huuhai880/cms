@@ -180,13 +180,12 @@ class AccountFilter extends PureComponent {
           startDate: null,
           endDate: null,
           selectedGender: null,
-
           selectedActive: { label: "Có", value: 1 },
           initProvince: false,
           initCountry: false,
         },
         () => {
-          this.setState({ initCountry: true });
+          // this.setState({ initCountry: true });
           this.onSubmit(true);
         }
       );
@@ -196,6 +195,7 @@ class AccountFilter extends PureComponent {
   render() {
     const { segment, typeRegister } = this.state;
     const { businessArr } = this.props;
+    // console.log(this.state.selectedProvince);
     return (
       <div className="ml-3 mr-3 mb-3 mt-3">
         <Form autoComplete="nope" className="zoom-scale-9">
@@ -234,25 +234,15 @@ class AccountFilter extends PureComponent {
                               <Label for="" className="mr-sm-2">
                                 Tỉnh/ Thành phố
                               </Label>
-                              {this.state.initProvince ? (
-                                <ProvinceComponent
-                                  className="MuiPaper-filter__custom--select"
-                                  id="province_id"
-                                  name="province_id"
-                                  onChange={this.handleChangeProvince}
-                                  mainValue={
-                                    (this.state.selectedCountry &&
-                                      this.state.selectedCountry.value) ||
-                                    DEFAULT_COUNTRY_ID
-                                  }
-                                  defaultValue={this.state.selectedProvince}
-                                />
-                              ) : (
-                                <Select
-                                  className="MuiPaper-filter__custom--select"
-                                  placeholder={"-- Tỉnh/Thành phố --"}
-                                />
-                              )}
+
+                              <ProvinceComponent
+                                className="MuiPaper-filter__custom--select"
+                                id="province_id"
+                                name="province_id"
+                                onChange={this.handleChangeProvince}
+                                mainValue={DEFAULT_COUNTRY_ID}
+                                value={this.state.selectedProvince}
+                              />
                             </Col>
                             <Col xs={12} sm={4} className="mb-1">
                               <Label for="" className="mr-sm-2">
