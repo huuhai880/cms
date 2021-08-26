@@ -33,3 +33,30 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   margin-left: 20px;
 }
+
+
+.review-image-upload{
+  // width: 400px;
+  .ant-upload-list-picture-card-container{
+      height: 200px;
+      width: 100%;
+      .ant-upload-list-item-list-type-picture-card{
+          width: 100%;
+      }
+  }
+  .ant-upload-select-picture-card{
+      height: 200px;
+      width: 100%;
+  }
+  .ant-upload.ant-upload-select-picture-card{
+    height: 200px;
+    width: 100%;
+  }
+  .ant-upload-list-item-image{
+      // object-fit: contain !important;
+  }
+
+  // img.ant-upload-list-item-image{
+  //   object-fit:contain !important;
+  // }
+}

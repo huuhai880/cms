@@ -44,6 +44,7 @@ export default class CrmReviewModel extends Model {
     is_active: 1,
     check_member: true,
     check_author: null,
+    image_url: null
   });
 
   /**

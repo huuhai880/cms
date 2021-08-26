@@ -10,8 +10,24 @@ const template = {
   order_index: '{{#? ORDERINDEX}}',
   is_active: '{{#? ISACTIVE}}',
   review_content: '{{#? REVIEWCONTENT}}',
-  review_avatar: '{{#? REVIEWAVATAR}}',
+  // review_avatar: '{{#? REVIEWAVATAR}}',
+  review_avatar: [
+    {
+      "{{#if REVIEWAVATAR}}": `${config.domain_cdn}{{REVIEWAVATAR}}`,
+    },
+    {
+      "{{#else}}": undefined,
+    },
+  ],
   review_date: '{{#? REVIEWDATE}}',
+  image_url: [
+    {
+      "{{#if IMAGEURL}}": `${config.domain_cdn}{{IMAGEURL}}`,
+    },
+    {
+      "{{#else}}": undefined,
+    },
+  ],
 };
 
 let transform = new Transform(template);
@@ -41,6 +57,7 @@ const detail = (Partner = []) => {
     'is_active',
     'check_member',
     'check_author',
+    'image_url'
   ]);
 };
 

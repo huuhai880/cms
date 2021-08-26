@@ -15,6 +15,8 @@ import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
 import CrmReviewModel from "../../models/CrmReviewModel";
 
+import avatarDefault from '../../assets/img/ava_default.jpg'
+
 // Set layout full-wh
 layoutFullWidthHeight();
 
@@ -224,6 +226,7 @@ class CrmReview extends Component {
     this.getData(query);
   };
 
+
   render() {
     let { data } = this.state;
     const columns = [
@@ -250,7 +253,8 @@ class CrmReview extends Component {
                 <img
                   className="mr-2"
                   style={{ width: 40, height: 40 }}
-                  src={data[tableMeta["rowIndex"]].review_avatar}
+                  src={data[tableMeta["rowIndex"]].review_avatar ? data[tableMeta["rowIndex"]].review_avatar : avatarDefault}
+                  onError={(e)=>{e.target.onerror = null; e.target.src=avatarDefault}}
                 />
                 <div className="text-left">{value}</div>
               </div>
