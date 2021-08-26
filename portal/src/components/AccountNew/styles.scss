@@ -42,12 +42,26 @@ body.tox-dialog__disable-scroll {
     object-fit: cover;
   }
 }
+<<<<<<< HEAD
 .author-banner-upload {
   // width: 400px;
   .ant-upload-list-picture-card-container {
     height: 200px;
     .ant-upload-list-item-list-type-picture-card {
       width: 100% !important;
+=======
+.author-banner-upload{
+    // width: 400px;
+    .ant-upload-list-picture-card-container{
+        height: 200px;
+        .ant-upload-list-item-list-type-picture-card{
+            height: 200px !important; 
+        width: 100% !important;
+        }
+    }
+    .ant-upload-select-picture-card{
+        height: 200px;
+>>>>>>> fix/20210826_FIX_ACCOUNT
     }
   }
   .ant-upload-select-picture-card {
