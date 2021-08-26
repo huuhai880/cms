@@ -5,6 +5,9 @@ const logger = require('../classes/logger.class');
 const path = require('path');
 const folderUploadName = 'uploads';
 const base64 = require('is-base64');
+const FormData = require('form-data');
+const config = require('../../../config/config');
+const axios = require('axios');
 
 const readFileAsString = (path) => {
   try {
@@ -15,44 +18,18 @@ const readFileAsString = (path) => {
   return '';
 };
 
-// const saveTmpBase64File = (tmpFilePath = '', base64Uri = '') => {
-//   const base64data = base64Uri.split(';base64,').pop();
-//   return new Promise((resolve, reject) => {
-//     try {
-//       fs.writeFile(tmpFilePath, base64data, 'base64', (err) => {
-//         if (err) {
-//           console.log('saveTmpBase64File.writeFile.error:', err);
-//           resolve(null);
-//         }
-//         resolve(tmpFilePath);
-//       });
-//     } catch (error) {
-//       console.log('saveTmpBase64File.error:', error);
-//       resolve(null);
-//     }
-//   });
-// };
 
-// const uploadAvatar = async (uid, extention, base64) => {
-//   try {
-//     const fileName = `${ uuid() }.${ extention }`.toLowerCase();
-//     const filePath = path.normalize(path.format({ dir: `profile/${uid}`, base: fileName }));
-//     const tmpFilePath = path.join(os.tmpdir(), filePath);
-//     const tempLocalDir = path.dirname(tmpFilePath);
-//
-//     // create localDir to save image
-//     await mkdirp(tempLocalDir);
-//
-//     // save tmp file to localDir
-//     const localFilePath = await saveTmpBase64File(tmpFilePath, base64);
-//
-//     return localFilePath;
-//   } catch (error) {
-//     console.log('error: ', error);
-//   }
-//   console.log('Failed to upload file');
-//   return null;
-// };
+const uploadFormData = (base64) => {
+  return new Promise((resolve, reject) => {
+    const form = new FormData();
+    form.append('type', 'default');
+    form.append('file', Buffer.from( base64.split(';base64,').pop(), 'base64'), { filename : 'document.png' })
+    axios.post(`${config.domain_cdn}/upload`, form, { headers: {...form.getHeaders(), ...{'Authorization': `APIKEY ${config.upload_apikey}`}}} )
+    .then(res=>resolve(res.data))
+    .catch(reject)
+  })
+}
+
 
 const saveTmpBase64File = (pathFile, base64) => {
   try {
@@ -83,22 +60,27 @@ const getPathUpload = () => {
  */
 const saveBase64 = async (folderPath, base64, fileName) => {
   try {
-    let pathFolder = getPathUpload() + `/${folderPath}`;
-    pathFolder = path.normalize(pathFolder);
+    // let pathFolder = getPathUpload() + `/${folderPath}`;
+    // pathFolder = path.normalize(pathFolder);
 
-    // Check folder exists
-    if (!fs.existsSync(pathFolder)) {
-      await mkdirp(pathFolder);
-    }
+    // // Check folder exists
+    // if (!fs.existsSync(pathFolder)) {
+    //   await mkdirp(pathFolder);
+    // }
 
-    let pathFile = `${pathFolder}/${fileName}`;
-    pathFile = path.normalize(pathFile);
+    // let pathFile = `${pathFolder}/${fileName}`;
+    // pathFile = path.normalize(pathFile);
 
-    // save file
-    saveTmpBase64File(pathFile, base64);
+    // // save file
+    // saveTmpBase64File(pathFile, base64);
 
-    return path.normalize(`/${folderUploadName}/${folderPath}/${fileName}`);
+    // return path.normalize(`/${folderUploadName}/${folderPath}/${fileName}`);
+
+    const res = await uploadFormData(base64);
+    return res.data && res.data.file ? res.data.file : null
+
   } catch (e) {
+    console.log(e)
     logger.error(e, { 'function': 'fileHelper.saveBase64' });
 
     return null;
@@ -133,5 +115,5 @@ module.exports = {
   saveBase64,
   getExtensionFromBase64,
   isBase64,
-  getExtensionFromFileName,
+  getExtensionFromFileName
 };

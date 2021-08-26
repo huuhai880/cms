@@ -79,6 +79,17 @@ const removeCacheOptions = () => {
 
 const createReviewOrUpdate = async (bodyParams) => {
   try {
+
+    let image_url = apiHelper.getValueFromObject(bodyParams, 'image_url');
+    if (image_url) {
+      const path_image_url = await saveFile(image_url, 'review');
+      if (path_image_url) {
+        image_url = path_image_url;
+      }
+    }
+
+    console.log({image_url})
+
     const pool = await mssql.pool;
     let review_id = apiHelper.getValueFromObject(bodyParams, 'review_id');
     //check name
@@ -104,6 +115,7 @@ const createReviewOrUpdate = async (bodyParams) => {
         'CREATEDUSER',
         apiHelper.getValueFromObject(bodyParams, 'auth_name')
       )
+      .input('IMAGEURL', image_url)
       .execute(PROCEDURE_NAME.CRM_REVIEW_CREATEORUPDATE_ADMINWEB);
     const reviewId = data.recordset[0].RESULT;
     return new ServiceResponse(true, '', reviewId);
@@ -134,6 +146,33 @@ const detailReview = async (review_id) => {
     logger.error(e, { function: 'reviewService.detailReview' });
     return new ServiceResponse(false, e.message);
   }
+};
+
+
+const saveFile = async (base64, folderName) => {
+  let url = null;
+
+  try {
+    if (fileHelper.isBase64(base64)) {
+      const extension = fileHelper.getExtensionFromBase64(base64);
+      const guid = createGuid();
+      url = await fileHelper.saveBase64(folderName, base64, `${guid}.${extension}`);
+    } else {
+      url = base64.split(config.domain_cdn)[1];
+    }
+  } catch (e) {
+    logger.error(e, {
+      'function': 'bannerService.saveFile',
+    });
+  }
+  return url;
+};
+const createGuid = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    var r = Math.random() * 16 | 0,
+      v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 };
 
 module.exports = {

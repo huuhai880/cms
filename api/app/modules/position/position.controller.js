@@ -13,7 +13,6 @@ const apiHelper = require('../../common/helpers/api.helper');
 const getOptions = async (req, res, next) => {
   try {
     const serviceRes = await optionService('MD_POSITION', req.query);
-
     return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
     return next(error);
@@ -38,7 +37,6 @@ const getListPosition = async (req, res, next) => {
   }
 };
 const createOrUpdatePosition = async (req, res, next) => {
-  // console.log("zzzzzzzzz")
   try {
     // Insert CRMAccount
     const serviceRes = await PositonService.createOrUpdatePosition(req.body);
@@ -90,7 +88,6 @@ const detailPosition = async (req, res, next) => {
   }
 };
 const checkName = async (req, res, next) => {
-  // console.log()
   try {
     // Check ACCOUNT exists
     const serviceRes = await PositonService.checkName(req.query.name);

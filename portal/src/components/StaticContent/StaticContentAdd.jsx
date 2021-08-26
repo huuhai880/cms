@@ -76,7 +76,7 @@ export default class StaticContentAdd extends Component {
   formikValidationSchema = Yup.object().shape({
     static_title: Yup.string().required("Tiêu đề là bắt buộc."),
     static_content: Yup.string().required("Nội dung là bắt buộc."),
-    system_name: Yup.string().required("Tên hệ thống là bắt buộc."),
+    // system_name: Yup.string().required("Tên hệ thống là bắt buộc."),
   });
 
   /** @var {String} */
@@ -417,7 +417,6 @@ export default class StaticContentAdd extends Component {
                                   )}
                                 />
                               </Col>
-                              
                             </FormGroup>
                           </Col>
                         </Row>
@@ -427,10 +426,7 @@ export default class StaticContentAdd extends Component {
                             <FormGroup row>
                               <Label sm={2}>
                                 Tên hệ thống{" "}
-                                <span className="font-weight-bold red-text">
-                                  {" "}
-                                  *{" "}
-                                </span>
+                                <span className="font-weight-bold red-text"></span>
                               </Label>
                               <Col sm={4}>
                                 <Field

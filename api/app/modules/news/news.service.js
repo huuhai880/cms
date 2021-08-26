@@ -184,7 +184,6 @@ const getLastItemNews = async (newsId) => {
 };
 
 const createNewsOrUpdate = async (bodyParams) => {
-console.log("🚀 ~ file: news.service.js ~ line 187 ~ createNewsOrUpdate ~ bodyParams", bodyParams.new_date)
   try {
     const id = apiHelper.getValueFromObject(bodyParams, 'news_id');
     const params = bodyParams;
@@ -193,6 +192,8 @@ console.log("🚀 ~ file: news.service.js ~ line 187 ~ createNewsOrUpdate ~ body
       if (image_url) params.image_url = image_url;
       else return new ServiceResponse(false, RESPONSE_MSG.NEWS.UPLOAD_FAILED);
     }
+    console.log(params.image_url)
+
     const pool = await mssql.pool;
 
     //check name
@@ -472,7 +473,7 @@ const review = async (bodyParams) => {
   }
 };
 
-const deleteNewsRelated = async (newsId, relatedId) => {
+const deleteNewsRelated = async (newsId, bodyParams) => {
   try {
     const pool = await mssql.pool;
     await pool

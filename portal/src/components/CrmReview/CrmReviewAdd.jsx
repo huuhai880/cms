@@ -28,6 +28,7 @@ import { Editor } from "@tinymce/tinymce-react";
 
 // Model(s)
 import CrmReviewModel from "../../models/CrmReviewModel";
+import Upload from "../Common/Antd/Upload";
 
 /**
  * @class CrmReviewAdd
@@ -51,6 +52,7 @@ export default class CrmReviewAdd extends PureComponent {
       ready: false,
       // OptsAccount: [{value: 0, label: "-- Chọn --"}],
       // OptsAuthor: [{value: 0, label: "-- Chọn --"}],
+      clearImage: false,
     };
   }
 
@@ -232,11 +234,12 @@ export default class CrmReviewAdd extends PureComponent {
     this.setState((state) => ({
       ready: false,
       alerts: [],
+      clearImage: true,
     }));
     // Get bundle data --> ready data
     (async () => {
       let bundle = await this._getBundleData();
-      this.setState({ ...bundle, ready: true });
+      this.setState({ ...bundle, ready: true,  clearImage: false,});
     })();
     //.end
   };
@@ -603,6 +606,49 @@ export default class CrmReviewAdd extends PureComponent {
                                 </FormGroup>
                               </Col>
                             </Row>
+
+                            <Row>
+                              <Col xs={6}>
+                                <FormGroup row style={{
+                                  alignItems:'center'
+                                }}>
+                                  <Label
+                                    for="order_index"
+                                    className="text-left"
+                                    sm={4}
+                                  >
+                                    Hình ảnh
+                                  </Label>
+                                  <Col sm={8}>
+                                    {!this.state.clearImage && (
+                                      <Field
+                                        name="image_url"
+                                        render={({ field }) => {
+                                          return (
+                                            <div className="review-image-upload">
+                                              <Upload
+                                                onChange={(img) =>
+                                                  field.onChange({
+                                                    target: {
+                                                      name: field.name,
+                                                      value: img,
+                                                    },
+                                                  })
+                                                }
+                                                imageUrl={field.value}
+                                                accept="image/*"
+                                                disabled={noEdit}
+                                              />
+                                            </div>
+                                          );
+                                        }}
+                                      />
+                                    )}
+                                  </Col>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+
                             <Row>
                               <Col sm={6}>
                                 <FormGroup row>

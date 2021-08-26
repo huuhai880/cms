@@ -290,9 +290,9 @@ export default class NewsModel extends Model {
     // Validate data?!
     let data = Object.assign({}, _data);
     //
-    let as = this._api
-      .get(_static.NEWS_NEWS_DETAIL.replace(":id", id), data)
-      .then((data) => new NewsEntity(data));
+    // let as = this._api
+    //   .get(_static.NEWS_NEWS_DETAIL.replace(":id", id), data)
+    //   .then((data) => new NewsEntity(data));
     return this._api
       .get(_static.NEWS_NEWS_DETAIL.replace(":id", id), data)
       .then((data) => new NewsEntity(data));
