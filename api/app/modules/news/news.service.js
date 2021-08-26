@@ -192,6 +192,8 @@ const createNewsOrUpdate = async (bodyParams) => {
       if (image_url) params.image_url = image_url;
       else return new ServiceResponse(false, RESPONSE_MSG.NEWS.UPLOAD_FAILED);
     }
+    console.log(params.image_url)
+
     const pool = await mssql.pool;
 
     //check name

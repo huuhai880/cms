@@ -36,6 +36,7 @@ const config = {
     type: 'Bearer',
   },
   domain_cdn: envVars.DOMAIN_CDN,
+  upload_apikey: envVars.UPLOAD_APIKEY,
   database: {
     database: process.env.DB_NAME,
     username: process.env.DB_USER,
