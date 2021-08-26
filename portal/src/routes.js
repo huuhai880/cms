@@ -14,6 +14,13 @@ const UserChangePassword = React.lazy(() => import("./components/Users/UserChang
 const ChangePassword = React.lazy(() => import("./components/Users/ChangePassword"));
 //.end#Users
 
+// MainNumber
+const MainNumber = React.lazy(() => import("./components/MainNumber/MainNumber"));
+const MainNumberAdd = React.lazy(() => import("./components/MainNumber/MainNumberAdd"));
+// const UserDetail = React.lazy(() => import("./components/Users/UserDetail"));
+const MainNumberEdit = React.lazy(() => import("./components/MainNumber/MainNumberEdit"));
+//.end#MainNumber
+
 // UserGroups
 const UserGroups = React.lazy(() => import("./components/UserGroups/UserGroups"));
 const UserGroupsAdd = React.lazy(() => import("./components/UserGroups/UserGroupsAdd"));
@@ -2653,6 +2660,36 @@ const routes = [
       component: PositonEdit,
     },
     // end#Review
+       // MainNumber
+       {
+        path: "/main-number",
+        exact: true,
+        name: "Các con số",
+        function: "FOR_MAINNUMBER_VIEW",
+        component: MainNumber,
+      },
+      {
+        path: "/main-number/add",
+        exact: true,
+        name: "Thêm mới",
+        function: "FOR_MAINNUMBER_ADD",
+        component: MainNumberAdd,
+      },
+      // {
+      //   path: "/review/detail/:id",
+      //   exact: true,
+      //   name: "Chi tiết",
+      //   function: "MD_POSITION_VIEW",
+      //   component: ReviewDetail,
+      // },
+      {
+        path: "/main-number/edit/:id",
+        exact: true,
+        name: "Chỉnh sửa",
+        function: "FOR_MAINNUMBER_EDIT",
+        component: MainNumberEdit,
+      },
+      // end#MainNumber
 ];
 
 export default routes;

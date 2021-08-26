@@ -63,8 +63,8 @@ function AccountAdd({ noEdit }) {
           .string()
           .required("Mật khẩu không được để trống .")
           .matches(
-            /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*[0-9]){1})((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
-            "Mật khẩu tối thiêu 8 ký tự, 1 ký tự thường, 1 ký tự hoa và 1 số ."
+            /^.*(?=.{6,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*[0-9]){1})((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+            "Mật khẩu tối thiêu 6 ký tự, 1 ký tự thường, 1 ký tự hoa và 1 số ."
           ),
     full_name: yup.string().required("Họ và tên khai sinh không được để trống .").nullable(),
     nick_name: yup.string().required("Họ và tên không được để trống .").nullable(),
@@ -113,7 +113,7 @@ function AccountAdd({ noEdit }) {
             if (btnType == "save") {
               setDataAccount(initialValues);
               // _initData();
-              _initDataDetail()
+              _initDataDetail();
               window._$g.toastr.show("Lưu thành công!", "success");
             } else if (btnType == "save&quit") {
               window._$g.toastr.show("Lưu thành công!", "success");
@@ -141,7 +141,7 @@ function AccountAdd({ noEdit }) {
           _accountModel.create(values).then((data) => {
             if (btnType == "save") {
               formik.resetForm();
-              _initData()
+              _initData();
               window._$g.toastr.show("Lưu thành công!", "success");
             } else if (btnType == "save&quit") {
               window._$g.toastr.show("Lưu thành công!", "success");
@@ -228,6 +228,13 @@ function AccountAdd({ noEdit }) {
       setAlerPassword("Vui lòng điền đầy đủ thông tin");
     } else if (password != password_confirm) {
       setAlerPassword("Mật khẩu nhập lại không đúng");
+    } else if (
+      password.match(
+        // /^.*(?=.{6,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*[0-9]){1})((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
+        /^([a-z0-9]{6,})$/
+      )
+    ) {
+      setAlerPassword("Mật khẩu tối thiêu 6 ký tự, 1 ký tự thường, 1 ký tự hoa và 1 số .");
     } else {
       setAlerPassword("");
       try {
