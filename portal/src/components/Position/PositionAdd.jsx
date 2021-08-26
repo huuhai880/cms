@@ -50,8 +50,8 @@ function PositionAdd() {
   const handleCreateOrUpdateAcount = async (values) => {
     try {
       await _positionModel.check({ name: values.position_name }).then((data) => {
-        console.log(data)
-        if (data.POSITIONID) {
+        // console.log(data)
+        if (data.POSITIONID && formik.values.position_name != dataPosition.position_name) {
           // setalert("Email đã tồn tại!");
           formik.setFieldError("position_name", "Tên thuộc tính đã tồn tại!");
           window.scrollTo(0, 0);

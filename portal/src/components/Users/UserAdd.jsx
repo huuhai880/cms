@@ -510,7 +510,7 @@ export default class UserAdd extends PureComponent {
                           <Col xs={12} sm={3}>
                             <FormGroup row>
                               <Col sm={12}>
-                                <div className="hidden ps-relative">
+                                <div className="ps-relative">
                                   <Media
                                     object
                                     onError={() =>

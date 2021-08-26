@@ -93,34 +93,6 @@ export default class PageSetting extends React.Component {
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
-                                                className={`${activeTab === "AUTHOR" ? "active" : ""}`}
-                                                onClick={() => this.setState({ activeTab: 'AUTHOR' })}>
-                                                Góc tác giả
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                className={`${activeTab === "PUBLISHING" ? "active" : ""}`}
-                                                onClick={() => this.setState({ activeTab: 'PUBLISHING' })}>
-                                                Đơn vị xuất bản
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                className={`${activeTab === "INTRODUCE" ? "active" : ""}`}
-                                                onClick={() => this.setState({ activeTab: 'INTRODUCE' })}>
-                                                Góc giới thiệu
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
-                                                className={`${activeTab === "CONTACT" ? "active" : ""}`}
-                                                onClick={() => this.setState({ activeTab: 'CONTACT' })}>
-                                                Liên hệ
-                                            </NavLink>
-                                        </NavItem>
-                                        <NavItem>
-                                            <NavLink
                                                 className={`${activeTab === "SEO" ? "active" : ""}`}
                                                 onClick={() => this.setState({ activeTab: 'SEO' })}>
                                                 SEO website
