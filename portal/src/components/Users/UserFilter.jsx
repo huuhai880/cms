@@ -17,6 +17,13 @@ class UserFilter extends PureComponent {
         { name: "Nam", id: 1 },
         { name: "Nữ", id: 0 },
       ],
+      selectedActive: { label: "Có", value: 1 },
+      /** @var {Array} */
+      isActives: [
+        { name: "Tất cả", id: 2 },
+        { name: "Có", id: 1 },
+        { name: "Không", id: 0 },
+      ],
     };
   }
 
@@ -36,6 +43,10 @@ class UserFilter extends PureComponent {
     this.setState({ gender });
   };
 
+  handleChangeActive = (selectedActive) => {
+    this.setState({ selectedActive });
+  };
+
   handleKeyDown = (event) => {
     if (1 * event.keyCode === 13) {
       event.preventDefault();
@@ -44,13 +55,14 @@ class UserFilter extends PureComponent {
   };
 
   onSubmit = () => {
-    const { inputValue, position, department, gender } = this.state;
+    const { inputValue, position, department, gender, selectedActive } = this.state;
     const { handleSubmit } = this.props;
     handleSubmit(
       inputValue ? inputValue.trim() : "",
       department ? department.value : undefined,
       position ? position.value : undefined,
-      gender ? gender.value : undefined
+      gender ? gender.value : undefined,
+      selectedActive ? selectedActive.value : 2,
     );
   };
 
@@ -59,7 +71,8 @@ class UserFilter extends PureComponent {
       this.state.inputValue ||
       this.state.position ||
       this.state.department ||
-      this.state.gender
+      this.state.gender ||
+      this.state.selectedActive
     ) {
       this.setState(
         {
@@ -67,6 +80,7 @@ class UserFilter extends PureComponent {
           position: null,
           department: null,
           gender: null,
+          selectedActive: { label: "Có", value: 1 },
         },
         () => {
           this.onSubmit();
@@ -101,7 +115,7 @@ class UserFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={4}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Phòng ban
@@ -121,7 +135,7 @@ class UserFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={4}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Chức vụ
@@ -138,6 +152,28 @@ class UserFilter extends PureComponent {
                     value,
                     label,
                   }))}
+                />
+              </FormGroup>
+            </Col>
+          </Row>
+
+          <Row className="mt-3">
+            <Col xs={12} sm={4}>
+              <FormGroup className="mb-2 mb-sm-0">
+                <Label for="" className="mr-sm-2">
+                  Kích hoạt
+                </Label>
+                <Select
+                  className="MuiPaper-filter__custom--select"
+                  id="isActives"
+                  name="isActives"
+                  onChange={this.handleChangeActive}
+                  isSearchable={true}
+                  placeholder={"-- Chọn --"}
+                  value={this.state.selectedActive}
+                  options={this.state.isActives.map(
+                    ({ name: label, id: value }) => ({ value, label })
+                  )}
                 />
               </FormGroup>
             </Col>
@@ -160,37 +196,35 @@ class UserFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
+            <Col
+              xs={12}
+              sm={6}
+              className="pt-3 d-flex align-items-centerflex-fill  justify-content-end mt-3 pl-0 pr-0"
+            >
+              <FormGroup className="mb-sm-0">
+                <Button
+                  className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={this.onSubmit}
+                  color="primary"
+                  size="sm"
+                >
+                  <i className="fa fa-search" />
+                  <span className="ml-1">Tìm kiếm</span>
+                </Button>
+              </FormGroup>
+              <FormGroup className="ml-2 mb-sm-0">
+                <Button
+                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={this.onClear}
+                  size="sm"
+                >
+                  <i className="fa fa-refresh" />
+                  <span className="ml-1">Làm mới</span>
+                </Button>
+              </FormGroup>
+            </Col>
           </Row>
         </Form>
-        <div>
-          <Col
-            xs={12}
-            sm={12}
-            className="d-flex align-items-centerflex-fill  justify-content-end mt-3 pl-0 pr-0"
-          >
-            <FormGroup className="mb-2 mb-sm-0">
-              <Button
-                className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                onClick={this.onSubmit}
-                color="primary"
-                size="sm"
-              >
-                <i className="fa fa-search" />
-                <span className="ml-1">Tìm kiếm</span>
-              </Button>
-            </FormGroup>
-            <FormGroup className="mb-2 ml-2 mb-sm-0">
-              <Button
-                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                onClick={this.onClear}
-                size="sm"
-              >
-                <i className="fa fa-refresh" />
-                <span className="ml-1">Làm mới</span>
-              </Button>
-            </FormGroup>
-          </Col>
-        </div>
       </div>
     );
   }

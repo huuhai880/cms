@@ -19,7 +19,6 @@ const getListUser = async (req) => {
   try {
     const page = apiHelper.getPage(req);
     const limit = apiHelper.getLimit(req);
-    // console.log(req)
     const query = `${PROCEDURE_NAME.SYS_USER_GETLIST} 
       @PageSize=:PageSize,
       @PageIndex=:PageIndex,
@@ -30,7 +29,8 @@ const getListUser = async (req) => {
       @FUNCTIONALIAS=:FUNCTIONALIAS,
       @POSITIONID=:POSITIONID,
       @GENDER=:GENDER,
-      @ORDERBYDES=:ORDERBYDES`;
+      @ORDERBYDES=:ORDERBYDES,
+      @ISACTIVE=:ISACTIVE`;
     const users = await database.sequelize.query(query, {
       replacements: {
         PageSize: limit,
@@ -43,6 +43,7 @@ const getListUser = async (req) => {
         FUNCTIONALIAS: apiHelper.getQueryParam(req, 'function_alias'),
         POSITIONID: apiHelper.getQueryParam(req, 'position_id'),
         ORDERBYDES: apiHelper.getQueryParam(req, 'sortorder'),
+        ISACTIVE: apiHelper.getQueryParam(req, 'is_active'),
       },
       type: database.QueryTypes.SELECT,
     });
@@ -420,11 +421,7 @@ const findByEmail = async (email) => {
     }
     return null;
   } catch (error) {
-    return new ServiceResponse(
-      false,
-      RESPONSE_MSG.USER.CHECK_EMAIL,
-      null
-    );
+    return new ServiceResponse(false, RESPONSE_MSG.USER.CHECK_EMAIL, null);
   }
 };
 const getOptionsAll = async (queryParams = {}) => {

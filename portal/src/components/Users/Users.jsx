@@ -48,6 +48,7 @@ class Users extends PureComponent {
     query: {
       itemsPerPage: 25,
       page: 1,
+      is_active: 1,
     },
     isLoading: false,
     isOpenSnackbar: false,
@@ -106,7 +107,7 @@ class Users extends PureComponent {
     let bundle = {};
     let all = [
       // @TODO:
-      this._userModel.list().then((data) => (bundle["data"] = data)),
+      this._userModel.list(this.state.query).then((data) => (bundle["data"] = data)),
       this._positionModel
         .getOptions()
         .then((data) => (bundle["positions"] = data)),
@@ -187,7 +188,7 @@ class Users extends PureComponent {
     }
   }
 
-  handleSubmitFilter = (search, department_id, position_id, gender) => {
+  handleSubmitFilter = (search, department_id, position_id, gender, is_active,) => {
     let query = { ...this.state.query };
     query.page = 1;
     query = Object.assign(query, {
@@ -195,6 +196,7 @@ class Users extends PureComponent {
       department_id,
       position_id,
       gender,
+      is_active
     });
     this.getData(query).catch(() => {
       window._$g.dialogs.alert(
@@ -385,6 +387,27 @@ class Users extends PureComponent {
           },
           customBodyRender: (value) => {
             return <span className="d-block text-left">{value || ""}</span>;
+          },
+        },
+      },
+      {
+        name: "is_active",
+        label: "Kích hoạt",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value) => {
+            return <span className="d-block text-center">{value? "Có": "Không"}</span>;
           },
         },
       },
