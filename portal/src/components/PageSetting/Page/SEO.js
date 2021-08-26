@@ -255,7 +255,7 @@ export default class SEO extends PureComponent {
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
-                                                            />
+                                                            /> 
                                                             <FormInput
                                                                 label="Từ khóa"
                                                                 name="SEO_DEFAULT_KEYWORDS.value"
