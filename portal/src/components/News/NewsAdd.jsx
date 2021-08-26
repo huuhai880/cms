@@ -554,6 +554,7 @@ export default class NewsAdd extends Component {
 
   // Submit remove
   async handleSubmitRemoveItem(confirm, index) {
+    
     let { values, handleChange } = this.formikProps;
     const { NewsEnt } = this.props;
     let { related } = values;
@@ -562,14 +563,13 @@ export default class NewsAdd extends Component {
       if (newsSelected.parent_id && NewsEnt) {
         // Call api remove news related
         await this._newsModel.deleteRelated(
-          NewsEnt.news_id,
+        NewsEnt.news_id,
           newsSelected.news_id
         );
       }
-      const cloneData = JSON.parse(JSON.stringify(related));
+      let cloneData = JSON.parse(JSON.stringify(related));
       cloneData.splice(index, 1);
       handleChange({ target: { name: "related", value: cloneData } });
-      this.setState({ dataRelated: related });
     }
   }
 

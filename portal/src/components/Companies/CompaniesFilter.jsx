@@ -186,7 +186,7 @@ class CompaniesFilter extends PureComponent {
               </FormGroup>
             </Col>
             <Col xs={12} sm={3}>
-              <FormGroup className="mb-2 mb-sm-0">
+              <FormGroup className="mb-2 mt-3 mb-sm-0">
                 <Label for="ward" className="mr-sm-2">
                   Phường/xã
                 </Label>
@@ -206,7 +206,7 @@ class CompaniesFilter extends PureComponent {
               </FormGroup>
             </Col>
             <Col xs={12} sm={3}>
-              <FormGroup className="mb-2 mb-sm-0">
+              <FormGroup className="mb-2 mt-3 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Kích hoạt
                 </Label>
@@ -227,7 +227,7 @@ class CompaniesFilter extends PureComponent {
             <Col
               xs={12}
               sm={6}
-              className="d-flex align-items-end justify-content-end"
+              className="d-flex align-items-end justify-content-end mt-3"
             >
               <FormGroup className="mb-2 mb-sm-0">
                 <Button

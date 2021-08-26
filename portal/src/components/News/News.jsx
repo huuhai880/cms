@@ -322,7 +322,6 @@ class News extends Component {
   handlePickNews = () => {
     const { handlePick } = this.props;
     if (handlePick) {
-      console.log("this._pickDataItems)", this._pickDataItems);
       handlePick(this._pickDataItems);
     }
   };
@@ -485,28 +484,16 @@ class News extends Component {
           empty: true,
           customBodyRender: (value, tableMeta, updateValue) => {
             if (handlePick) {
-              // let checked = false;
-              let related = this.props.related;
-              // let checked = (Object.keys(related).length === this.state.data.length) && this.state.data.length ? true : false;
-              let item = this.state.data[tableMeta["rowIndex"]];
-              // related.forEach((items)=> {
-              //   if(items.news_id === item.news_id)
-              //   return checked = true
-              // })
-
               return (
                 <div className="text-center mb-1">
                   <Checkbox
-                    id={`"-td"${item.news_id}`}
-                    // checked={checked}
                     onChange={({ target }) => {
+                      let item = this.state.data[tableMeta["rowIndex"]];
                       let { _pickDataItems = {} } = this;
                       if (target.checked) {
                         _pickDataItems[item.news_id] = item;
-                        // checked = true
                       } else {
                         delete _pickDataItems[item.news_id];
-                        // checked = false
                       }
                       Object.assign(this, { _pickDataItems });
                     }}

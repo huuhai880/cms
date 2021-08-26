@@ -243,6 +243,22 @@ class NewsFilter extends PureComponent {
                   <span className="ml-1">Làm mới</span>
                 </Button>
               </FormGroup>
+              {handlePick ? (
+                <FormGroup className="mb-2 ml-2 mb-sm-0">
+                  <Button
+                    className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePick();
+                    }}
+                    color="success"
+                    size="sm"
+                  >
+                    <i className="fa fa-plus" />
+                    <span className="ml-1"> Chọn </span>
+                  </Button>
+                </FormGroup>
+              ) : null}
             </Col>
           </Row>
         </Form>

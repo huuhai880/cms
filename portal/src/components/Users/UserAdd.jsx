@@ -90,6 +90,7 @@ export default class UserAdd extends PureComponent {
         { name: "Nam", id: "1" },
         { name: "Nữ", id: "0" },
       ],
+      errorImage: false
     };
 
     // Init validator
@@ -104,17 +105,16 @@ export default class UserAdd extends PureComponent {
             .required("Mật khẩu là bắt buộc.")
             .matches(
               /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()\-_=+{};:,<.>])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/,
-              "Mật khẩu yêu cầu 8 kí tự bao gồm chữ hoa , chữ thường, số, và kí tự đặc biệt."
+              "Mật khẩu yêu cầu 8 ký tự bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt."
             ),
       gender: Yup.string().required("Giới tính là bắt buộc."),
       email: Yup.string()
         .trim()
         // .email("Email không hợp lệ")
         .required("Email là bắt buộc."),
-      birthday: Yup.date()
-        // .trim()
-        .nullable(true)
-        .typeError("Sai định dạng ngày")
+      birthday: Yup.string()
+        .trim()
+        .nullable()
         .required("Ngày sinh là bắt buộc."),
       first_name: Yup.string().trim().required("Họ là bắt buộc."),
       last_name: Yup.string().trim().required("Tên là bắt buộc."),
@@ -206,7 +206,9 @@ export default class UserAdd extends PureComponent {
       this._userGroupModel
         .getOptions({ is_active: 2 })
         .then((data) => (bundle["userGroups"] = data)),
-      this._positionModel.getOptions().then((data) => (bundle["positions"] = data)),
+      this._positionModel
+        .getOptions({ is_active: 1 })
+        .then((data) => (bundle["positions"] = data)),
       this._departmentModel
         .getOptions({ is_active: 1 })
         .then((data) => (bundle["departments"] = data)),
@@ -233,9 +235,14 @@ export default class UserAdd extends PureComponent {
   makeAvatarStr(values = {}) {
     let { positions = [], departments = [] } = this.state;
     let position = positions.find((p) => "" + p.id === "" + values.position_id);
-    let department = departments.find((d) => "" + d.id === "" + values.department_id);
+    let department = departments.find(
+      (d) => "" + d.id === "" + values.department_id
+    );
     return [
-      [values.user_name, [values.first_name, values.last_name].filter((_d) => !!_d).join(" ")]
+      [
+        values.user_name,
+        [values.first_name, values.last_name].filter((_d) => !!_d).join(" "),
+      ]
         .filter((_d) => !!_d)
         .join(" - "),
       [
@@ -269,7 +276,8 @@ export default class UserAdd extends PureComponent {
         },
       })
         .then((usrImgBase64) => {
-          usrImgBase64 = usrImgBase64.length > 0 ? usrImgBase64[0] : usrImgBase64;
+          usrImgBase64 =
+            usrImgBase64.length > 0 ? usrImgBase64[0] : usrImgBase64;
           this.setState({ usrImgBase64 });
         })
         .catch((err) => {
@@ -344,11 +352,24 @@ export default class UserAdd extends PureComponent {
     // Build form data
     // +++
     let { birthday } = values;
-    let bdArr = (birthday && moment(birthday, "YYYY/MM/DD").format("DD/MM/YYYY")) || [];
+    let bdArr =
+      (birthday &&
+        moment(birthday, [
+          "DD/MM/YYYY",
+          "DDMMYYYY",
+          "DD-MM-YYYY",
+          "D/MM/YYYY",
+          "DD/M/YYYY",
+          "D/M/YYYY",
+          "DD-M-YYYY",
+          "D-MM-YYYY",
+          "D-M-YYYY",
+        ]).format("DD/MM/YYYY")) ||
+      "";
     // +++
     let formData = Object.assign({}, values, {
       default_picture_url: usrImgBase64,
-      birthday: bdArr.length ? bdArr : "",
+      birthday: bdArr ? bdArr : "",
       phone_number: "" + values.phone_number,
       phone_number_1: "" + values.phone_number_1,
       // password: (userEnt && userEnt.password) || values.password,
@@ -375,7 +396,9 @@ export default class UserAdd extends PureComponent {
       .catch((apiData) => {
         // NG
         let { errors, statusText, message } = apiData;
-        let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
+        let msg = [`<b>${statusText || message}</b>`]
+          .concat(errors || [])
+          .join("<br/>");
         alerts.push({ color: "danger", msg });
       })
       .finally(() => {
@@ -411,8 +434,16 @@ export default class UserAdd extends PureComponent {
   }
 
   render() {
-    let { _id, ready, alerts, usrImgBase64, userGroups, positions, departments, genders } =
-      this.state;
+    let {
+      _id,
+      ready,
+      alerts,
+      usrImgBase64,
+      userGroups,
+      positions,
+      departments,
+      genders,
+    } = this.state;
     let { userEnt, noEdit } = this.props;
     /** @var {Object} */
     let initialValues = this.getInitialValues();
@@ -429,8 +460,8 @@ export default class UserAdd extends PureComponent {
             <Card>
               <CardHeader>
                 <b>
-                  {userEnt ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} nhân viên{" "}
-                  {userEnt ? userEnt.full_name : ""}
+                  {userEnt ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"}{" "}
+                  nhân viên {userEnt ? userEnt.full_name : ""}
                 </b>
               </CardHeader>
               <CardBody>
@@ -455,7 +486,7 @@ export default class UserAdd extends PureComponent {
                   {(formikProps) => {
                     let {
                       values,
-                      // errors,
+                      errors,
                       // status,
                       // touched, handleChange, handleBlur,
                       // submitForm,
@@ -470,7 +501,11 @@ export default class UserAdd extends PureComponent {
                     this.handleFormikBeforeRender({ initialValues });
                     // Render
                     return (
-                      <Form id="form1st" onSubmit={handleSubmit} onReset={handleReset}>
+                      <Form
+                        id="form1st"
+                        onSubmit={handleSubmit}
+                        onReset={handleReset}
+                      >
                         <Row>
                           <Col xs={12} sm={3}>
                             <FormGroup row>
@@ -478,7 +513,12 @@ export default class UserAdd extends PureComponent {
                                 <div className="hidden ps-relative">
                                   <Media
                                     object
-                                    src={usrImgBase64 || UserModel.defaultImgBase64}
+                                    onError={() =>
+                                      this.setState({usrImgBase64: UserModel.defaultImgBase64})
+                                    }
+                                    src={
+                                      usrImgBase64 || UserModel.defaultImgBase64
+                                    }
                                     alt="User image"
                                     className="user-imgage radius-50-percent"
                                   />
@@ -492,7 +532,9 @@ export default class UserAdd extends PureComponent {
                                 </div>
                                 <b className="center block">
                                   {this.makeAvatarStr(values).map((text, idx) =>
-                                    text ? <p key={`avatar-text-${idx}`}>{text}</p> : null
+                                    text ? (
+                                      <p key={`avatar-text-${idx}`}>{text}</p>
+                                    ) : null
                                   )}
                                 </b>
                               </Col>
@@ -504,7 +546,9 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="position_id" sm={4}>
                                     Chức vụ
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -517,9 +561,12 @@ export default class UserAdd extends PureComponent {
                                           })
                                         );
                                         let defaultValue = options.find(
-                                          ({ value }) => 1 * value === 1 * field.value
+                                          ({ value }) =>
+                                            1 * value === 1 * field.value
                                         );
-                                        let placeholder = (positions[0] && positions[0].name) || "";
+                                        let placeholder =
+                                          (positions[0] && positions[0].name) ||
+                                          "";
                                         return (
                                           <Select
                                             id="position_id"
@@ -545,7 +592,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="position_id"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -557,7 +607,9 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="department_id" sm={4}>
                                     Phòng ban
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={8} style={{ zIndex: "100" }}>
                                     <Field
@@ -570,10 +622,13 @@ export default class UserAdd extends PureComponent {
                                           })
                                         );
                                         let defaultValue = options.find(
-                                          ({ value }) => 1 * value === 1 * field.value
+                                          ({ value }) =>
+                                            1 * value === 1 * field.value
                                         );
                                         let placeholder =
-                                          (departments[0] && departments[0].name) || "";
+                                          (departments[0] &&
+                                            departments[0].name) ||
+                                          "";
                                         return (
                                           <Select
                                             id="department_id"
@@ -599,7 +654,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="department_id"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -613,7 +671,9 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="user_name" sm={4}>
                                     ID nhân viên
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -634,7 +694,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="user_name"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -650,7 +713,9 @@ export default class UserAdd extends PureComponent {
                                 >
                                   <Label for="Password" sm={4}>
                                     Mật khẩu
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={8}>
                                     <InputGroup>
@@ -661,7 +726,9 @@ export default class UserAdd extends PureComponent {
                                             {...field}
                                             onBlur={null}
                                             type={`${
-                                              this.state.passwordVisible ? "text" : "password"
+                                              this.state.passwordVisible
+                                                ? "text"
+                                                : "password"
                                             }`}
                                             name="password"
                                             id="password"
@@ -674,7 +741,8 @@ export default class UserAdd extends PureComponent {
                                         <Button
                                           block
                                           onClick={() => {
-                                            let { passwordVisible } = this.state;
+                                            let { passwordVisible } =
+                                              this.state;
                                             this.setState({
                                               passwordVisible: !passwordVisible,
                                             });
@@ -682,7 +750,9 @@ export default class UserAdd extends PureComponent {
                                         >
                                           <i
                                             className={`fa ${
-                                              this.state.passwordVisible ? "fa-eye-slash" : "fa-eye"
+                                              this.state.passwordVisible
+                                                ? "fa-eye-slash"
+                                                : "fa-eye"
                                             }`}
                                           />
                                         </Button>
@@ -691,7 +761,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="password"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -705,7 +778,9 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="gender_1" sm={4}>
                                     Giới tính
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={8}>
                                     <Row>
@@ -716,13 +791,18 @@ export default class UserAdd extends PureComponent {
                                               <Label check>
                                                 <Field
                                                   name="gender"
-                                                  render={({ field /* _form */ }) => (
+                                                  render={({
+                                                    field /* _form */,
+                                                  }) => (
                                                     <Input
                                                       {...field}
                                                       onBlur={null}
                                                       value={id}
                                                       type="radio"
-                                                      checked={1 * values.gender === 1 * id}
+                                                      checked={
+                                                        1 * values.gender ===
+                                                        1 * id
+                                                      }
                                                       id={`gender_${id}`}
                                                       disabled={noEdit}
                                                     />
@@ -737,7 +817,10 @@ export default class UserAdd extends PureComponent {
                                       <ErrorMessage
                                         name="gender"
                                         component={({ children }) => (
-                                          <Alert color="danger" className="field-validation-error">
+                                          <Alert
+                                            color="danger"
+                                            className="field-validation-error"
+                                          >
                                             {children}
                                           </Alert>
                                         )}
@@ -750,7 +833,9 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="email" sm={4}>
                                     Email
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -770,7 +855,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="email"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -784,14 +872,20 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="birthday" sm={4}>
                                     Ngày sinh
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
                                       name="birthday"
                                       render={({
                                         date,
-                                        form: { setFieldValue, setFieldTouched, values },
+                                        form: {
+                                          setFieldValue,
+                                          setFieldTouched,
+                                          values,
+                                        },
                                         field,
                                         ...props
                                       }) => {
@@ -801,9 +895,11 @@ export default class UserAdd extends PureComponent {
                                               size="default"
                                               id="bdpicker"
                                               allowClear={false}
-                                              startDate={
-                                                values.birthday ? moment(values.birthday) : null
-                                              }
+                                              // startDate={
+                                              //   values.birthday
+                                              //     ? moment(values.birthday)
+                                              //     : ""
+                                              // }
                                               placeholder={"dd/mm/yyyy"}
                                               format="DD/MM/YYYY"
                                               style={{
@@ -817,13 +913,33 @@ export default class UserAdd extends PureComponent {
                                                 margin: "0px",
                                               }}
                                               onOpenChange={(open) => {
-                                                let startDate = null;
-                                                let typeLeft = document.querySelector(
-                                                  `#bdpicker `
-                                                ).value;
-                                                
-                                                if(!open) {
-                                                  startDate = moment(typeLeft, "DD/MM/YYYY")
+                                                let startDate = "";
+                                                let typeLeft =
+                                                  document.querySelector(
+                                                    `#bdpicker `
+                                                  ).value;
+                                                if (!open) {
+                                                  if (
+                                                    moment(
+                                                      typeLeft,
+                                                      "DD/MM/YYYY"
+                                                    ).isValid()
+                                                  ) {
+                                                    startDate = moment(
+                                                      typeLeft,
+                                                      [
+                                                        "DD/MM/YYYY",
+                                                        "DDMMYYYY",
+                                                        "DD-MM-YYYY",
+                                                        "D/MM/YYYY",
+                                                        "DD/M/YYYY",
+                                                        "D/M/YYYY",
+                                                        "DD-M-YYYY",
+                                                        "D-MM-YYYY",
+                                                        "D-M-YYYY",
+                                                      ]
+                                                    );
+                                                  }
                                                   setFieldValue(
                                                     "birthday",
                                                     startDate
@@ -844,7 +960,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="birthday"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -859,7 +978,9 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="first_name" sm={4}>
                                     Họ
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -879,7 +1000,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="first_name"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -891,7 +1015,9 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="last_name" sm={4}>
                                     Tên
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -911,7 +1037,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="last_name"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -943,7 +1072,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="about_me"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -966,7 +1098,9 @@ export default class UserAdd extends PureComponent {
                                       <Label sm={2}>
                                         <b className="underline">
                                           Địa chỉ
-                                          <span className="font-weight-bold red-text">*</span>
+                                          <span className="font-weight-bold red-text">
+                                            *
+                                          </span>
                                         </b>
                                       </Label>
                                       <Col sm={10}>
@@ -981,14 +1115,22 @@ export default class UserAdd extends PureComponent {
                                                     name={field.name}
                                                     onChange={({ value }) => {
                                                       // change?
-                                                      if ("" + values[field.name] !== "" + value) {
+                                                      if (
+                                                        "" +
+                                                          values[field.name] !==
+                                                        "" + value
+                                                      ) {
                                                         return form.setValues(
-                                                          Object.assign(values, {
-                                                            [field.name]: value,
-                                                            province_id: "",
-                                                            district_id: "",
-                                                            ward_id: "",
-                                                          })
+                                                          Object.assign(
+                                                            values,
+                                                            {
+                                                              [field.name]:
+                                                                value,
+                                                              province_id: "",
+                                                              district_id: "",
+                                                              ward_id: "",
+                                                            }
+                                                          )
                                                         );
                                                       }
                                                       field.onChange({
@@ -1027,13 +1169,21 @@ export default class UserAdd extends PureComponent {
                                                     name={field.name}
                                                     onChange={({ value }) => {
                                                       // change?
-                                                      if ("" + values[field.name] !== "" + value) {
+                                                      if (
+                                                        "" +
+                                                          values[field.name] !==
+                                                        "" + value
+                                                      ) {
                                                         return form.setValues(
-                                                          Object.assign(values, {
-                                                            [field.name]: value,
-                                                            district_id: "",
-                                                            ward_id: "",
-                                                          })
+                                                          Object.assign(
+                                                            values,
+                                                            {
+                                                              [field.name]:
+                                                                value,
+                                                              district_id: "",
+                                                              ward_id: "",
+                                                            }
+                                                          )
                                                         );
                                                       }
                                                       field.onChange({
@@ -1043,7 +1193,9 @@ export default class UserAdd extends PureComponent {
                                                         },
                                                       });
                                                     }}
-                                                    mainValue={values.country_id}
+                                                    mainValue={
+                                                      values.country_id
+                                                    }
                                                     value={values[field.name]}
                                                     isDisabled={noEdit}
                                                   />
@@ -1075,12 +1227,20 @@ export default class UserAdd extends PureComponent {
                                                     name={field.name}
                                                     onChange={({ value }) => {
                                                       // change?
-                                                      if ("" + values[field.name] !== "" + value) {
+                                                      if (
+                                                        "" +
+                                                          values[field.name] !==
+                                                        "" + value
+                                                      ) {
                                                         return form.setValues(
-                                                          Object.assign(values, {
-                                                            [field.name]: value,
-                                                            ward_id: "",
-                                                          })
+                                                          Object.assign(
+                                                            values,
+                                                            {
+                                                              [field.name]:
+                                                                value,
+                                                              ward_id: "",
+                                                            }
+                                                          )
                                                         );
                                                       }
                                                       field.onChange({
@@ -1090,7 +1250,9 @@ export default class UserAdd extends PureComponent {
                                                         },
                                                       });
                                                     }}
-                                                    mainValue={values.province_id}
+                                                    mainValue={
+                                                      values.province_id
+                                                    }
                                                     value={values[field.name]}
                                                     isDisabled={noEdit}
                                                   />
@@ -1113,7 +1275,9 @@ export default class UserAdd extends PureComponent {
                                             <Field
                                               key={`ward_of_${values.district_id}`}
                                               name="ward_id"
-                                              render={({ field /*, form*/ }) => {
+                                              render={({
+                                                field /*, form*/,
+                                              }) => {
                                                 return (
                                                   <WardComponent
                                                     id={field.name}
@@ -1126,7 +1290,9 @@ export default class UserAdd extends PureComponent {
                                                         },
                                                       })
                                                     }
-                                                    mainValue={values.district_id}
+                                                    mainValue={
+                                                      values.district_id
+                                                    }
                                                     value={values[field.name]}
                                                     isDisabled={noEdit}
                                                   />
@@ -1157,7 +1323,9 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="address" sm={2}>
                                     Địa chị cụ thể
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={10}>
                                     <Field
@@ -1177,7 +1345,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="address"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -1191,7 +1362,9 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="phone_number" sm={4}>
                                     Điện thoại
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={7}>
                                     <Field
@@ -1204,8 +1377,6 @@ export default class UserAdd extends PureComponent {
                                           name="phone_number"
                                           id="phone_number"
                                           min={0}
-                                          minLength={10}
-                                          maxLength={11}
                                           placeholder="Nhập số điện thoại"
                                           disabled={noEdit}
                                         />
@@ -1214,7 +1385,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="phone_number"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -1238,8 +1412,6 @@ export default class UserAdd extends PureComponent {
                                           name="phone_number_1"
                                           id="phone_number_1"
                                           min={0}
-                                          minLength={10}
-                                          maxLength={11}
                                           placeholder="Nhập số điện thoại"
                                           disabled={noEdit}
                                         />
@@ -1248,7 +1420,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="phone_number_1"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -1267,7 +1442,9 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row className="mb5">
                                   <Label for="user_group_id" sm={2}>
                                     Nhóm người dùng
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={10}>
                                     <Field
@@ -1281,7 +1458,9 @@ export default class UserAdd extends PureComponent {
                                         );
                                         // let defaultValue = options.find(({ value }) => (1 * value) === (1 * field.value));
                                         let placeholder =
-                                          (userGroups[0] && userGroups[0].name) || "";
+                                          (userGroups[0] &&
+                                            userGroups[0].name) ||
+                                          "";
                                         return (
                                           <Select
                                             id="user_group_id"
@@ -1309,56 +1488,74 @@ export default class UserAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="user_groups" sm={2}></Label>
                                   <Col sm={10}>
-                                    <Table size="sm" bordered striped hover responsive>
+                                    <Table
+                                      size="sm"
+                                      bordered
+                                      striped
+                                      hover
+                                      responsive
+                                    >
                                       <thead>
                                         <tr>
                                           <th style={{ width: "1%" }}>#</th>
                                           <th>{window._$g._("Tên nhóm")}</th>
                                           <th>{window._$g._("Mô tả")}</th>
-                                          <th style={{ width: "1%" }}>{window._$g._("Xóa")}</th>
+                                          <th style={{ width: "1%" }}>
+                                            {window._$g._("Xóa")}
+                                          </th>
                                         </tr>
                                       </thead>
                                       <tbody>
                                         {(() => {
                                           let idx = 0;
-                                          return values.user_groups.map((ugId) => {
-                                            let item = userGroups.find(
-                                              (_item) => "" + ugId === "" + _item.id
-                                            );
-                                            item && idx++;
-                                            return item ? (
-                                              <tr key={`user_group-${idx}`}>
-                                                <th scope="row" className="text-center">
-                                                  {idx}
-                                                </th>
-                                                <td>{item.name}</td>
-                                                <td>{item.description}</td>
-                                                <td className="text-center">
-                                                  <Field
-                                                    render={({ /*field, */ form }) => {
-                                                      return (
-                                                        <Button
-                                                          color="danger"
-                                                          disabled={noEdit}
-                                                          size={"sm"}
-                                                          className=""
-                                                          onClick={(event) =>
-                                                            this.handleRemoveUserGroup({
-                                                              item,
-                                                              event,
-                                                              form,
-                                                            })
-                                                          }
-                                                        >
-                                                          <i className="fa fa-minus-circle" />
-                                                        </Button>
-                                                      );
-                                                    }}
-                                                  />
-                                                </td>
-                                              </tr>
-                                            ) : null;
-                                          });
+                                          return values.user_groups.map(
+                                            (ugId) => {
+                                              let item = userGroups.find(
+                                                (_item) =>
+                                                  "" + ugId === "" + _item.id
+                                              );
+                                              item && idx++;
+                                              return item ? (
+                                                <tr key={`user_group-${idx}`}>
+                                                  <th
+                                                    scope="row"
+                                                    className="text-center"
+                                                  >
+                                                    {idx}
+                                                  </th>
+                                                  <td>{item.name}</td>
+                                                  <td>{item.description}</td>
+                                                  <td className="text-center">
+                                                    <Field
+                                                      render={({
+                                                        /*field, */ form,
+                                                      }) => {
+                                                        return (
+                                                          <Button
+                                                            color="danger"
+                                                            disabled={noEdit}
+                                                            size={"sm"}
+                                                            className=""
+                                                            onClick={(event) =>
+                                                              this.handleRemoveUserGroup(
+                                                                {
+                                                                  item,
+                                                                  event,
+                                                                  form,
+                                                                }
+                                                              )
+                                                            }
+                                                          >
+                                                            <i className="fa fa-minus-circle" />
+                                                          </Button>
+                                                        );
+                                                      }}
+                                                    />
+                                                  </td>
+                                                </tr>
+                                              ) : null;
+                                            }
+                                          );
                                         })()}
                                       </tbody>
                                       {/*<tfoot>
@@ -1368,7 +1565,10 @@ export default class UserAdd extends PureComponent {
                                     <ErrorMessage
                                       name="user_groups"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -1385,7 +1585,9 @@ export default class UserAdd extends PureComponent {
                                       color="primary"
                                       className="mr-2 btn-block-sm"
                                       onClick={() =>
-                                        window._$g.rdr(`/users/edit/${userEnt.user_id}`)
+                                        window._$g.rdr(
+                                          `/users/edit/${userEnt.user_id}`
+                                        )
                                       }
                                     >
                                       <i className="fa fa-edit mr-1" />
@@ -1429,7 +1631,9 @@ export default class UserAdd extends PureComponent {
                                       type="submit"
                                       color="success"
                                       disabled={isSubmitting}
-                                      onClick={() => this.handleSubmit("save_n_close")}
+                                      onClick={() =>
+                                        this.handleSubmit("save_n_close")
+                                      }
                                       className="mr-2 btn-block-sm mt-md-0 mt-sm-2"
                                     >
                                       <i className="fa fa-save mr-2" />
