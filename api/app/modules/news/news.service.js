@@ -113,15 +113,36 @@ const getListNews = async (queryParams = {}) => {
       .input('PAGESIZE', itemsPerPage)
       .input('PAGEINDEX', currentPage)
       .input('KEYWORD', keyword)
-      .input('NEWSSTATUSID', apiHelper.getValueFromObject(queryParams, 'news_status_id'))
-      .input('NEWSCATEGORYID',apiHelper.getValueFromObject(queryParams, 'news_category_id'))
-      .input('NEWSDATEFROM',apiHelper.getValueFromObject(queryParams, 'news_date_from'))
-      .input('NEWSDATETO',apiHelper.getValueFromObject(queryParams, 'news_date_to'))
-      .input('CREATEDDATEFROM', apiHelper.getValueFromObject(queryParams, 'create_date_from'))
-      .input('CREATEDDATETO',apiHelper.getValueFromObject(queryParams, 'create_date_to'))
+      .input(
+        'NEWSSTATUSID',
+        apiHelper.getValueFromObject(queryParams, 'news_status_id')
+      )
+      .input(
+        'NEWSCATEGORYID',
+        apiHelper.getValueFromObject(queryParams, 'news_category_id')
+      )
+      .input(
+        'NEWSDATEFROM',
+        apiHelper.getValueFromObject(queryParams, 'news_date_from')
+      )
+      .input(
+        'NEWSDATETO',
+        apiHelper.getValueFromObject(queryParams, 'news_date_to')
+      )
+      .input(
+        'CREATEDDATEFROM',
+        apiHelper.getValueFromObject(queryParams, 'create_date_from')
+      )
+      .input(
+        'CREATEDDATETO',
+        apiHelper.getValueFromObject(queryParams, 'create_date_to')
+      )
       .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'is_active'))
       .input('AUTHORID', apiHelper.getValueFromObject(queryParams, 'author_id'))
-      .input('EXCLUDEID', apiHelper.getValueFromObject(queryParams, 'exclude_id'))
+      .input(
+        'EXCLUDEID',
+        apiHelper.getValueFromObject(queryParams, 'exclude_id')
+      )
       .execute(PROCEDURE_NAME.NEWS_NEWS_GETLIST_ADMINWEB);
     const stores = data.recordset;
 
@@ -150,8 +171,8 @@ const detailNews = async (newsId) => {
     if (news && news.length > 0) {
       news = newsClass.detail(news[0]);
       news.related = [];
-      if(data.recordsets.length > 1){
-        news.related = newsClass.listRelated(data.recordsets[1])
+      if (data.recordsets.length > 1) {
+        news.related = newsClass.listRelated(data.recordsets[1]);
       }
       return new ServiceResponse(true, '', news);
     }
@@ -192,22 +213,23 @@ const createNewsOrUpdate = async (bodyParams) => {
       if (image_url) params.image_url = image_url;
       else return new ServiceResponse(false, RESPONSE_MSG.NEWS.UPLOAD_FAILED);
     }
-    console.log(params.image_url)
 
     const pool = await mssql.pool;
 
-    //check name
-    const dataCheck = await pool
-      .request()
-      .input('NEWSID', apiHelper.getValueFromObject(bodyParams, 'news_id'))
-      .input(
-        'NEWSTITLE',
-        apiHelper.getValueFromObject(bodyParams, 'news_title')
-      )
-      .execute(PROCEDURE_NAME.NEWS_NEWS_CHECKNAME_ADMINWEB);
-    if (!dataCheck.recordset || !dataCheck.recordset[0].RESULT) {
-      return new ServiceResponse(false, RESPONSE_MSG.NEWS.EXISTS_NAME, null);
+    if (!id) {
+      const dataCheck = await pool
+        .request()
+        .input('NEWSID', apiHelper.getValueFromObject(bodyParams, 'news_id'))
+        .input(
+          'NEWSTITLE',
+          apiHelper.getValueFromObject(bodyParams, 'news_title')
+        )
+        .execute(PROCEDURE_NAME.NEWS_NEWS_CHECKNAME_ADMINWEB);
+      if (!dataCheck.recordset || !dataCheck.recordset[0].RESULT) {
+        return new ServiceResponse(false, RESPONSE_MSG.NEWS.EXISTS_NAME, null);
+      }
     }
+    //check name
 
     const data = await pool
       .request()
@@ -355,24 +377,30 @@ const createNewsOrUpdate = async (bodyParams) => {
       .input('USER', apiHelper.getValueFromObject(bodyParams, 'auth_name'))
       .execute(PROCEDURE_NAME.NEWS_NEWS_CREATEORUPDATE_ADMINWEB);
     const newsId = data.recordset[0].RESULT;
-    // Xoa cac related lien quan neu co 
-    if(id && id != ''){
+    // Xoa cac related lien quan neu co
+    if (id && id != '') {
       await pool
         .request()
         .input('NEWSID', id)
-        .input('DELETEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name'))
+        .input(
+          'DELETEDUSER',
+          apiHelper.getValueFromObject(bodyParams, 'auth_name')
+        )
         .execute(PROCEDURE_NAME.NEWS_NEWSRELATED_DELETEBYNEWSID_ADMINWEB);
     }
     // Them cac bai viet lien quan
     const newsRelated = apiHelper.getValueFromObject(bodyParams, 'related');
-    if(newsRelated && newsRelated.length){
-      for(let i = 0; i < newsRelated.length; i ++){
+    if (newsRelated && newsRelated.length) {
+      for (let i = 0; i < newsRelated.length; i++) {
         const { news_id: related_id } = newsRelated[i];
         await pool
           .request()
           .input('PARENTID', newsId)
           .input('NEWSID', related_id)
-          .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name'))
+          .input(
+            'CREATEDUSER',
+            apiHelper.getValueFromObject(bodyParams, 'auth_name')
+          )
           .execute(PROCEDURE_NAME.NEWS_NEWSRELATED_CREATE_ADMINWEB);
       }
     }
@@ -480,7 +508,10 @@ const deleteNewsRelated = async (newsId, bodyParams) => {
       .request()
       .input('PARENTID', newsId)
       .input('NEWSID', apiHelper.getValueFromObject(bodyParams, 'news_id'))
-      .input('DELETEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name'))
+      .input(
+        'DELETEDUSER',
+        apiHelper.getValueFromObject(bodyParams, 'auth_name')
+      )
       .execute(PROCEDURE_NAME.NEWS_NEWSRELATED_DELETE_ADMINWEB);
     return new ServiceResponse(true, RESPONSE_MSG.NEWS.DELETE_SUCCESS, true);
   } catch (e) {
@@ -501,5 +532,5 @@ module.exports = {
   checkTag,
   checkMetaKeyword,
   review,
-  deleteNewsRelated
+  deleteNewsRelated,
 };

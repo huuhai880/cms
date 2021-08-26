@@ -147,7 +147,6 @@ export default class NewsCategoryAdd extends PureComponent {
     let { setSubmitting, resetForm } = formProps;
 
     let willRedirect = false;
-    console.log("values", values);
     let alerts = [];
     // Build form data
     let formData = Object.assign({}, values, {
@@ -156,10 +155,6 @@ export default class NewsCategoryAdd extends PureComponent {
       is_system: 1 * values.is_system || 0,
       // is_cate_video: 1 * values.is_cate_video || 0,
     });
-    console.log(
-      "🚀 ~ file: NewsCategoryAdd.jsx ~ line 159 ~ NewsCategoryAdd ~ handleFormikSubmit ~ formData",
-      formData
-    );
 
     //return false;
     let newsCategoryID =

@@ -252,7 +252,7 @@ class CrmReview extends Component {
               <div className="d-flex flex-fill, align-items-center justify-content-start">
                 <img
                   className="mr-2"
-                  style={{ width: 40, height: 40 }}
+                  style={{ width: 40, height: 40, borderRadius: "50%" }}
                   src={data[tableMeta["rowIndex"]].review_avatar ? data[tableMeta["rowIndex"]].review_avatar : avatarDefault}
                   onError={(e)=>{e.target.onerror = null; e.target.src=avatarDefault}}
                 />
@@ -264,7 +264,7 @@ class CrmReview extends Component {
       },
       {
         name: "review_content",
-        label: "nội dung",
+        label: "Nội dung",
         options: {
           filter: false,
           sort: false,
@@ -279,13 +279,14 @@ class CrmReview extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-left">{value}</div>;
+
+            return <p className="text-left mb-0" dangerouslySetInnerHTML={{ __html: value.replace(/(<([^>]+)>)/ig, '').split(" ").slice(0, 15).join(" ") + "..." }} />;
           },
         },
       },
       {
         name: "review_date",
-        label: "ngày đánh giá",
+        label: "Ngày đánh giá",
         options: {
           filter: false,
           sort: false,
@@ -306,7 +307,7 @@ class CrmReview extends Component {
       },
       {
         name: "is_active",
-        label: "kích hoạt",
+        label: "Kích hoạt",
         options: {
           filter: false,
           sort: false,
