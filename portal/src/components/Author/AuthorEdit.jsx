@@ -34,7 +34,6 @@ export default class AuthorEdit extends PureComponent {
         })
       ;
       authorEnt && this.setState({ authorEnt });
-      console.log("🚀 ~ file: AuthorEdit.jsx ~ line 37 ~ AuthorEdit ~ authorEnt", authorEnt)
     })();
     //.end
   }

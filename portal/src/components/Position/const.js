@@ -43,25 +43,7 @@ export const getColumTable = (data, total, query, handleDelete) => {
         },
       },
     },
-    {
-      name: "created_user",
-      label: "Người tạo",
-      options: {
-        filter: false,
-        sort: false,
-        customHeadRender: (columnMeta, handleToggleColumn) => {
-          return (
-            <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
-              <div className="text-center">{columnMeta.label}</div>
-            </th>
-          );
-        },
-        customBodyRender: (value, tableMeta, updateValue) => {
-          //   console.log(tableMeta);
-          return <div className="text-left">{value}</div>;
-        },
-      },
-    },
+    
     {
       name: "created_date",
       label: "Ngày tạo",
@@ -101,7 +83,25 @@ export const getColumTable = (data, total, query, handleDelete) => {
         },
       },
     },
-
+    {
+      name: "created_user",
+      label: "Người tạo",
+      options: {
+        filter: false,
+        sort: false,
+        customHeadRender: (columnMeta, handleToggleColumn) => {
+          return (
+            <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+              <div className="text-center">{columnMeta.label}</div>
+            </th>
+          );
+        },
+        customBodyRender: (value, tableMeta, updateValue) => {
+          //   console.log(tableMeta);
+          return <div className="text-left">{value}</div>;
+        },
+      },
+    },
     {
       name: "Thao tác",
       options: {

@@ -1,63 +1,63 @@
-body.tox-dialog__disable-scroll{
-    overflow: auto !important;
+body.tox-dialog__disable-scroll {
+  overflow: auto !important;
 }
-.DropzoneArea-dropZone-14{
-    z-index: 1;
+.DropzoneArea-dropZone-14 {
+  z-index: 1;
 }
-.author{
-    .tl-render-image {
-        height: 200px;
-        min-height: 200px;
-        position: relative;
-        img{
-            max-height: 200px;
-        }
-        button {
-            top: 0;
-            right: 0;
-            width: 30px;
-            height: 30px;
-            /* color: red; */
-            /* background: red; */
-            /* color: #fff; */
-            align-items: center;
-            display: flex;
-        }
+.author {
+  .tl-render-image {
+    height: 200px;
+    min-height: 200px;
+    position: relative;
+    img {
+      max-height: 200px;
     }
-    .tl-drop-image{
-        .DropzoneArea-dropZone-14{
-            height: 200px;
-            min-height: 200px;
-            position: relative; 
-        }
-        .DropzoneArea-dropZone-636{
-            z-index: 1;
-        }
+    button {
+      top: 0;
+      right: 0;
+      width: 30px;
+      height: 30px;
+      /* color: red; */
+      /* background: red; */
+      /* color: #fff; */
+      align-items: center;
+      display: flex;
     }
+  }
+  .tl-drop-image {
+    .DropzoneArea-dropZone-14 {
+      height: 200px;
+      min-height: 200px;
+      position: relative;
+    }
+    .DropzoneArea-dropZone-636 {
+      z-index: 1;
+    }
+  }
 }
 
 .tl-drop-image {
-    .banner-image-upload{
-        height: 145px;
-        object-fit: cover;
-    }
+  .banner-image-upload {
+    height: 145px;
+    object-fit: cover;
+  }
 }
-.author-banner-upload{
-    // width: 400px;
-    .ant-upload-list-picture-card-container{
-        height: 200px;
-        .ant-upload-list-item-list-type-picture-card{
-            width: 100%;
-        }
+.author-banner-upload {
+  //   width: 100% !important;
+  .ant-upload-list-picture-card-container {
+    height: 200px;
+    .ant-upload-list-item-list-type-picture-card {
+      width: 100% !important;
     }
-    .ant-upload-select-picture-card{
-        height: 200px;
-    }
-    .ant-upload-list-item-image{
-        // object-fit: contain !important;
-    }
-
+  }
+  .ant-upload-select-picture-card {
+    height: 200px !important;
+    width: 100% !important;
+  }
+  .ant-upload-list-item-image {
+    // object-fit: contain !important;
+  }
 }
-.author_quote_textarea{
-    min-height: 200px;
+.author_quote_textarea {
+  min-height: 200px;
 }

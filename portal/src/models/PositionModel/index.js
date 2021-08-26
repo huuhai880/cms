@@ -89,8 +89,8 @@ export default class PositionModel extends Model {
    * Get options (list opiton)
    * @returns Promise
    */
-  getOptions() {
-    return this._api.get(_static.API_POSITION_OPTS, {});
+  getOptions(_opts = {}) {
+    return this._api.get(_static.API_POSITION_OPTS, _opts);
   }
 
   /**
@@ -152,7 +152,10 @@ export default class PositionModel extends Model {
     // console.log(id)
     let data = Object.assign({}, _data);
     //
-    return this._api.put(_static.API_POSITION_DELETE.replace(":position_id", id), data);
+    return this._api.put(
+      _static.API_POSITION_DELETE.replace(":position_id", id),
+      data
+    );
   }
   check(_data = {}) {
     // Validate data?!

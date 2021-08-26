@@ -104,7 +104,7 @@ function AccountAdd({ noEdit }) {
     try {
       await _accountModel.check({ email: values.email }).then((data) => {
         // console.log(data)
-        if (data.MEMBERID) {
+        if (data.MEMBERID && formik.values.email != dataAccount.email) {
           // setalert("Email đã tồn tại!");
           formik.setFieldError("email", "Email đã tồn tại!");
           // window.scrollTo(0, 0);
@@ -113,7 +113,7 @@ function AccountAdd({ noEdit }) {
             if (btnType == "save") {
               setDataAccount(initialValues);
               // _initData();
-              _initDataDetail()
+              _initDataDetail();
               window._$g.toastr.show("Lưu thành công!", "success");
             } else if (btnType == "save&quit") {
               window._$g.toastr.show("Lưu thành công!", "success");
@@ -141,7 +141,7 @@ function AccountAdd({ noEdit }) {
           _accountModel.create(values).then((data) => {
             if (btnType == "save") {
               formik.resetForm();
-              _initData()
+              _initData();
               window._$g.toastr.show("Lưu thành công!", "success");
             } else if (btnType == "save&quit") {
               window._$g.toastr.show("Lưu thành công!", "success");
@@ -275,7 +275,7 @@ function AccountAdd({ noEdit }) {
                         <Col xs={12} sm={3}>
                           <FormGroup row>
                             <Col sm={12}>
-                              <div className="hidden ps-relative">
+                              <div className="ps-relative">
                                 {formik.values.image_avatar ? (
                                   <Media
                                     object

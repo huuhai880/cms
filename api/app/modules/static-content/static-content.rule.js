@@ -4,7 +4,7 @@ const ruleCreateOrUpdate = {
   webcategory_id: Joi.number().allow(null),
   static_title: Joi.string().required(),
   static_content: Joi.string().required(),
-  system_name:Joi.string().required(),
+  // system_name:Joi.string().required(),
   meta_keywords:Joi.string().allow('', null),
   meta_data_scriptions: Joi.string().allow('', null),
   meta_title: Joi.string().allow('', null),

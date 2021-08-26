@@ -88,19 +88,13 @@ class Banner extends Component {
     let bundle = {};
     let all = [
       // @TODO:
-      this._BannerModel
-        .getList(this.state.query)
-        .then((data) => (bundle["data"] = data)),
+      this._BannerModel.getList(this.state.query).then((data) => (bundle["data"] = data)),
       this._configModel
         .getListPlacementForBanner()
-        .then(
-          (data) => (bundle["placementOpts"] = mapDataOptions4Select(data))
-        ),
+        .then((data) => (bundle["placementOpts"] = mapDataOptions4Select(data))),
     ];
     await Promise.all(all).catch((err) => {
-      window._$g.dialogs.alert(
-        window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`)
-      );
+      window._$g.dialogs.alert(window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`));
     });
     return bundle;
   }
@@ -137,10 +131,8 @@ class Banner extends Component {
     if (type.match(/detail|edit/i)) {
       window._$g.rdr(`${route}${id}`);
     } else {
-      window._$g.dialogs.prompt(
-        "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
-        "Xóa",
-        (confirm) => this.handleClose(confirm, id, rowIndex)
+      window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "Xóa", (confirm) =>
+        this.handleClose(confirm, id, rowIndex)
       );
     }
   }
@@ -158,19 +150,12 @@ class Banner extends Component {
           });
         })
         .catch(() => {
-          window._$g.dialogs.alert(
-            window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
-          );
+          window._$g.dialogs.alert(window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!"));
         });
     }
   }
 
-  handleSubmitFilter = (
-    create_date_from,
-    create_date_to,
-    is_active,
-    placement
-  ) => {
+  handleSubmitFilter = (create_date_from, create_date_to, is_active, placement) => {
     let query = { ...this.state.query };
     query.page = 1;
     query = Object.assign(query, {
@@ -180,9 +165,7 @@ class Banner extends Component {
       placement,
     });
     this.getData(query).catch(() => {
-      window._$g.dialogs.alert(
-        window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
-      );
+      window._$g.dialogs.alert(window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!"));
     });
   };
 
@@ -202,6 +185,7 @@ class Banner extends Component {
   render() {
     const columns = [
       configIDRowTable("banner_id", "/banner/detail/", this.state.query),
+
       {
         name: "placement",
         label: "Vị trí đặt banner",
@@ -221,8 +205,39 @@ class Banner extends Component {
           },
           customBodyRender: (value) => {
             return (
-              <div class="text-left" style={{ width: 200 }}>
+              <div class="text-left">
                 {value ? value.name : ""}
+              </div>
+            );
+          },
+        },
+      },
+      {
+        name: "picture_url",
+        label: "Hình banner",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+                style={{ maxWidth: 200 }}
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value) => {
+            return (
+              <div class="text-left" style={{ width: 200 }}>
+                <img
+                  className="mr-2"
+                  style={{ width: "100%", height: "100%" }}
+                  src={value}
+                  //   alt="H1"
+                />
               </div>
             );
           },
@@ -293,9 +308,7 @@ class Banner extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                <CheckAccess permission="CMS_BANNER_EDIT">
-                  {value ? "Có" : "Không"}
-                </CheckAccess>
+                <CheckAccess permission="CMS_BANNER_EDIT">{value ? "Có" : "Không"}</CheckAccess>
               </div>
             );
           },
@@ -350,7 +363,7 @@ class Banner extends Component {
     ];
     const { count, page, query, placementOpts } = this.state;
     const options = configTableOptions(count, page, query);
-
+    // console.log(this.state.data)
     return (
       <div>
         <Card className="animated fadeIn z-index-222 mb-3">
@@ -364,11 +377,7 @@ class Banner extends Component {
                 }))
               }
             >
-              <i
-                className={`fa ${
-                  this.state.toggleSearch ? "fa-minus" : "fa-plus"
-                }`}
-              />
+              <i className={`fa ${this.state.toggleSearch ? "fa-minus" : "fa-plus"}`} />
             </div>
           </CardHeader>
           {this.state.toggleSearch && (
@@ -382,12 +391,7 @@ class Banner extends Component {
             </CardBody>
           )}
         </Card>
-        <Col
-          xs={12}
-          sm={4}
-          className="d-flex align-items-end mb-3"
-          style={{ padding: 0 }}
-        >
+        <Col xs={12} sm={4} className="d-flex align-items-end mb-3" style={{ padding: 0 }}>
           <CheckAccess permission="CMS_BANNER_ADD">
             <FormGroup className="mb-2 mb-sm-0">
               <Button
@@ -411,11 +415,7 @@ class Banner extends Component {
                 </div>
               ) : (
                 <div>
-                  <MUIDataTable
-                    data={this.state.data}
-                    columns={columns}
-                    options={options}
-                  />
+                  <MUIDataTable data={this.state.data} columns={columns} options={options} />
                   <CustomPagination
                     count={count}
                     rowsPerPage={query.itemsPerPage}
