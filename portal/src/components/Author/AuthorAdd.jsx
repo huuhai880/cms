@@ -574,7 +574,7 @@ export default class AuthorAdd extends PureComponent {
                           <Col xs={12} md={3}>
                             <FormGroup row>
                               <Col sm={12}>
-                                <div className="hidden ps-relative">
+                                <div className=" ps-relative">
                                   <Media
                                     object
                                     src={

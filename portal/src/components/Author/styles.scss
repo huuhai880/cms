@@ -51,7 +51,8 @@ body.tox-dialog__disable-scroll{
         }
     }
     .ant-upload-select-picture-card{
-        height: 200px;
+        height: 200px !important; 
+        width: 100% !important;
     }
     .ant-upload-list-item-image{
         // object-fit: contain !important;
