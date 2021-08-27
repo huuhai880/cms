@@ -46,16 +46,19 @@ body.tox-dialog__disable-scroll{
     width: 400px;
     .ant-upload-list-picture-card-container{
         height: 200px;
+        width: 100%;
         .ant-upload-list-item-list-type-picture-card{
             width: 100%;
         }
     }
     .ant-upload-select-picture-card{
         height: 200px;
+        width: 100%;
     }
-    .ant-upload-list-item-image{
-        // object-fit: contain !important;
-    }
+    .ant-upload.ant-upload-select-picture-card{
+        height: 200px;
+        width: 100%;
+      }
 
 }
 .author_quote_textarea{
