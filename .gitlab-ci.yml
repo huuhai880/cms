@@ -40,7 +40,7 @@ tsh_deploy_api_dev:
     - docker run -d -v "$TEST_DIR/cdn":/usr/src/api/storage/uploads -v "$TEST_DIR/api/storage/logs":/usr/src/api/storage/logs -p 127.0.0.1:6101:3000 --name container_tsh_api_dev img_tsh_api_dev
     - echo "Deploy api success!!!"   
 
-tsh_build_portal_dev:
+tsh_build_portal_dev: 
   tags:
     - runner-global-hn   
   stage: build-dev
