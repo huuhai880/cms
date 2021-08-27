@@ -9,7 +9,7 @@ stages:
 
 tsh_build_docker_api_dev:
   tags:
-    - 204-runner
+    - tsh-runner-204
   stage: build-dev  
   only:
       refs:
@@ -26,7 +26,7 @@ tsh_build_docker_api_dev:
 
 tsh_deploy_api_dev:
   tags:
-    - 204-runner
+    - tsh-runner-204
   stage: deploy-dev  
   only:
       refs:
