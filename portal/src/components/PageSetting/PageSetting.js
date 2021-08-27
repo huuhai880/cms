@@ -93,6 +93,13 @@ export default class PageSetting extends React.Component {
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
+                                                className={`${activeTab === "CONTACT" ? "active" : ""}`}
+                                                onClick={() => this.setState({ activeTab: 'CONTACT' })}>
+                                                Liên hệ
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
                                                 className={`${activeTab === "SEO" ? "active" : ""}`}
                                                 onClick={() => this.setState({ activeTab: 'SEO' })}>
                                                 SEO website
