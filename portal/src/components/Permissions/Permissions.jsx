@@ -82,14 +82,31 @@ export default class Permissions extends PureComponent {
 
   /** @var {Array} */
   _dataFuncGroupOpts = [];
-
+  myForm = null;
   componentDidMount() {
     // Get bundle data --> ready data
     (async () => {
       let bundle = await this._getBundleData();
-      this.setState({ ...bundle, ready: true });
+      this.setState({ ...bundle, ready: true }, () => {
+        this.myForm = document.getElementById('permissions-div');
+        if(this.myForm){
+            this.myForm.addEventListener("keydown", this._handleKeyDown);
+        }
+      });
     })();
     //.end
+  }
+  
+  componentWillUnmount() {
+    if(this.myForm){
+      this.myForm.removeEventListener("keydown", this._handleKeyDown);
+    }
+  }
+
+  _handleKeyDown = (event) => {
+      if(event.keyCode == 13){
+         event.preventDefault();
+      }
   }
 
   /** @var {Object} */
@@ -112,7 +129,7 @@ export default class Permissions extends PureComponent {
   /**
    * Goi API, lay toan bo data lien quan, vd: chuc vu, phong ban, dia chi,...
    */
-  async _getBundleData() {
+   async _getBundleData() {
     let bundle = {};
     let all = [
       this._userGroupModel.getOptions({ is_active: 1 })
@@ -153,28 +170,28 @@ export default class Permissions extends PureComponent {
         });
 
         //
-        for (let i = 0; i < user_groups.length; i++) {
-          let userGroup = user_groups[i];
-          if (userGroup && !!userGroup.has_permission) {
-            all2nd.push(
-              this._permissionModel.getListFunctionsByFunctionGroup(function_group_id)
-              .then(({ items = [] }) => {
-                Object.assign(functionGroup, {
-                  _functions: (functionGroup._functions || []).concat(items),
-                  _isOpen: false
-                });
-                return items;
-              })
-            );
-            break;
-          }
-        }
+        // for (let i = 0; i < user_groups.length; i++) {
+        //   let userGroup = user_groups[i];
+        //   if (userGroup && !!userGroup.has_permission) {
+        //     all2nd.push(
+        //       this._permissionModel.getListFunctionsByFunctionGroup(function_group_id)
+        //       .then(({ items = [] }) => {
+        //         Object.assign(functionGroup, {
+        //           _functions: (functionGroup._functions || []).concat(items),
+        //           _isOpen: true
+        //         });
+        //         return items;
+        //       })
+        //     );
+        //     break;
+        //   }
+        // }
       });
-      await Promise.all(all2nd)
-        .catch(err => window._$g.dialogs.alert(
-          window._$g._(`Khởi tạo dữ liệu (2) không thành công (${err.message}).`),
-          () => window.location.reload()
-        ))
+      // await Promise.all(all2nd)
+      //   .catch(err => window._$g.dialogs.alert(
+      //     window._$g._(`Khởi tạo dữ liệu (2) không thành công (${err.message}).`),
+      //     () => window.location.reload()
+      //   ))
       ;
     }
     //.end
@@ -193,6 +210,7 @@ export default class Permissions extends PureComponent {
   }
 
   handleFormSubmit(evt) {
+    console.log({evt})
     evt.preventDefault();
     //
     let { alerts } = this.state;
@@ -451,7 +469,7 @@ export default class Permissions extends PureComponent {
               })}
               </Col>
             </Row>
-            <Form id="form1st" onSubmit={this.handleFormSubmit}>
+            <Form id="form1st" className="frmPermission" onSubmit={this.handleFormSubmit}>
               <FormGroup row className="p-2">
                 <Col xs={12} sm={4} className="custom-zIndex-Select">
                   <Label for="" className="font-weight-bold">Nhóm quyền:</Label>
