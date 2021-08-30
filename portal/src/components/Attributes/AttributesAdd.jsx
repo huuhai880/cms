@@ -510,7 +510,7 @@ export default class AttributesAdd extends PureComponent {
                                 <Button
                                   key="buttonAddItem"
                                   color="success"
-                                  disabled={isSubmitting}
+                                  disabled={noEdit}
                                   onClick={() =>
                                     this.handleAddItem("save_n_close")
                                   }
@@ -619,7 +619,7 @@ export default class AttributesAdd extends PureComponent {
                                                       options={Options}
                                                       placeholder="-- Chọn --"
                                                       id={`partner_id_${index}`}
-                                                      disabled={noEdit}
+                                                      isDisabled={noEdit}
                                                     />
                                                   )}
                                                 />
@@ -744,7 +744,7 @@ export default class AttributesAdd extends PureComponent {
                                                       });
                                                   }
                                                 }}
-                                                // disabled={noEdit}
+                                                disabled={noEdit}
                                               />
                                               {/* {!this.state.clearImage && (
                                                 <Field
@@ -947,6 +947,7 @@ export default class AttributesAdd extends PureComponent {
                                                   this.handleRemoveItem(index)
                                                 }
                                                 title="Xóa"
+                                                disabled={noEdit}
                                               >
                                                 <i className="fa fa-minus-circle" />
                                               </Button>
