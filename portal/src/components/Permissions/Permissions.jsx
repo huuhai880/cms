@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent } from "react";
 import {
   // CustomInput,
   Alert,
@@ -12,33 +12,32 @@ import {
   FormGroup,
   Label,
   // Input
-} from 'reactstrap'
-import Select from 'react-select';
+} from "reactstrap";
+import Select from "react-select";
 
 // Component(s)
-import Loading from '../Common/Loading';
-import Table from './Table';
+import Loading from "../Common/Loading";
+import Table from "./Table";
 
 // Util(s)
-import { mapDataOptions4Select } from '../../utils/html';
+import { mapDataOptions4Select } from "../../utils/html";
 
 // Model(s)
-import UserGroupModel from '../../models/UserGroupModel';
+import UserGroupModel from "../../models/UserGroupModel";
 import FunctionGroupModel from "../../models/FunctionGroupModel";
 import FunctionModel from "../../models/FunctionModel";
 import PermissionModel from "../../models/PermissionModel";
 
 // Assets
-import './styles.scss';
+import "./styles.scss";
 
 /**
  * @class Permissions
  */
 export default class Permissions extends PureComponent {
-
   /** @var {Object} */
   formikProps = null;
-  
+
   constructor(props) {
     super(props);
 
@@ -67,7 +66,7 @@ export default class Permissions extends PureComponent {
       /** @var {Array} */
       functionGroups: [],
       /** @var {Array} */
-      functions: []
+      functions: [],
     };
   }
 
@@ -76,8 +75,8 @@ export default class Permissions extends PureComponent {
 
   /** @var {Object} */
   _dataIdStrObj = {
-    'func_group': '',
-    'user_group': '',
+    func_group: "",
+    user_group: "",
   };
 
   /** @var {Array} */
@@ -88,32 +87,32 @@ export default class Permissions extends PureComponent {
     (async () => {
       let bundle = await this._getBundleData();
       this.setState({ ...bundle, ready: true }, () => {
-        this.myForm = document.getElementById('permissions-div');
-        if(this.myForm){
-            this.myForm.addEventListener("keydown", this._handleKeyDown);
+        this.myForm = document.getElementById("permissions-div");
+        if (this.myForm) {
+          this.myForm.addEventListener("keydown", this._handleKeyDown);
         }
       });
     })();
     //.end
   }
-  
+
   componentWillUnmount() {
-    if(this.myForm){
+    if (this.myForm) {
       this.myForm.removeEventListener("keydown", this._handleKeyDown);
     }
   }
 
   _handleKeyDown = (event) => {
-      if(event.keyCode == 13){
-         event.preventDefault();
-      }
-  }
+    if (event.keyCode == 13) {
+      event.preventDefault();
+    }
+  };
 
   /** @var {Object} */
   formikValidationSchema = {};
 
   /**
-   * 
+   *
    * @return {Object}
    */
   getInitialValues() {
@@ -129,32 +128,35 @@ export default class Permissions extends PureComponent {
   /**
    * Goi API, lay toan bo data lien quan, vd: chuc vu, phong ban, dia chi,...
    */
-   async _getBundleData() {
+  async _getBundleData() {
     let bundle = {};
     let all = [
-      this._userGroupModel.getOptions({ is_active: 1 })
-        .then(userGroups => {
-          this._dataUserGroupOpts = mapDataOptions4Select(userGroups);
-          Object.assign(bundle, { userGroups });
-        }),
-      this._permissionModel.getListFunctionGroups({
-          itemsPerPage: PermissionModel._MAX_ITEMS_PER_PAGE
+      this._userGroupModel.getOptions({ is_active: 1 }).then((userGroups) => {
+        this._dataUserGroupOpts = mapDataOptions4Select(userGroups);
+        Object.assign(bundle, { userGroups });
+      }),
+      this._permissionModel
+        .getListFunctionGroups({
+          itemsPerPage: PermissionModel._MAX_ITEMS_PER_PAGE,
         })
         .then(({ items: functionGroups = [] }) => {
           let funcGroupOpts = functionGroups.map(
-            ({ function_group_id: value, function_group_name: label }) => ({ value, label })
+            ({ function_group_id: value, function_group_name: label }) => ({
+              value,
+              label,
+            })
           );
           this._dataFuncGroupOpts = funcGroupOpts;
           Object.assign(bundle, { functionGroups });
         }),
       // this._functionGroupModel.getOptions().then(data => (bundle['functionGroups'] = data)),
     ];
-    await Promise.all(all)
-      .catch(err => window._$g.dialogs.alert(
+    await Promise.all(all).catch((err) =>
+      window._$g.dialogs.alert(
         window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
         () => window.location.reload()
-      ))
-    ;
+      )
+    );
 
     // Loop, format function_groups data and get details,...
     let { functionGroups = [] } = bundle;
@@ -166,7 +168,7 @@ export default class Permissions extends PureComponent {
         // Init
         Object.assign(functionGroup, {
           _functions: undefined,
-          _isOpen: false
+          _isOpen: false,
         });
 
         //
@@ -192,7 +194,6 @@ export default class Permissions extends PureComponent {
       //     window._$g._(`Khởi tạo dữ liệu (2) không thành công (${err.message}).`),
       //     () => window.location.reload()
       //   ))
-      ;
     }
     //.end
     //
@@ -210,7 +211,7 @@ export default class Permissions extends PureComponent {
   }
 
   handleFormSubmit(evt) {
-    console.log({evt})
+    console.log({ evt });
     evt.preventDefault();
     //
     let { alerts } = this.state;
@@ -222,21 +223,25 @@ export default class Permissions extends PureComponent {
     // Init, format form data,...
     let formData = {};
     // +++
-    functionGroups.forEach(functionGroup => {
+    functionGroups.forEach((functionGroup) => {
       let { function_group_id, user_groups = [], _functions } = functionGroup;
       // Case: unload functions
-      if (!_functions) { return; }
+      if (!_functions) {
+        return;
+      }
       //
       userGroups.forEach(({ id: userGroupId }) => {
         //
-        let foundUserGroup = user_groups.find(item => ('' + item.user_group_id) === ('' + userGroupId));
+        let foundUserGroup = user_groups.find(
+          (item) => "" + item.user_group_id === "" + userGroupId
+        );
         //
         let formItem = formData[userGroupId];
         if (!formItem) {
-          formData[userGroupId] = (formItem = {
+          formData[userGroupId] = formItem = {
             user_group_id: userGroupId,
-            function_group_ids: []
-          });
+            function_group_ids: [],
+          };
         }
         let { function_group_ids } = formItem;
         //
@@ -244,15 +249,17 @@ export default class Permissions extends PureComponent {
           function_group_id,
           has_permission: !!(foundUserGroup && foundUserGroup.has_permission),
           function_ids: _functions
-            .map(_function => {
+            .map((_function) => {
               let functionUserGroups = _function.user_groups || [];
-              let foundUserGroup = functionUserGroups.find(item => ('' + item.user_group_id) === ('' + userGroupId));
+              let foundUserGroup = functionUserGroups.find(
+                (item) => "" + item.user_group_id === "" + userGroupId
+              );
               if (foundUserGroup && foundUserGroup.has_permission) {
                 return _function.function_id;
               }
               return null;
             })
-            .filter(function_id => !!function_id)
+            .filter((function_id) => !!function_id),
         });
         Object.assign(formItem, { function_group_ids });
       });
@@ -261,11 +268,14 @@ export default class Permissions extends PureComponent {
     // console.log('handleFormSubmit#functionGroups: ', functionGroups);
     // console.log('handleFormSubmit#formData: ', formData);
     // Call API, set data
-    this._permissionModel.postUserGroupFunction(formData)
-      .then(data => { // OK
-        window._$g.toastr.show('Lưu thành công!', 'success');
+    this._permissionModel
+      .postUserGroupFunction(formData)
+      .then((data) => {
+        // OK
+        window._$g.toastr.show("Lưu thành công!", "success");
       })
-      .catch(apiData => { // NG
+      .catch((apiData) => {
+        // NG
         let { message } = apiData;
         let msg = [`<b>${message}</b>`];
         alerts.push({ color: "danger", msg });
@@ -278,26 +288,27 @@ export default class Permissions extends PureComponent {
 
   handleClickFunctionGroup(functionGroup) {
     let { functionGroups } = this.state;
-    let foundIdx = functionGroups.findIndex(item  => item === functionGroup);
+    let foundIdx = functionGroups.findIndex((item) => item === functionGroup);
     if (foundIdx >= 0) {
       let { function_group_id, _functions, _isOpen } = functionGroup;
       Object.assign(functionGroup, {
-        _isOpen: _functions ? !_isOpen : null
+        _isOpen: _functions ? !_isOpen : null,
       });
       this.setState({ functionGroups: [].concat(functionGroups) });
       // Load details
       if (!(_functions instanceof Array)) {
-        this._permissionModel.getListFunctionsByFunctionGroup(function_group_id)
-        .then(({ items = [] }) => {
-          Object.assign(functionGroup, {
-            _functions: (functionGroup._functions || []).concat(items),
-            _isOpen: true
+        this._permissionModel
+          .getListFunctionsByFunctionGroup(function_group_id)
+          .then(({ items = [] }) => {
+            Object.assign(functionGroup, {
+              _functions: (functionGroup._functions || []).concat(items),
+              _isOpen: true,
+            });
+            this.setState(({ functionGroups }) => ({
+              functionGroups: [].concat(functionGroups),
+            }));
+            return items;
           });
-          this.setState(({ functionGroups }) => ({
-            functionGroups: [].concat(functionGroups)
-          }));
-          return items;
-        })
       }
       //.end
     }
@@ -306,15 +317,19 @@ export default class Permissions extends PureComponent {
   handleClickCheckAll(functionGroup, userGroup) {
     let { functionGroups } = this.state;
     let user_group_id = userGroup.id;
-    let foundIdx = functionGroups.findIndex(item  => item === functionGroup);
+    let foundIdx = functionGroups.findIndex((item) => item === functionGroup);
     if (foundIdx < 0) {
       return;
     }
     let { function_group_id, user_groups = [], _functions } = functionGroup;
-    let foundUserGroup = user_groups.find(item => ('' + user_group_id) === ('' + item.user_group_id));
+    let foundUserGroup = user_groups.find(
+      (item) => "" + user_group_id === "" + item.user_group_id
+    );
     // Add/Edit `UserGroup`
     if (!foundUserGroup) {
-      user_groups.push(foundUserGroup = { user_group_id, has_permission: false });
+      user_groups.push(
+        (foundUserGroup = { user_group_id, has_permission: false })
+      );
       Object.assign(functionGroup, { user_groups });
     }
     let { has_permission } = foundUserGroup;
@@ -326,26 +341,31 @@ export default class Permissions extends PureComponent {
     // +++ Check/Uncheck all functions by functionGroup
     const checkUncheckAllFunctions = () => {
       let { _functions } = functionGroup;
-      (_functions || []).forEach(_function => {
+      (_functions || []).forEach((_function) => {
         let { function_id, user_groups = [] } = _function;
-        let foundUserGroup = user_groups.find(item => ('' + user_group_id) === ('' + item.user_group_id));
+        let foundUserGroup = user_groups.find(
+          (item) => "" + user_group_id === "" + item.user_group_id
+        );
         if (!foundUserGroup) {
-          user_groups.push(foundUserGroup = { function_id, user_group_id, has_permission });
+          user_groups.push(
+            (foundUserGroup = { function_id, user_group_id, has_permission })
+          );
           Object.assign(_function, { user_groups });
         }
         Object.assign(foundUserGroup, { has_permission });
       });
-      // 
+      //
       this.setState({ functionGroups: [].concat(functionGroups) });
     };
     // +++ load data?!
     if (!(_functions instanceof Array)) {
       Object.assign(functionGroup, { _isOpen: null });
-      this._permissionModel.getListFunctionsByFunctionGroup(function_group_id)
+      this._permissionModel
+        .getListFunctionsByFunctionGroup(function_group_id)
         .then(({ items = [] }) => {
           Object.assign(functionGroup, {
             _functions: (functionGroup._functions || []).concat(items),
-            _isOpen: true
+            _isOpen: true,
           });
           return checkUncheckAllFunctions() || _functions;
         });
@@ -356,23 +376,29 @@ export default class Permissions extends PureComponent {
 
   handleClickCheck(functionGroup, _function, userGroup) {
     let { functionGroups } = this.state;
-    let foundIdx = functionGroups.findIndex(item => item === functionGroup);
+    let foundIdx = functionGroups.findIndex((item) => item === functionGroup);
     if (foundIdx < 0) {
       return;
     }
     let { _functions = [] } = functionGroup;
-    foundIdx = _functions.findIndex(item => ('' + _function.function_id) === ('' + item.function_id));
+    foundIdx = _functions.findIndex(
+      (item) => "" + _function.function_id === "" + item.function_id
+    );
     if (foundIdx < 0) {
       return;
     }
     let { function_id, user_groups = [] } = _function;
-    let foundUserGroup = user_groups.find(item => ('' + userGroup.id) === ('' + item.user_group_id));
+    let foundUserGroup = user_groups.find(
+      (item) => "" + userGroup.id === "" + item.user_group_id
+    );
     if (!foundUserGroup) {
-      user_groups.push(foundUserGroup = {
-        function_id,
-        user_group_id: userGroup.id,
-        has_permission: false,
-      });
+      user_groups.push(
+        (foundUserGroup = {
+          function_id,
+          user_group_id: userGroup.id,
+          has_permission: false,
+        })
+      );
       Object.assign(_function, { user_groups });
     }
     let { has_permission } = foundUserGroup;
@@ -381,15 +407,19 @@ export default class Permissions extends PureComponent {
     // Check/Uncheck all
     let checkCount = 0;
     _functions.forEach(({ user_groups = [] }) => {
-      let foundUserGroup = user_groups.find(item => ('' + userGroup.id) === ('' + item.user_group_id));
+      let foundUserGroup = user_groups.find(
+        (item) => "" + userGroup.id === "" + item.user_group_id
+      );
       if (foundUserGroup && !!foundUserGroup.has_permission) {
         checkCount++;
       }
     });
     (functionGroup.user_groups || []).forEach((user_group) => {
       let { user_group_id } = user_group;
-      if (('' + user_group_id) === ('' + userGroup.id)) {
-        Object.assign(user_group, { has_permission: 1  * (checkCount === _functions.length) });
+      if ("" + user_group_id === "" + userGroup.id) {
+        Object.assign(user_group, {
+          has_permission: 1 * (checkCount === _functions.length),
+        });
       }
     });
     //.end
@@ -397,16 +427,19 @@ export default class Permissions extends PureComponent {
   }
 
   handleFilterSelectMulti = (type, valuesItem) => {
-    let items = (valuesItem instanceof Array) ? valuesItem : [valuesItem];
-    let idStr = items.filter(_i => !!_i).map(_i => _i.value).join();
-    this._dataIdStrObj[type] = idStr = idStr ? `,${idStr},` : '';
-  }
+    let items = valuesItem instanceof Array ? valuesItem : [valuesItem];
+    let idStr = items
+      .filter((_i) => !!_i)
+      .map((_i) => _i.value)
+      .join();
+    this._dataIdStrObj[type] = idStr = idStr ? `,${idStr},` : "";
+  };
 
   handleSubmitFilter = (evt) => {
     evt.preventDefault();
     // Re render
     this.forceUpdate();
-  }
+  };
 
   handleResetFilter = (evt) => {
     evt.preventDefault();
@@ -414,37 +447,37 @@ export default class Permissions extends PureComponent {
     this._filterSelectFuncGroup.select.clearValue();
     this._filterSelectUserGroup.select.clearValue();
     this._dataIdStrObj = {
-      'func_group': '',
-      'user_group': '',
+      func_group: "",
+      user_group: "",
     };
     // Re render
     this.forceUpdate();
-  }
+  };
 
   _getFiltUserGroupsState = () => {
     let { userGroups = [] } = this.state;
-    let result = userGroups, idStr = this._dataIdStrObj['user_group'];
+    let result = userGroups,
+      idStr = this._dataIdStrObj["user_group"];
     if (userGroups.length && idStr) {
-      result = userGroups.filter(({ id }) => (idStr.indexOf(`,${id},`) >= 0));
+      result = userGroups.filter(({ id }) => idStr.indexOf(`,${id},`) >= 0);
     }
     return result;
-  }
+  };
 
   _getFiltFuncGroupsState = () => {
     let { functionGroups = [] } = this.state;
-    let result = functionGroups, idStr = this._dataIdStrObj['func_group'];
+    let result = functionGroups,
+      idStr = this._dataIdStrObj["func_group"];
     if (functionGroups.length && idStr) {
-      result = functionGroups.filter(({ function_group_id: id }) => (idStr.indexOf(`,${id},`) >= 0));
+      result = functionGroups.filter(
+        ({ function_group_id: id }) => idStr.indexOf(`,${id},`) >= 0
+      );
     }
     return result;
-  }
+  };
 
   render() {
-    let {
-      ready,
-      alerts,
-      isSubmitting,
-    } = this.state;
+    let { ready, alerts, isSubmitting } = this.state;
     let userGroups = this._getFiltUserGroupsState();
     let functionGroups = this._getFiltFuncGroupsState();
 
@@ -459,28 +492,41 @@ export default class Permissions extends PureComponent {
           <CardBody className="px-0 py-0">
             <Row>
               <Col xs={12} className="">
-              {/* general alerts */}
-              {alerts.map(({ color, msg }, idx) => {
-                return (
-                  <Alert key={`alert-${idx}`} color={color} isOpen={true} toggle={() => this.setState({ alerts: [] })}>
-                    <span dangerouslySetInnerHTML={{ __html: msg }} />
-                  </Alert>
-                );
-              })}
+                {/* general alerts */}
+                {alerts.map(({ color, msg }, idx) => {
+                  return (
+                    <Alert
+                      key={`alert-${idx}`}
+                      color={color}
+                      isOpen={true}
+                      toggle={() => this.setState({ alerts: [] })}
+                    >
+                      <span dangerouslySetInnerHTML={{ __html: msg }} />
+                    </Alert>
+                  );
+                })}
               </Col>
             </Row>
-            <Form id="form1st" className="frmPermission" onSubmit={this.handleFormSubmit}>
+            <Form
+              id="form1st"
+              className="frmPermission"
+              onSubmit={this.handleFormSubmit}
+            >
               <FormGroup row className="p-2">
                 <Col xs={12} sm={4} className="custom-zIndex-Select">
-                  <Label for="" className="font-weight-bold">Nhóm quyền:</Label>
+                  <Label for="">Nhóm quyền:</Label>
                   {(() => {
                     return (
                       <Select
-                        ref={ref => { this._filterSelectFuncGroup = ref; }}
+                        ref={(ref) => {
+                          this._filterSelectFuncGroup = ref;
+                        }}
                         isMulti
                         isSearchable
                         placeholder={"-- Chọn --"}
-                        onChange={(valuesItem/*, actionItem*/) => this.handleFilterSelectMulti('func_group', valuesItem)}
+                        onChange={(valuesItem /*, actionItem*/) =>
+                          this.handleFilterSelectMulti("func_group", valuesItem)
+                        }
                         value={this.state.functionGroup}
                         // defaultValue={}
                         options={this._dataFuncGroupOpts}
@@ -489,15 +535,19 @@ export default class Permissions extends PureComponent {
                   })()}
                 </Col>
                 <Col xs={12} sm={4} className="custom-zIndex-Select">
-                  <Label for="" className="font-weight-bold">Nhóm người dùng:</Label>
+                  <Label for="">Nhóm người dùng:</Label>
                   {(() => {
                     return (
                       <Select
-                        ref={ref => { this._filterSelectUserGroup = ref; }}
+                        ref={(ref) => {
+                          this._filterSelectUserGroup = ref;
+                        }}
                         isMulti
                         isSearchable
                         placeholder={"-- Chọn --"}
-                        onChange={(valuesItem/*, actionItem*/) => this.handleFilterSelectMulti('user_group', valuesItem)}
+                        onChange={(valuesItem /*, actionItem*/) =>
+                          this.handleFilterSelectMulti("user_group", valuesItem)
+                        }
                         value={this.state.userGroup}
                         // defaultValue={}
                         options={this._dataUserGroupOpts}
@@ -506,22 +556,26 @@ export default class Permissions extends PureComponent {
                   })()}
                 </Col>
                 <Col xs={12} sm={4} className="text-right">
-                  <Label for="" className="font-weight-bold">&nbsp;</Label>
-                  <div style={{ height: "100p%J"}}>
+                  <Label for="" className="font-weight-bold">
+                    &nbsp;
+                  </Label>
+                  <div style={{ height: "100p%J" }}>
                     <Button
                       color="info"
                       className="ml-2 MuiPaper-filter__custom--button"
                       disabled={isSubmitting}
                       onClick={this.handleSubmitFilter}
                     >
-                      <i className="fa fa-search" /><span className="ml-1">Tìm kiếm</span>
+                      <i className="fa fa-search" />
+                      <span className="ml-1">Tìm kiếm</span>
                     </Button>
                     <Button
                       className="ml-2"
                       disabled={isSubmitting}
                       onClick={this.handleResetFilter}
                     >
-                      <i className="fa fa-refresh" /><span className="ml-1">Làm mới</span>
+                      <i className="fa fa-refresh" />
+                      <span className="ml-1">Làm mới</span>
                     </Button>
                     <Button
                       color="primary"
@@ -529,7 +583,8 @@ export default class Permissions extends PureComponent {
                       className="ml-2 "
                       disabled={isSubmitting}
                     >
-                      <i className="fa fa-edit" /><span className="ml-1">Lưu thông tin</span>
+                      <i className="fa fa-edit" />
+                      <span className="ml-1">Lưu thông tin</span>
                     </Button>
                   </div>
                 </Col>

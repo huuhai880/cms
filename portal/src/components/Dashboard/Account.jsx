@@ -54,7 +54,7 @@ class Account extends Component {
     query: {
       itemsPerPage: 10,
       page: 1,
-      is_active: 1,
+      // is_active: 1,
     }
   }
 
@@ -126,11 +126,9 @@ class Account extends Component {
   handleActionItemClick(type, id, rowIndex) {
     let routes = {
       detail: '/account/detail/',
-      delete: '/account/delete/',
-      edit: '/account/edit/',
     }
     const route = routes[type]
-    if (type.match(/detail|edit/i)) {
+    if (type.match(/detail/i)) {
       window._$g.rdr(`${route}${id}`)
     } else {
       window._$g.dialogs.prompt(
@@ -141,24 +139,24 @@ class Account extends Component {
     }
   }
 
-  handleClose(confirm, id, rowIndex) {
-    const { data } = this.state
-    if (confirm) {
-      this._accountModel.delete(id)
-        .then(() => {
-          const cloneData = JSON.parse(JSON.stringify(data))
-          cloneData.splice(rowIndex, 1)
-          this.setState({
-            data: cloneData,
-          })
-        })
-        .catch(() => {
-          window._$g.dialogs.alert(
-            window._$g._('Bạn vui lòng chọn dòng dữ liệu cần thao tác!')
-          )
-        })
-    }
-  }
+  // handleClose(confirm, id, rowIndex) {
+  //   const { data } = this.state
+  //   if (confirm) {
+  //     this._accountModel.delete(id)
+  //       .then(() => {
+  //         const cloneData = JSON.parse(JSON.stringify(data))
+  //         cloneData.splice(rowIndex, 1)
+  //         this.setState({
+  //           data: cloneData,
+  //         })
+  //       })
+  //       .catch(() => {
+  //         window._$g.dialogs.alert(
+  //           window._$g._('Bạn vui lòng chọn dòng dữ liệu cần thao tác!')
+  //         )
+  //       })
+  //   }
+  // }
 
   handleChangeRowsPerPage = (event) => {
     let query = { ...this.state.query };
@@ -213,7 +211,7 @@ class Account extends Component {
       },
       {
         name: "customer_code",
-        label: "Mã thẻ khách hàng",
+        label: "Mã khách hàng",
         options: {
           filter: false,
           sort: true,
@@ -435,46 +433,31 @@ class Account extends Component {
             )
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            let { controlIsActiveProps = {} } = this.props;
             return (
-              <div className={`text-center color-overlay`}>
-                <CheckAccess permission="CRM_CUSDATALEADS_EDIT">
-                  <FormControlLabel
-                    label={value ? "Có" : "Không"}
-                    value={value ? "Có" : "Không"}
-                    control={
-                      <Switch
-                        color="primary"
-                        checked={value === 1}
-                        value={value}
-                        disabled={true}
-                      />
-                    }
-                    {...controlIsActiveProps}
-                  />
-                </CheckAccess>
+              <div className="text-center">
+                {value? "Có": "Không"}
               </div>
-            );
+            )
           }
         },
       },
-      {
-        name: "Thao tác",
-        options: {
-          filter: false,
-          sort: false,
-          empty: true,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return (
-              <div className={`text-center color-overlay `}>
-                <Button color="warning" title="Chi tiết" className="mr-1" onClick={evt => this.handleActionItemClick('detail', this.state.data[tableMeta['rowIndex']].member_id, tableMeta['rowIndex'])}>
-                  <i className="fa fa-info" />
-                </Button>
-              </div>
-            );
-          }
-        }
-      },
+      // {
+      //   name: "Thao tác",
+      //   options: {
+      //     filter: false,
+      //     sort: false,
+      //     empty: true,
+      //     customBodyRender: (value, tableMeta, updateValue) => {
+      //       return (
+      //         <div className={`text-center color-overlay `}>
+      //           <Button color="warning" title="Chi tiết" className="mr-1" onClick={evt => this.handleActionItemClick('detail', this.state.data[tableMeta['rowIndex']].member_id, tableMeta['rowIndex'])}>
+      //             <i className="fa fa-info" />
+      //           </Button>
+      //         </div>
+      //       );
+      //     }
+      //   }
+      // },
     ]
 
     return (

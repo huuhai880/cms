@@ -50,7 +50,7 @@ class FunctionFilter extends PureComponent {
       .map((_i) => _i.value)
       .join("|");
     handleSubmit(
-      inputValue,
+      inputValue ? inputValue.trim() : "",
       selectedOption ? selectedOption.value : 2,
       functionGroupId || undefined
     );
