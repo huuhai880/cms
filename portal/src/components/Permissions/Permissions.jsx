@@ -105,6 +105,7 @@ export default class Permissions extends PureComponent {
   _handleKeyDown = (event) => {
     if (event.keyCode == 13) {
       event.preventDefault();
+      this.forceUpdate();
     }
   };
 
