@@ -177,6 +177,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                       fullname: data[tableMeta["rowIndex"]].news_comment_user_fullname,
                     })
                   }
+                  disabled={data[tableMeta["rowIndex"]].is_review_user == null}
                 >
                   <i className="fa fa-comment" />
                 </Button>

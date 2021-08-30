@@ -86,7 +86,7 @@ const createUserOrUpdate = async (bodyParams = {}) => {
       .input('USERGROUPNAME', apiHelper.getValueFromObject(bodyParams, 'user_group_name'))
       .input('BUSINESSID', apiHelper.getValueFromObject(bodyParams, 'business_id'))
       .input('DESCRIPTION', apiHelper.getValueFromObject(bodyParams, 'description'))
-      .input('ORDERINDEX', apiHelper.getValueFromObject(bodyParams, 'user_group_id'))
+      .input('ORDERINDEX', apiHelper.getValueFromObject(bodyParams, 'order_index'))
       .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active'))
       .input('ISSYSTEM', apiHelper.getValueFromObject(bodyParams, 'is_system'))
       .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_id'))
