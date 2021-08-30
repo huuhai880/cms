@@ -19,10 +19,16 @@ const ChangePassword = React.lazy(() =>
 //.end#Users
 
 // MainNumber
-const MainNumber = React.lazy(() => import("./components/MainNumber/MainNumber"));
-const MainNumberAdd = React.lazy(() => import("./components/MainNumber/MainNumberAdd"));
+const MainNumber = React.lazy(() =>
+  import("./components/MainNumber/MainNumber")
+);
+const MainNumberAdd = React.lazy(() =>
+  import("./components/MainNumber/MainNumberAdd")
+);
 // const UserDetail = React.lazy(() => import("./components/Users/UserDetail"));
-const MainNumberEdit = React.lazy(() => import("./components/MainNumber/MainNumberEdit"));
+const MainNumberEdit = React.lazy(() =>
+  import("./components/MainNumber/MainNumberEdit")
+);
 //.end#MainNumber
 
 // UserGroups
@@ -451,8 +457,12 @@ const TopicEdit = React.lazy(() => import("./components/Topic/TopicEdit"));
 // Admin Website: Account
 const Account = React.lazy(() => import("./components/Account/Account"));
 const AccountAdd = React.lazy(() => import("./components/Account/AccountAdd"));
-const AccountDetail = React.lazy(() => import("./components/Account/AccountDetail"));
-const AccountEdit = React.lazy(() => import("./components/Account/AccountEdit"));
+const AccountDetail = React.lazy(() =>
+  import("./components/Account/AccountDetail")
+);
+const AccountEdit = React.lazy(() =>
+  import("./components/Account/AccountEdit")
+);
 //.End
 // Admin Website: News
 const News = React.lazy(() => import("./components/News/News"));
@@ -2841,66 +2851,97 @@ const routes = [
     component: ReviewEdit,
   },
   // end#Review
-    // Review
-    {
-      path: "/position",
-      exact: true,
-      name: "Chức vụ",
-      function: "MD_POSITION_VIEW",
-      component: Position,
-    },
-    {
-      path: "/position/add",
-      exact: true,
-      name: "Thêm mới",
-      function: "MD_POSITION_ADD",
-      component: PositionAdd,
-    },
-    // {
-    //   path: "/review/detail/:id",
-    //   exact: true,
-    //   name: "Chi tiết",
-    //   function: "MD_POSITION_VIEW",
-    //   component: ReviewDetail,
-    // },
-    {
-      path: "/position/edit/:id",
-      exact: true,
-      name: "Chỉnh sửa",
-      function: "MD_POSITION_EDIT",
-      component: PositonEdit,
-    },
-    // end#Review
-       // MainNumber
-       {
-        path: "/main-number",
-        exact: true,
-        name: "Các con số",
-        function: "FOR_MAINNUMBER_VIEW",
-        component: MainNumber,
-      },
-      {
-        path: "/main-number/add",
-        exact: true,
-        name: "Thêm mới",
-        function: "FOR_MAINNUMBER_ADD",
-        component: MainNumberAdd,
-      },
-      // {
-      //   path: "/review/detail/:id",
-      //   exact: true,
-      //   name: "Chi tiết",
-      //   function: "MD_POSITION_VIEW",
-      //   component: ReviewDetail,
-      // },
-      {
-        path: "/main-number/edit/:id",
-        exact: true,
-        name: "Chỉnh sửa",
-        function: "FOR_MAINNUMBER_EDIT",
-        component: MainNumberEdit,
-      },
-      // end#MainNumber
+  // Review
+  {
+    path: "/position",
+    exact: true,
+    name: "Chức vụ",
+    function: "MD_POSITION_VIEW",
+    component: Position,
+  },
+  {
+    path: "/position/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "MD_POSITION_ADD",
+    component: PositionAdd,
+  },
+  // {
+  //   path: "/review/detail/:id",
+  //   exact: true,
+  //   name: "Chi tiết",
+  //   function: "MD_POSITION_VIEW",
+  //   component: ReviewDetail,
+  // },
+  {
+    path: "/position/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "MD_POSITION_EDIT",
+    component: PositonEdit,
+  },
+  // end#Review
+  // MainNumber
+  {
+    path: "/main-number",
+    exact: true,
+    name: "Các con số",
+    function: "FOR_MAINNUMBER_VIEW",
+    component: MainNumber,
+  },
+  {
+    path: "/main-number/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "FOR_MAINNUMBER_ADD",
+    component: MainNumberAdd,
+  },
+  // {
+  //   path: "/review/detail/:id",
+  //   exact: true,
+  //   name: "Chi tiết",
+  //   function: "MD_POSITION_VIEW",
+  //   component: ReviewDetail,
+  // },
+  {
+    path: "/main-number/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "FOR_MAINNUMBER_EDIT",
+    component: MainNumberEdit,
+  },
+  // end#MainNumber
+
+  //Attributes
+  {
+    path: "/attributes",
+    exact: true,
+    name: "Danh sách thuộc tính",
+    function: "FOR_ATTRIBUTES_VIEW",
+    component: Attributes,
+  },
+  {
+    path: "/attributes/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "FOR_ATTRIBUTES_ADD",
+    component: AttributesAdd,
+  },
+  {
+    path: "/attributes/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "FOR_ATTRIBUTES_VIEW",
+    component: AttributesDetail,
+  },
+  {
+    path: "/attributes/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "FOR_ATTRIBUTES_EDIT",
+    component: AttributesEdit,
+  },
+  // end#Attributes
 ];
 
 export default routes;
