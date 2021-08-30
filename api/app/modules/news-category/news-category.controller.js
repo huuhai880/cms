@@ -122,7 +122,7 @@ const deleteNewsCategory = async (req, res, next) => {
       return next(serviceRes);
     }
 
-    return res.json(new SingleResponse(null, RESPONSE_MSG.NEWSCATEGORY.DELETE_SUCCESS));
+    return res.json(new SingleResponse( serviceRes.getData(), RESPONSE_MSG.NEWSCATEGORY.DELETE_SUCCESS));
   } catch (error) {
     return next(error);
   }
