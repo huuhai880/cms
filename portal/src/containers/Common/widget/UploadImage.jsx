@@ -75,7 +75,7 @@ const UploadImage = ({
               }
               console.log({field})
               return (
-                <div className="tl-drop-image">
+                <div >
                   <DropzoneArea
                     acceptedFiles={[".jpg", ".png", ".jpeg"]}
                     filesLimit={1}

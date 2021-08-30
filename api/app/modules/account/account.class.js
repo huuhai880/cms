@@ -73,6 +73,9 @@ const template = {
   deleted_user: '{{#? DELETEDUSER}}',
   deleted_date: '{{#? DELETEDDATE}}',
   gen_customer_code: '{{#? GEN_CUSTOMER_CODE}}',
+  facebook: '{{#? FACEBOOKURL}}',
+  twitter: '{{#? TWITTERURL}}',
+
 };
 
 let transform = new Transform(template);
@@ -103,6 +106,8 @@ const detail = (user) => {
     'district_id',
     'ward_id',
     'is_active',
+    'facebook',
+    'twitter'
   ]);
 };
 const genCode = (user) => {

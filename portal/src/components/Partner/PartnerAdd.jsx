@@ -112,9 +112,7 @@ export default class PartnerAdd extends PureComponent {
     let bundle = {};
     let { partnerEnt } = this.props;
     let all = [
-      this._countryModel
-        .getOptions()
-        .then((data) => (bundle["countries"] = data)),
+      this._countryModel.getOptions().then((data) => (bundle["countries"] = data)),
       this._provinceModel
         .getOptions(CountryModel.ID_VN)
         .then((data) => (bundle["provinces"] = data)),
@@ -129,9 +127,7 @@ export default class PartnerAdd extends PureComponent {
     }
     if (partnerEnt && partnerEnt.district_id) {
       all = all.concat([
-        this._wardModel
-          .getOptions(partnerEnt.district_id)
-          .then((data) => (bundle["wards"] = data)),
+        this._wardModel.getOptions(partnerEnt.district_id).then((data) => (bundle["wards"] = data)),
       ]);
     }
 
@@ -203,7 +199,8 @@ export default class PartnerAdd extends PureComponent {
     password: this.props.partnerEnt
       ? undefined
       : Yup.string()
-          .trim()          .required("Mật khẩu là bắt buộc.")
+          .trim()
+          .required("Mật khẩu là bắt buộc.")
           .matches(
             /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*()\-_=+{};:,<.>])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/,
             "Mật khẩu yêu cầu 8 kí tự bao gồm chữ hoa , chữ thường, số, và kí tự đặc biệt."
@@ -211,10 +208,7 @@ export default class PartnerAdd extends PureComponent {
     ower_phone_1: Yup.string()
       .matches(/^\d{10,11}$/, "Số điện thoại không hợp lệ!")
       .required("Số điện thoại là bắt buộc."),
-    ower_phone_2: Yup.string().matches(
-      /^\d{10,11}$/,
-      "Số điện thoại không hợp lệ!"
-    ),
+    ower_phone_2: Yup.string().matches(/^\d{10,11}$/, "Số điện thoại không hợp lệ!"),
     // email: Yup.string().matches(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, "Nhập cho đúng định dạng mail vào"),
   });
 
@@ -261,8 +255,7 @@ export default class PartnerAdd extends PureComponent {
     });
     //
 
-    const partnerId =
-      (partnerEnt && partnerEnt.partner_id) || formData[this._partnerModel];
+    const partnerId = (partnerEnt && partnerEnt.partner_id) || formData[this._partnerModel];
     let apiCall = partnerId
       ? this._partnerModel.update(partnerId, formData)
       : this._partnerModel.create(formData);
@@ -280,9 +273,12 @@ export default class PartnerAdd extends PureComponent {
       .catch((apiData) => {
         // NG
         let { errors, statusText, message } = apiData;
-        let msg = [`<b>${statusText || message}</b>`]
-          .concat(errors || [])
-          .join("<br/>");
+
+        let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
+        // console.log(message)
+        if (message == "Số điện thoại đối tác đã tồn tại.") {
+          document.getElementById("phone_number").focus();
+        }
         alerts.push({ color: "danger", msg });
       })
       .finally(() => {
@@ -324,6 +320,8 @@ export default class PartnerAdd extends PureComponent {
     }
 
     let { alerts, countries, provinces, districts, wards } = this.state;
+    // console.log(alerts[0])
+    // console.log(alerts[0].msg=="Số điện thoại đối tác đã tồn tại.")
 
     /** @var {Object} */
     let initialValues = this.getInitialValues();
@@ -381,11 +379,7 @@ export default class PartnerAdd extends PureComponent {
                     this.handleFormikBeforeRender({ initialValues });
                     // Render
                     return (
-                      <Form
-                        id="form1st"
-                        onSubmit={handleSubmit}
-                        onReset={handleReset}
-                      >
+                      <Form id="form1st" onSubmit={handleSubmit} onReset={handleReset}>
                         <Row className="mb15">
                           <Col xs={12}>
                             <b className="underline">Thông tin đối tác</b>
@@ -396,9 +390,7 @@ export default class PartnerAdd extends PureComponent {
                             <FormGroup row>
                               <Label for="partner_name" sm={2}>
                                 Tên đối tác
-                                <span className="font-weight-bold red-text">
-                                  *
-                                </span>
+                                <span className="font-weight-bold red-text">*</span>
                               </Label>
                               <Col sm={10}>
                                 <Field
@@ -417,10 +409,7 @@ export default class PartnerAdd extends PureComponent {
                                 <ErrorMessage
                                   name="partner_name"
                                   component={({ children }) => (
-                                    <Alert
-                                      color="danger"
-                                      className="field-validation-error"
-                                    >
+                                    <Alert color="danger" className="field-validation-error">
                                       {children}
                                     </Alert>
                                   )}
@@ -499,9 +488,7 @@ export default class PartnerAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="phone_number" sm={4}>
                                     Số điện thoại
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -520,10 +507,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="phone_number"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -553,10 +537,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="email"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -588,10 +569,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="fax"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -621,10 +599,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="tax_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -689,10 +664,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="bank_name"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -722,10 +694,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="bank_routing"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -755,10 +724,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="bank_account_name"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -788,10 +754,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="bank_account_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -810,9 +773,7 @@ export default class PartnerAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="country_id" sm={4}>
                                     Quốc gia
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -825,8 +786,7 @@ export default class PartnerAdd extends PureComponent {
                                           })
                                         );
                                         let defaultValue = options.find(
-                                          ({ value }) =>
-                                            1 * value === 1 * field.value
+                                          ({ value }) => 1 * value === 1 * field.value
                                         );
                                         return (
                                           <Select
@@ -840,18 +800,11 @@ export default class PartnerAdd extends PureComponent {
                                                   value: item.value,
                                                 },
                                               };
-                                              this.handleChangeAddress(
-                                                "country_id",
-                                                event
-                                              );
+                                              this.handleChangeAddress("country_id", event);
                                               field.onChange(event);
                                             }}
                                             isSearchable={true}
-                                            placeholder={
-                                              (options[0] &&
-                                                options[0].label) ||
-                                              ""
-                                            }
+                                            placeholder={(options[0] && options[0].label) || ""}
                                             defaultValue={defaultValue}
                                             options={options}
                                             isDisabled={noEdit}
@@ -862,10 +815,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="country_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -877,9 +827,7 @@ export default class PartnerAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="province_id" sm={4}>
                                     Tỉnh/Thành phố
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -892,12 +840,9 @@ export default class PartnerAdd extends PureComponent {
                                           })
                                         );
                                         let defaultValue = options.find(
-                                          ({ value }) =>
-                                            1 * value === 1 * field.value
+                                          ({ value }) => 1 * value === 1 * field.value
                                         );
-                                        let placeholder =
-                                          (provinces[0] && provinces[0].name) ||
-                                          "";
+                                        let placeholder = (provinces[0] && provinces[0].name) || "";
                                         return (
                                           <Select
                                             id="province_id"
@@ -910,10 +855,7 @@ export default class PartnerAdd extends PureComponent {
                                                   value: item.value,
                                                 },
                                               };
-                                              this.handleChangeAddress(
-                                                "province",
-                                                event
-                                              );
+                                              this.handleChangeAddress("province", event);
                                               field.onChange(event);
                                             }}
                                             isSearchable={true}
@@ -928,10 +870,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="province_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -945,9 +884,7 @@ export default class PartnerAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="district_id" sm={4}>
                                     Quận/Huyện
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -960,12 +897,9 @@ export default class PartnerAdd extends PureComponent {
                                           })
                                         );
                                         let defaultValue = options.find(
-                                          ({ value }) =>
-                                            1 * value === 1 * field.value
+                                          ({ value }) => 1 * value === 1 * field.value
                                         );
-                                        let placeholder =
-                                          (districts[0] && districts[0].name) ||
-                                          "";
+                                        let placeholder = (districts[0] && districts[0].name) || "";
                                         return (
                                           <Select
                                             id="district_id"
@@ -978,10 +912,7 @@ export default class PartnerAdd extends PureComponent {
                                                   value: item.value,
                                                 },
                                               };
-                                              this.handleChangeAddress(
-                                                "district",
-                                                event
-                                              );
+                                              this.handleChangeAddress("district", event);
                                               field.onChange(event);
                                             }}
                                             isSearchable={true}
@@ -996,10 +927,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="district_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1011,26 +939,20 @@ export default class PartnerAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="ward_id" sm={4}>
                                     Phường/Xã
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
                                       name="ward_id"
                                       render={({ field /*, form*/ }) => {
-                                        let options = wards.map(
-                                          ({ name: label, id: value }) => ({
-                                            value,
-                                            label,
-                                          })
-                                        );
+                                        let options = wards.map(({ name: label, id: value }) => ({
+                                          value,
+                                          label,
+                                        }));
                                         let defaultValue = options.find(
-                                          ({ value }) =>
-                                            1 * value === 1 * field.value
+                                          ({ value }) => 1 * value === 1 * field.value
                                         );
-                                        let placeholder =
-                                          (wards[0] && wards[0].name) || "";
+                                        let placeholder = (wards[0] && wards[0].name) || "";
                                         return (
                                           <Select
                                             id="ward_id"
@@ -1043,10 +965,7 @@ export default class PartnerAdd extends PureComponent {
                                                   value: item.value,
                                                 },
                                               };
-                                              this.handleChangeAddress(
-                                                "ward",
-                                                event
-                                              );
+                                              this.handleChangeAddress("ward", event);
                                               field.onChange(event);
                                             }}
                                             isSearchable={true}
@@ -1061,10 +980,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="ward_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1078,9 +994,7 @@ export default class PartnerAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="address" sm={2}>
                                     Địa Chỉ
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={10}>
                                     <Field
@@ -1099,10 +1013,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="address"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1121,9 +1032,7 @@ export default class PartnerAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="ower_name" sm={4}>
                                     Tên người đại diện
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -1142,10 +1051,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="ower_name"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1157,9 +1063,7 @@ export default class PartnerAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="ower_email" sm={4}>
                                     Email
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -1178,10 +1082,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="ower_email"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1195,9 +1096,7 @@ export default class PartnerAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="user_name" sm={4}>
                                     Tài khoản
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -1216,10 +1115,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="user_name"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1235,9 +1131,7 @@ export default class PartnerAdd extends PureComponent {
                                 >
                                   <Label for="Password" sm={4}>
                                     Mật khẩu
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={8}>
                                     <InputGroup>
@@ -1248,9 +1142,7 @@ export default class PartnerAdd extends PureComponent {
                                             {...field}
                                             onBlur={null}
                                             type={`${
-                                              this.state.passwordVisible
-                                                ? "text"
-                                                : "password"
+                                              this.state.passwordVisible ? "text" : "password"
                                             }`}
                                             name="password"
                                             id="password"
@@ -1264,8 +1156,7 @@ export default class PartnerAdd extends PureComponent {
                                           block
                                           disabled={noEdit || partnerEnt}
                                           onClick={() => {
-                                            let { passwordVisible } =
-                                              this.state;
+                                            let { passwordVisible } = this.state;
                                             this.setState({
                                               passwordVisible: !passwordVisible,
                                             });
@@ -1273,9 +1164,7 @@ export default class PartnerAdd extends PureComponent {
                                         >
                                           <i
                                             className={`fa ${
-                                              this.state.passwordVisible
-                                                ? "fa-eye-slash"
-                                                : "fa-eye"
+                                              this.state.passwordVisible ? "fa-eye-slash" : "fa-eye"
                                             }`}
                                           />
                                         </Button>
@@ -1284,10 +1173,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="password"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1301,9 +1187,7 @@ export default class PartnerAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="ower_phone_1" sm={4}>
                                     Số điện thoại 1
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -1322,10 +1206,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="ower_phone_1"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1355,10 +1236,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="ower_phone_2"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1399,10 +1277,7 @@ export default class PartnerAdd extends PureComponent {
                                     <ErrorMessage
                                       name="is_active"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1420,9 +1295,7 @@ export default class PartnerAdd extends PureComponent {
                                       color="primary"
                                       className="mr-2 btn-block-sm"
                                       onClick={() =>
-                                        window._$g.rdr(
-                                          `/partner/edit/${partnerEnt.partner_id}`
-                                        )
+                                        window._$g.rdr(`/partner/edit/${partnerEnt.partner_id}`)
                                       }
                                     >
                                       <i className="fa fa-edit mr-1" />
@@ -1447,9 +1320,7 @@ export default class PartnerAdd extends PureComponent {
                                       type="submit"
                                       color="success"
                                       disabled={isSubmitting}
-                                      onClick={() =>
-                                        this.handleSubmit("save_n_close")
-                                      }
+                                      onClick={() => this.handleSubmit("save_n_close")}
                                       className="mr-2 btn-block-sm mt-md-0 mt-sm-2"
                                     >
                                       <i className="fa fa-save mr-2" />

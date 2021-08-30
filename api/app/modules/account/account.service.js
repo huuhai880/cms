@@ -141,7 +141,7 @@ const createCRMAccountOrUpdate = async (body = {}) => {
     await transaction.begin();
     let password = apiHelper.getValueFromObject(body, 'pass_word');
     password = stringHelper.hashPassword(password);
-
+    // console.log(body)
     /////create;
     const requestAccount = new sql.Request(transaction);
     const resultAccount = await requestAccount

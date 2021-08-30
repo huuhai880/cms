@@ -53,7 +53,7 @@ function PositionAdd() {
         // console.log(data)
         if (data.POSITIONID && formik.values.position_name != dataPosition.position_name) {
           // setalert("Email đã tồn tại!");
-          formik.setFieldError("position_name", "Tên thuộc tính đã tồn tại!");
+          formik.setFieldError("position_name", "Tên chức vụ đã tồn tại!");
           window.scrollTo(0, 0);
         } else {
           _positionModel.create(values).then((data) => {
