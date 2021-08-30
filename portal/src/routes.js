@@ -2841,69 +2841,6 @@ const routes = [
     component: ReviewEdit,
   },
   // end#Review
-<<<<<<< HEAD
-  // Review
-  {
-    path: "/position",
-    exact: true,
-    name: "Chức vụ",
-    function: "MD_POSITION_VIEW",
-    component: Position,
-  },
-  {
-    path: "/position/add",
-    exact: true,
-    name: "Thêm mới",
-    function: "MD_POSITION_ADD",
-    component: PositionAdd,
-  },
-  // {
-  //   path: "/review/detail/:id",
-  //   exact: true,
-  //   name: "Chi tiết",
-  //   function: "MD_POSITION_VIEW",
-  //   component: ReviewDetail,
-  // },
-  {
-    path: "/position/edit/:id",
-    exact: true,
-    name: "Chỉnh sửa",
-    function: "MD_POSITION_EDIT",
-    component: PositonEdit,
-  },
-  // end#Review
-
-  //Attributes
-  {
-    path: "/attributes",
-    exact: true,
-    name: "Danh sách thuộc tính",
-    function: "FOR_ATTRIBUTES_VIEW",
-    component: Attributes,
-  },
-  {
-    path: "/attributes/add",
-    exact: true,
-    name: "Thêm mới",
-    function: "FOR_ATTRIBUTES_ADD",
-    component: AttributesAdd,
-  },
-  {
-    path: "/attributes/detail/:id",
-    exact: true,
-    name: "Chi tiết",
-    function: "FOR_ATTRIBUTES_VIEW",
-    component: AttributesDetail,
-  },
-  {
-    path: "/attributes/edit/:id",
-    exact: true,
-    name: "Chỉnh sửa",
-    function: "FOR_ATTRIBUTES_EDIT",
-    component: AttributesEdit,
-  },
-  // end#Attributes
-=======
     // Review
     {
       path: "/position",
@@ -2964,7 +2901,6 @@ const routes = [
         component: MainNumberEdit,
       },
       // end#MainNumber
->>>>>>> feature/20210826_MAINNUMBER
 ];
 
 export default routes;
