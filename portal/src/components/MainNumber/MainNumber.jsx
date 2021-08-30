@@ -7,16 +7,20 @@ import { getColumTable } from "./const";
 import MUIDataTable from "mui-datatables";
 import { configTableOptions } from "../../utils/index";
 import CustomPagination from "../../utils/CustomPagination";
+import MainNumberModel from "../../models/MainNumberModel";
+
 layoutFullWidthHeight();
 
 function MainNumber() {
+  const _mainNumberModel = new MainNumberModel();
+
   const [dataNumber, setDataNumber] = useState([]);
   const [toggleSearch, settoggleSearch] = useState(true);
   const [isLoading, setisLoading] = useState(true);
   const [query, setQuery] = useState({
-    itemsPerPage: 25,
+    itemsPerPage: 10,
     page: 1,
-    is_active: 1,
+    selectdActive: 1,
   });
   //// init data
   useEffect(() => {
@@ -31,10 +35,10 @@ function MainNumber() {
   ////call API
   const _callAPI = async (props) => {
     try {
-      //   await _accountModel.getList(props).then((data) => {
-      //     setDataAccount(data);
-      //     // console.log(data);
-      //   });
+      await _mainNumberModel.getListNumber(props).then((data) => {
+        setDataNumber(data);
+        // console.log(data);
+      });
     } catch (error) {
       console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
@@ -47,17 +51,17 @@ function MainNumber() {
   const handleDelete = (id) => {
     window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "xóa", (confirm) => {
       if (confirm) {
-        // try {
-        //   _accountModel.delete(id).then((data) => {
-        //     window._$g.toastr.show("Xóa thành công", "success");
-        //     _callAPI(query);
-        //   });
-        // } catch (error) {
-        //   console.log(error);
-        //   window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
-        // } finally {
-        //   setisLoading(false);
-        // }
+        try {
+          _mainNumberModel.delete(id).then((data) => {
+            window._$g.toastr.show("Xóa thành công", "success");
+            _callAPI(query);
+          });
+        } catch (error) {
+          console.log(error);
+          window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+        } finally {
+          setisLoading(false);
+        }
       }
     });
   };
@@ -73,7 +77,7 @@ function MainNumber() {
         {toggleSearch && (
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-filter__custom">
-              <Filter handleSubmit={handleSubmitFillter} />
+              <Filter handleSubmitFillter={handleSubmitFillter} />
             </div>
           </CardBody>
         )}

@@ -11,7 +11,18 @@ import { Button } from "reactstrap";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import * as yup from "yup";
-
+export const initialValues = {
+  main_number_id: "",
+  main_number: "",
+  is_active: 1,
+  main_number_desc: "",
+  main_number_img: [],
+};
+///// validate
+export const validationSchema = yup.object().shape({
+  main_number: yup.string().required("Con số không được để trống .").nullable(),
+  main_number_img:yup.array().required("Danh sách hình ảnh không được để trống .").nullable(),
+});
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   // console.log(data);
   return [
@@ -28,6 +39,9 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
               <div className="text-center">{columnMeta.label}</div>
             </th>
           );
+        },
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return <div className="text-center">{value}</div>;
         },
       },
     },
@@ -53,7 +67,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
       },
     },
     {
-      name: "main_number_decs",
+      name: "main_number_desc",
       label: "Mô tả",
       options: {
         filter: false,
