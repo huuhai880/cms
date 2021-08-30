@@ -72,6 +72,7 @@ class News extends Component {
     isOpenReview: false,
     currentItem: {},
     isRequireNote: false,
+    _pickDataItems: {}
   };
 
   componentDidMount() {
@@ -89,7 +90,10 @@ class News extends Component {
       let { newsCategoryArr = [], newsStatusArr = [] } = this.state;
       newsCategoryArr = newsCategoryArr.concat(bundle.newsCategoryArr || []);
       newsStatusArr = newsStatusArr.concat(bundle.newsStatusArr || []);
-      //
+      const _pickDataItems = this.props.related ? (this.props.related||[]).reduce((obj, item) => {
+        obj[item.news_id] = item;
+        return obj;
+      }, {}) : {};
       this.setState(
         {
           isLoading,
@@ -101,10 +105,14 @@ class News extends Component {
             page,
             newsCategoryArr: newsCategoryArr,
             newsStatusArr: newsStatusArr,
+            _pickDataItems
           });
         }
       );
     })();
+    if(this.props.related){
+      
+    }
     //.end
   }
 
@@ -322,7 +330,7 @@ class News extends Component {
   handlePickNews = () => {
     const { handlePick } = this.props;
     if (handlePick) {
-      handlePick(this._pickDataItems);
+      handlePick(this.state._pickDataItems);
     }
   };
 
@@ -484,18 +492,19 @@ class News extends Component {
           empty: true,
           customBodyRender: (value, tableMeta, updateValue) => {
             if (handlePick) {
+              let item = this.state.data[tableMeta["rowIndex"]];
+              let { _pickDataItems = {} } = this.state;
               return (
                 <div className="text-center mb-1">
                   <Checkbox
+                    checked={!!_pickDataItems[item.news_id]}
                     onChange={({ target }) => {
-                      let item = this.state.data[tableMeta["rowIndex"]];
-                      let { _pickDataItems = {} } = this;
                       if (target.checked) {
                         _pickDataItems[item.news_id] = item;
                       } else {
                         delete _pickDataItems[item.news_id];
                       }
-                      Object.assign(this, { _pickDataItems });
+                      this.setState({_pickDataItems})
                     }}
                   />
                 </div>
