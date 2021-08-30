@@ -40,7 +40,7 @@ class DefaultHeader extends Component {
         <Nav className="ml-auto" navbar>
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav>
-              <img className="img-avatar" alt="avatars" src={userAuth && userAuth.defaultPictureUrl()} />
+              <img className="img-avatar" style={{width: 35, objectFit:'cover'}} alt="avatars" src={userAuth && userAuth.defaultPictureUrl()} />
               <span className="none767 mr-3">
                 {userAuth ? `${userAuth.user_name} - ${userAuth._fullname()}` : ''}
               </span>

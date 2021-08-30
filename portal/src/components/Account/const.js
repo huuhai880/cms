@@ -221,7 +221,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   title="Chỉnh sửa"
                   className="mr-1"
                   onClick={(evt) => {
-                    window._$g.rdr(`/account-new/edit/${data[tableMeta["rowIndex"]].member_id}`);
+                    window._$g.rdr(`/account/edit/${data[tableMeta["rowIndex"]].member_id}`);
                   }}
                 >
                   <i className="fa fa-edit" />

@@ -1,8 +1,5 @@
-import React, { Component } from "react";
-import { Formik, Field, ErrorMessage } from 'formik';
-import * as Yup from "yup";
+import React, { useState, useEffect } from "react";
 import {
-  Alert,
   Card,
   CardBody,
   CardHeader,
@@ -15,1142 +12,971 @@ import {
   Input,
   CustomInput,
   Media,
+  Nav,
+  NavItem,
+  NavLink,
+  TabPane,
+  TabContent,
   InputGroup,
   InputGroupAddon,
-  // InputGroupText,
-  Table
 } from "reactstrap";
-import Select from "react-select";
+import { useParams } from "react-router";
+import { layoutFullWidthHeight } from "../../utils/html";
+import { useFormik } from "formik";
+import { initialValues } from "./const";
+import { readFileAsBase64 } from "../../utils/html";
+import AccountModel from "../../models/AccountModel";
+import DatePicker from "../Common/DatePicker";
 import moment from "moment";
-
-// Component(s)
+import { Radio } from "antd";
+import Upload from "../Common/Antd/Upload";
+import AcccountAddress from "./AcccountAddress";
 import { CheckAccess } from '../../navigation/VerifyAccess'
-import Loading from '../Common/Loading';
-import Address, { DEFAULT_COUNTRY_ID } from '../Common/Address';
-import DatePicker from '../Common/DatePicker';
+import { Modal } from "antd";
+import "./styles.scss";
+import "./style.css";
+import * as yup from "yup";
 
-// Util(s)
-import { readFileAsBase64 } from '../../utils/html';
-// Model(s)
-import AccountModel from "../../models/AccountModel"; 
-
-/**
- * @class AccountAdd
- */
-export default class AccountAdd extends Component {
-
-  /** @var {Object} */
-  formikProps = null;
-  
-  constructor(props) {
-    super(props);
-
-    // Init model(s)
-    this._accountModel = new AccountModel(); 
-    // Bind method(s)
-    this.handleUserImageChange = this.handleUserImageChange.bind(this);
-    this.handleAddUserGroup = this.handleAddUserGroup.bind(this);
-    this.handleRemoveUserGroup = this.handleRemoveUserGroup.bind(this);
-    this.handleFormikBeforeRender = this.handleFormikBeforeRender.bind(this);
-    this.handleFormikSubmit = this.handleFormikSubmit.bind(this);
-    this.handleFormikReset = this.handleFormikReset.bind(this);
-
-    // Init state
-    // +++
-    let { AccountEnt } = props;
-    // let {} = AccountEnt || {};
-    // +++
-    this.state = {
-      /** @var {Number} */
-      _id: 0,
-      /** @var {Array} */
-      alerts: [],
-      /** @var {String|null} */
-      usrImgBase64: (AccountEnt && AccountEnt.defaultPictureUrl()) || null,
-      /** @var {Boolean} */
-      ready: false,
-      /** @var {Object|null} */
-      userData: null,
-      /** @var {Array} */
-      userGroups: [
-        { name: "-- Nhóm người dùng --", id: "" },
-      ],
-      /** @var {Array} */
-      positions: [
-        { name: "-- Chọn --", id: "" },
-      ],
-      /** @var {Array} */
-      departments: [
-        { name: "-- Chọn --", id: "" },
-      ],
-      /** @var {Array} */
-      genders: [
-        { name: "Nam", id: "1" },
-        { name: "Nữ", id: "0" },
-      ],
-      maritalStatus:[
-        { name: "Chưa kết hôn", id: "0" },
-        { name: "Đã kết hôn", id: "1" },
-      ],
-    };
-
-    // Init validator
-    this.formikValidationSchema = Yup.object().shape({
-      user_name: Yup.string().trim()
-        .required("ID khách hàng là bắt buộc."),
-      password: AccountEnt ? undefined : Yup.string().trim()
-        .min(8, 'Mật khẩu quá ngắn, ít nhất 8 ký tự!')
-        .max(25, 'Mật khẩu quá dài, tối đa 25 ký tự!')
-        .required("Mật khẩu là bắt buộc."),
-      gender: Yup.number()
-        .required("Giới tính là bắt buộc."),
-      birth_day: Yup.string().trim()
-        .required("Ngày sinh là bắt buộc."),
-      phone_number: Yup.string().trim()
-        .matches(/^\d{10,11}$/, 'Điện thoại không hợp lệ!')
-        .required("Điện thoại là bắt buộc."),
-      phone_number_1: Yup.string().trim()
-       .matches(/^\d{10,11}$/, 'Điện thoại không hợp lệ!'),
-    });
-  }
-
-  componentDidMount() {
-    // Get bundle data --> ready data
-    (async () => {
-      let bundle = await this._getBundleData();
-      this.setState({ ...bundle, ready: true });
-    })();
-    //.end
-  }
-
-  /**
-   * 
-   * @return {Object}
-   */
-  getInitialValues() {
-    let { AccountEnt } = this.props;
-    let { accountData = {} } = this.state;
-    let values = Object.assign(
-      {}, this._accountModel.fillable(),
-      {
-        // Set default country to 'VN'
-        country_id: DEFAULT_COUNTRY_ID,
-      },
-      accountData
-    );
-    if (AccountEnt) {
-      Object.assign(values, AccountEnt);
+layoutFullWidthHeight();
+function AccountAdd({ noEdit }) {
+  let { id } = useParams();
+  const [activeTab, setActiveTab] = useState("INFO");
+  const [dataAccount, setDataAccount] = useState(initialValues);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [value, setValue] = useState(1);
+  const _accountModel = new AccountModel();
+  const [btnType, setbtnType] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [password, setPassword] = useState("");
+  const [password_confirm, setPasswordconfirm] = useState("");
+  const [alerPassword, setAlerPassword] = useState("");
+  const validationSchema = yup.object().shape({
+    user_name: yup
+      .string()
+      .required("Tên đăng nhập không được để trống .")
+      .nullable()
+      .email("Vui lòng nhập tên đăng nhập theo đinh dạng email ."),
+    pass_word: id
+      ? undefined
+      : yup
+        .string()
+        .required("Mật khẩu không được để trống .")
+        .matches(
+          /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*[0-9]){1})((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+          "Mật khẩu tối thiêu 8 ký tự, 1 ký tự thường, 1 ký tự hoa và 1 số ."
+        ),
+    full_name: yup.string().required("Họ và tên khai sinh không được để trống .").nullable(),
+    nick_name: yup.string().required("Họ và tên không được để trống .").nullable(),
+    birth_day: yup.string().required("Ngày sinh không được để trống .").nullable(),
+    email: yup
+      .string()
+      .required("Email không được để trống .")
+      .nullable()
+      .email("Vui lòng nhập tên đăng nhập theo đinh dạng email ."),
+    id_card: yup.string().required("Số CMND/CCCD không được để trống .").nullable(),
+    id_card_place: yup.string().required("Nơi cấp không được để trống .").nullable(),
+    id_card_date: yup.string().required("Ngày cấp không được để trống .").nullable(),
+    // ward_id: yup.string().required("Phường/ Xã không được để trống !").nullable(),
+    // province_id: yup.string().required("Tỉnh/ Thành phố không được để trống !").nullable(),
+    // district_id: yup.string().required("Quận/ Huyện không được để trống !").nullable(),
+    phone_number: yup
+      .string()
+      .required("Số điện thoại không được để trống .")
+      .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ"),
+  });
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: dataAccount,
+    validationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
+    onSubmit: (values) => {
+      if (id) {
+        handleUpdateAcount(values);
+      } else {
+        handleCreateAcount(values);
+      }
+    },
+  });
+  //// update account
+  const handleUpdateAcount = async (values) => {
+    try {
+      await _accountModel.check({ email: values.email }).then((data) => {
+        // console.log(data)
+        if (data.MEMBERID && formik.values.email != dataAccount.email) {
+          // setalert("Email đã tồn tại!");
+          formik.setFieldError("email", "Email đã tồn tại!");
+          // window.scrollTo(0, 0);
+        } else {
+          _accountModel.update(id, values).then((data) => {
+            if (btnType == "save") {
+              setDataAccount(initialValues);
+              // _initData();
+              _initDataDetail();
+              window._$g.toastr.show("Lưu thành công!", "success");
+            } else if (btnType == "save&quit") {
+              window._$g.toastr.show("Lưu thành công!", "success");
+              setDataAccount(initialValues);
+              return window._$g.rdr("/account");
+            }
+            // console.log(data);
+          });
+          // console.log(data);
+        }
+      });
+    } catch (error) { }
+  };
+  // console.log(dataAccount)
+  //// create account
+  const handleCreateAcount = async (values) => {
+    try {
+      await _accountModel.check({ email: values.email }).then((data) => {
+        // console.log(data)
+        if (data.MEMBERID) {
+          // setalert("Email đã tồn tại!");
+          formik.setFieldError("email", "Email đã tồn tại!");
+          // window.scrollTo(0, 0);
+        } else {
+          _accountModel.create(values).then((data) => {
+            if (btnType == "save") {
+              formik.resetForm();
+              _initData();
+              window._$g.toastr.show("Lưu thành công!", "success");
+            } else if (btnType == "save&quit") {
+              window._$g.toastr.show("Lưu thành công!", "success");
+              setDataAccount(initialValues);
+              return window._$g.rdr("/account");
+            }
+            // console.log(data);
+          });
+        }
+      });
+    } catch (error) { }
+  };
+  //// scroll to error
+  useEffect(() => {
+    if (!formik.isSubmitting) return;
+    if (Object.keys(formik.errors).length > 0) {
+      document.getElementsByName(Object.keys(formik.errors)[0])[0].focus();
     }
-    // Format
-    Object.keys(values).forEach(key => {
-      if (null === values[key]) {
-        values[key] = "";
-      }
-      // values[key] += '';
-      // birthday
-      if (key === 'birth_day') {
-        let bdArr = values[key].match(/(\d{2})[/-](\d{2})[/-](\d{4})/);
-        bdArr && (values[key] = `${bdArr[3]}-${bdArr[2]}-${bdArr[1]}`);
-      }
-      // user_groups
-      if (key === 'user_groups') {
-        values[key] = values[key] || [];
-      }
-    });
-
-    // Return;
-    return values;
-  }
-
-  /**
-   * Goi API, lay toan bo data lien quan, vd: chuc vu, phong ban, dia chi,...
-   */
-  async _getBundleData() { 
-    let bundle = {};
-    let all = [];
-    await Promise.all(all)
-      .catch(err => window._$g.dialogs.alert(
-        window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
-        () => window.location.reload()
-      ))
-    ;
-    //
-    Object.keys(bundle).forEach((key) => {
-      let data = bundle[key];
-      let stateValue = this.state[key];
-      if (data instanceof Array && stateValue instanceof Array) {
-        data = [stateValue[0]].concat(data);
-      }
-      bundle[key] = data;
-    });
-    // console.log('bundle: ', bundle);
-    //
-    return bundle;
-  }
-
-  makeAvatarStr(values = {})
-  {
-    let {
-      positions = [],
-      departments = []
-    } = this.state;
-    let position = positions.find(p => ('' + p.id) === ('' + values.position_id));
-    let department = departments.find(d => ('' + d.id) === ('' + values.department_id));
-    return [
-      [
-        values.user_name,
-        [values.first_name, values.last_name].filter(_d => !!_d).join(' '),
-      ].filter(_d => !!_d).join(' - '),
-      [
-        (position && position.id) ? position && position.name : '',
-        (department && department.id) ? department && department.name : ''
-      ].filter(_d => !!_d).join(' - '),
-    ];
-  }
-
-  handleUserImageChange(event) {
+  }, [formik]);
+  ////gen code
+  const _initData = async () => {
+    try {
+      await _accountModel.GenCode().then((data) => {
+        formik.setFieldValue("customer_code", data.customer_code);
+        // formik.setFieldValue("customer_code", data.customer_code);
+      });
+    } catch (error) {
+      console.log(error);
+      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
+    }
+  };
+  useEffect(() => {
+    _initData();
+  }, []);
+  const _initDataDetail = async () => {
+    try {
+      await _accountModel.read(id).then((data) => {
+        // console.log(data)
+        setDataAccount(data);
+      });
+    } catch (error) {
+      console.log(error);
+      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
+    }
+  };
+  useEffect(() => {
+    if (id) {
+      _initDataDetail();
+    }
+  }, [id]);
+  /////// config img
+  const handleUserImageChange = (event) => {
     let { target } = event;
     if (target.files[0]) {
       readFileAsBase64(target, {
         // option: validate input
         validate: (file) => {
           // Check file's type
-          if ('type' in file) {
-            if (file.type.indexOf('image/') !== 0) {
-              return 'Chỉ được phép sử dụng tập tin ảnh.';
+          if ("type" in file) {
+            if (file.type.indexOf("image/") !== 0) {
+              return "Chỉ được phép sử dụng tập tin ảnh.";
             }
           }
           // Check file's size in bytes
-          if ('size' in file) {
+          if ("size" in file) {
             let maxSize = 4; /*4mb*/
-            if ((file.size / 1024 / 1024) > maxSize) {
+            if (file.size / 1024 / 1024 > maxSize) {
               return `Dung lượng tập tin tối đa là: ${maxSize}mb.`;
             }
           }
-        }
+        },
       })
-        .then(usrImgBase64 => {
-          this.setState({ usrImgBase64 });
+        .then((usrImgBase64) => {
+          formik.setFieldValue("image_avatar", usrImgBase64[0]);
         })
-        .catch(err => {
+        .catch((err) => {
           window._$g.dialogs.alert(window._$g._(err.message));
-        })
-      ;
-    }
-  }
-
-  handleAddUserGroup({ item/*, action*/, form: { values, handleChange } }) {
-    if (item && item.value) {
-      let { userGroups = [] } = this.state;
-      let { user_groups = [] } = values;
-      let fItem = userGroups.find(_item => ('' + _item.id) === ('' + item.value));
-      let dupId = user_groups.find(id => ('' + id) === ('' + item.value));
-      if (fItem && !dupId) {
-        user_groups.push(fItem.id);
-        handleChange({
-          target: { type: 'select', name: 'user_groups', value: user_groups }
         });
+    }
+  };
+  //config modal
+  const handleOk = async () => {
+    if (password == "" || password_confirm == "") {
+      setAlerPassword("Vui lòng điền đầy đủ thông tin");
+    } else if (password != password_confirm) {
+      setAlerPassword("Mật khẩu nhập lại không đúng");
+    } else {
+      setAlerPassword("");
+      try {
+        let formData = { password: password };
+        await _accountModel.changePassword(id, formData).then((data) => {
+          window._$g.toastr.show("thay đổi mật khẩu thành công!", "success");
+          _initDataDetail();
+          setIsModalVisible(false);
+        });
+      } catch (error) {
+        console.log(error);
+        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
       }
     }
-  }
+  };
 
-  handleRemoveUserGroup({ item/*, event*/, form: { values, handleChange } }) {
-    if (item && item.id) {
-      let { user_groups } = values;
-      let fIdx = user_groups.findIndex(id => ('' + id) === ('' + item.id));
-      if (fIdx >= 0) {
-        user_groups.splice(fIdx, 1);
-        handleChange({
-          target: { type: 'select', name: 'user_groups', value: user_groups }
-        });
-      }
-    }
-  }
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  return (
+    <div key={`view`} className="animated fadeIn news">
+      <Row className="d-flex justify-content-center">
+        <Col xs={12}>
+          <Card>
+            <CardHeader>
+              <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} khách hàng </b>
+            </CardHeader>
 
-  handleFormikBeforeRender({ initialValues }) {
-    let { values } = this.formikProps;
-    if (values === initialValues) {
-      return;
-    }
-    // Reformat data
-    let province_id = values.country_id ? values.province_id : "";
-    let district_id = province_id ? values.district_id : "";
-    let ward_id = district_id ? values.ward_id : "";
-    // +++
-    Object.assign(values, {
-      // +++ address
-      province_id,
-      district_id,
-      ward_id
-    });
-    // console.log('formikBfRender: ', values);
-  }
-
-  /** @var {String} */
-  _btnType = null;
-
-  handleSubmit(btnType) { 
-    let { submitForm } = this.formikProps;
-    this._btnType = btnType; 
-    return submitForm();
-  }
-
-  handleFormikSubmit(values, formProps) { 
-    let { AccountEnt } = this.props;
-    let { usrImgBase64 } = this.state;
-    let { setSubmitting } = formProps;
-    let willRedirect = false;
-    let alerts = [];
-    // Build form data
-    // +++
-    let { birth_day,id_card_date } = values;
-    let bdArr = (birth_day && moment(birth_day).format("MM/DD/YYYY")) || '';
-    let cdArr = (id_card_date && moment(id_card_date).format("DD/MM/YYYY")) || '';
-    let member_id = (AccountEnt && AccountEnt.member_id) ? AccountEnt.member_id : 0;
-
-    // +++
-    let formData = Object.assign({}, values, {
-      image_avatar: usrImgBase64,
-      birth_day: (bdArr.length ? bdArr : ''),
-      phone_number: '' + values.phone_number,
-      password_confirm: values.password,
-      city_id: values.province_id,
-      description: values.about_me,
-      marital_status: (values.marital_status == true) ? 1 : 0,
-      id_card_date:(cdArr.length ? cdArr : ''),
-      is_notification: (values.is_notification == true) ? 1: 0,
-      is_can_email: (values.is_can_email == true) ? 1: 0,
-      is_system: (values.is_system)? 1: 0,
-      is_change_password: (member_id > 0) ? 0 : 1,
-      is_active: (values.is_active)? 1: 0, 
-    });  
-    let memberId = (AccountEnt && AccountEnt.member_id) || formData[this._accountModel];
-    let apiCall = memberId
-      ? this._accountModel.update(memberId, formData)
-      : this._accountModel.create(formData)
-    ;
-    apiCall
-      .then(data => { // OK
-        window._$g.toastr.show('Lưu thành công!', 'success');
-        if (this._btnType === 'save_n_close') {
-          willRedirect = true;
-          return window._$g.rdr('/account');
-        }
-        // Chain
-        return data;
-      })
-      .catch(apiData => { // NG
-        let { errors, statusText, message } = apiData;
-        let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join('<br/>');
-        alerts.push({ color: "danger", msg });
-      })
-      .finally(() => {
-        // Submit form is done!
-        setSubmitting(false);
-        //
-        if (!AccountEnt && !willRedirect && !alerts.length) {
-          return this.handleFormikReset();
-        }
-        this.setState(() => ({ alerts }), () => { window.scrollTo(0, 0); });
-      })
-    ;
-  }
-
-  handleFormikReset() { 
-    this.setState(state => ({
-      _id: 1 + state._id,
-      ready: false,
-      alerts: [],
-      usrImgBase64: null
-    }));
-    // Get bundle data --> ready data
-    (async () => {
-      let bundle = await this._getBundleData();
-      this.setState({ ...bundle, ready: true });
-    })();
-    //.end
-  }
-
-  render() {
-    let {
-      _id,
-      ready,
-      alerts,
-      usrImgBase64,
-      genders,
-      maritalStatus
-    } = this.state;
-    let { AccountEnt, noEdit } = this.props;
-    /** @var {Object} */
-    let initialValues = this.getInitialValues(); 
-    // Ready?
-    if (!ready) {
-      return <Loading />;
-    }
-
-    return (
-      <div key={`view-${_id}`} className="animated fadeIn">
-        <Row>
-          <Col xs={12}>
-            <Card>
-              <CardHeader>
-                <b>{AccountEnt ? (noEdit ? 'Chi tiết' : 'Chỉnh sửa') : 'Thêm mới'} khách hàng {AccountEnt ? AccountEnt.full_name : ''}</b>
-              </CardHeader>
-              <CardBody>
-                {/* general alerts */}
-                {alerts.map(({ color, msg }, idx) => {
-                  return (
-                    <Alert key={`alert-${idx}`} color={color} isOpen={true} toggle={() => this.setState({ alerts: [] })}>
-                      <span dangerouslySetInnerHTML={{ __html: msg }} />
-                    </Alert>
-                  );
-                })}
-                <Formik 
-                   initialValues={initialValues}
-                   validationSchema={this.formikValidationSchema}
-                   validate={this.handleFormikValidate}
-                   onSubmit={this.handleFormikSubmit}
-                >
-                  {formikProps => {
-                  let {
-                    values, 
-                    handleSubmit,
-                    handleReset, 
-                    isSubmitting,
-                    /* and other goodies */
-                  } = (this.formikProps = window._formikProps = formikProps); 
-
-                  // Render
-                  return (
-                    <Form 
-                      id="form1st" 
-                      onSubmit={handleSubmit} 
-                      onReset={handleReset}
+            <CardBody>
+              <Row>
+                <Nav tabs>
+                  <NavItem>
+                    <NavLink
+                      className={`${activeTab === "INFO" ? "active" : ""}`}
+                    //   onClick={() => this.setState({ activeTab: "INFO" })}
                     >
+                      Thông tin tài khoản
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+                <TabContent activeTab={activeTab} style={{ width: "100%" }}>
+                  <TabPane tabId={"INFO"}>
+                    <Form id="formInfo" onSubmit={formik.handleSubmit}>
                       <Row>
                         <Col xs={12} sm={3}>
                           <FormGroup row>
                             <Col sm={12}>
-                              <div className="hidden ps-relative">
-                                <Media
-                                  object
-                                  src={usrImgBase64  || AccountModel.defaultImgBase64}
-                                  alt="User image"
-                                  className="user-imgage radius-50-percent"
-                                />
+                              <div className="ps-relative">
+                                {formik.values.image_avatar ? (
+                                  <Media
+                                    object
+                                    src={formik.values.image_avatar}
+                                    alt="User image"
+                                    // className="user-imgage"
+                                    className="user-imgage radius-50-percent"
+                                  />
+                                ) : (
+                                  <i
+                                    style={{
+                                      fontSize: 50,
+                                      paddingTop: 65,
+                                      paddingLeft: 70,
+                                    }}
+                                    className="user-imgage radius-50-percent fa fa-plus"
+                                  />
+                                )}
                                 <Input
                                   type="file"
-                                  id="user_image_file"
+                                  id="icon"
                                   className="input-overlay"
-                                  onChange={this.handleUserImageChange}
+                                  onChange={handleUserImageChange}
                                   disabled={noEdit}
                                 />
                               </div>
-                              <b className="center block">{this.makeAvatarStr(values).map((text, idx) => (text ? <p key={`avatar-text-${idx}`}>{text}</p> : null))}</b>
+                              <div className="justify-content-center text-center">
+                                {formik.values.customer_code ? (
+                                  <b>
+                                    {formik.values.customer_code
+                                      ? formik.values.customer_code
+                                      : null}{" "}
+                                    - {formik.values.full_name ? formik.values.full_name : null}
+                                  </b>
+                                ) : null}
+                              </div>
                             </Col>
                           </FormGroup>
                         </Col>
                         <Col xs={12} sm={9}>
-
-                            <Row className="mb15">
-                                  <Col xs={12}>
-                                  <b className="underline">Thông tin tài khoản</b>
-                                  </Col>
-                            </Row> 
-
-                            <Row>                           
-                              <Col xs={12} sm={6}>
-                                <FormGroup row>
-                                  <Label for="user_name" sm={4}>
-                                    Tên đăng nhập <span className="font-weight-bold red-text">*</span>
-                                  </Label>
-                                  <Col sm={8}>
-                                      <Field name="user_name"
-                                        render={({ field }) => (
-                                          <Input
-                                            {...field}
-                                            onBlur={null}
-                                            type="text" 
-                                            disabled={noEdit}
-                                          />
-                                        )}
-                                      />
-                                      <ErrorMessage
-                                        name="user_name" component={({ children }) => ( <Alert color="danger" className="field-validation-error">{children}</Alert> )}
-                                      />
-                                  </Col>
-                                </FormGroup>
-                              </Col>
-                              <Col xs={12} sm={6}>
-                                <FormGroup row  hidden={!!AccountEnt} className={`${AccountEnt ? 'hidden' : ''}`}>
-                                  <Label for="Password" sm={4}>
-                                    Mật khẩu<span className="font-weight-bold red-text">*</span>
-                                  </Label>
-                                  <Col sm={8}>
-                                    <InputGroup>
-                                      <Field
-                                        name="password"
-                                        render={({ field /* _form */ }) => <Input
-                                          {...field}
-                                          onBlur={null}
-                                          type={`${this.state.passwordVisible ? 'text' : 'password'}`}
-                                          name="password"
-                                          id="password"
-                                          placeholder="******"
-                                          disabled={noEdit}
-                                        />}
-                                      />
-                                      <InputGroupAddon addonType="append">
-                                        <Button block onClick={() => {
-                                          let { passwordVisible } = this.state;
-                                          this.setState({ passwordVisible: !passwordVisible });
-                                        }}>
-                                          <i className={`fa ${this.state.passwordVisible ? 'fa-eye-slash' : 'fa-eye'}`} />
-                                        </Button>
-                                      </InputGroupAddon>
-                                    </InputGroup>
-                                    <ErrorMessage name="password" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
-                                  </Col>
-                                </FormGroup>
-                              </Col>                            
-                            </Row>
-
-                            <Row>
-                              <Col xs={12} sm={6}>
-                                <FormGroup row>
-                                  <Label for="customer_code" sm={4}>
-                                    Mã khách hàng<span className="font-weight-bold red-text">*</span>
-                                  </Label>
-                                  <Col sm={8}>
-                                    <Field
-                                      name="customer_code"
-                                      render={({ field /* _form */ }) => <Input
-                                        {...field}
-                                        readOnly={true}
-                                        onBlur={null}
-                                        type="text"
-                                        name="customer_code"
-                                        id="customer_code" 
-                                        disabled={noEdit}
-                                      />}
-                                    />
-                                    <ErrorMessage name="customer_code" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
-                                  </Col>
-                                </FormGroup>
-                              </Col>
-                              <Col xs={12} sm={6}>
-                                <FormGroup row>
-                                  <Label for="register_date" sm={4}>
-                                    Ngày đăng ký<span className="font-weight-bold red-text">*</span>
-                                  </Label>
-                                  <Col sm={8}>
-                                  <Field
-                                      name="register_date"
-                                      render={({
-                                        date,
-                                        form: { setFieldValue, setFieldTouched, values },
-                                        field,
-                                        ...props
-                                      }) => {
-                                        return (
-                                          <DatePicker
-                                            id="register_date"
-                                            date={values.register_date ? moment(values.register_date, 'DD/MM/YYYY') : null}
-                                            onDateChange={date => {
-                                              setFieldValue('register_date', date)
-                                            }}
-                                            disabled={true}
-                                            maxToday
-                                          />
-                                        )
-                                      }}
-                                    />
-                                    <ErrorMessage name="register_date" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
-                                  </Col>
-                                </FormGroup>
-                              </Col>
-                            </Row>
-
-                            <Row className="mb15">
-                              <Col xs={12}>
-                                <b className="underline">Thông tin cá nhân</b>
-                              </Col>
-                            </Row> 
-
-                            <Row>
-                              <Col xs={12} sm={6}>
-                                <FormGroup row>
-                                  <Label for="full_name" sm={4}>
-                                    Họ tên<span className="font-weight-bold red-text">*</span>
-                                  </Label>
-                                  <Col sm={8}>
-                                    <Field
-                                      name="full_name"
-                                      render={({ field /* _form */ }) => <Input
-                                        {...field}
-                                        onBlur={null}
-                                        type="full_name"
-                                        name="full_name"
-                                        id="full_name" 
-                                        disabled={noEdit}
-                                      />}
-                                    />
-                                    <ErrorMessage name="full_name" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
-                                  </Col>
-                                </FormGroup>
-                              </Col>
-                              <Col xs={12} sm={6}>
-                                <FormGroup row>
-                                  <Label for="birth_day" sm={4}>
-                                    Ngày sinh<span className="font-weight-bold red-text">*</span>
-                                  </Label>
-                                  <Col sm={8}>
-                                    <Field
-                                      name="birth_day"
-                                      render={({
-                                        date,
-                                        form: { setFieldValue, setFieldTouched, values },
-                                        field,
-                                        ...props
-                                      }) => {
-                                        return (
-                                          <DatePicker
-                                            id="birth_day"
-                                            date={values.birth_day ? moment(values.birth_day) : null}
-                                            onDateChange={dates => {
-                                              setFieldValue('birth_day', dates)
-                                            }}
-                                            disabled={noEdit}
-                                            maxToday
-                                          />
-                                        )
-                                      }}
-                                    />
-                                    <ErrorMessage name="birth_day" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
-                                  </Col>
-                                </FormGroup>
-                              </Col>
-                            </Row>
-
+                          <Row className="mb15">
+                            <Col xs={12}>
+                              <b className="underline">Thông tin tài khoản</b>
+                            </Col>
+                          </Row>
                           <Row>
-                          <Col xs={12} sm={6}>
+                            <Col xs={12} sm={6}>
                               <FormGroup row>
-                                <Label for="gender_1" sm={4}>
-                                  Giới tính<span className="font-weight-bold red-text">*</span>
+                                <Label for="user_name" sm={4}>
+                                  Tên đăng nhập <span className="font-weight-bold red-text">*</span>
                                 </Label>
                                 <Col sm={8}>
-                                  <Row>
-                                    {genders.map(({ name, id }, idx) => {
-                                      return (
-                                        <Col xs={4} key={`gender-${idx}`}>
-                                          <FormGroup check>
-                                            <Label check>
-                                              <Field
-                                                name="gender"
-                                                render={({ field /* _form */ }) => <Input
-                                                  {...field}
-                                                  onBlur={null}
-                                                  value={id}
-                                                  type="radio"
-                                                  checked={(1 * values.gender) === (1 * id)}
-                                                  id={`gender_${id}`}
-                                                  disabled={noEdit}
-                                                />}
-                                              /> {name}
-                                            </Label>
-                                          </FormGroup>
-                                        </Col>
-                                      );
-                                    })}
-                                    <ErrorMessage name="gender" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />  
-                                  </Row>
+                                  <Input
+                                    name="user_name"
+                                    id="user_name"
+                                    type="text"
+                                    placeholder="Tên đăng nhập"
+                                    disabled={id}
+                                    value={formik.values.user_name}
+                                    onChange={(e) => {
+                                      formik.setFieldValue("user_name", e.target.value);
+                                      formik.setFieldValue("email", e.target.value);
+                                    }}
+                                  />
+                                  {formik.errors.user_name && (
+                                    <div
+                                      className="field-validation-error alert alert-danger fade show"
+                                      role="alert"
+                                    >
+                                      {formik.errors.user_name}
+                                    </div>
+                                  )}
                                 </Col>
                               </FormGroup>
                             </Col>
                             <Col xs={12} sm={6}>
                               <FormGroup row>
-                                <Label for="marital_status" sm={4}>
-                                  Tình trạng hôn nhân
+                                <Label for="pass_word" sm={4}>
+                                  Mật khẩu<span className="font-weight-bold red-text">*</span>
                                 </Label>
                                 <Col sm={8}>
-                                  <Row>
-                                    {maritalStatus.map(({ name, id }, idx) => {
-                                      return (
-                                        <Col xs={4} key={`marital-status-${idx}`}>
-                                          <FormGroup check>
-                                            <Label check>
-                                              <Field
-                                                name="marital_status"
-                                                render={({ field /* _form */ }) => <Input
-                                                  {...field}
-                                                  onBlur={null}
-                                                  value={id}
-                                                  type="radio"
-                                                  checked={(1 * values.marital_status) === (1 * id)}
-                                                  id={`marital_status_${id}`}
-                                                  disabled={noEdit}
-                                                />}
-                                              /> {name}
-                                            </Label>
-                                          </FormGroup>
-                                        </Col>
-                                      );
-                                    })}
-                                  </Row>
+                                  <InputGroup>
+                                    <Input
+                                      // onBlur={null}
+                                      type={`${passwordVisible ? "text" : "password"}`}
+                                      name="pass_word"
+                                      id="pass_word"
+                                      placeholder="******"
+                                      disabled={noEdit}
+                                      value={formik.values.pass_word}
+                                      onChange={formik.handleChange}
+                                    />
+                                    {id ? (
+                                      <CheckAccess permission="CRM_ACCOUNT_EDIT">
+                                        <InputGroupAddon addonType="append">
+                                          <Button
+                                            color="success"
+                                            block
+                                            onClick={() => {
+                                              setIsModalVisible(true);
+                                            }}
+                                          >
+                                            Đổi mật khẩu
+                                          </Button>
+                                        </InputGroupAddon>
+                                      </CheckAccess>
+
+                                    ) : (
+                                      <InputGroupAddon addonType="append">
+                                        <Button
+                                          block
+                                          onClick={() => {
+                                            setPasswordVisible(!passwordVisible);
+                                          }}
+                                        >
+                                          <i
+                                            className={`fa ${passwordVisible ? "fa-eye" : "fa-eye-slash"
+                                              }`}
+                                          />
+                                        </Button>
+                                      </InputGroupAddon>
+                                    )}
+                                  </InputGroup>
+                                  {formik.errors.pass_word && (
+                                    <div
+                                      className="field-validation-error alert alert-danger fade show"
+                                      role="alert"
+                                    >
+                                      {formik.errors.pass_word}
+                                    </div>
+                                  )}
                                 </Col>
                               </FormGroup>
                             </Col>
                           </Row>
-
                           <Row>
                             <Col xs={12} sm={6}>
                               <FormGroup row>
-                                <Label for="phone_number" sm={4}>
+                                <Label for="user_name" sm={4}>
+                                  Mã khách hàng
+                                </Label>
+                                <Col sm={8}>
+                                  <Input
+                                    name="customer_code"
+                                    id="customer_code"
+                                    type="text"
+                                    // placeholder="Tên đăng nhập"
+                                    disabled={true}
+                                    value={formik.values.customer_code}
+                                  // onChange={formik.handleChange}
+                                  />
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="Password" sm={4}>
+                                  Ngày đăng ký
+                                </Label>
+                                <Col sm={8}>
+                                  {formik.values.register_date ? (
+                                    <Input
+                                      name="register_date"
+                                      id="register_date"
+                                      type="text"
+                                      // placeholder="Tên đăng nhập"
+                                      disabled={true}
+                                      value={formik.values.register_date}
+                                    // onChange={formik.handleChange}
+                                    />
+                                  ) : (
+                                    <DatePicker
+                                      id="register_date"
+                                      date={moment()}
+                                      disabled={true}
+                                      maxToday
+                                    />
+                                  )}
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row className="mb15">
+                            <Col xs={12}>
+                              <b className="underline">Thông tin cá nhân</b>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="nick_name" sm={4}>
+                                  Họ và tên <span className="font-weight-bold red-text">*</span>
+                                </Label>
+                                <Col sm={8}>
+                                  <Input
+                                    name="nick_name"
+                                    id="nick_name"
+                                    type="text"
+                                    placeholder="Họ và tên đệm"
+                                    disabled={noEdit}
+                                    value={formik.values.nick_name}
+                                    onChange={formik.handleChange}
+                                  />
+                                  {formik.errors.nick_name && (
+                                    <div
+                                      className="field-validation-error alert alert-danger fade show"
+                                      role="alert"
+                                    >
+                                      {formik.errors.nick_name}
+                                    </div>
+                                  )}
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="user_name" sm={4}>
+                                  Họ và tên khai sinh
+                                  <span className="font-weight-bold red-text">*</span>
+                                </Label>
+                                <Col sm={8}>
+                                  <Input
+                                    name="full_name"
+                                    id="full_name"
+                                    type="text"
+                                    placeholder="Tên khai sinh"
+                                    disabled={noEdit}
+                                    value={formik.values.full_name}
+                                    onChange={formik.handleChange}
+                                  />
+                                  {formik.errors.full_name && (
+                                    <div
+                                      className="field-validation-error alert alert-danger fade show"
+                                      role="alert"
+                                    >
+                                      {formik.errors.full_name}
+                                    </div>
+                                  )}
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="nick_name" sm={4}>
+                                  Ngày sinh <span className="font-weight-bold red-text">*</span>
+                                </Label>
+                                <Col sm={8}>
+                                  <DatePicker
+                                    id="birth_day"
+                                    date={
+                                      formik.values.birth_day
+                                        ? moment(formik.values.birth_day)
+                                        : null
+                                    }
+                                    onDateChange={(dates) => {
+                                      // setFieldValue("birth_day", dates);
+                                      formik.setFieldValue("birth_day", dates);
+                                    }}
+                                    disabled={noEdit}
+                                    maxToday
+                                  />
+                                  {formik.errors.birth_day && (
+                                    <div
+                                      className="field-validation-error alert alert-danger fade show"
+                                      role="alert"
+                                    >
+                                      {formik.errors.birth_day}
+                                    </div>
+                                  )}
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="user_name" sm={4}>
+                                  Giới tính<span className="font-weight-bold red-text">*</span>
+                                </Label>
+                                <Col sm={8}>
+                                  <Radio.Group
+                                    disabled={noEdit}
+                                    onChange={(e) => {
+                                      // setValue(e.target.value);
+                                      formik.setFieldValue("gender", e.target.value);
+                                    }}
+                                    value={formik.values.gender}
+                                  >
+                                    <Radio value={1}>Nam</Radio>
+                                    <Radio value={0}>Nữ</Radio>
+                                  </Radio.Group>
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="nick_name" sm={4}>
+                                  Tình trạng hôn nhân{" "}
+                                </Label>
+                                <Col sm={8}>
+                                  <Radio.Group
+                                    disabled={noEdit}
+                                    onChange={(e) => {
+                                      // setValue(e.target.value);
+                                      formik.setFieldValue("marital_status", e.target.value);
+                                    }}
+                                    value={formik.values.marital_status}
+                                  >
+                                    <Radio value={0}>Chưa kết hôn</Radio>
+                                    <Radio value={1}>Đã kết hôn</Radio>
+                                  </Radio.Group>
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="user_name" sm={4}>
                                   Số điện thoại<span className="font-weight-bold red-text">*</span>
                                 </Label>
                                 <Col sm={8}>
-                                  <Field
+                                  <Input
                                     name="phone_number"
-                                    render={({ field /* _form */ }) => <Input
-                                      {...field}
-                                      onBlur={null}
-                                      type="text"
-                                      name="phone_number"
-                                      id="phone_number" 
-                                      disabled={noEdit}
-                                    />}
+                                    id="phone_number"
+                                    type="text"
+                                    placeholder="Số điện thoại"
+                                    disabled={noEdit}
+                                    value={formik.values.phone_number}
+                                    onChange={formik.handleChange}
                                   />
-                                  <ErrorMessage name="phone_number" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
+                                  {formik.errors.phone_number && (
+                                    <div
+                                      className="field-validation-error alert alert-danger fade show"
+                                      role="alert"
+                                    >
+                                      {formik.errors.phone_number}
+                                    </div>
+                                  )}
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="email" sm={4}>
+                                  Email<span className="font-weight-bold red-text">*</span>
+                                </Label>
+                                <Col sm={8}>
+                                  <Input
+                                    name="email"
+                                    id="email"
+                                    type="text"
+                                    placeholder="email"
+                                    disabled={noEdit}
+                                    value={formik.values.email}
+                                    onChange={(e) => {
+                                      formik.setFieldValue("user_name", e.target.value);
+                                      formik.setFieldValue("email", e.target.value);
+                                    }}
+                                  />
+                                  {formik.errors.email && (
+                                    <div
+                                      className="field-validation-error alert alert-danger fade show"
+                                      role="alert"
+                                    >
+                                      {formik.errors.email}
+                                    </div>
+                                  )}
+                                </Col>
+                              </FormGroup>
+                              {id ? (
+                                <Label for="email">
+                                  <span className="red-text pd-0">
+                                    * Thay đổi email là thay đổi tài khoản đang nhập
+                                  </span>
+                                </Label>
+                              ) : null}
+                            </Col>
+                          </Row>
+                          <Row className="mb15">
+                            <Col xs={12}>
+                              <b className="underline">Chứng minh nhân dân/ Thẻ căn cước</b>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="id_card" sm={4}>
+                                  Số CMND<span className="font-weight-bold red-text">*</span>
+                                </Label>
+                                <Col sm={8}>
+                                  <Input
+                                    name="id_card"
+                                    id="id_card"
+                                    type="text"
+                                    placeholder=" Số CMND"
+                                    disabled={noEdit}
+                                    value={formik.values.id_card}
+                                    onChange={formik.handleChange}
+                                  />
+                                  {formik.errors.id_card && (
+                                    <div
+                                      className="field-validation-error alert alert-danger fade show"
+                                      role="alert"
+                                    >
+                                      {formik.errors.id_card}
+                                    </div>
+                                  )}
                                 </Col>
                               </FormGroup>
                             </Col>
                             <Col xs={12} sm={6}>
                               <FormGroup row>
                                 <Label for="email" sm={4}>
-                                  Email
+                                  Ngày cấp<span className="font-weight-bold red-text">*</span>
                                 </Label>
                                 <Col sm={8}>
-                                  <Field
-                                    name="email"
-                                    render={({ field /* _form */ }) => <Input
-                                      {...field}
-                                      onBlur={null}
-                                      type="email"
-                                      name="email"
-                                      id="email" 
-                                      disabled={noEdit}
-                                    />}
+                                  <DatePicker
+                                    id="id_card_date"
+                                    date={
+                                      formik.values.id_card_date
+                                        ? moment(formik.values.id_card_date)
+                                        : null
+                                    }
+                                    onDateChange={(dates) => {
+                                      // setFieldValue("birth_day", dates);
+                                      formik.setFieldValue("id_card_date", dates);
+                                    }}
+                                    disabled={noEdit}
+                                    maxToday
                                   />
+                                  {formik.errors.id_card_date && (
+                                    <div
+                                      className="field-validation-error alert alert-danger fade show"
+                                      role="alert"
+                                    >
+                                      {formik.errors.id_card_date}
+                                    </div>
+                                  )}
                                 </Col>
                               </FormGroup>
                             </Col>
                           </Row>
-                          
                           <Row>
-                            <Col xs={12} sm={6}>
+                            <Col xs={12} sm={12}>
                               <FormGroup row>
-                                <Label for="id_card" sm={4}>
-                                  Số CMND
-                                </Label>
-                                <Col sm={8}>
-                                  <Field
-                                    name="id_card"
-                                    render={({ field /* _form */ }) => <Input
-                                      {...field}
-                                      onBlur={null}
-                                      type="text"
-                                      name="id_card"
-                                      id="id_card" 
-                                      disabled={noEdit}
-                                    />}
-                                  />
-                                </Col>
-                              </FormGroup>
-                            </Col>
-                            <Col xs={12} sm={6}>
-                                <FormGroup row>
-                                  <Label for="id_card_date" sm={4}>
-                                    Ngày cấp
-                                  </Label>
-                                  <Col sm={8}>
-                                    <Field
-                                      name="birthdid_card_dateay"
-                                      render={({
-                                        date,
-                                        form: { setFieldValue, setFieldTouched, values },
-                                        field,
-                                        ...props
-                                      }) => {
-                                        return (
-                                          <DatePicker
-                                            id="id_card_date"
-                                            date={values.id_card_date ? moment(values.id_card_date) : null}
-                                            onDateChange={date => {
-                                              setFieldValue('id_card_date', date)
-                                            }}
-                                            disabled={noEdit}
-                                            maxToday
-                                          />
-                                        )
-                                      }}
-                                    />
-                                  </Col>
-                                </FormGroup>
-                              </Col>
-                          </Row>
-
-                          <Row>
-                            <Col  xs={12} sm={6}>
-                              <FormGroup row>
-                                <Label for="id_card_place" sm={4}>
-                                 Nơi cấp
-                                </Label>
-                                <Col sm={8}>
-                                  <Field
-                                    name="id_card_place"
-                                    render={({ field /* _form */ }) => <Input
-                                      {...field}
-                                      onBlur={null}
-                                      type="text"
-                                      name="id_card_place"
-                                      id="id_card_place"
-                                      disabled={noEdit}
-                                    />}
-                                  /> 
-                                </Col>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-
-                          <Row className="mb15">
-                            <Col xs={12}>
-                              <b className="underline">Thông tin cá nhân</b>
-                            </Col>
-                          </Row> 
-
-                          <Address className="row">{(addrProps) => {
-                            let {
-                              CountryComponent,
-                              ProvinceComponent,
-                              DistrictComponent,
-                              WardComponent
-                            } = addrProps;
-                            return (
-                                <Col xs={12}>
-                                  <FormGroup row>
-                                    <Col sm={12}>
-                                      <Row>
-                                        <Col xs={12} sm={6} className="mb-1">
-                                          <Field
-                                            name="country_id"
-                                            render={({ field, form }) => {
-                                              return (
-                                                <CountryComponent
-                                                  id={field.name}
-                                                  name={field.name}
-                                                  onChange={({ value }) => {
-                                                    // change?
-                                                    if ('' + values[field.name] !== '' + value) {
-                                                      return form.setValues(Object.assign(values, {
-                                                        [field.name]: value, province_id: "", district_id: "", ward_id: "",
-                                                      }));
-                                                    }
-                                                    field.onChange({ target: { name: field.name, value } });
-                                                  }}
-                                                  value={values[field.name]}
-                                                  isDisabled={noEdit}
-                                                />
-                                              );
-                                            }}
-                                          /> 
-                                        </Col>
-                                        <Col xs={12} sm={6} className="mb-1">
-                                          <Field
-                                            key={`province_of_${values.country_id}`}
-                                            name="province_id"
-                                            render={({ field, form }) => {
-                                              return (
-                                                <ProvinceComponent
-                                                  id={field.name}
-                                                  name={field.name}
-                                                  onChange={({ value }) => {
-                                                    // change?
-                                                    if ('' + values[field.name] !== '' + value) {
-                                                      return form.setValues(Object.assign(values, {
-                                                        [field.name]: value, district_id: "", ward_id: "",
-                                                      }));
-                                                    }
-                                                    field.onChange({ target: { name: field.name, value } });
-                                                  }}
-                                                  mainValue={values.country_id}
-                                                  value={values[field.name]}
-                                                  isDisabled={noEdit}
-                                                />
-                                              );
-                                            }}
-                                          /> 
-                                        </Col>
-                                      </Row>
-                                      <Row>
-                                        <Col xs={12} sm={6} className="mb-1">
-                                          <Field
-                                            key={`district_of_${values.province_id}`}
-                                            name="district_id"
-                                            render={({ field, form }) => {
-                                              return (
-                                                <DistrictComponent
-                                                  id={field.name}
-                                                  name={field.name}
-                                                  onChange={({ value }) => {
-                                                    // change?
-                                                    if ('' + values[field.name] !== '' + value) {
-                                                      return form.setValues(Object.assign(values, {
-                                                        [field.name]: value, ward_id: "",
-                                                      }));
-                                                    }
-                                                    field.onChange({ target: { name: field.name, value } });
-                                                  }}
-                                                  mainValue={values.province_id}
-                                                  value={values[field.name]}
-                                                  isDisabled={noEdit}
-                                                />
-                                              );
-                                            }}
-                                          /> 
-                                        </Col>
-                                        <Col xs={12} sm={6} className="mb-1">
-                                          <Field
-                                            key={`ward_of_${values.district_id}`}
-                                            name="ward_id"
-                                            render={({ field/*, form*/ }) => {
-                                              return (
-                                                <WardComponent
-                                                  id={field.name}
-                                                  name={field.name}
-                                                  onChange={({ value }) => field.onChange({
-                                                    target: { name: field.name, value }
-                                                  })}
-                                                  mainValue={values.district_id}
-                                                  value={values[field.name]}
-                                                  isDisabled={noEdit}
-                                                />
-                                              );
-                                            }}
-                                          /> 
-                                        </Col>
-                                      </Row>
-                                    </Col>
-                                  </FormGroup>
-                                </Col>
-                              );
-                          }}</Address>
-                          
-                          <Row>
-                            <Col xs={12}>
-                              <FormGroup row>
-                                <Label for="address" sm={2}>
-                                 Số nhà đường
+                                <Label for="id_card_place" sm={2}>
+                                  Nơi cấp<span className="font-weight-bold red-text">*</span>
                                 </Label>
                                 <Col sm={10}>
-                                  <Field
-                                    name="address"
-                                    render={({ field /* _form */ }) => <Input
-                                      {...field}
-                                      onBlur={null}
-                                      type="text"
-                                      name="address"
-                                      id="address"
-                                      placeholder="Khu phố/ Thôn/ Xóm/ Tổ/ Số nhà/ Đường"
-                                      disabled={noEdit}
-                                    />}
+                                  <Input
+                                    name="id_card_place"
+                                    id="id_card_place"
+                                    type="text"
+                                    placeholder="Nơi cấp CMND"
+                                    disabled={noEdit}
+                                    value={formik.values.id_card_place}
+                                    onChange={formik.handleChange}
+                                  />
+                                  {formik.errors.id_card_place && (
+                                    <div
+                                      className="field-validation-error alert alert-danger fade show"
+                                      role="alert"
+                                    >
+                                      {formik.errors.id_card_place}
+                                    </div>
+                                  )}
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={6} sm={6}>
+                              <FormGroup>
+                                <Label for="id_card_front_image">Ảnh CMND/căn cước mặt trước</Label>
+
+                                <div className="author-banner-upload">
+                                  <Upload
+                                    onChange={(img) => {
+                                      formik.setFieldValue("id_card_front_image", img);
+                                    }}
+                                    imageUrl={formik.values.id_card_front_image}
+                                    accept="image/*"
+                                    disabled={noEdit}
+                                  />
+                                </div>
+                              </FormGroup>
+                            </Col>
+                            <Col xs={6} sm={6}>
+                              <FormGroup>
+                                <Label for="id_card_back_image">Ảnh CMND/căn cước mặt sau</Label>
+
+                                <div className="author-banner-upload">
+                                  <Upload
+                                    onChange={(img) => {
+                                      formik.setFieldValue("id_card_back_image", img);
+                                    }}
+                                    imageUrl={formik.values.id_card_back_image}
+                                    accept="image/*"
+                                    disabled={noEdit}
+                                  />
+                                </div>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={6} sm={6}>
+                              <FormGroup>
+                                <Label for="id_card_front_image">Ảnh live</Label>
+                                <div className="author-banner-upload">
+                                  <Upload
+                                    onChange={(img) => {
+                                      formik.setFieldValue("live_image", img);
+                                    }}
+                                    imageUrl={formik.values.live_image}
+                                    accept="image/*"
+                                    disabled={noEdit}
+                                  />
+                                </div>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row className="mb15">
+                            <AcccountAddress noEdit={noEdit} formik={formik} />
+                          </Row>
+                          <Row className="mb15">
+                            <Col xs={12}>
+                              <b className="underline">Mạng xã hội</b>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="nick_name" sm={4}>
+                                  Facebook
+                                </Label>
+                                <Col sm={8}>
+                                  <Input
+                                    name="facebook"
+                                    id="facebook"
+                                    type="text"
+                                    placeholder="https://www.facebook.com/abc"
+                                    disabled={noEdit}
+                                    value={formik.values.facebook}
+                                    onChange={formik.handleChange}
+                                  />
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="user_name" sm={4}>
+                                  Twitter
+                                </Label>
+                                <Col sm={8}>
+                                  <Input
+                                    name="twitter"
+                                    id="twitter"
+                                    type="text"
+                                    placeholder="https://twitter.com/abc"
+                                    disabled={noEdit}
+                                    value={formik.values.twitter}
+                                    onChange={formik.handleChange}
                                   />
                                 </Col>
                               </FormGroup>
                             </Col>
                           </Row>
-
-                          <Row className="mb15">
-                            <Col xs={12}>
-                              <b className="underline">Thông tin xác nhận kích hoạt</b>
-                            </Col>
-                          </Row> 
-
-                          <Row>
-                            <Col xs={6} sm={4}>
-                              <FormGroup row>
-                                <Label for="is_confirm" sm={4}></Label>
-                                <Col sm={8}>
-                                  <Field
-                                    name="is_confirm"
-                                    render={({ field /* _form */ }) => <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_confirm}
-                                      type="switch"
-                                      id={field.name}
-                                      label="Đã xác nhận thông tin tài khoản"
-                                      disabled={noEdit}
-                                    />}
-                                  /> 
-                                </Col>
-                              </FormGroup>
-                            </Col>
-                            <Col xs={6} sm={4}>
-                              <FormGroup row>
-                                <Label for="is_active" sm={4}></Label>
-                                <Col sm={8}>
-                                  <Field
-                                    name="is_active"
-                                    render={({ field /* _form */ }) => <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_active}
-                                      type="switch"
-                                      id={field.name}
-                                      label="Kích hoạt"
-                                      disabled={noEdit}
-                                    />}
-                                  /> 
-                                </Col>
-                              </FormGroup>
-                            </Col>
-                            <Col xs={6} sm={4}>
-                              <FormGroup row>
-                                <Label for="is_system" sm={4}></Label>
-                                <Col sm={8}>
-                                  <Field
-                                    name="is_system"
-                                    render={({ field /* _form */ }) => <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_system}
-                                      type="switch"
-                                      id={field.name}
-                                      label="Hệ thống"
-                                      disabled={noEdit}
-                                    />}
-                                  /> 
-                                </Col>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                         
-                          <Row className="mb15">
-                            <Col xs={12}>
-                              <b className="underline">Thông tin nhận hỗ trợ</b>
-                            </Col>
-                          </Row>
-
-                          <Row>
-                            <Col xs={6} sm={4}>
-                              <FormGroup row>
-                                <Label for="is_can_sms_or_phone" sm={4}></Label>
-                                <Col sm={8}>
-                                  <Field
-                                    name="is_can_sms_or_phone"
-                                    render={({ field /* _form */ }) => <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_can_sms_or_phone}
-                                      type="switch"
-                                      id={field.name}
-                                      label="Có nhận SMS và cuộc gọi?"
-                                      disabled={noEdit}
-                                    />}
-                                  /> 
-                                </Col>
-                              </FormGroup>
-                            </Col>
-                            <Col xs={6} sm={4}>
-                              <FormGroup row>
-                                <Label for="is_can_email" sm={4}></Label>
-                                <Col sm={8}>
-                                  <Field
-                                    name="is_can_email"
-                                    render={({ field /* _form */ }) => <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_can_email}
-                                      type="switch"
-                                      id={field.name}
-                                      label="Có nhận mail?"
-                                      disabled={noEdit}
-                                    />}
-                                  /> 
-                                </Col>
-                              </FormGroup>
-                            </Col>
-                            <Col xs={6} sm={4}>
-                              <FormGroup row>
-                                <Label for="is_notification" sm={4}></Label>
-                                <Col sm={8}>
-                                  <Field
-                                    name="is_notification"
-                                    render={({ field /* _form */ }) => <CustomInput
-                                      {...field}
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={values.is_notification}
-                                      type="switch"
-                                      id={field.name}
-                                      label="Có nhận thông báo?"
-                                      disabled={noEdit}
-                                    />}
-                                  /> 
-                                </Col>
-                              </FormGroup>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col sm={12} className="text-right">
-                              {
-                                noEdit?(
-                                  <CheckAccess permission="CRM_ACCOUNT_EDIT">
-                                    <Button color="primary" className="mr-2 btn-block-sm" onClick={() => window._$g.rdr(`/users/edit/${AccountEnt.member_id}`)}>
-                                      <i className="fa fa-edit mr-1" />Chỉnh sửa
-                                    </Button>
-                                  </CheckAccess>
-                                ):
-                                [ 
-                                  (AccountEnt && AccountEnt.member_id) && (<CheckAccess key="buttonUserPassword" permission="SYS_USER_PASSWORD">
-                                  <Button color="warning text-white" className="mr-2 btn-block-sm" onClick={() => window._$g.rdr(`/account/account-change-password/${AccountEnt.member_id}`)}>
-                                    <i className="fa fa-lock mr-1"></i>Thay đổi mật khẩu
-                                  </Button>
-                                </CheckAccess>),
-                                  <Button 
-                                    key="buttonSave" 
-                                    type="submit" 
-                                    color="primary" 
-                                    disabled={isSubmitting} 
-                                    onClick={() => this.handleSubmit('save')} className="mr-2 btn-block-sm">
-                                    <i className="fa fa-save mr-2" />Lưu
-                                  </Button>,
-                                  <Button 
-                                  key="buttonSaveClose" type="submit" color="success" disabled={isSubmitting} onClick={() => this.handleSubmit('save_n_close')} className="mr-2 btn-block-sm mt-md-0 mt-sm-2">
-                                    <i className="fa fa-save mr-2" />Lưu &amp; Đóng
-                                  </Button>
-                                ]
-                              }
-                              <Button disabled={isSubmitting} onClick={() => window._$g.rdr('/account')} className="btn-block-sm mt-md-0 mt-sm-2">
-                                <i className="fa fa-times-circle mr-1" />Đóng
-                              </Button>
-                            </Col>
-                          </Row>
+                          <CustomInput
+                            className="pull-left"
+                            onBlur={null}
+                            checked={formik.values.is_active}
+                            type="switch"
+                            id="is_active"
+                            label="Kích hoạt"
+                            name="is_active"
+                            disabled={noEdit}
+                            onChange={(e) => {
+                              formik.setFieldValue("is_active", e.target.checked ? 1 : 0);
+                            }}
+                          />
                         </Col>
                       </Row>
+                      <div className="text-right mb-2">
+                        <div>
+                          {
+                            noEdit ? (
+                              <CheckAccess permission="CRM_ACCOUNT_EDIT">
+                                <Button color="primary" className="mr-2 btn-block-sm" onClick={() => window._$g.rdr(`/account/edit/${dataAccount.member_id}`)}>
+                                  <i className="fa fa-edit mr-1" />Chỉnh sửa
+                                </Button>
+                              </CheckAccess>
+                            ) : <>
+                              <button
+                                className="mr-2 btn-block-sm btn btn-primary"
+                                onClick={() => {
+                                  setbtnType("save");
+                                }}
+                                type="submit"
+                              >
+                                <i className="fa fa-save mr-1" />
+                                Lưu
+                              </button>
+                              <button
+                                className="mr-2 btn-block-sm btn btn-success"
+                                onClick={() => {
+                                  setbtnType("save&quit");
+                                }}
+                                type="submit"
+                              >
+                                <i className="fa fa-save mr-1" />
+                                Lưu và đóng
+                              </button>
+                            </>
+
+                          }
+                          <button
+                            className=" btn-block-sm btn btn-secondary"
+                            type="button"
+                            onClick={() => window._$g.rdr(`/account`)}
+                          >
+                            <i className="fa fa-times-circle mr-1" />
+                            Đóng
+                          </button>
+                        </div>
+                      </div>
                     </Form>
-                  );
-                }}</Formik>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
-    );
-  }
+                  </TabPane>
+                </TabContent>
+              </Row>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+
+      <Modal
+        wrapClassName="vertical-center-modal"
+        title={`Đổi mật khẩu`}
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        width={500}
+        footer={null}
+      >
+        <Col xs={12} sm={12} className="px-0">
+          <FormGroup row>
+            <Label for="nick_name" sm={4}>
+              Mật khẩu mới <span className="font-weight-bold red-text">*</span>
+            </Label>
+            <Col sm={8}>
+              <Input
+                name="password"
+                id="password"
+                type="password"
+                placeholder="*******"
+                disabled={noEdit}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+            </Col>
+          </FormGroup>
+        </Col>
+        <Col xs={12} sm={12} className="px-0">
+          <FormGroup row>
+            <Label for="user_name" sm={4}>
+              Nhập lại mật khẩu mới<span className="font-weight-bold red-text">*</span>
+            </Label>
+            <Col sm={8}>
+              <Input
+                name="password_confirm"
+                id="password_confirm"
+                type="password"
+                placeholder="*******"
+                disabled={noEdit}
+                onChange={(e) => {
+                  setPasswordconfirm(e.target.value);
+                }}
+              />
+            </Col>
+          </FormGroup>
+        </Col>
+        <Col xs={12} className="px-0">
+          {alerPassword && (
+            <div className="field-validation-error alert alert-danger fade show" role="alert">
+              {alerPassword}
+            </div>
+          )}
+        </Col>
+        <Col xs={12} className="px-0 text-right">
+        <button type="submit" onClick={handleOk} className=" btn-block-sm btn btn-primary mr-2">
+            Cập nhật
+          </button>
+          <button type="button" onClick={handleCancel} className=" btn-block-sm btn btn-secondary">
+            Đóng
+          </button>
+        </Col>
+      </Modal>
+    </div>
+  );
 }
+
+export default AccountAdd;
