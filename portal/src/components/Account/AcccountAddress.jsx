@@ -71,13 +71,13 @@ export default class AcccountAddress extends Component {
     );
   };
   render() {
-    const { formik } = this.props;
+    const { formik, noEdit } = this.props;
     setTimeout(() => this.setState({ isLoading: false }), 2000);
     return (
       <div style={{ width: "100%" }}>
         <Row className="mb15">
           <Col xs={12}>
-            <b className="underline">Địa chỉ</b>
+            <b className="underline px-3">Địa chỉ</b>
           </Col>
         </Row>
         {this.state.isLoading ? (
@@ -103,6 +103,7 @@ export default class AcccountAddress extends Component {
                             id="province_id"
                             name="province_id"
                             onChange={this.handleChangeProvince}
+                            isDisabled={noEdit}
                             mainValue={6}
                             value={formik.values.province_id}
                           />
@@ -127,10 +128,12 @@ export default class AcccountAddress extends Component {
                               onChange={this.handleChangeDistrict}
                               mainValue={formik.values.province_id}
                               value={formik.values.district_id}
+                              isDisabled={noEdit}
                             />
                           ) : (
                             <Select
                               className="MuiPaper-filter__custom--select"
+                              isDisabled={noEdit}
                               placeholder={"-- Quận/Huyện --"}
                             />
                           )}
@@ -158,11 +161,13 @@ export default class AcccountAddress extends Component {
                               onChange={this.handleChangeWard}
                               mainValue={formik.values.district_id}
                               value={formik.values.ward_id}
+                              isDisabled={noEdit}
                             />
                           ) : (
                             <Select
                               className="MuiPaper-filter__custom--select"
                               placeholder={"-- Phường/ Xã --"}
+                              isDisabled={noEdit}
                             />
                           )}
 
@@ -184,7 +189,7 @@ export default class AcccountAddress extends Component {
                             id="address"
                             type="text"
                             placeholder="Địa chỉ cụ thể"
-                            // disabled={noEdit}
+                            disabled={noEdit}
                             value={formik.values.address}
                             onChange={formik.handleChange}
                           />
