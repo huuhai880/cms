@@ -3,10 +3,10 @@ import { Upload, Modal } from "antd";
 import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
 import "./styles.scss";
 
-const getImageUrl = (imageUrl) => {
+const getImageUrl = (imageUrl, id) => {
   let fileLists = [];
   fileLists.push({
-    uid: -1,
+    uid: id,
     //name: "",
     status: "done",
     url: imageUrl,
@@ -19,14 +19,14 @@ function UploadImage(props) {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState(
-    props.imageUrl ? getImageUrl(props.imageUrl) : []
+    props.imageUrl ? getImageUrl(props.imageUrl, props.id) : []
   );
 
-  useEffect(() => {
-    if (props.imageUrl) {
-      setFileList(getImageUrl(props.imageUrl));
-    }
-  }, [props]);
+  // useEffect(() => {
+  //   if (props.imageUrl) {
+  //     setFileList(getImageUrl(props.imageUrl));
+  //   }
+  // }, [props]);
 
   const handleCancel = () => setPreviewVisible(false);
 
@@ -81,7 +81,7 @@ function UploadImage(props) {
       <Upload
         {...props}
         listType="picture-card"
-        fileList={fileList}
+        fileList={fileList||[]}
         onPreview={handlePreview}
         onChange={handleChange}
         showUploadList={{ showRemoveIcon: true, showPreviewIcon: true }}
@@ -116,14 +116,16 @@ function UploadImage(props) {
 //export default UploadImage;
 function MemoizedUploadImageProfile(props) {
   return useMemo(() => {
+    console.log("props.imageUrl", props.imageUrl? 1: 0)
     return (
       <UploadImage
         onChange={props.onChange}
         imageUrl={props.imageUrl}
+        id={props.id}
         {...props}
       />
     );
-  }, [props.imageUrl, props.onChange]);
+  }, [props.imageUrl, props.onChange, props.id]);
 }
 
 export default MemoizedUploadImageProfile;

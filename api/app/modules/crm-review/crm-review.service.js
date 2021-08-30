@@ -87,7 +87,6 @@ const createReviewOrUpdate = async (bodyParams) => {
         image_url = path_image_url;
       }
     }
-
     const pool = await mssql.pool;
     let review_id = apiHelper.getValueFromObject(bodyParams, 'review_id');
     //check name

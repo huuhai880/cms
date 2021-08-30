@@ -75,7 +75,7 @@ const UploadImage = ({
               }
 
               return (
-                <div className="tl-drop-image">
+                <div >
                   <DropzoneArea
                     {...field}
                     acceptedFiles={[".jpg", ".png", ".jpeg"]}
