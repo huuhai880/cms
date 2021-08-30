@@ -73,11 +73,10 @@ const UploadImage = ({
                   </div>
                 );
               }
-
+              console.log({field})
               return (
                 <div >
                   <DropzoneArea
-                    {...field}
                     acceptedFiles={[".jpg", ".png", ".jpeg"]}
                     filesLimit={1}
                     dropzoneText={""}
