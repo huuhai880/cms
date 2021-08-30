@@ -10,6 +10,7 @@ class Dashboard extends Component {
       <div className="animated fadeIn">
         <DashboardHeader />
         {/* <Account /> */}
+        {console.log(window)}
       </div>
     );
   }

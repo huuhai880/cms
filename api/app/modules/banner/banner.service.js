@@ -107,7 +107,6 @@ const deleteBanner = async (banner_id, bodyParams) => {
 };
 const saveFile = async (base64, folderName) => {
   let url = null;
-
   try {
     if (fileHelper.isBase64(base64)) {
       const extension = fileHelper.getExtensionFromBase64(base64);

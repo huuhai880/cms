@@ -1,0 +1,42 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  margin-left: 20px;
+}
+
+input[type="file"] {
+  width: 100%;
+  vertical-align: middle;
+  direction: rtl;
+  white-space: nowrap;
+  line-height: 30px;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  background: #20a8d8;
+  color: #ffffff;
+  line-height: 30px;
+  border: none;
+  float: right;
+  border-radius: 0.25rem;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.wrap-chbx > .col > .custom-checkbox {
+  padding-left: 30px;
+}
+
+.avatar-uploader > .ant-upload {
+  width: 128px;
+  height: 128px;
+}
+
+.wrap-image
+  > .ant-upload-list-picture-card
+  > .ant-upload-list-picture-card-container {
+  margin: 0 !important;
+}
+
+.wrap-image > .ant-upload-list > .ant-upload-select-picture-card {
+  margin: 0 !important;
+}
