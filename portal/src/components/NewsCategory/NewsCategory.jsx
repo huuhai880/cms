@@ -195,21 +195,12 @@ class NewsCategory extends Component {
           if (1 * res === 1) {
             this._newsCategoryModel
               .delete(id)
-              .then((isDeleted) => {
-                if(isDeleted*1 === 1){
+              .then(() => {
                   let cloneData = JSON.parse(JSON.stringify(data));
                   cloneData.splice(rowIndex, 1);
                   this.setState({
                     data: cloneData,
                   });
-                }
-                else{
-                  window._$g.dialogs.alert(
-                    window._$g._(
-                      `Vui lòng xóa bài viết của danh mục trước khi xóa!`
-                    )
-                  );
-                }
               })
               .catch(() => {
                 window._$g.dialogs.alert(
