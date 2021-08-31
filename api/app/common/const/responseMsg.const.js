@@ -714,5 +714,6 @@ module.exports = {
     UPDATE_FAILED: 'Cập nhật thất bại.',
     DELETE_SUCCESS: 'Xóa thành công.',
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
+    EXISTS_NAME: 'Tên thuộc tính đã tồn tại.',
   },
 };

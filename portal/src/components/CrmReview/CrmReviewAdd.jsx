@@ -15,7 +15,7 @@ import {
   Input,
   CustomInput,
 } from "reactstrap";
-import { mapDataOptions4Select } from "../../utils/html";
+import { mapDataOptions4Select, readImageAsBase64 } from "../../utils/html";
 import Select from "react-select";
 import moment from "moment";
 import "./styles.scss";
@@ -228,6 +228,21 @@ export default class CrmReviewAdd extends PureComponent {
           }
         );
       });
+  };
+
+  handleUploadImage = async (blobInfo, success, failure) => {
+    readImageAsBase64(blobInfo.blob(), async (imageUrl) => {
+      try {
+        const imageUpload = await this._authorModel.upload({
+          base64: imageUrl,
+          folder: "files",
+          includeCdn: true,
+        });
+        success(imageUpload);
+      } catch (error) {
+        failure(error);
+      }
+    });
   };
 
   handleFormikReset = () => {

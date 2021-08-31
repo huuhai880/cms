@@ -504,7 +504,7 @@ class News extends Component {
 
             return (
               <div className="text-center">
-                <CheckAccess permission="NEWS_NEWS_REVIEW ">
+                <CheckAccess permission="NEWS_NEWS_REVIEW">
                   <Button
                     color={
                       this.state.data[tableMeta["rowIndex"]].is_review !== 2
