@@ -42,10 +42,11 @@ export default class AttributesModel extends Model {
         images_id: "",
         partner_id: null,
         url_images: "",
-        is_default: "",
+        is_default: 1,
         is_active_image: "",
       },
     ],
+    check_is_default: ""
   });
 
   /**
