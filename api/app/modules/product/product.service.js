@@ -15,12 +15,8 @@ const config = require('../../../config/config');
 const { saveImage } = require('../../common/helpers/saveFile.helper');
 
 const savedPath = 'product_image';
-/**
- * Get list
- *
- * @param queryParams
- * @returns ServiceResponse
- */
+
+
 const getListProduct = async (queryParams = {}) => {
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
@@ -28,75 +24,29 @@ const getListProduct = async (queryParams = {}) => {
     const keyword = apiHelper.getSearch(queryParams);
 
     const pool = await mssql.pool;
-    const data = await pool
+    const resProduct = await pool
       .request()
-      .input('PageSize', itemsPerPage)
-      .input('PageIndex', currentPage)
-      .input('KEYWORD', keyword)
-      .input(
-        'PRODUCTCATEGORYID',
-        apiHelper.getValueFromObject(queryParams, 'product_category_id')
-      )
-      .input(
-        'CREATEDDATEFROM',
-        apiHelper.getValueFromObject(queryParams, 'created_date_from')
-      )
-      .input(
-        'CREATEDDATETO',
-        apiHelper.getValueFromObject(queryParams, 'created_date_to')
-      )
-      .input(
-        'ISSHOWWEB',
-        apiHelper.getFilterBoolean(queryParams, 'is_show_web')
-      )
-      .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'is_active'))
-      .input('USERID', apiHelper.getValueFromObject(queryParams, 'auth_id'))
-      .input('AUTHORID', apiHelper.getValueFromObject(queryParams, 'author_id'))
-      .execute(PROCEDURE_NAME.MD_PRODUCT_GETLIST);
+      .input('keyword', keyword)
+      .input('productcategoryid', apiHelper.getValueFromObject(queryParams, 'product_category_id', null))
+      .input('startdate', apiHelper.getValueFromObject(queryParams, 'start_date', null))
+      .input('enddate', apiHelper.getValueFromObject(queryParams, 'end_date', null))
+      .input('isactive', apiHelper.getValueFromObject(queryParams, 'is_active', 2))
+      .input('pagesize', itemsPerPage)
+      .input('pageindex', currentPage)
+      .execute(PROCEDURE_NAME.MD_PRODUCT_GETLIST_ADMINWEB);
 
-    const dataRecord = data.recordset;
-    let products = productClass.list(dataRecord);
-    for (let i = 0; i < products.length; i++) {
-      const dataBus = await pool
-        .request() // eslint-disable-next-line no-await-in-loop
-        .input(
-          'PRODUCTID',
-          apiHelper.getValueFromObject(products[i], 'product_id')
-        )
-        .execute(PROCEDURE_NAME.MD_PRODUCT_BUSINESS_GETLISTBYPRODUCTID);
-      const dataRecordBus = dataBus.recordset;
-      products[i].businesses = [];
-      if (dataRecordBus) {
-        products[i].businesses = productClass.listBussiness(dataRecordBus);
-      }
-      const dataPrice = await pool
-        .request() // eslint-disable-next-line no-await-in-loop
-        .input(
-          'PRODUCTID',
-          apiHelper.getValueFromObject(products[i], 'product_id')
-        )
-        .input('ISREVIEW', 1)
-        .input('ISACTIVE', 1)
-        .execute(PROCEDURE_NAME.SL_PRICES_GETBYPRODUCTID);
-      const dataRecordPrice = dataPrice.recordset;
-      products[i].prices = [];
-      if (dataRecordPrice) {
-        products[i].prices = productClass.listPrice(dataRecordPrice);
-      }
-    }
-    return new ServiceResponse(true, '', {
-      data: products,
-      page: currentPage,
-      limit: itemsPerPage,
-      total: apiHelper.getTotalData(dataRecord),
-    });
+    let list = productClass.list(resProduct.recordset);
+    let total = apiHelper.getTotalData(resProduct.recordset);
+    return new ServiceResponse(true, "", { list, total })
   } catch (e) {
     logger.error(e, {
-      function: 'ProductService.getListProduct',
+      function: 'product.service.getListProduct',
     });
     return new ServiceResponse(false, e.message);
   }
 };
+
+
 
 const createProductOrUpdate = async (body = {}) => {
   const pool = await mssql.pool;
@@ -581,6 +531,35 @@ const updateProductRelated = async (body = {}) => {
   }
 };
 
+
+const getListAttributesGroup = async () => {
+  try {
+
+    const pool = await mssql.pool;
+    const res = await pool.request()
+      .execute('FOR_ATTRIBUTESGROUP_GetList_AdminWeb')
+
+    let listAttributesGroup = productClass.listAttributesGroup(res.recordsets[0]);
+    let listInterpret = productClass.listInterpret(res.recordsets[1])
+
+    if (listAttributesGroup && listAttributesGroup.length > 0) {
+      for (let index = 0; index < listAttributesGroup.length; index++) {
+        let attributesGroup = listAttributesGroup[index];
+        let interpretOfGroup = listInterpret.filter(p => p.attributes_group_id == attributesGroup.attributes_group_id);
+        attributesGroup.interprets = interpretOfGroup ? interpretOfGroup : []
+      }
+    }
+
+    return new ServiceResponse(true, "", listAttributesGroup)
+
+  } catch (error) {
+    logger.error(e, {
+      function: 'product.service.getListAttributesGroup',
+    });
+    return new ServiceResponse(false, e.message);
+  }
+}
+
 module.exports = {
   getListProduct,
   createProductOrUpdate,
@@ -593,4 +572,5 @@ module.exports = {
   getProductRelated,
   getProductRelatedModal,
   updateProductRelated,
+  getListAttributesGroup
 };

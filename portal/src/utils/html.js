@@ -381,3 +381,16 @@ export function changeToSlug(str)
     // console.log(str)
     return str;
 }
+
+export const convertValue = (value, options) => {
+  if (!(typeof value === "object") && options && options.length) {
+    value = ((_val) => {
+      return options.find((item) => "" + item.value === "" + _val);
+    })(value);
+  } else if (Array.isArray(value) && options && options.length) {
+    return options.filter((item) => {
+      return value.find((e) => e == item.value);
+    });
+  }
+  return value;
+};

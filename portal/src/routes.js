@@ -249,6 +249,15 @@ const ProductDetail = React.lazy(() => import("./components/Products/ProductDeta
 const ProductEdit = React.lazy(() => import("./components/Products/ProductEdit"));
 //.end#Products
 
+
+// Product
+const Product = React.lazy(() => import("./components/Product/Product"));
+const ProductAddNew = React.lazy(() => import("./components/Product/ProductAdd"));
+// const ProductDetail = React.lazy(() => import("./components/Products/ProductDetail"));
+// const ProductEdit = React.lazy(() => import("./components/Products/ProductEdit"));
+//.end#Product
+
+
 // Promotions
 const Promotions = React.lazy(() => import("./components/Promotions/Promotions"));
 const PromotionAdd = React.lazy(() => import("./components/Promotions/PromotionAdd"));
@@ -2653,6 +2662,39 @@ const routes = [
       component: PositonEdit,
     },
     // end#Review
+
+
+    // Product
+  {
+    path: "/product",
+    exact: true,
+    name: "Danh sách sản phẩm",
+    function: "MD_PRODUCT_VIEW",
+    component: Product,
+  },
+  {
+    path: "/product/addnew",
+    exact: true,
+    name: "Thêm mới",
+    function: "MD_PRODUCT_ADD",
+    component: ProductAddNew,
+  },
+  // {
+  //   path: "/products/detail/:id",
+  //   exact: true,
+  //   name: "Chi tiết",
+  //   function: "MD_PRODUCT_VIEW",
+  //   component: ProductDetail,
+  // },
+  // {
+  //   path: "/products/edit/:id",
+  //   exact: true,
+  //   name: "Chỉnh sửa",
+  //   function: "MD_PRODUCT_EDIT",
+  //   component: ProductEdit,
+  // },
+  //.end#Products
+
 ];
 
 export default routes;

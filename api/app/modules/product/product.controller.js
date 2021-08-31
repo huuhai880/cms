@@ -3,15 +3,14 @@ const SingleResponse = require('../../common/responses/single.response');
 const ListResponse = require('../../common/responses/list.response');
 const RESPONSE_MSG = require('../../common/const/responseMsg.const');
 
-/**
- * Get list
- */
+
 const getListProduct = async (req, res, next) => {
   try {
-    req.query.auth_id = req.body.auth_id;
     const serviceRes = await productService.getListProduct(req.query);
-    const { data, total, page, limit } = serviceRes.getData();
-    return res.json(new ListResponse(data, total, page, limit));
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
     return next(error);
   }
@@ -203,6 +202,20 @@ const updateProductRelated = async (req, res, next) => {
   }
 };
 
+
+const getListAttributesGroup = async (req, res, next) => {
+  try {
+    const serviceRes = await productService.getListAttributesGroup();
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports = {
   getListProduct,
   detailProduct,
@@ -216,4 +229,5 @@ module.exports = {
   getProductRelated,
   getProductRelatedModal,
   updateProductRelated,
+  getListAttributesGroup
 };

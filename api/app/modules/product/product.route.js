@@ -48,6 +48,10 @@ routes.route('/get-options').get(productController.getOptions);
 
 routes.route('/get-qr/:product_id').get(productController.getQRList);
 
+
+//Thuộc tính
+routes.route('/attributes-group').get(productController.getListAttributesGroup);
+
 module.exports = {
   prefix,
   routes,

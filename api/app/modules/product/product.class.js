@@ -4,36 +4,24 @@ const template = {
   product_id: '{{#? PRODUCTID}}',
   product_category_id: '{{#? PRODUCTCATEGORYID}}',
   category_name: '{{#? CATEGORYNAME}}',
-  author_id: '{{#? AUTHORID}}',
-  publishing_company_id: '{{#? PUBLISHINGCOMPANYID}}',
-  release_time: '{{#? RELEASETIME}}',
-  product_code: '{{#? PRODUCTCODE}}',
   product_name: '{{#? PRODUCTNAME}}',
   product_name_show_web: '{{#? PRODUCTNAMESHOWWEB}}',
-  product_content_detail: '{{#? PRODUCTCONTENTDETAIL}}',
-  short_description: '{{#? SHORTDESCRIPTION}}',
-  video_url: '{{#? VIDEOURL}}',
   is_show_web: '{{ISSHOWWEB ? 1 : 0}}',
-  is_show_home: '{{ISSHOWHOME ? 1 : 0}}',
   is_active: '{{ISACTIVE ? 1 : 0}}',
-  created_user: '{{#? CREATEDUSER}}',
-  created_date: '{{#? CREATEDDATE}}',
-  updated_user: '{{#? UPDATEDUSER}}',
-  updated_date: '{{#? UPDATEDDATE}}',
-  is_deleted: '{{ISDELETED ? 1 : 0}}',
-  deleted_user: '{{#? DELETEDUSER}}',
-  deleted_date: '{{#? DELETEDDATE}}',
+  price: '{{PRICE ? PRICE : 0}}',
 
-  product_related_id: '{{#? PRODUCTRELATEDID}}',
-  publishing_company: '{{#? PUBLISHINGCOMPANY}}',
+  attributes_group_id: "{{#? ATTRIBUTESGROUPID}}",
+  attributes_group_name: "{{#? ATTRIBUTESGROUPNAME}}",
 
-  //atrribute value
-  // product_attribute_values_id: '{{#? PRODUCTATTRIBUTEVALUESID}}',
-  // product_attribute_id: '{{#? PRODUCTATTRIBUTEID}}',
-  // attribute_name: '{{#? ATTRIBUTENAME}}',
-  // attribute_values: '{{#? ATTRIBUTEVALUES}}',
-  // product_id: '{{#? PRODUCTID}}',
-  // unit_id: '{{#? UNITID}}',
+  interpret_id : "{{#? INTERPRETID}}",
+  formula_id : "{{#? FORMULAID}}",
+  main_number_id: "{{#? MAINNUMBERID}}",
+  is_master: "{{ISMASTER ? 1 : 0}}",
+  interpret_detail_id : "{{#? INTERPRETDETAILID}}",
+  interpret_detail_name : "{{#? INTERPRETDETAILNAME}}",
+  attribute_id : "{{#? ATTRIBUTEID}}",
+  attribute_name : "{{#? ATTRIBUTENAME}}"
+
 };
 const detail = (product) => {
   let transform = new Transform(template);
@@ -57,14 +45,6 @@ const detail = (product) => {
     'is_sell_well',
     'is_show_home',
     'publishing_company',
-
-    //atrribute value
-    // 'product_attribute_values_id',
-    // 'product_attribute_id',
-    // 'attribute_name',
-    // 'attribute_values',
-    // 'product_id',
-    // 'unit_id',
   ]);
 };
 
@@ -93,33 +73,13 @@ const list = (products = []) => {
 
   return transform.transform(products, [
     'product_id',
-    'manufacturer_id',
-    'manufacturer_name',
     'product_category_id',
     'category_name',
     'product_name_show_web',
-    'product_code',
     'product_name',
-    'product_imei',
-    'model_id',
-    'model_name',
-    'origin_id',
-    'origin_name',
-    'quantity',
     'price',
     'is_show_web',
-    'is_service',
     'is_active',
-    'created_date',
-    'status_product_id',
-    'status_product_name',
-    'view',
-    'add',
-    'edit',
-    'del',
-    'is_amount_days',
-    'is_session',
-    'values_in',
   ]);
 };
 const listProductRelated = (products = []) => {
@@ -286,6 +246,31 @@ const qrList = (values) => {
   return transform.transform(values, ['news_id', 'news_title']);
 };
 
+
+
+const listAttributesGroup = (list = []) => {
+  let transform = new Transform(template);
+
+  return transform.transform(list, [
+    'attributes_group_id',
+    'attributes_group_name'
+  ]);
+};
+
+const listInterpret = (list = []) => {
+  let transform = new Transform(template);
+
+  return transform.transform(list, [
+    'attributes_group_id',
+    'attribute_id',
+    'attribute_name',
+    'interpret_id',
+    'interpret_detail_id',
+    'interpret_detail_name'
+  ]);
+};
+
+
 module.exports = {
   options,
   detail,
@@ -298,4 +283,8 @@ module.exports = {
   listAttributeValues,
   proAttributeValues,
   qrList,
+
+
+  listAttributesGroup,
+  listInterpret
 };

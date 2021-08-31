@@ -275,6 +275,10 @@ export default class ProductModel extends Model {
     let data = Object.assign({}, _data);
     return this._api.get(_static.API_PRODUCT_GET_PRODUCTRELATEDMODAL, data);
   }
+
+  getListAttributesGroup(){
+    return this._api.get('/product/attributes-group')
+  }
 }
 // Make alias
 const _static = ProductModel;
