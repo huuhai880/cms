@@ -51,7 +51,6 @@ export default class AttributesEdit extends PureComponent {
                 label: item.partner_id[0].name,
               }
             );
-          console.log(item);
           return item;
         });
       AttributesEnt && this.setState({ AttributesEnt });

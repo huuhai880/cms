@@ -253,27 +253,27 @@ class Account extends Component {
           },
         },
       },
-      {
-        name: "customer_type_name",
-        label: "Loại khách hàng",
-        options: {
-          filter: true,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className={`color-overlay `}>{value}</div>;
-          },
-        },
-      },
+      // {
+      //   name: "customer_type_name",
+      //   label: "Loại khách hàng",
+      //   options: {
+      //     filter: true,
+      //     sort: false,
+      //     customHeadRender: (columnMeta, handleToggleColumn) => {
+      //       return (
+      //         <th
+      //           key={`head-th-${columnMeta.label}`}
+      //           className="MuiTableCell-root MuiTableCell-head"
+      //         >
+      //           <div className="text-center">{columnMeta.label}</div>
+      //         </th>
+      //       );
+      //     },
+      //     customBodyRender: (value, tableMeta, updateValue) => {
+      //       return <div className={`color-overlay `}>{value}</div>;
+      //     },
+      //   },
+      // },
       // {
       //   name: "customer_company_name",
       //   label: "Công ty khách hàng",

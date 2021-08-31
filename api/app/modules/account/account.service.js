@@ -21,6 +21,7 @@ const config = require('../../../config/config');
  * @returns ServiceResponse
  */
 const getListCRMAccount = async (queryParams = {}) => {
+console.log("🚀 ~ file: account.service.js ~ line 24 ~ getListCRMAccount ~ queryParams", queryParams)
   // console.log(queryParams)
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);

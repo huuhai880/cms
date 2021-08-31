@@ -79,25 +79,26 @@ const createAttributesOrUpdate = async (bodyParams) => {
       bodyParams,
       'list_attributes_image'
     );
-    //check name
-    // const dataCheckUsername = await pool
-    //   .request()
-    //   .input(
-    //     'PARTNERID',
-    //     apiHelper.getValueFromObject(bodyParams, 'partner_id')
-    //   )
-    //   .input('USERNAME', apiHelper.getValueFromObject(bodyParams, 'user_name'))
-    //   .execute(PROCEDURE_NAME.MD_PARTNER_CHECK_USERNAME);
-    // if (
-    //   !dataCheckUsername.recordset ||
-    //   !dataCheckUsername.recordset[0].RESULT
-    // ) {
-    //   return new ServiceResponse(
-    //     false,
-    //     RESPONSE_MSG.PARTNER.EXISTS_USER_NAME,
-    //     null
-    //   );
-    // }
+
+    // check name
+    const dataCheckAttributenName = await pool
+      .request()
+      .input('ATTRIBUTEID', attribute_id)
+      .input(
+        'ATTRIBUTENAME',
+        apiHelper.getValueFromObject(bodyParams, 'attribute_name')
+      )
+      .execute(PROCEDURE_NAME.FOR_ATTRIBUTES_CHECK_USERNAME);
+    if (
+      !dataCheckAttributenName.recordset ||
+      dataCheckAttributenName.recordset[0].RESULT
+    ) {
+      return new ServiceResponse(
+        false,
+        RESPONSE_MSG.ATTRIBUTES.EXISTS_NAME,
+        null
+      );
+    }
 
     const dataAttributes = await pool
       .request()
@@ -123,15 +124,15 @@ const createAttributesOrUpdate = async (bodyParams) => {
 
     const attributeId = dataAttributes.recordset[0].RESULT;
 
-    if(attribute_id) {
+    if (attribute_id) {
       const delAttributes = await pool
-      .request()
-      .input('ATTRIBUTEID', attribute_id)
-      .input(
-        'DELETEDUSER',
-        apiHelper.getValueFromObject(bodyParams, 'auth_name')
-      )
-      .execute(PROCEDURE_NAME.FOR_ATTRIBUTESIMAGE_DELETE);
+        .request()
+        .input('ATTRIBUTEID', attribute_id)
+        .input(
+          'DELETEDUSER',
+          apiHelper.getValueFromObject(bodyParams, 'auth_name')
+        )
+        .execute(PROCEDURE_NAME.FOR_ATTRIBUTESIMAGE_DELETE);
     }
 
     if (list_attributes_image && list_attributes_image.length > 0) {
