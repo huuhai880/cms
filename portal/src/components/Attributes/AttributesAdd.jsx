@@ -25,6 +25,7 @@ import _, { cloneDeep } from "lodash";
 import { Modal } from "antd";
 import "./styles.scss";
 import moment from "moment";
+import { Editor } from "@tinymce/tinymce-react";
 
 // Component(s)
 import { CheckAccess } from "../../navigation/VerifyAccess";
@@ -123,15 +124,19 @@ export default class AttributesAdd extends PureComponent {
 
   formikValidationSchema = Yup.object().shape({
     attribute_name: Yup.string().required("Tên thuộc tính là bắt buộc."),
-    main_number_id: Yup.number().required("Số chủ đạo là bắt buộc."),
-    // list_attributes_image: Yup.array()
-    //   .of(
-    //     Yup.object().shape({
-    //       partner_id: Yup.string().nullable().required("Required 1"),
-    //       url_images: Yup.string().nullable().required("Required 1"),
-    //     })
-    //   )
-    //   .required("Required"),
+    main_number_id: Yup.number().required("Chỉ số là bắt buộc."),
+    list_attributes_image: Yup.array().of(
+      Yup.object().shape({
+        partner_id: Yup.object()
+          .shape({
+            value: Yup.string(),
+            label: Yup.string(),
+          })
+          .nullable()
+          .required("Đối tác là bắt buộc."),
+        url_images: Yup.string().nullable().required("Hình ảnh là bắt buộc"),
+      })
+    ),
   });
 
   handleFormikBeforeRender = ({ initialValues }) => {
@@ -241,7 +246,19 @@ export default class AttributesAdd extends PureComponent {
   };
 
   handleRemoveItem = (index) => {
-    let { values, setFieldValue } = this.formikProps;
+    let { values, setFieldValue, resetForm } = this.formikProps;
+    if (values.list_attributes_image.length === 1) {
+      setFieldValue("list_attributes_image",  [
+        {
+          images_id: "",
+          partner_id: null,
+          url_images: "",
+          is_default: "",
+          is_active_image: "",
+        },
+      ],);
+      return;
+    }
     values.list_attributes_image.splice(index, 1);
     setFieldValue("list_attributes_image", values.list_attributes_image);
   };
@@ -391,7 +408,7 @@ export default class AttributesAdd extends PureComponent {
                                     className="text-left"
                                     sm={4}
                                   >
-                                    Số chủ đạo
+                                    Chỉ số
                                     <span className="font-weight-bold red-text">
                                       *
                                     </span>
@@ -403,8 +420,21 @@ export default class AttributesAdd extends PureComponent {
                                         <Input
                                           {...field}
                                           className="text-right"
+                                          onChange={(item) => {
+                                            let regex = new RegExp(/[^0-9]/);
+                                            item = item.target.value.replace(
+                                              regex,
+                                              ""
+                                            );
+                                            field.onChange({
+                                              target: {
+                                                name: "main_number_id",
+                                                value: item,
+                                              },
+                                            });
+                                          }}
                                           onBlur={null}
-                                          type="number"
+                                          type="text"
                                           id="main_number_id"
                                           disabled={noEdit}
                                           min="0"
@@ -432,64 +462,51 @@ export default class AttributesAdd extends PureComponent {
                                   <Label for="description" sm={2}>
                                     Mô tả
                                   </Label>
-                                  <Col sm={10} xs={12}>
-                                    <Field
-                                      name="description"
-                                      render={({ field /* _form */ }) => (
-                                        <Input
-                                          style={{ minHeight: "70px" }}
-                                          {...field}
-                                          onBlur={null}
-                                          type="textarea"
-                                          name="description"
-                                          id="description"
-                                          disabled={noEdit}
-                                        />
-                                      )}
-                                    />
-                                  </Col>
-                                </FormGroup>
-                              </Col>
-                            </Row>
-                            <Row>
-                              <Col sm={8}>
-                                <FormGroup row>
-                                  <Label for="is_active" sm={3}></Label>
-                                  <Col sm={8}>
-                                    <Field
-                                      name="is_active"
-                                      render={({ field /* _form */ }) => (
-                                        <CustomInput
-                                          {...field}
-                                          className="pull-left"
-                                          onBlur={null}
-                                          checked={values.is_active}
-                                          onChange={(event) => {
-                                            const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "is_active",
-                                                value: target.checked,
-                                              },
-                                            });
-                                          }}
-                                          type="checkbox"
-                                          id="is_active"
-                                          label="Kích hoạt"
-                                          disabled={noEdit}
-                                        />
-                                      )}
-                                    />
-                                    <ErrorMessage
-                                      name="is_active"
-                                      component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
-                                          {children}
-                                        </Alert>
-                                      )}
+                                  <Col sm={12} xs={12}>
+                                    <Editor
+                                      apiKey={
+                                        "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
+                                      }
+                                      scriptLoading={{
+                                        delay: 500,
+                                      }}
+                                      value={values.description}
+                                      disabled={noEdit}
+                                      init={{
+                                        height: "300px",
+                                        width: "100%",
+                                        menubar: false,
+                                        branding: false,
+                                        statusbar: false,
+                                        plugins: [
+                                          "advlist autolink fullscreen lists link image charmap print preview anchor",
+                                          "searchreplace visualblocks code fullscreen ",
+                                          "insertdatetime media table paste code help",
+                                          "image imagetools ",
+                                          "toc",
+                                        ],
+                                        menubar:
+                                          "file edit view insert format tools table tc help",
+                                        toolbar1:
+                                          "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                                          "alignleft aligncenter alignright alignjustify",
+                                        toolbar2:
+                                          "bullist numlist outdent indent | removeformat | help | image | toc",
+                                        file_picker_types: "image",
+                                        images_dataimg_filter: function (img) {
+                                          return img.hasAttribute(
+                                            "internal-blob"
+                                          );
+                                        },
+                                        images_upload_handler:
+                                          this.handleUploadImage,
+                                      }}
+                                      onEditorChange={(newValue) => {
+                                        this.formikProps.setFieldValue(
+                                          "description",
+                                          newValue
+                                        );
+                                      }}
                                     />
                                   </Col>
                                 </FormGroup>
@@ -540,7 +557,7 @@ export default class AttributesAdd extends PureComponent {
                                         style={{ width: "40%" }}
                                         className="text-center"
                                       >
-                                        Thành viên
+                                        Đối tác
                                       </th>
                                       <th
                                         style={{ width: "25%" }}
@@ -558,7 +575,7 @@ export default class AttributesAdd extends PureComponent {
                                         style={{ width: 30 }}
                                         className="text-center"
                                       >
-                                        kích hoạt
+                                        Kích hoạt
                                       </th>
                                       <th
                                         style={{ width: 50 }}
@@ -587,16 +604,11 @@ export default class AttributesAdd extends PureComponent {
                                             >
                                               <Col>
                                                 <Field
-                                                  name="partner_id"
                                                   render={({ field }) => (
                                                     <Select
-                                                      {...field}
                                                       onBlur={null}
                                                       value={
-                                                        values
-                                                          .list_attributes_image[
-                                                          index
-                                                        ]
+                                                        values.list_attributes_image
                                                           ? values
                                                               .list_attributes_image[
                                                               index
@@ -623,28 +635,27 @@ export default class AttributesAdd extends PureComponent {
                                                     />
                                                   )}
                                                 />
-                                                {/* {errors.list_attributes_image &&
-                                                  errors.list_attributes_image[
-                                                    errors.list_attributes_image
-                                                      .length - 1
-                                                  ].partner_id} */}
-                                                {/* <ErrorMessage
-                                                  name="partner_id"
-                                                  component={({ children }) => {
-                                                    <Alert
-                                                      color="danger"
-                                                      className="field-validation-error"
-                                                    >{children}
-                                                      {errors.list_attributes_image &&
-                                                        errors
-                                                          .list_attributes_image[
-                                                          errors
-                                                            .list_attributes_image
-                                                            .length - 1
-                                                        ].partner_id}
-                                                    </Alert>
-                                                  }}
-                                                /> */}
+                                                {errors &&
+                                                  errors.list_attributes_image && (
+                                                    <ErrorMessage
+                                                      name="list_attributes_image"
+                                                      component={({
+                                                        children,
+                                                      }) => (
+                                                        <Alert
+                                                          color="danger"
+                                                          className="field-validation-error text-left"
+                                                          style={{display: `${children[index] && children[index]
+                                                            .partner_id? "block": "none"}`}}
+                                                        >
+                                                          {children[index]
+                                                            ? children[index]
+                                                                .partner_id
+                                                            : null}
+                                                        </Alert>
+                                                      )}
+                                                    />
+                                                  )}
                                               </Col>
                                             </td>
                                             <td
@@ -715,9 +726,6 @@ export default class AttributesAdd extends PureComponent {
                                                       },
                                                     })
                                                       .then((usrImgBase64) => {
-                                                        console.log(
-                                                          usrImgBase64
-                                                        );
                                                         let clone = [
                                                           ...values.list_attributes_image,
                                                         ];
@@ -746,6 +754,27 @@ export default class AttributesAdd extends PureComponent {
                                                 }}
                                                 disabled={noEdit}
                                               />
+                                              {errors &&
+                                                errors.list_attributes_image && (
+                                                  <ErrorMessage
+                                                    name="list_attributes_image"
+                                                    component={({
+                                                      children,
+                                                    }) => (
+                                                      <Alert
+                                                          color="danger"
+                                                          className="field-validation-error text-left"
+                                                          style={{display: `${children[index] && children[index]
+                                                            .url_images? "block": "none"}`, marginBottom: "0"}}
+                                                        >
+                                                          {children[index]
+                                                            ? children[index]
+                                                                .url_images
+                                                            : null}
+                                                        </Alert>
+                                                    )}
+                                                  />
+                                                )}
                                               {/* {!this.state.clearImage && (
                                                 <Field
                                                   name="url_images"
@@ -842,6 +871,13 @@ export default class AttributesAdd extends PureComponent {
                                                       onChange={(event) => {
                                                         const { target } =
                                                           event;
+                                                        values.list_attributes_image =
+                                                          values.list_attributes_image.map(
+                                                            (value) => {
+                                                              value.is_default = false;
+                                                              return value;
+                                                            }
+                                                          );
                                                         values.list_attributes_image[
                                                           index
                                                         ].is_default =
@@ -961,58 +997,108 @@ export default class AttributesAdd extends PureComponent {
                               </Col>
                             </Row>
                             <Row>
-                              <Col sm={12} className="text-right mt-3">
-                                {noEdit ? (
-                                  <CheckAccess permission="FOR_ATTRIBUTES_EDIT">
+                              <Col sm={12}>
+                                <FormGroup row>
+                                  <Col sm={6}>
+                                    <FormGroup row className="mt-3">
+                                      <Label for="is_active" sm={6}></Label>
+                                      <Col sm={6}>
+                                        <Field
+                                          name="is_active"
+                                          render={({ field /* _form */ }) => (
+                                            <CustomInput
+                                              {...field}
+                                              className="pull-left"
+                                              onBlur={null}
+                                              checked={values.is_active}
+                                              onChange={(event) => {
+                                                const { target } = event;
+                                                field.onChange({
+                                                  target: {
+                                                    name: "is_active",
+                                                    value: target.checked,
+                                                  },
+                                                });
+                                              }}
+                                              type="checkbox"
+                                              id="is_active"
+                                              label="Kích hoạt"
+                                              disabled={noEdit}
+                                            />
+                                          )}
+                                        />
+                                        <ErrorMessage
+                                          name="is_active"
+                                          component={({ children }) => (
+                                            <Alert
+                                              color="danger"
+                                              className="field-validation-error"
+                                            >
+                                              {children}
+                                            </Alert>
+                                          )}
+                                        />
+                                      </Col>
+                                    </FormGroup>
+                                  </Col>
+                                  <Col sm={6} className="text-right mt-3">
+                                    {noEdit ? (
+                                      <CheckAccess permission="FOR_ATTRIBUTES_EDIT">
+                                        <Button
+                                          color="primary"
+                                          className="mr-2 btn-block-sm"
+                                          onClick={() =>
+                                            window._$g.rdr(
+                                              `/attributes/edit/${AttributesEnt.attribute_id}`
+                                            )
+                                          }
+                                        >
+                                          <i className="fa fa-edit mr-1" />
+                                          Chỉnh sửa
+                                        </Button>
+                                      </CheckAccess>
+                                    ) : (
+                                      [
+                                        <Button
+                                          key="buttonSave"
+                                          type="submit"
+                                          color="primary"
+                                          disabled={isSubmitting}
+                                          onClick={() =>
+                                            this.handleSubmit("save")
+                                          }
+                                          className="mr-2 btn-block-sm"
+                                        >
+                                          <i className="fa fa-save mr-2" />
+                                          Lưu
+                                        </Button>,
+                                        <Button
+                                          key="buttonSaveClose"
+                                          type="submit"
+                                          color="success"
+                                          disabled={isSubmitting}
+                                          onClick={() =>
+                                            this.handleSubmit("save_n_close")
+                                          }
+                                          className="mr-2 btn-block-sm mt-md-0 mt-sm-2"
+                                        >
+                                          <i className="fa fa-save mr-2" />
+                                          Lưu &amp; Đóng
+                                        </Button>,
+                                      ]
+                                    )}
                                     <Button
-                                      color="primary"
-                                      className="mr-2 btn-block-sm"
+                                      disabled={isSubmitting}
                                       onClick={() =>
-                                        window._$g.rdr(
-                                          `/attributes/edit/${AttributesEnt.attribute_id}`
-                                        )
+                                        window._$g.rdr("/attributes")
                                       }
+                                      className="btn-block-sm mt-md-0 mt-sm-2"
                                     >
-                                      <i className="fa fa-edit mr-1" />
-                                      Chỉnh sửa
+                                      <i className="fa fa-times-circle mr-1" />
+                                      Đóng
                                     </Button>
-                                  </CheckAccess>
-                                ) : (
-                                  [
-                                    <Button
-                                      key="buttonSave"
-                                      type="submit"
-                                      color="primary"
-                                      disabled={isSubmitting}
-                                      onClick={() => this.handleSubmit("save")}
-                                      className="mr-2 btn-block-sm"
-                                    >
-                                      <i className="fa fa-save mr-2" />
-                                      Lưu
-                                    </Button>,
-                                    <Button
-                                      key="buttonSaveClose"
-                                      type="submit"
-                                      color="success"
-                                      disabled={isSubmitting}
-                                      onClick={() =>
-                                        this.handleSubmit("save_n_close")
-                                      }
-                                      className="mr-2 btn-block-sm mt-md-0 mt-sm-2"
-                                    >
-                                      <i className="fa fa-save mr-2" />
-                                      Lưu &amp; Đóng
-                                    </Button>,
-                                  ]
-                                )}
-                                <Button
-                                  disabled={isSubmitting}
-                                  onClick={() => window._$g.rdr("/attributes")}
-                                  className="btn-block-sm mt-md-0 mt-sm-2"
-                                >
-                                  <i className="fa fa-times-circle mr-1" />
-                                  Đóng
-                                </Button>
+                                  </Col>
+                                </FormGroup>
                               </Col>
                             </Row>
                           </Col>

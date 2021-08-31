@@ -157,10 +157,7 @@ class Attributes extends Component {
     }
   }
 
-  handleSubmitFilter = (
-    search,
-    is_active
-  ) => {
+  handleSubmitFilter = (search, is_active) => {
     let query = { ...this.state.query };
     query.page = 1;
     query = Object.assign(query, {
@@ -213,7 +210,7 @@ class Attributes extends Component {
       },
       {
         name: "main_number_id",
-        label: "Số chủ đạo",
+        label: "Chỉ số",
         options: {
           filter: false,
           sort: false,
@@ -249,7 +246,18 @@ class Attributes extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-left">{value}</div>;
+            return (
+              <p
+                className="text-left mb-0"
+                dangerouslySetInnerHTML={{
+                  __html: value
+                    .replace(/(<([^>]+)>)/gi, "")
+                    .split(" ")
+                    .slice(0, 15)
+                    .join(" "),
+                }}
+              />
+            );
           },
         },
       },
@@ -348,9 +356,7 @@ class Attributes extends Component {
           {this.state.toggleSearch && (
             <CardBody className="px-0 py-0">
               <div className="MuiPaper-filter__custom z-index-2">
-                <AttributesFilter
-                  handleSubmit={this.handleSubmitFilter}
-                />
+                <AttributesFilter handleSubmit={this.handleSubmitFilter} />
               </div>
             </CardBody>
           )}
