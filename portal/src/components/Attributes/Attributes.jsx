@@ -251,10 +251,12 @@ class Attributes extends Component {
                 className="text-left mb-0"
                 dangerouslySetInnerHTML={{
                   __html: value
-                    .replace(/(<([^>]+)>)/gi, "")
-                    .split(" ")
-                    .slice(0, 15)
-                    .join(" "),
+                    ? value
+                        .replace(/(<([^>]+)>)/gi, "")
+                        .split(" ")
+                        .slice(0, 15)
+                        .join(" ")
+                    : "",
                 }}
               />
             );

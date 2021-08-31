@@ -21,11 +21,9 @@ import { readFileAsBase64 } from "../../utils/html";
 import { mapDataOptions4Select } from "../../utils/html";
 import Select from "react-select";
 import "./styles.scss";
-import _, { cloneDeep } from "lodash";
-import { Modal } from "antd";
 import "./styles.scss";
-import moment from "moment";
 import { Editor } from "@tinymce/tinymce-react";
+import ReactNumberFormat from "react-number-format";
 
 // Component(s)
 import { CheckAccess } from "../../navigation/VerifyAccess";
@@ -33,6 +31,7 @@ import Loading from "../Common/Loading";
 
 // Model(s)
 import AttributesModel from "../../models/AttributesModel";
+import { floralwhite } from "color-name";
 
 /**
  * @class AttributesAdd
@@ -125,18 +124,32 @@ export default class AttributesAdd extends PureComponent {
   formikValidationSchema = Yup.object().shape({
     attribute_name: Yup.string().required("Tên thuộc tính là bắt buộc."),
     main_number_id: Yup.number().required("Chỉ số là bắt buộc."),
-    list_attributes_image: Yup.array().of(
-      Yup.object().shape({
-        partner_id: Yup.object()
-          .shape({
-            value: Yup.string(),
-            label: Yup.string(),
-          })
-          .nullable()
-          .required("Đối tác là bắt buộc."),
-        url_images: Yup.string().nullable().required("Hình ảnh là bắt buộc"),
-      })
-    ),
+    list_attributes_image: Yup.array()
+      .of(
+        Yup.object().shape({
+          partner_id: Yup.object()
+            .shape({
+              value: Yup.string(),
+              label: Yup.string(),
+            })
+            .nullable()
+            .required("Đối tác là bắt buộc."),
+          url_images: Yup.string().nullable().required("Hình ảnh là bắt buộc"),
+        })
+      )
+      .test("list_attributes_image", null, (arr) => {
+        let check = arr.filter((item) => {
+          return item.is_default == true;
+        });
+        if (check.length > 0) {
+          return true;
+        }
+        return new Yup.ValidationError(
+          "Chọn một ảnh mặc định là bắt buộc.",
+          null,
+          "check_is_default"
+        );
+      }),
   });
 
   handleFormikBeforeRender = ({ initialValues }) => {
@@ -239,7 +252,7 @@ export default class AttributesAdd extends PureComponent {
       images_id: "",
       partner_id: null,
       url_images: undefined,
-      is_default: "",
+      is_default: 0,
       is_active_image: "",
     });
     setFieldValue("list_attributes_image", values.list_attributes_image);
@@ -248,15 +261,15 @@ export default class AttributesAdd extends PureComponent {
   handleRemoveItem = (index) => {
     let { values, setFieldValue, resetForm } = this.formikProps;
     if (values.list_attributes_image.length === 1) {
-      setFieldValue("list_attributes_image",  [
+      setFieldValue("list_attributes_image", [
         {
           images_id: "",
           partner_id: null,
           url_images: "",
-          is_default: "",
+          is_default: 1,
           is_active_image: "",
         },
-      ],);
+      ]);
       return;
     }
     values.list_attributes_image.splice(index, 1);
@@ -417,28 +430,48 @@ export default class AttributesAdd extends PureComponent {
                                     <Field
                                       name="main_number_id"
                                       render={({ field /* _form */ }) => (
-                                        <Input
-                                          {...field}
-                                          className="text-right"
-                                          onChange={(item) => {
-                                            let regex = new RegExp(/[^0-9]/);
-                                            item = item.target.value.replace(
-                                              regex,
-                                              ""
-                                            );
-                                            field.onChange({
-                                              target: {
-                                                name: "main_number_id",
-                                                value: item,
-                                              },
-                                            });
-                                          }}
-                                          onBlur={null}
+                                        <ReactNumberFormat
+                                          decimalScale={0}
+                                          fixedDecimalScale={false}
+                                          isNumericString
+                                          mask="_"
                                           type="text"
+                                          placeholder="0"
+                                          className="text-right"
+                                          customInput={Input}
+                                          name="main_number_id"
                                           id="main_number_id"
-                                          disabled={noEdit}
-                                          min="0"
+                                          onChange={(value) => {
+                                            this.formikProps.setFieldValue(
+                                              "main_number_id",
+                                              value.target.value
+                                            );
+                                          }}
+                                          value={values.main_number_id}
+                                          min={0}
                                         />
+                                        //   <Input
+                                        //     {...field}
+                                        //     className="text-right"
+                                        //     onChange={(item) => {
+                                        //       let regex = new RegExp(/[^0-9]/);
+                                        //       item = item.target.value.replace(
+                                        //         regex,
+                                        //         ""
+                                        //       );
+                                        //       field.onChange({
+                                        //         target: {
+                                        //           name: "main_number_id",
+                                        //           value: item,
+                                        //         },
+                                        //       });
+                                        //     }}
+                                        //     onBlur={null}
+                                        //     type="text"
+                                        //     id="main_number_id"
+                                        //     disabled={noEdit}
+                                        //     min="0"
+                                        //   />
                                       )}
                                     />
                                     <ErrorMessage
@@ -534,7 +567,7 @@ export default class AttributesAdd extends PureComponent {
                                   className="pull-right btn-block-sm mt-md-0 mt-sm-2"
                                 >
                                   <i className="fa fa-plus-circle mr-2" />
-                                  Thêm hình ảnh
+                                  Thêm
                                 </Button>
                               </Col>
                             </Row>
@@ -607,6 +640,7 @@ export default class AttributesAdd extends PureComponent {
                                                   render={({ field }) => (
                                                     <Select
                                                       onBlur={null}
+                                                      className="text-left"
                                                       value={
                                                         values.list_attributes_image
                                                           ? values
@@ -645,8 +679,15 @@ export default class AttributesAdd extends PureComponent {
                                                         <Alert
                                                           color="danger"
                                                           className="field-validation-error text-left"
-                                                          style={{display: `${children[index] && children[index]
-                                                            .partner_id? "block": "none"}`}}
+                                                          style={{
+                                                            display: `${
+                                                              children[index] &&
+                                                              children[index]
+                                                                .partner_id
+                                                                ? "block"
+                                                                : "none"
+                                                            }`,
+                                                          }}
                                                         >
                                                           {children[index]
                                                             ? children[index]
@@ -762,16 +803,24 @@ export default class AttributesAdd extends PureComponent {
                                                       children,
                                                     }) => (
                                                       <Alert
-                                                          color="danger"
-                                                          className="field-validation-error text-left"
-                                                          style={{display: `${children[index] && children[index]
-                                                            .url_images? "block": "none"}`, marginBottom: "0"}}
-                                                        >
-                                                          {children[index]
-                                                            ? children[index]
-                                                                .url_images
-                                                            : null}
-                                                        </Alert>
+                                                        color="danger"
+                                                        className="field-validation-error text-left"
+                                                        style={{
+                                                          display: `${
+                                                            children[index] &&
+                                                            children[index]
+                                                              .url_images
+                                                              ? "block"
+                                                              : "none"
+                                                          }`,
+                                                          marginBottom: "0",
+                                                        }}
+                                                      >
+                                                        {children[index]
+                                                          ? children[index]
+                                                              .url_images
+                                                          : null}
+                                                      </Alert>
                                                     )}
                                                   />
                                                 )}
@@ -834,18 +883,7 @@ export default class AttributesAdd extends PureComponent {
                                                     );
                                                   }}
                                                 />
-                                              )}
-                                              <ErrorMessage
-                                                name="url_images"
-                                                component={({ children }) => (
-                                                  <Alert
-                                                    color="danger"
-                                                    className="field-validation-error"
-                                                  >
-                                                    {children}
-                                                  </Alert>
-                                                )}
-                                              /> */}
+                                              )} */}
                                             </td>
                                             <td
                                               className="text-center wrap-chbx"
@@ -880,8 +918,7 @@ export default class AttributesAdd extends PureComponent {
                                                           );
                                                         values.list_attributes_image[
                                                           index
-                                                        ].is_default =
-                                                          target.checked;
+                                                        ].is_default = true;
                                                         field.onChange({
                                                           target: {
                                                             name: "list_attributes_image",
@@ -895,17 +932,6 @@ export default class AttributesAdd extends PureComponent {
                                                       id={`is_default_${index}`}
                                                       disabled={noEdit}
                                                     />
-                                                  )}
-                                                />
-                                                <ErrorMessage
-                                                  name="is_default"
-                                                  component={({ children }) => (
-                                                    <Alert
-                                                      color="danger"
-                                                      className="field-validation-error"
-                                                    >
-                                                      {children}
-                                                    </Alert>
                                                   )}
                                                 />
                                               </Col>
@@ -994,6 +1020,17 @@ export default class AttributesAdd extends PureComponent {
                                     </tbody>
                                   </Table>
                                 }
+                                <ErrorMessage
+                                  name="check_is_default"
+                                  component={({ children }) => (
+                                    <Alert
+                                      color="danger"
+                                      className="field-validation-error"
+                                    >
+                                      {children}
+                                    </Alert>
+                                  )}
+                                />
                               </Col>
                             </Row>
                             <Row>
