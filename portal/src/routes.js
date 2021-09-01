@@ -850,6 +850,21 @@ const AttributesEdit = React.lazy(() =>
 );
 // end#Attributes
 
+//Calculation
+const Calculation = React.lazy(() =>
+  import("./components/MdCalculation/Calculation")
+);
+const CalculationAdd = React.lazy(() =>
+  import("./components/MdCalculation/CalculationAdd")
+);
+const CalculationDetail = React.lazy(() =>
+  import("./components/MdCalculation/CalculationDetail")
+);
+const CalculationEdit = React.lazy(() =>
+  import("./components/MdCalculation/CalculationEdit")
+);
+// end#Calculation
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   // dashboard
@@ -2942,6 +2957,37 @@ const routes = [
     component: AttributesEdit,
   },
   // end#Attributes
+
+  //Calculation
+  {
+    path: "/calculation",
+    exact: true,
+    name: "Danh sách phép tính",
+    function: "MD_CALCULATION_VIEW",
+    component: Calculation,
+  },
+  {
+    path: "/calculation/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "MD_CALCULATION_ADD",
+    component: CalculationAdd,
+  },
+  {
+    path: "/calculation/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "MD_CALCULATION_VIEW",
+    component: CalculationDetail,
+  },
+  {
+    path: "/calculation/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "MD_CALCULATION_EDIT",
+    component: CalculationEdit,
+  },
+  // end#Calculation
 ];
 
 export default routes;

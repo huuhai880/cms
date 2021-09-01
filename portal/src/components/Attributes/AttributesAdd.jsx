@@ -552,6 +552,9 @@ export default class AttributesAdd extends PureComponent {
                                 className="mb-2"
                               >
                                 Hình ảnh
+                                <span className="font-weight-bold red-text">
+                                  *
+                                </span>
                               </Label>
                               <Col
                                 sm={8}
