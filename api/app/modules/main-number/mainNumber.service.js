@@ -163,7 +163,7 @@ const addMainNumber = async (body = {}) => {
       .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
       .execute('FOR_MAINNUMBER_CreateOrUpdate_AdminWeb');
     const mainNumber_id = resultMainNumber.recordset[0].RESULT;
-    console.log(apiHelper.getValueFromObject(body, 'main_number_id'))
+    // console.log(apiHelper.getValueFromObject(body, 'main_number_id'))
     if (apiHelper.getValueFromObject(body, 'main_number_id')) {
       await pool.request()
         .input('MAINNUMBERID', mainNumber_id)

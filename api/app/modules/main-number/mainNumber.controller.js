@@ -76,7 +76,7 @@ const getMainNumberList = async (req, res, next) => {
 };
 const getImageListByNum = async (req, res, next) => {
   const mainNumber_id = req.params.mainNumber_id;
-  console.log(req.params.mainNumber_id);
+  // console.log(req.params.mainNumber_id);
   try {
     const serviceRes = await MainNumberService.getImageListByNum(mainNumber_id);
     if (serviceRes.isFailed()) {
