@@ -242,21 +242,12 @@ const ProductAttributeDetail = React.lazy(() =>
 // const CategoryAdd = React.lazy(() => import('./components/Category/CategoryAdd'))
 //.end#Category
 
-// Products
-// const Products = React.lazy(() => import("./components/ProductsOld/Products"));
-// const ProductOldAdd = React.lazy(() => import("./components/ProductsOld/ProductAdd"));
-// const ProductOldDetail = React.lazy(() => import("./components/ProductsOld/ProductDetail"));
-// const ProductOldEdit = React.lazy(() => import("./components/ProductsOld/ProductEdit"));
-//.end#Products
-
-
 // Product
 const Product = React.lazy(() => import("./components/Product/Product"));
 const ProductAdd = React.lazy(() => import("./components/Product/ProductAdd"));
 const ProductDetail = React.lazy(() => import("./components/Product/ProductDetail"));
 const ProductEdit = React.lazy(() => import("./components/Product/ProductEdit"));
 //.end#Product
-
 
 // Promotions
 const Promotions = React.lazy(() => import("./components/Promotions/Promotions"));
@@ -1415,36 +1406,36 @@ const routes = [
   },
   //.end#ProductAttribute
 
-  // Products
-  // {
-  //   path: "/products",
-  //   exact: true,
-  //   name: "Danh sách sản phẩm",
-  //   function: "MD_PRODUCT_VIEW",
-  //   component: Products,
-  // },
-  // {
-  //   path: "/products/add",
-  //   exact: true,
-  //   name: "Thêm mới",
-  //   function: "MD_PRODUCT_ADD",
-  //   component: ProductOlddd,
-  // },
-  // {
-  //   path: "/products/detail/:id",
-  //   exact: true,
-  //   name: "Chi tiết",
-  //   function: "MD_PRODUCT_VIEW",
-  //   component: ProductDetail,
-  // },
-  // {
-  //   path: "/products/edit/:id",
-  //   exact: true,
-  //   name: "Chỉnh sửa",
-  //   function: "MD_PRODUCT_EDIT",
-  //   component: ProductEdit,
-  // },
-  //.end#Products
+  // Product
+  {
+    path: "/product",
+    exact: true,
+    name: "Danh sách sản phẩm",
+    function: "MD_PRODUCT_VIEW",
+    component: Product,
+  },
+  {
+    path: "/product/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "MD_PRODUCT_ADD",
+    component: ProductAdd,
+  },
+  {
+    path: "/product/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "MD_PRODUCT_VIEW",
+    component: ProductDetail,
+  },
+  {
+    path: "/product/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "MD_PRODUCT_EDIT",
+    component: ProductEdit,
+  },
+  //.end#Product
 
   // Promotions
   {
@@ -2662,39 +2653,6 @@ const routes = [
     component: PositonEdit,
   },
   // end#Review
-
-
-  // Product
-  {
-    path: "/product",
-    exact: true,
-    name: "Danh sách sản phẩm",
-    function: "MD_PRODUCT_VIEW",
-    component: Product,
-  },
-  {
-    path: "/product/add",
-    exact: true,
-    name: "Thêm mới",
-    function: "MD_PRODUCT_ADD",
-    component: ProductAdd,
-  },
-  {
-    path: "/product/detail/:id",
-    exact: true,
-    name: "Chi tiết",
-    function: "MD_PRODUCT_VIEW",
-    component: ProductDetail,
-  },
-  {
-    path: "/product/edit/:id",
-    exact: true,
-    name: "Chỉnh sửa",
-    function: "MD_PRODUCT_EDIT",
-    component: ProductEdit,
-  },
-  //.end#Product
-
 ];
 
 export default routes;
