@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
 
 // Component(s)
-import AccountEdit from './AccountEdit';
+import AccountAdd from './AccountAdd';
 
 /**
- * @class AccountEditDetail
+ * @class AccountDetail
  */
-export default class AccountEditDetail extends PureComponent {
+export default class AccountDetail extends PureComponent {
   render() {
-    return <AccountEdit {...this.props} noEdit={true} />
+    return <AccountAdd {...this.props} noEdit={true} />
   }
 }

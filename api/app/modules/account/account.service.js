@@ -21,6 +21,7 @@ const config = require('../../../config/config');
  * @returns ServiceResponse
  */
 const getListCRMAccount = async (queryParams = {}) => {
+console.log("🚀 ~ file: account.service.js ~ line 24 ~ getListCRMAccount ~ queryParams", queryParams)
   // console.log(queryParams)
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
@@ -141,7 +142,7 @@ const createCRMAccountOrUpdate = async (body = {}) => {
     await transaction.begin();
     let password = apiHelper.getValueFromObject(body, 'pass_word');
     password = stringHelper.hashPassword(password);
-
+    // console.log(body)
     /////create;
     const requestAccount = new sql.Request(transaction);
     const resultAccount = await requestAccount

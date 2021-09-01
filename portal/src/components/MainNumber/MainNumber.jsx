@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Card, CardBody, CardHeader, Col, Input, FormGroup, Button } from "reactstrap";
-import AccountFilter from "./AccountFilter";
 import { layoutFullWidthHeight } from "../../utils/html";
+import Filter from "./Filter";
+import { Alert, Card, CardBody, CardHeader, Col, Input, FormGroup, Button } from "reactstrap";
+import { CircularProgress } from "@material-ui/core";
+import { getColumTable } from "./const";
 import MUIDataTable from "mui-datatables";
 import { configTableOptions } from "../../utils/index";
 import CustomPagination from "../../utils/CustomPagination";
-import { CircularProgress, Checkbox } from "@material-ui/core";
-import AccountModel from "../../models/AccountModel";
-import { getColumTable } from "./const";
+import MainNumberModel from "../../models/MainNumberModel";
 
 layoutFullWidthHeight();
-function Account() {
-  const _accountModel = new AccountModel();
+
+function MainNumber() {
+  const _mainNumberModel = new MainNumberModel();
+
+  const [dataNumber, setDataNumber] = useState([]);
   const [toggleSearch, settoggleSearch] = useState(true);
   const [isLoading, setisLoading] = useState(true);
-  const [dataAccount, setDataAccount] = useState([]);
   const [query, setQuery] = useState({
-    itemsPerPage: 25,
+    itemsPerPage: 10,
     page: 1,
-    is_active: 1,
+    selectdActive: 1,
   });
   //// init data
   useEffect(() => {
@@ -33,8 +35,8 @@ function Account() {
   ////call API
   const _callAPI = async (props) => {
     try {
-      await _accountModel.getList(props).then((data) => {
-        setDataAccount(data);
+      await _mainNumberModel.getListNumber(props).then((data) => {
+        setDataNumber(data);
         // console.log(data);
       });
     } catch (error) {
@@ -44,13 +46,13 @@ function Account() {
       setisLoading(false);
     }
   };
-  ///// delete acccount
+
+  ///// delete number
   const handleDelete = (id) => {
     window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "xóa", (confirm) => {
       if (confirm) {
         try {
-
-          _accountModel.delete(id).then((data) => {
+          _mainNumberModel.delete(id).then((data) => {
             window._$g.toastr.show("Xóa thành công", "success");
             _callAPI(query);
           });
@@ -75,7 +77,7 @@ function Account() {
         {toggleSearch && (
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-filter__custom">
-              <AccountFilter handleSubmit={handleSubmitFillter} />
+              <Filter handleSubmitFillter={handleSubmitFillter} />
             </div>
           </CardBody>
         )}
@@ -86,7 +88,7 @@ function Account() {
             color="success"
             className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
             onClick={() => {
-              window._$g.rdr("/account-new/add");
+              window._$g.rdr("/main-number/add");
             }}
             size="sm"
           >
@@ -106,21 +108,21 @@ function Account() {
               ) : (
                 <div>
                   <MUIDataTable
-                    data={dataAccount.items}
+                    data={dataNumber.items}
                     columns={getColumTable(
-                      dataAccount.items,
-                      dataAccount.totalItems,
+                      dataNumber.items,
+                      dataNumber.totalItems,
                       query,
                       handleDelete
                       // handleReply,
                       // handleReview
                     )}
-                    options={configTableOptions(dataAccount.totalItems, query.page, {
+                    options={configTableOptions(dataNumber.totalItems, query.page, {
                       itemsPerPage: query.itemsPerPage,
                     })}
                   />
                   <CustomPagination
-                    count={dataAccount.totalItems}
+                    count={dataNumber.totalItems}
                     rowsPerPage={query.itemsPerPage}
                     page={query.page - 1 || 0}
                     // onChangePage={handleChangePage}
@@ -136,4 +138,4 @@ function Account() {
   );
 }
 
-export default Account;
+export default MainNumber;

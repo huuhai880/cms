@@ -518,12 +518,11 @@ export default class NewsAdd extends Component {
   handlePickNews = (news = {}) => {
     const { setFieldValue, values } = this.formikProps;
     this.setState({ isOpenNewsList: false }, () => {
-      let related = values.related || [];
-      (Object.keys(news) || []).forEach((key) => {
-        if (related.findIndex((item) => item.news_id === key) < 0) {
-          related.unshift(news[key]);
-        }
-      });
+      let related = Object.keys(news).length == 0 ? values.related : 
+      (Object.keys(news) || []).reduce((arr, key) => {
+          arr.push(news[key]);
+          return arr;
+      }, []);
 
       setFieldValue("related", related);
       this.setState({ dataRelated: related });

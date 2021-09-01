@@ -81,8 +81,7 @@ const saveBase64 = async (folderPath, base64, fileName) => {
 
   } catch (e) {
     // console.log(e)
-    logger.error(e, { 'function': 'fileHelper.saveBase64' });
-
+    // logger.error(e, { 'function': 'fileHelper.saveBase64' });
     return null;
   }
 };

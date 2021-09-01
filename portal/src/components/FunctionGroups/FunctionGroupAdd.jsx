@@ -533,6 +533,15 @@ export default class FunctionGroupAdd extends PureComponent {
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
+                                          onChange={(event) => {
+                                            const { target } = event;
+                                            field.onChange({
+                                              target: {
+                                                name: "is_active",
+                                                value: target.checked,
+                                              },
+                                            });
+                                          }}
                                           checked={values.is_active}
                                           type="checkbox"
                                           id="is_active"
@@ -551,6 +560,15 @@ export default class FunctionGroupAdd extends PureComponent {
                                           className="pull-left"
                                           onBlur={null}
                                           checked={values.is_system}
+                                          onChange={(event) => {
+                                            const { target } = event;
+                                            field.onChange({
+                                              target: {
+                                                name: "is_system",
+                                                value: target.checked,
+                                              },
+                                            });
+                                          }}
                                           type="checkbox"
                                           id="is_system"
                                           label="Hệ thống?"

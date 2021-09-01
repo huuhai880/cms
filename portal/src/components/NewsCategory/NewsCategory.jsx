@@ -196,11 +196,11 @@ class NewsCategory extends Component {
             this._newsCategoryModel
               .delete(id)
               .then(() => {
-                let cloneData = JSON.parse(JSON.stringify(data));
-                cloneData.splice(rowIndex, 1);
-                this.setState({
-                  data: cloneData,
-                });
+                  let cloneData = JSON.parse(JSON.stringify(data));
+                  cloneData.splice(rowIndex, 1);
+                  this.setState({
+                    data: cloneData,
+                  });
               })
               .catch(() => {
                 window._$g.dialogs.alert(

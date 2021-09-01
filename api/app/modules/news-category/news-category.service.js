@@ -178,11 +178,11 @@ const changeStatusNewsCategory = async (newsCategoryId, bodyParams) => {
 const deleteNewsCategory = async (newsCategoryId, bodyParams) => {
   try {
     const pool = await mssql.pool;
-    await pool.request()
+    const res = await pool.request()
       .input('NEWSCATEGORYID',newsCategoryId)
       .input('UPDATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name'))
       .execute(PROCEDURE_NAME.NEWS_NEWSCATEGORY_DELETE_ADMINWEB);
-    return new ServiceResponse(true, RESPONSE_MSG.NEWSCATEGORY.DELETE_SUCCESS,true);
+    return new ServiceResponse(true, RESPONSE_MSG.NEWSCATEGORY.DELETE_SUCCESS,res.recordset[0].RESULT);
   } catch (e) {
     logger.error(e, {'function': 'newsCategoryService.deleteNewsCategory'});
     return new ServiceResponse(false, e.message);

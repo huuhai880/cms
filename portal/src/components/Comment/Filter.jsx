@@ -102,7 +102,7 @@ function Filter({ handleSubmitFillter }) {
                 alignItems: "center",
               }}
             >
-              <Label for="inputValue" className="mr-sm-2 font-weight-bold">
+              <Label for="inputValue" className="mr-sm-2 ">
                 Từ khóa
               </Label>
               <Col className="pl-0 pr-0">
@@ -131,7 +131,7 @@ function Filter({ handleSubmitFillter }) {
                 alignItems: "center",
               }}
             >
-              <Label for="" className="mr-sm-2 font-weight-bold">
+              <Label for="" className="mr-sm-2">
                 Ngày bình luận
               </Label>
               <Col className="pl-0 pr-0">
@@ -160,7 +160,7 @@ function Filter({ handleSubmitFillter }) {
                 alignItems: "center",
               }}
             >
-              <Label for="" className="mr-sm-2  font-weight-bold">
+              <Label for="" className="mr-sm-2">
                 Trạng thái
               </Label>
               <Col className="pl-0 pr-0">

@@ -41,6 +41,8 @@ export const initialValues = {
   facebook: "",
   twitter: "",
   is_active: 1,
+  password: "",
+  repassword: "",
 };
 export const initialPassword = {
   password: "",
@@ -62,7 +64,6 @@ export const initialPassword = {
 //     .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!"),
 // });
 ///// validate
- 
 
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   // console.log(data);
@@ -221,7 +222,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   title="Chỉnh sửa"
                   className="mr-1"
                   onClick={(evt) => {
-                    window._$g.rdr(`/account-new/edit/${data[tableMeta["rowIndex"]].member_id}`);
+                    window._$g.rdr(`/account/edit/${data[tableMeta["rowIndex"]].member_id}`);
                   }}
                 >
                   <i className="fa fa-edit" />

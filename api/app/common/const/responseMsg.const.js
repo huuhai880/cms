@@ -706,4 +706,24 @@ module.exports = {
     EXISTS_PHONE_NUMBER: 'Số điện thoại đối tác đã tồn tại.',
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
   },
+
+  ATTRIBUTES: {
+    CREATE_SUCCESS: 'Thêm mới thành công.',
+    CREATE_FAILED: 'Thêm mới thất bại.',
+    UPDATE_SUCCESS: 'Cập nhật thành công.',
+    UPDATE_FAILED: 'Cập nhật thất bại.',
+    DELETE_SUCCESS: 'Xóa thành công.',
+    SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
+    EXISTS_NAME: 'Tên thuộc tính đã tồn tại.',
+  },
+
+  CALCULATION: {
+    CREATE_SUCCESS: 'Thêm mới thành công.',
+    CREATE_FAILED: 'Thêm mới thất bại.',
+    UPDATE_SUCCESS: 'Cập nhật thành công.',
+    UPDATE_FAILED: 'Cập nhật thất bại.',
+    DELETE_SUCCESS: 'Xóa thành công.',
+    SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
+    EXISTS_NAME: 'Tên phép tính đã tồn tại.',
+  },
 };
