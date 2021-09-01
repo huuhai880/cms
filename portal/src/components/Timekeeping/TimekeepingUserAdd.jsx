@@ -33,7 +33,7 @@ import { CheckAccess } from '../../navigation/VerifyAccess';
 // import Loading from '../Common/Loading';
 import NumberFormat from '../Common/NumberFormat';
 // import DatePicker from '../Common/DatePicker';
-import Products from '../Products/Products';
+import Products from '../ProductsOld/Products';
 import CustomerDataLeads from '../CustomerDataLeads/CustomerDataLeads';
 
 // Util(s)

@@ -25,7 +25,7 @@ import RichEditor from "../Common/RichEditor";
 import { DateRangePicker } from 'react-dates'
 import { CheckAccess } from '../../navigation/VerifyAccess'
 import "react-image-lightbox/style.css"; 
-import "../Products/styles.scss";
+import "../ProductsOld/styles.scss";
 // Assets
 import "./styles.scss";
 // Model(s)

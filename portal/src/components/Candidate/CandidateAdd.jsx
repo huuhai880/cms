@@ -25,7 +25,7 @@ import Loading from "../Common/Loading";
 import { CheckAccess } from '../../navigation/VerifyAccess'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "react-image-lightbox/style.css"; 
-import "../Products/styles.scss";
+import "../ProductsOld/styles.scss";
 // Model(s)
 import CandidateModel from "../../models/CandidateModel";
 import CompanyModel from "../../models/CompanyModel";

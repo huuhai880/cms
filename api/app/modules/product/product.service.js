@@ -15,12 +15,6 @@ const config = require('../../../config/config');
 const { saveImage } = require('../../common/helpers/saveFile.helper');
 
 const savedPath = 'product_image';
-/**
- * Get list
- *
- * @param queryParams
- * @returns ServiceResponse
- */
 const getListProduct = async (queryParams = {}) => {
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
@@ -28,289 +22,25 @@ const getListProduct = async (queryParams = {}) => {
     const keyword = apiHelper.getSearch(queryParams);
 
     const pool = await mssql.pool;
-    const data = await pool
+    const resProduct = await pool
       .request()
-      .input('PageSize', itemsPerPage)
-      .input('PageIndex', currentPage)
-      .input('KEYWORD', keyword)
-      .input(
-        'PRODUCTCATEGORYID',
-        apiHelper.getValueFromObject(queryParams, 'product_category_id')
-      )
-      .input(
-        'CREATEDDATEFROM',
-        apiHelper.getValueFromObject(queryParams, 'created_date_from')
-      )
-      .input(
-        'CREATEDDATETO',
-        apiHelper.getValueFromObject(queryParams, 'created_date_to')
-      )
-      .input(
-        'ISSHOWWEB',
-        apiHelper.getFilterBoolean(queryParams, 'is_show_web')
-      )
-      .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'is_active'))
-      .input('USERID', apiHelper.getValueFromObject(queryParams, 'auth_id'))
-      .input('AUTHORID', apiHelper.getValueFromObject(queryParams, 'author_id'))
-      .execute(PROCEDURE_NAME.MD_PRODUCT_GETLIST);
+      .input('keyword', keyword)
+      .input('productcategoryid', apiHelper.getValueFromObject(queryParams, 'product_category_id', null))
+      .input('startdate', apiHelper.getValueFromObject(queryParams, 'start_date', null))
+      .input('enddate', apiHelper.getValueFromObject(queryParams, 'end_date', null))
+      .input('isactive', apiHelper.getValueFromObject(queryParams, 'is_active', 2))
+      .input('pagesize', itemsPerPage)
+      .input('pageindex', currentPage)
+      .execute(PROCEDURE_NAME.MD_PRODUCT_GETLIST_ADMINWEB);
 
-    const dataRecord = data.recordset;
-    let products = productClass.list(dataRecord);
-    for (let i = 0; i < products.length; i++) {
-      const dataBus = await pool
-        .request() // eslint-disable-next-line no-await-in-loop
-        .input(
-          'PRODUCTID',
-          apiHelper.getValueFromObject(products[i], 'product_id')
-        )
-        .execute(PROCEDURE_NAME.MD_PRODUCT_BUSINESS_GETLISTBYPRODUCTID);
-      const dataRecordBus = dataBus.recordset;
-      products[i].businesses = [];
-      if (dataRecordBus) {
-        products[i].businesses = productClass.listBussiness(dataRecordBus);
-      }
-      const dataPrice = await pool
-        .request() // eslint-disable-next-line no-await-in-loop
-        .input(
-          'PRODUCTID',
-          apiHelper.getValueFromObject(products[i], 'product_id')
-        )
-        .input('ISREVIEW', 1)
-        .input('ISACTIVE', 1)
-        .execute(PROCEDURE_NAME.SL_PRICES_GETBYPRODUCTID);
-      const dataRecordPrice = dataPrice.recordset;
-      products[i].prices = [];
-      if (dataRecordPrice) {
-        products[i].prices = productClass.listPrice(dataRecordPrice);
-      }
-    }
-    return new ServiceResponse(true, '', {
-      data: products,
-      page: currentPage,
-      limit: itemsPerPage,
-      total: apiHelper.getTotalData(dataRecord),
-    });
+    let list = productClass.list(resProduct.recordset);
+    let total = apiHelper.getTotalData(resProduct.recordset);
+    return new ServiceResponse(true, "", { list, total })
   } catch (e) {
     logger.error(e, {
-      function: 'ProductService.getListProduct',
+      function: 'product.service.getListProduct',
     });
     return new ServiceResponse(false, e.message);
-  }
-};
-
-const createProductOrUpdate = async (body = {}) => {
-  const pool = await mssql.pool;
-  const transaction = await new sql.Transaction(pool);
-  try {
-    const dataCheck = await pool
-      .request()
-      .input(
-        'PRODUCTID',
-        parseInt(apiHelper.getValueFromObject(body, 'product_id'))
-      )
-      .input('PRODUCTCODE', apiHelper.getValueFromObject(body, 'product_code'))
-      .execute(PROCEDURE_NAME.MD_PRODUCT_CHECKNAME);
-    if (!dataCheck.recordset || !dataCheck.recordset[0].RESULT) {
-      // used
-      return new ServiceResponse(
-        false,
-        RESPONSE_MSG.PRODUCT.CHECK_CODE_FAILED,
-        null
-      );
-    }
-
-    // Begin transaction
-    await transaction.begin();
-    // Save Product
-    const requestProduct = new sql.Request(transaction);
-    const resultProduct = await requestProduct
-      .input('PRODUCTID', apiHelper.getValueFromObject(body, 'product_id'))
-      .input(
-        'PRODUCTCATEGORYID',
-        apiHelper.getValueFromObject(body, 'product_category_id')
-      )
-      .input('AUTHORID', apiHelper.getValueFromObject(body, 'author_id'))
-      .input(
-        'PUBLISINGCOMPANYID',
-        apiHelper.getValueFromObject(body, 'publishing_company_id')
-      )
-      .input('RELEASETIME', apiHelper.getValueFromObject(body, 'release_time'))
-      .input('PRODUCTCODE', apiHelper.getValueFromObject(body, 'product_code'))
-      .input('PRODUCTNAME', apiHelper.getValueFromObject(body, 'product_name'))
-      .input(
-        'PRODUCTNAMESHOWWEB',
-        apiHelper.getValueFromObject(body, 'product_name_show_web')
-      )
-      .input(
-        'PRODUCTCONTENTDETAIL',
-        apiHelper.getValueFromObject(body, 'product_content_detail')
-      )
-      .input(
-        'SHORTDESCRIPTION',
-        apiHelper.getValueFromObject(body, 'short_description')
-      )
-      .input('VIDEOURL', apiHelper.getValueFromObject(body, 'video_url'))
-      .input('ISSHOWHOME', apiHelper.getValueFromObject(body, 'is_show_home'))
-      .input('ISSHOWWEB', apiHelper.getValueFromObject(body, 'is_show_web'))
-      .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
-      .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-      .input(
-        'PUBLISHINGCOMPANY',
-        apiHelper.getValueFromObject(body, 'publishing_company')
-      )
-      .execute(PROCEDURE_NAME.MD_PRODUCT_CREATEORUPDATE);
-
-    const selectedValues = body.product_attribute_values
-      .map((e) => ({
-        ...e.attribute_values.find((item) => item.value == e.selected),
-        selected: e.selected,
-      }))
-      .filter((e) => !RegExp(/^s_/gm).test(e.selected) && e.selected);
-    let product_id = apiHelper.getValueFromObject(body, 'product_id') || '';
-    if (
-      resultProduct &&
-      resultProduct.recordset &&
-      resultProduct.recordset.length
-    ) {
-      product_id = Object.values(resultProduct.recordset[0])[0];
-    }
-
-    if (product_id) {
-      for (let i = 0; i < selectedValues.length; i++) {
-        try {
-          const requestQuery = new sql.Request(transaction);
-          const data = await requestQuery
-            .input('PRODUCTID', product_id)
-            .input(
-              'PRODUCTATTRIBUTEID',
-              parseInt(selectedValues[i].porduct_attribute_id)
-            )
-            .input('ATTRIBUTEVALUES', selectedValues[i].attribute_value)
-            .input(
-              'CREATEDUSER',
-              apiHelper.getValueFromObject(body, 'auth_name')
-            )
-            .execute(PROCEDURE_NAME.PRO_PRODUCTATTRIBUTEVALUES_CREATE);
-        } catch (e) {
-          await transaction.rollback();
-          logger.error(error, {
-            function: 'ProductService.createProductAttributeValues',
-          });
-        }
-      }
-    }
-
-    const deletedAttributeValues = body.deleted_attributes;
-    if (deletedAttributeValues && deletedAttributeValues.length) {
-      for (let i = 0; i < deletedAttributeValues.length; i++) {
-        try {
-          const requestQuery = new sql.Request(transaction);
-          data = await requestQuery
-            .input('PRODUCTATTRIBUTEVALUESID', deletedAttributeValues[i])
-            .input(
-              'UPDATEDUSER',
-              apiHelper.getValueFromObject(body, 'auth_name')
-            )
-            .execute('PRO_PRODUCTATTRIBUTEVALUES_DeleteByID');
-        } catch (e) {
-          logger.error(error, {
-            function: 'ProductService.deleteAttributeValues',
-          });
-        }
-      }
-    }
-
-    const { newImages, updateImages, deleteImages } = body;
-    //create new image
-    for (let i = 0; i < newImages.length; i++) {
-      const requestQuery = new sql.Request(transaction);
-      const picture_url = await saveImage(savedPath, newImages[i].picture_url);
-      data = await requestQuery
-        .input('PICTUREURL', picture_url)
-        .input('PRODUCTID', product_id)
-        .input('ISDEFAULT', newImages[i].is_default)
-        .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-        .execute('PRO_PRODUCTIMAGES_CreateOrUpdate');
-    }
-
-    //update new image
-    for (let i = 0; i < updateImages.length; i++) {
-      const requestQuery = new sql.Request(transaction);
-      data = await requestQuery
-        .input('PRODUCTIMAGEID', updateImages[i].product_picture_id)
-        .input('ISDEFAULT', updateImages[i].is_default)
-        .execute('PRO_PRODUCTIMAGES_CreateOrUpdate');
-    }
-
-    //delete new image
-    for (let i = 0; i < deleteImages.length; i++) {
-      const requestQuery = new sql.Request(transaction);
-      data = await requestQuery
-        .input('PRODUCTPICTUREID', deleteImages[i].product_picture_id)
-        .execute('PRO_PRODUCTPICTURE_Delete');
-    }
-
-    transaction.commit();
-    removeCacheOptions();
-    return new ServiceResponse(true, '', { product_id });
-  } catch (error) {
-    await transaction.rollback();
-    logger.error(error, {
-      function: 'ProductService.createProductOrUpdate',
-    });
-    console.error('ProductService.createProductOrUpdate', error);
-    // Return error
-    return new ServiceResponse(false, e.message);
-  }
-};
-
-const detailProduct = async (product_id) => {
-  try {
-    const pool = await mssql.pool;
-
-    const data = await pool
-      .request()
-      .input('PRODUCTID', product_id)
-      .execute(PROCEDURE_NAME.MD_PRODUCT_GETBYID);
-    if (data.recordsets && data.recordsets.length > 0) {
-      if (data.recordsets[0].length > 0) {
-        const products = data.recordsets[0];
-        const values = data.recordsets[2];
-        let record = productClass.detail(products[0]);
-        record.product_attribute_values =
-          productClass.proAttributeValues(values);
-        return new ServiceResponse(true, '', record);
-      }
-    }
-    return new ServiceResponse(false, RESPONSE_MSG.NOT_FOUND);
-  } catch (e) {
-    logger.error(e, {
-      function: 'ProductService.detailProduct',
-    });
-
-    return new ServiceResponse(false, e.message);
-  }
-};
-
-const changeStatusProduct = async (product_id, bodyParams) => {
-  try {
-    const pool = await mssql.pool;
-    await pool
-      .request()
-      .input('PRODUCTID', product_id)
-      .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active'))
-      .input(
-        'UPDATEDUSER',
-        apiHelper.getValueFromObject(bodyParams, 'auth_name')
-      )
-      .execute(PROCEDURE_NAME.MD_PRODUCT_UPDATESTATUS);
-    removeCacheOptions();
-    return new ServiceResponse(true);
-  } catch (e) {
-    logger.error(e, {
-      function: 'ProductService.changeStatusProduct',
-    });
-    return new ServiceResponse(false);
   }
 };
 
@@ -321,19 +51,20 @@ const deleteProduct = async (product_id, bodyParams) => {
       .request()
       .input('PRODUCTID', product_id)
       .input(
-        'UPDATEDUSER',
+        'DELETEDUSER',
         apiHelper.getValueFromObject(bodyParams, 'auth_name')
       )
-      .execute(PROCEDURE_NAME.MD_PRODUCT_DELETE);
+      .execute('MD_PRODUCT_Delete_AdminWeb');
     removeCacheOptions();
     return new ServiceResponse(true);
   } catch (e) {
     logger.error(e, {
-      function: 'ProductService.deleteProduct',
+      function: 'product.service.deleteProduct',
     });
     return new ServiceResponse(false, e.message);
   }
 };
+
 const getOptions = async function (queryParams) {
   try {
     const pool = await mssql.pool;
@@ -366,231 +97,310 @@ const getOptions = async function (queryParams) {
     return new ServiceResponse(false, e.message);
   }
 };
-const savePicture = async (base64, filename) => {
-  let url = null;
-  try {
-    if (fileHelper.isBase64(base64)) {
-      const extentions = ['.jpeg', '.jpg', '.png', '.gif'];
-      const extention = fileHelper.getExtensionFromFileName(
-        filename,
-        extentions
-      );
-      if (extention) {
-        const guid = createGuid();
-        url = await fileHelper.saveBase64(
-          folderName,
-          base64,
-          `${guid}.${extention}`
-        );
-      }
-    } else {
-      url = base64.split(config.domain_cdn)[1];
-    }
-  } catch (e) {
-    logger.error(e, {
-      function: 'ProductService.savePicture',
-    });
-  }
-  return url;
-};
-const createGuid = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    var r = (Math.random() * 16) | 0,
-      v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-};
+
 const removeCacheOptions = () => {
   return cacheHelper.removeByKey(CACHE_CONST.MD_PRODUCT_OPTIONS);
 };
 
-const getOrderNumber = async () => {
+
+const getListAttributesGroup = async () => {
   try {
+
     const pool = await mssql.pool;
-    const { recordset } = await pool
-      .request()
-      .execute('MD_PRODUCT_GetOrderNumber');
-    if (recordset && recordset.length) {
-      const data = recordset[0]['RESULT'];
-      const fourDigit = (value) => {
-        if (value.length === 4) return value;
-        return fourDigit('0' + value);
-      };
-      const result = fourDigit(parseInt(data) + 1);
-      return new ServiceResponse(true, '', result);
+    const res = await pool.request()
+      .execute('FOR_ATTRIBUTESGROUP_GetList_AdminWeb')
+
+    let listAttributesGroup = productClass.listAttributesGroup(res.recordsets[0]);
+    let listInterpret = productClass.listInterpret(res.recordsets[1])
+
+    if (listAttributesGroup && listAttributesGroup.length > 0) {
+      for (let index = 0; index < listAttributesGroup.length; index++) {
+        let attributesGroup = listAttributesGroup[index];
+        let interpretOfGroup = listInterpret.filter(p => p.attributes_group_id == attributesGroup.attributes_group_id);
+        attributesGroup.interprets = interpretOfGroup ? interpretOfGroup : []
+      }
     }
-    return new ServiceResponse(false, 'Thất bại');
+
+    return new ServiceResponse(true, "", listAttributesGroup)
+
   } catch (error) {
     logger.error(e, {
-      function: 'ProductService.getOrderNumber',
+      function: 'product.service.getListAttributesGroup',
     });
     return new ServiceResponse(false, e.message);
   }
-};
+}
 
-const getQrList = async (product_id) => {
+const createProduct = async (bodyParams = {}) => {
+  const pool = await mssql.pool;
+  const transaction = await new sql.Transaction(pool);
   try {
-    const pool = await mssql.pool;
-    const queryRes = await pool
-      .request()
-      .input('PRODUCTID', product_id)
-      .execute('NEWS_NEWS_GetListQr');
-    if (queryRes.recordsets && queryRes.recordsets.length) {
-      let data = productClass.qrList(queryRes.recordsets[0]);
-      return data;
-    }
-  } catch (error) {
-    logger.error(e, {
-      function: 'ProductService.getQRList',
-    });
-    return new ServiceResponse(false, e.message);
-  }
-};
 
-const getProductRelated = async (queryParams = {}) => {
-  try {
-    const currentPage = apiHelper.getCurrentPage(queryParams);
-    const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
-    const keyword = apiHelper.getSearch(queryParams);
+    let product_images = apiHelper.getValueFromObject(bodyParams, 'product_images', []);
+    if (product_images.length > 0) {
+      for (let index = 0; index < product_images.length; index++) {
+        let image = product_images[index];
+        const image_url = await saveImage('product', image.picture_url);
+        if (image_url) {
+          image.picture_url = image_url
+        }
+        else {
 
-    if (!apiHelper.getValueFromObject(queryParams, 'product_id')) {
-      return new ServiceResponse(true, '', {
-        data: [],
-        page: currentPage,
-        limit: itemsPerPage,
-        total: 0,
-      });
+          return new ServiceResponse(false, RESPONSE_MSG.NEWS.UPLOAD_FAILED);
+        }
+      }
     }
 
-    const pool = await mssql.pool;
-    const { recordset } = await pool
-      .request()
-      .input(
-        'PRODUCTID',
-        apiHelper.getValueFromObject(queryParams, 'product_id')
-      )
-      .input(
-        'PRODUCTCATEGORYID',
-        apiHelper.getValueFromObject(queryParams, 'product_category_id')
-      )
-      .input(
-        'CREATEDDATEFROM',
-        apiHelper.getValueFromObject(queryParams, 'created_date_from')
-      )
-      .input(
-        'CREATEDDATETO',
-        apiHelper.getValueFromObject(queryParams, 'created_date_to')
-      )
-      .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'is_active'))
-      .input('PageSize', itemsPerPage)
-      .input('PageIndex', currentPage)
-      .input('KEYWORD', keyword)
-      .execute(PROCEDURE_NAME.MD_PRODUCT_GETLISTPRODUCTRELATED);
-
-    return new ServiceResponse(true, '', {
-      data: productClass.listProductRelated(recordset),
-      page: currentPage,
-      limit: itemsPerPage,
-      total: apiHelper.getTotalData(recordset),
-    });
-  } catch (e) {
-    logger.error(e, {
-      function: 'ProductService.getProductRelated',
-    });
-    return new ServiceResponse(false, e.message);
-  }
-};
-
-const getProductRelatedModal = async (queryParams = {}) => {
-  try {
-    const currentPage = apiHelper.getCurrentPage(queryParams);
-    const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
-    const keyword = apiHelper.getSearch(queryParams);
-
-    const pool = await mssql.pool;
-    const { recordset } = await pool
-      .request()
-      .input(
-        'PRODUCTCATEGORYID',
-        apiHelper.getValueFromObject(queryParams, 'product_category_id')
-      )
-      .input(
-        'CREATEDDATEFROM',
-        apiHelper.getValueFromObject(queryParams, 'created_date_from')
-      )
-      .input(
-        'CREATEDDATETO',
-        apiHelper.getValueFromObject(queryParams, 'created_date_to')
-      )
-      .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'is_active'))
-      .input('PageSize', itemsPerPage)
-      .input('PageIndex', currentPage)
-      .input('KEYWORD', keyword)
-      .input(
-        'IGNORELIST',
-        apiHelper.getValueFromObject(queryParams, 'ignore_list', '')
-      )
-      .execute(PROCEDURE_NAME.MD_PRODUCT_GETLISTPRODUCTRELATEDMODEL);
-
-    return new ServiceResponse(true, '', {
-      data: productClass.list(recordset),
-      page: currentPage,
-      limit: itemsPerPage,
-      total: apiHelper.getTotalData(recordset),
-    });
-  } catch (e) {
-    logger.error(e, {
-      function: 'ProductService.getProductRelatedModal',
-    });
-    return new ServiceResponse(false, e.message);
-  }
-};
-const updateProductRelated = async (body = {}) => {
-  try {
-    const product_id = apiHelper.getValueFromObject(body, 'product_id');
-    const createList = apiHelper.getValueFromObject(body, 'create_list', []);
-    const deleteList = apiHelper.getValueFromObject(body, 'delete_list', []);
-    const user = apiHelper.getValueFromObject(body, 'auth_name');
-
-    const pool = await mssql.pool;
-    const transaction = await new sql.Transaction(pool);
     await transaction.begin();
 
-    for (let i = 0; i < createList.length; i++) {
-      const req = new sql.Request(transaction);
-      await req
-        .input('PARENTID', product_id)
-        .input('PRODUCTID', createList[i])
-        .input('CREATEDUSER', user)
-        .execute(PROCEDURE_NAME.MD_PRODUCT_CREATEPRODUCTRELATED);
+    //Product
+    const reqProduct = new sql.Request(transaction);
+    const resProduct = await reqProduct
+      .input('PRODUCTCATEGORYID', apiHelper.getValueFromObject(bodyParams, 'product_category_id', 0))
+      .input('PRODUCTNAME', apiHelper.getValueFromObject(bodyParams, 'product_name', null))
+      .input('PRODUCTNAMESHOWWEB', apiHelper.getValueFromObject(bodyParams, 'product_name_show_web', null))
+      .input('URLPRODUCT', apiHelper.getValueFromObject(bodyParams, 'url_product', null))
+      .input('SHORTDESCRIPTION', apiHelper.getValueFromObject(bodyParams, 'short_description', null))
+      .input('PRODUCTCONTENTDETAIL', apiHelper.getValueFromObject(bodyParams, 'product_content_detail', null))
+      .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active', 1))
+      .input('ISSHOWWEB', apiHelper.getValueFromObject(bodyParams, 'is_show_web', 0))
+      .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+      .execute('MD_PRODUCT_Create_AdminWeb')
+
+    let { product_id } = resProduct.recordset[0];
+    if (!product_id) {
+      await transaction.rollback();
+      return new ServiceResponse(
+        false,
+        "Lỗi thêm mới sản phẩm",
+        null
+      );
     }
-    for (let i = 0; i < deleteList.length; i++) {
-      const req = new sql.Request(transaction);
-      await req
-        .input('PRODUCTRELATEDID', deleteList[i])
-        .input('DELETEDUSER', user)
-        .execute(PROCEDURE_NAME.MD_PRODUCT_DELETEPRODUCTRELATED);
+
+    //Images Product
+    if (product_images && product_images.length > 0) {
+      const reqImage = new sql.Request(transaction);
+      for (let index = 0; index < product_images.length; index++) {
+        const image = product_images[index];
+        await reqImage
+          .input('PRODUCTID', product_id)
+          .input('PICTUREURL', image.picture_url)
+          .input('ISDEFAULT', image.is_default)
+          .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+          .execute('PRO_PRODUCTIMAGES_Create_AdminWeb')
+      }
     }
+
+    //Product Attribute
+    let product_attributes = apiHelper.getValueFromObject(bodyParams, 'product_attributes', []);
+    if (product_attributes && product_attributes.length > 0) {
+      const reqAttribute = new sql.Request(transaction);
+      for (let index = 0; index < product_attributes.length; index++) {
+        const attribute = product_attributes[index];
+        let { interprets = [] } = attribute || {}
+        for (let j = 0; j < interprets.length; j++) {
+          const interpret = interprets[j];
+
+          await reqAttribute.input('PRODUCTID', product_id)
+            .input('ATTRIBUTESGROUPID', attribute.attributes_group_id)
+            .input('INTERPRETID', interpret.interpret_id)
+            .input('INTERPRETDETAILID', interpret.interpret_detail_id)
+            .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+            .execute('MD_PRODUCT_ATTRIBUTES_Create_AdminWeb')
+        }
+      }
+    }
+
     await transaction.commit();
-    return new ServiceResponse(true, '');
+    removeCacheOptions();
+    return new ServiceResponse(true, "", product_id)
+
   } catch (e) {
+    await transaction.rollback()
+   
     logger.error(e, {
-      function: 'ProductService.updateProductRelated',
+      function: 'product.service.createProduct',
     });
     return new ServiceResponse(false, e.message);
   }
-};
+}
+
+const updateProduct = async (bodyParams = {}) => {
+  const pool = await mssql.pool;
+  const transaction = await new sql.Transaction(pool);
+  try {
+
+    let product_images = apiHelper.getValueFromObject(bodyParams, 'product_images', []);
+    if (product_images.length > 0) {
+      for (let index = 0; index < product_images.length; index++) {
+        let image = product_images[index];
+        const image_url = await saveImage('product', image.picture_url);
+        if (image_url) {
+          image.picture_url = image_url
+        }
+        else {
+
+          return new ServiceResponse(false, RESPONSE_MSG.NEWS.UPLOAD_FAILED);
+        }
+      }
+    }
+
+    await transaction.begin();
+
+    let product_id = apiHelper.getValueFromObject(bodyParams, 'product_id', 0);
+
+    //Product
+    const reqProduct = new sql.Request(transaction);
+    const resProduct = await reqProduct
+      .input('PRODUCTID', product_id)
+      .input('PRODUCTCATEGORYID', apiHelper.getValueFromObject(bodyParams, 'product_category_id', 0))
+      .input('PRODUCTNAME', apiHelper.getValueFromObject(bodyParams, 'product_name', null))
+      .input('PRODUCTNAMESHOWWEB', apiHelper.getValueFromObject(bodyParams, 'product_name_show_web', null))
+      .input('URLPRODUCT', apiHelper.getValueFromObject(bodyParams, 'url_product', null))
+      .input('SHORTDESCRIPTION', apiHelper.getValueFromObject(bodyParams, 'short_description', null))
+      .input('PRODUCTCONTENTDETAIL', apiHelper.getValueFromObject(bodyParams, 'product_content_detail', null))
+      .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active', 1))
+      .input('ISSHOWWEB', apiHelper.getValueFromObject(bodyParams, 'is_show_web', 0))
+      .input('UPDATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+      .execute('MD_PRODUCT_Update_AdminWeb')
+
+    let { result } = resProduct.recordset[0];
+
+    if (result == 0) {
+      await transaction.rollback();
+      return new ServiceResponse(
+        false,
+        "Lỗi cập nhật sản phẩm",
+        null
+      );
+    }
+
+
+    //Images Product
+    const reqDelImage = new sql.Request(transaction);
+    await reqDelImage
+      .input('PRODUCTID', product_id)
+      .input('DELETEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+      .execute('PRO_PRODUCTIMAGES_Delete_AdminWeb')
+
+    if (product_images && product_images.length > 0) {
+      const reqImage = new sql.Request(transaction);
+      for (let index = 0; index < product_images.length; index++) {
+        const image = product_images[index];
+        await reqImage
+          .input('PRODUCTID', product_id)
+          .input('PICTUREURL', image.picture_url)
+          .input('ISDEFAULT', image.is_default)
+          .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+          .execute('PRO_PRODUCTIMAGES_Create_AdminWeb')
+      }
+    }
+
+
+    //Product Attribute
+    const reqDelAttribute = new sql.Request(transaction);
+    await reqDelAttribute
+      .input('PRODUCTID', product_id)
+      .input('DELETEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+      .execute('MD_PRODUCT_ATTRIBUTES_Delete_AdminWeb')
+
+    let product_attributes = apiHelper.getValueFromObject(bodyParams, 'product_attributes', []);
+    if (product_attributes && product_attributes.length > 0) {
+      const reqAttribute = new sql.Request(transaction);
+      for (let index = 0; index < product_attributes.length; index++) {
+        const attribute = product_attributes[index];
+        let { interprets = [] } = attribute || {}
+        for (let j = 0; j < interprets.length; j++) {
+          const interpret = interprets[j];
+
+          await reqAttribute
+            .input('PRODUCTID', product_id)
+            .input('ATTRIBUTESGROUPID', attribute.attributes_group_id)
+            .input('INTERPRETID', interpret.interpret_id)
+            .input('INTERPRETDETAILID', interpret.interpret_detail_id)
+            .input('UPDATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+            .execute('MD_PRODUCT_ATTRIBUTES_Update_AdminWeb')
+        }
+      }
+    }
+
+    await transaction.commit();
+    removeCacheOptions();
+    return new ServiceResponse(true, "", true)
+  } catch (e) {
+    await transaction.rollback()
+    logger.error(e, {
+      function: 'product.service.updateProduct',
+    });
+    return new ServiceResponse(false, e.message);
+  }
+}
+
+const detailProduct = async (product_id) => {
+  try {
+    const pool = await mssql.pool;
+    const resProduct = await pool.request()
+      .input('PRODUCTID', product_id)
+      .execute('MD_PRODUCT_GetById_AdminWeb')
+
+    let product_images = []
+    let product = productClass.detail(resProduct.recordsets[0][0]);
+    product_images = productClass.listPicture(resProduct.recordsets[1]);
+    let attributes = productClass.listAttributes(resProduct.recordsets[2])
+
+    let product_attributes = [];
+    if (attributes && attributes.length > 0) {
+      for (let index = 0; index < attributes.length; index++) {
+        const attr = attributes[index];
+        let {
+          attributes_group_id,
+          attribute_id,
+          interpret_id,
+          interpret_detail_id,
+          product_id
+        } = attr || {}
+        let find = product_attributes.find(p => p.attributes_group_id == attributes_group_id);
+        if (!find) {
+          product_attributes.push({
+            attributes_group_id,
+            product_id,
+            interprets: [{
+              attribute_id,
+              interpret_id,
+              interpret_detail_id
+            }]
+          })
+        }
+        else {
+          find.interprets = [...find.interprets, {
+            attribute_id,
+            interpret_id,
+            interpret_detail_id
+          }]
+        }
+      }
+    }
+    if (product) {
+      product.product_images = product_images;
+      product.product_attributes = product_attributes
+    }
+
+    return new ServiceResponse(true, "", product)
+
+  } catch (e) {
+    logger.error(e, {
+      function: 'product.service.detailProduct',
+    });
+    return new ServiceResponse(false, e.message);
+  }
+}
 
 module.exports = {
   getListProduct,
-  createProductOrUpdate,
-  detailProduct,
   deleteProduct,
-  changeStatusProduct,
   getOptions,
-  getOrderNumber,
-  getQrList,
-  getProductRelated,
-  getProductRelatedModal,
-  updateProductRelated,
+  getListAttributesGroup,
+  createProduct,
+  updateProduct,
+  detailProduct
 };
