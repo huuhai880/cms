@@ -31,7 +31,7 @@ import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css"; // This only needs to be imported once in your app
 
 // Assets
-import "../Products/styles.scss";
+import "../ProductsOld/styles.scss";
 // Component(s) 
 import Loading from "../Common/Loading";
 import RichEditor from "../Common/RichEditor";

@@ -363,16 +363,12 @@ const ProductAttributeDetail = React.lazy(() =>
 // const CategoryAdd = React.lazy(() => import('./components/Category/CategoryAdd'))
 //.end#Category
 
-// Products
-const Products = React.lazy(() => import("./components/Products/Products"));
-const ProductAdd = React.lazy(() => import("./components/Products/ProductAdd"));
-const ProductDetail = React.lazy(() =>
-  import("./components/Products/ProductDetail")
-);
-const ProductEdit = React.lazy(() =>
-  import("./components/Products/ProductEdit")
-);
-//.end#Products
+// Product
+const Product = React.lazy(() => import("./components/Product/Product"));
+const ProductAdd = React.lazy(() => import("./components/Product/ProductAdd"));
+const ProductDetail = React.lazy(() => import("./components/Product/ProductDetail"));
+const ProductEdit = React.lazy(() => import("./components/Product/ProductEdit"));
+//.end#Product
 
 // Promotions
 const Promotions = React.lazy(() =>
@@ -1693,36 +1689,36 @@ const routes = [
   },
   //.end#ProductAttribute
 
-  // Products
+  // Product
   {
-    path: "/products",
+    path: "/product",
     exact: true,
     name: "Danh sách sản phẩm",
     function: "MD_PRODUCT_VIEW",
-    component: Products,
+    component: Product,
   },
   {
-    path: "/products/add",
+    path: "/product/add",
     exact: true,
     name: "Thêm mới",
     function: "MD_PRODUCT_ADD",
     component: ProductAdd,
   },
   {
-    path: "/products/detail/:id",
+    path: "/product/detail/:id",
     exact: true,
     name: "Chi tiết",
     function: "MD_PRODUCT_VIEW",
     component: ProductDetail,
   },
   {
-    path: "/products/edit/:id",
+    path: "/product/edit/:id",
     exact: true,
     name: "Chỉnh sửa",
     function: "MD_PRODUCT_EDIT",
     component: ProductEdit,
   },
-  //.end#Products
+  //.end#Product
 
   // Promotions
   {

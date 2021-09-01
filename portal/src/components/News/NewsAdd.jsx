@@ -34,7 +34,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import NumberFormat from "../Common/NumberFormat";
 
 // Assets
-import "../Products/styles.scss";
+import "../ProductsOld/styles.scss";
 // Component(s)
 import Loading from "../Common/Loading";
 import { CheckAccess } from "../../navigation/VerifyAccess";

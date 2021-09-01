@@ -33,7 +33,7 @@ import Loading from '../Common/Loading';
 import NumberFormat from '../Common/NumberFormat';
 import DatePicker from '../Common/DatePicker';
 // +++
-import Products from '../Products/Products';
+import Products from '../ProductsOld/Products';
 import PromotionOffers from '../PromotionOffers/PromotionOffers';
 import PromotionOfferAdd from '../PromotionOffers/PromotionOfferAdd';
 import CustomerType from '../CustomerType/CustomerType';

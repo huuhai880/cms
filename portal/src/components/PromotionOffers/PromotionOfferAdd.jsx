@@ -31,7 +31,7 @@ import { CheckAccess } from '../../navigation/VerifyAccess'
 import Loading from '../Common/Loading';
 import NumberFormat from '../Common/NumberFormat';
 // +++
-import Products from '../Products/Products';
+import Products from '../ProductsOld/Products';
 
 // Util(s)
 import { mapDataOptions4Select, formatFormData } from '../../utils/html';
