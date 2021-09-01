@@ -80,7 +80,7 @@ const saveBase64 = async (folderPath, base64, fileName) => {
     return res.data && res.data.file ? res.data.file : null
 
   } catch (e) {
-    console.log(e)
+    // console.log(e)
     logger.error(e, { 'function': 'fileHelper.saveBase64' });
 
     return null;

@@ -58,6 +58,7 @@ import { useFormik } from "formik";
 import { initialValues, validationSchema } from "./ProductConstant";
 import ProductModel from "models/ProductModel/index";
 import MessageError from "./MessageError";
+import Loading from "../Common/Loading";
 
 const _authorModel = new AuthorModel();
 const _productCategoryModel = new ProductCategoryModel();
@@ -68,10 +69,8 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const [productCategories, setProductCategories] = useState([]);
   const [product, setProduct] = useState(initialValues);
   const [buttonType, setButtonType] = useState(null);
-  const [productAttributes, setProductAttributes] = useState([]);
   const [attributesGroup, setAttributesGroup] = useState([]);
-
-  const [attributesProduct, setAttributesProduct] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -89,7 +88,17 @@ function ProductAdd({ noEdit = false, productId = null }) {
   }, []);
 
   const initData = async () => {
+    setLoading(true);
     try {
+      if (productId) {
+        let product = await _productModel.read(productId);
+        let value = {
+            ...initialValues,
+            ...product
+        }
+        setProduct(value);
+      }
+      
       let data = await _productCategoryModel.getOptions({ is_active: 1 });
       let productCategoryOption = mapDataOptions4Select(data);
 
@@ -100,21 +109,14 @@ function ProductAdd({ noEdit = false, productId = null }) {
         };
       });
       setProductCategories(productCategoryOption);
-
-      //Danh sach Thuoc tinh va Luan giai
       let listAttributesGroup = await _productModel.getListAttributesGroup();
-      console.log({ listAttributesGroup });
       setAttributesGroup(listAttributesGroup);
-
-      if (productId) {
-        let product = await _productModel.read(productId);
-        let value = Object.assign(initialValues, product);
-        setProduct(value);
-      }
     } catch (error) {
       window._$g.dialogs.alert(
         window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -146,7 +148,12 @@ function ProductAdd({ noEdit = false, productId = null }) {
 
   const handleSubmitProduct = async (values) => {
     try {
-      console.log({ values });
+      let result = false;
+      if (productId) {
+        result = await _productModel.update(productId, values);
+      } else {
+        result = await _productModel.create(values);
+      }
 
       window._$g.toastr.show("Lưu thành công!", "success");
       if (buttonType == "save_n_close") {
@@ -158,11 +165,12 @@ function ProductAdd({ noEdit = false, productId = null }) {
       }
     } catch (error) {
       let { errors, statusText, message } = error;
+   
       let msg = [`<b>${statusText || message}</b>`]
         .concat(errors || [])
         .join("<br/>");
 
-      setAlerts({ color: "danger", msg });
+      setAlerts([{ color: "danger", msg }]);
       window.scrollTo(0, 0);
     } finally {
       formik.setSubmitting(false);
@@ -277,7 +285,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
       >
         <tbody>
           {formik.values.product_attributes.map((item, index) => (
-            <tr>
+            <tr key={index}>
               <td style={{ width: "30%" }}>
                 <Select
                   className="MuiPaper-filter__custom--select"
@@ -289,10 +297,11 @@ function ProductAdd({ noEdit = false, productId = null }) {
                   isSearchable={true}
                   placeholder={"-- Chọn Thuộc tính --"}
                   value={convertValue(
-                    item.attribute_group_id,
+                    item.attributes_group_id,
                     optionAttributesGroup() || []
                   )}
                   options={optionAttributesGroup()}
+                  isDisabled={noEdit}
                 />
               </td>
               <td>
@@ -310,6 +319,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                   )}
                   options={optionInterpretDetail(item.attributes_group_id)}
                   isMulti={true}
+                  isDisabled={noEdit}
                 />
               </td>
               <td
@@ -337,9 +347,9 @@ function ProductAdd({ noEdit = false, productId = null }) {
     ) : null;
   };
 
-  console.log(formik.values)
-
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <div key={`view-${productId || 0}`} className="animated fadeIn">
       <Row className="d-flex justify-content-center">
         <Col xs={12} md={12}>
@@ -358,8 +368,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                     key={`alert-${idx}`}
                     color={color}
                     isOpen={true}
-                    toggle={() => this.setState({ alerts: [] })}
-                  >
+                    toggle={() => setAlerts([])}>
                     <span dangerouslySetInnerHTML={{ __html: msg }} />
                   </Alert>
                 );
@@ -465,7 +474,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                         <FormGroup row>
                           <Label className="col-sm-4 col-form-label">
                             Url sản phẩm
-                            <span className="font-weight-bold red-text">*</span>
+                            {/* <span className="font-weight-bold red-text">*</span> */}
                           </Label>
                           <Col sm={8}>
                             <Input
@@ -475,7 +484,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                               name="url_product"
                               {...formik.getFieldProps("url_product")}
                             />
-                            <MessageError formik={formik} name="url_product" />
+                            {/* <MessageError formik={formik} name="url_product" /> */}
                           </Col>
                         </FormGroup>
                       </Col>
@@ -552,18 +561,20 @@ function ProductAdd({ noEdit = false, productId = null }) {
                   </Col>
 
                   <Col xs={12}>
-                    <Button
-                      className="btn-sm mt-1"
-                      color="secondary"
-                      onClick={handleAddAttributeProduct}
-                      disabled={
-                        (formik.values.product_attributes || []).length ==
-                        attributesGroup.length
-                      }
-                    >
-                      <i className="fa fa-plus mr-2" />
-                      Thêm thuộc tính
-                    </Button>
+                    {!noEdit && (
+                      <Button
+                        className="btn-sm mt-1"
+                        color="secondary"
+                        onClick={handleAddAttributeProduct}
+                        disabled={
+                          (formik.values.product_attributes || []).length ==
+                          attributesGroup.length
+                        }
+                      >
+                        <i className="fa fa-plus mr-2" />
+                        Thêm thuộc tính
+                      </Button>
+                    )}
                   </Col>
                 </Row>
 

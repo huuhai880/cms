@@ -238,9 +238,9 @@ export const validationSchema = yup.object().shape({
     product_content_detail: yup.string().required(
         "Chi tiết sản phẩm là bắt buộc"
     ),
-    url_product: yup.string().required(
-        "Url sản phẩm là bắt buộc"
-    ).nullable(),
+    // url_product: yup.string().required(
+    //     "Url sản phẩm là bắt buộc"
+    // ).nullable(),
     // price: yup.number()
     //     .test(
     //         'price',

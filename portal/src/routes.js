@@ -243,18 +243,18 @@ const ProductAttributeDetail = React.lazy(() =>
 //.end#Category
 
 // Products
-const Products = React.lazy(() => import("./components/Products/Products"));
-const ProductAdd = React.lazy(() => import("./components/Products/ProductAdd"));
-const ProductDetail = React.lazy(() => import("./components/Products/ProductDetail"));
-const ProductEdit = React.lazy(() => import("./components/Products/ProductEdit"));
+// const Products = React.lazy(() => import("./components/ProductsOld/Products"));
+// const ProductOldAdd = React.lazy(() => import("./components/ProductsOld/ProductAdd"));
+// const ProductOldDetail = React.lazy(() => import("./components/ProductsOld/ProductDetail"));
+// const ProductOldEdit = React.lazy(() => import("./components/ProductsOld/ProductEdit"));
 //.end#Products
 
 
 // Product
 const Product = React.lazy(() => import("./components/Product/Product"));
-const ProductAddNew = React.lazy(() => import("./components/Product/ProductAdd"));
-// const ProductDetail = React.lazy(() => import("./components/Products/ProductDetail"));
-// const ProductEdit = React.lazy(() => import("./components/Products/ProductEdit"));
+const ProductAdd = React.lazy(() => import("./components/Product/ProductAdd"));
+const ProductDetail = React.lazy(() => import("./components/Product/ProductDetail"));
+const ProductEdit = React.lazy(() => import("./components/Product/ProductEdit"));
 //.end#Product
 
 
@@ -1416,34 +1416,34 @@ const routes = [
   //.end#ProductAttribute
 
   // Products
-  {
-    path: "/products",
-    exact: true,
-    name: "Danh sách sản phẩm",
-    function: "MD_PRODUCT_VIEW",
-    component: Products,
-  },
-  {
-    path: "/products/add",
-    exact: true,
-    name: "Thêm mới",
-    function: "MD_PRODUCT_ADD",
-    component: ProductAdd,
-  },
-  {
-    path: "/products/detail/:id",
-    exact: true,
-    name: "Chi tiết",
-    function: "MD_PRODUCT_VIEW",
-    component: ProductDetail,
-  },
-  {
-    path: "/products/edit/:id",
-    exact: true,
-    name: "Chỉnh sửa",
-    function: "MD_PRODUCT_EDIT",
-    component: ProductEdit,
-  },
+  // {
+  //   path: "/products",
+  //   exact: true,
+  //   name: "Danh sách sản phẩm",
+  //   function: "MD_PRODUCT_VIEW",
+  //   component: Products,
+  // },
+  // {
+  //   path: "/products/add",
+  //   exact: true,
+  //   name: "Thêm mới",
+  //   function: "MD_PRODUCT_ADD",
+  //   component: ProductOlddd,
+  // },
+  // {
+  //   path: "/products/detail/:id",
+  //   exact: true,
+  //   name: "Chi tiết",
+  //   function: "MD_PRODUCT_VIEW",
+  //   component: ProductDetail,
+  // },
+  // {
+  //   path: "/products/edit/:id",
+  //   exact: true,
+  //   name: "Chỉnh sửa",
+  //   function: "MD_PRODUCT_EDIT",
+  //   component: ProductEdit,
+  // },
   //.end#Products
 
   // Promotions
@@ -1692,50 +1692,50 @@ const routes = [
     component: AccChangePassword,
   },
   //.End
-// Admin portal: Account
-{
-  path: "/account-new",
-  exact: true,
-  name: "Danh sách sách khách hàng",
-  function: "CRM_ACCOUNT_VIEW",
-  component: AccountNew,
-},
-{
-  path: "/account-new/add",
-  exact: true,
-  name: "Thêm mới",
-  function: "CRM_ACCOUNT_ADD",
-  component: AccountNewAdd,
-},
-// {
-//   path: "/account/detail/:id",
-//   exact: true,
-//   name: "Chi tiết",
-//   function: "CRM_ACCOUNT_VIEW",
-//   component: AccountDetail,
-// },
-{
-  path: "/account-new/edit/:id",
-  exact: true,
-  name: "Chỉnh sửa",
-  function: "CRM_ACCOUNT_EDIT",
-  component: AccountNewEdit,
-},
-// {
-//   path: "/account/account-change-password/:id",
-//   exact: true,
-//   name: "Thay đổi mật khẩu",
-//   function: "SYS_ACCOUNT_PASSWORD",
-//   component: AccountChangePassword,
-// },
-// {
-//   path: "/acc-change-password",
-//   exact: true,
-//   name: "Thay đổi mật khẩu",
-//   function: null,
-//   component: AccChangePassword,
-// },
-//.End
+  // Admin portal: Account
+  {
+    path: "/account-new",
+    exact: true,
+    name: "Danh sách sách khách hàng",
+    function: "CRM_ACCOUNT_VIEW",
+    component: AccountNew,
+  },
+  {
+    path: "/account-new/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "CRM_ACCOUNT_ADD",
+    component: AccountNewAdd,
+  },
+  // {
+  //   path: "/account/detail/:id",
+  //   exact: true,
+  //   name: "Chi tiết",
+  //   function: "CRM_ACCOUNT_VIEW",
+  //   component: AccountDetail,
+  // },
+  {
+    path: "/account-new/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "CRM_ACCOUNT_EDIT",
+    component: AccountNewEdit,
+  },
+  // {
+  //   path: "/account/account-change-password/:id",
+  //   exact: true,
+  //   name: "Thay đổi mật khẩu",
+  //   function: "SYS_ACCOUNT_PASSWORD",
+  //   component: AccountChangePassword,
+  // },
+  // {
+  //   path: "/acc-change-password",
+  //   exact: true,
+  //   name: "Thay đổi mật khẩu",
+  //   function: null,
+  //   component: AccChangePassword,
+  // },
+  //.End
   // Admin Website: News
   {
     path: "/news",
@@ -2632,39 +2632,39 @@ const routes = [
     component: ReviewEdit,
   },
   // end#Review
-    // Review
-    {
-      path: "/position",
-      exact: true,
-      name: "Chức vụ",
-      function: "MD_POSITION_VIEW",
-      component: Position,
-    },
-    {
-      path: "/position/add",
-      exact: true,
-      name: "Thêm mới",
-      function: "MD_POSITION_ADD",
-      component: PositionAdd,
-    },
-    // {
-    //   path: "/review/detail/:id",
-    //   exact: true,
-    //   name: "Chi tiết",
-    //   function: "MD_POSITION_VIEW",
-    //   component: ReviewDetail,
-    // },
-    {
-      path: "/position/edit/:id",
-      exact: true,
-      name: "Chỉnh sửa",
-      function: "MD_POSITION_EDIT",
-      component: PositonEdit,
-    },
-    // end#Review
+  // Review
+  {
+    path: "/position",
+    exact: true,
+    name: "Chức vụ",
+    function: "MD_POSITION_VIEW",
+    component: Position,
+  },
+  {
+    path: "/position/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "MD_POSITION_ADD",
+    component: PositionAdd,
+  },
+  // {
+  //   path: "/review/detail/:id",
+  //   exact: true,
+  //   name: "Chi tiết",
+  //   function: "MD_POSITION_VIEW",
+  //   component: ReviewDetail,
+  // },
+  {
+    path: "/position/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "MD_POSITION_EDIT",
+    component: PositonEdit,
+  },
+  // end#Review
 
 
-    // Product
+  // Product
   {
     path: "/product",
     exact: true,
@@ -2673,27 +2673,27 @@ const routes = [
     component: Product,
   },
   {
-    path: "/product/addnew",
+    path: "/product/add",
     exact: true,
     name: "Thêm mới",
     function: "MD_PRODUCT_ADD",
-    component: ProductAddNew,
+    component: ProductAdd,
   },
-  // {
-  //   path: "/products/detail/:id",
-  //   exact: true,
-  //   name: "Chi tiết",
-  //   function: "MD_PRODUCT_VIEW",
-  //   component: ProductDetail,
-  // },
-  // {
-  //   path: "/products/edit/:id",
-  //   exact: true,
-  //   name: "Chỉnh sửa",
-  //   function: "MD_PRODUCT_EDIT",
-  //   component: ProductEdit,
-  // },
-  //.end#Products
+  {
+    path: "/product/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "MD_PRODUCT_VIEW",
+    component: ProductDetail,
+  },
+  {
+    path: "/product/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "MD_PRODUCT_EDIT",
+    component: ProductEdit,
+  },
+  //.end#Product
 
 ];
 

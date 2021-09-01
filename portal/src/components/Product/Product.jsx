@@ -72,7 +72,7 @@ function Product(props) {
   };
 
   const handleClickAdd = () => {
-    window._$g.rdr("/product/addnew");
+    window._$g.rdr("/product/add");
   };
 
   const handleActionItemClick = (type, id, rowIndex) => {

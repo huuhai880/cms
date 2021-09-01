@@ -16,9 +16,7 @@ const getListProduct = async (req, res, next) => {
   }
 };
 
-/**
- * Get detail
- */
+
 const detailProduct = async (req, res, next) => {
   try {
     const productId = req.params.product_id;
@@ -32,13 +30,10 @@ const detailProduct = async (req, res, next) => {
   }
 };
 
-/**
- * Create
- */
+
 const createProduct = async (req, res, next) => {
   try {
-    req.body.product_id = null;
-    const serviceRes = await productService.createProductOrUpdate(req.body);
+    const serviceRes = await productService.createProduct(req.body);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -54,22 +49,14 @@ const createProduct = async (req, res, next) => {
   }
 };
 
-/**
- * Update
- */
+
+
 const updateProduct = async (req, res, next) => {
   try {
     const productId = req.params.product_id;
     req.body.product_id = productId;
 
-    // Check exists
-    const serviceResDetail = await productService.detailProduct(productId);
-    if (serviceResDetail.isFailed()) {
-      return next(serviceResDetail);
-    }
-
-    // Update
-    const serviceRes = await productService.createProductOrUpdate(req.body);
+    const serviceRes = await productService.updateProduct(req.body);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -85,41 +72,10 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
-/**
- * Change status
- */
-const changeStatusProduct = async (req, res, next) => {
-  try {
-    const productId = req.params.product_id;
-    // Check exists
-    const serviceResDetail = await productService.detailProduct(productId);
-    if (serviceResDetail.isFailed()) {
-      return next(serviceResDetail);
-    }
 
-    // Update status
-    await productService.changeStatusProduct(productId, req.body);
-    return res.json(
-      new SingleResponse(null, RESPONSE_MSG.PRODUCT.CHANGE_STATUS_SUCCESS)
-    );
-  } catch (error) {
-    return next(error);
-  }
-};
-
-/**
- * Delete CRM_Product
- */
 const deleteProduct = async (req, res, next) => {
   try {
     const productId = req.params.product_id;
-    // Check exists
-    const serviceResDetail = await productService.detailProduct(productId);
-    if (serviceResDetail.isFailed()) {
-      return next(serviceResDetail);
-    }
-
-    // Delete
     const serviceRes = await productService.deleteProduct(productId, req.body);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
@@ -132,9 +88,7 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
-/**
- * Get list options Product
- */
+
 const getOptions = async (req, res, next) => {
   try {
     const serviceRes = await productService.getOptions(req.query);
@@ -142,61 +96,6 @@ const getOptions = async (req, res, next) => {
       return next(serviceResDetail);
     }
     return res.json(new SingleResponse(serviceRes.getData()));
-  } catch (error) {
-    return next(error);
-  }
-};
-
-const getOrderNumber = async (req, res, next) => {
-  try {
-    const serviceRes = await productService.getOrderNumber();
-    return res.json(new SingleResponse(serviceRes));
-  } catch (error) {
-    return next(error);
-  }
-};
-
-const getQRList = async (req, res, next) => {
-  try {
-    const productId = req.params.product_id;
-    const serviceRes = await productService.getQrList(productId);
-    return res.json(new SingleResponse(serviceRes));
-  } catch (error) {
-    return next(error);
-  }
-};
-
-const getProductRelated = async (req, res, next) => {
-  try {
-    const productId = req.params.product_id;
-    const query = req.query;
-    query.product_id = productId;
-    const serviceRes = await productService.getProductRelated(query);
-    const { data, total, page, limit } = serviceRes.getData();
-    return res.json(new ListResponse(data, total, page, limit));
-  } catch (error) {
-    return next(error);
-  }
-};
-const getProductRelatedModal = async (req, res, next) => {
-  try {
-    const serviceRes = await productService.getProductRelatedModal(req.query);
-    const { data, total, page, limit } = serviceRes.getData();
-    return res.json(new ListResponse(data, total, page, limit));
-  } catch (error) {
-    return next(error);
-  }
-};
-const updateProductRelated = async (req, res, next) => {
-  try {
-    const productId = req.params.product_id;
-    const { body } = req;
-    body.product_id = productId;
-    const serviceRes = await productService.updateProductRelated(body);
-    if (serviceRes.isFailed()) {
-      return next(serviceRes);
-    }
-    return res.json(new SingleResponse(null, 'success'));
   } catch (error) {
     return next(error);
   }
@@ -221,13 +120,7 @@ module.exports = {
   detailProduct,
   createProduct,
   updateProduct,
-  changeStatusProduct,
   deleteProduct,
   getOptions,
-  getOrderNumber,
-  getQRList,
-  getProductRelated,
-  getProductRelatedModal,
-  updateProductRelated,
   getListAttributesGroup
 };
