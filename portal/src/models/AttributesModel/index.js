@@ -37,7 +37,7 @@ export default class AttributesModel extends Model {
   fillable = () => ({
     attribute_id: "",
     attribute_name: "",
-    attribute_group_id: null,
+    attributes_group_id: "",
     main_number_id: null,
     description: "",
     is_active: 1,
