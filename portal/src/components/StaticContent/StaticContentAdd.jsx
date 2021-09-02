@@ -23,7 +23,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import Loading from "../Common/Loading";
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import "react-image-lightbox/style.css";
-import "../Products/styles.scss";
+import "../ProductsOld/styles.scss";
 import "./styles.scss";
 // Component(s)
 // Model(s)

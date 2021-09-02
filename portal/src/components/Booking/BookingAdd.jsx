@@ -29,7 +29,7 @@ import Products from "./Products";
 import { CheckAccess } from '../../navigation/VerifyAccess'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import "react-image-lightbox/style.css"; 
-import "../Products/styles.scss";
+import "../ProductsOld/styles.scss";
 
 // Model(s)
 import BookingModel from "../../models/BookingModel";
