@@ -157,11 +157,12 @@ class Attributes extends Component {
     }
   }
 
-  handleSubmitFilter = (search, is_active) => {
+  handleSubmitFilter = (search, attributes_group_id, is_active) => {
     let query = { ...this.state.query };
     query.page = 1;
     query = Object.assign(query, {
       search,
+      attributes_group_id,
       is_active,
     });
     this.getData(query).catch(() => {
@@ -209,7 +210,7 @@ class Attributes extends Component {
         },
       },
       {
-        name: "main_number_id",
+        name: "main_number",
         label: "Chỉ số",
         options: {
           filter: false,
@@ -225,7 +226,28 @@ class Attributes extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-right">{value}</div>;
+            return <div className="text-center">{value}</div>;
+          },
+        },
+      },
+      {
+        name: "group_name",
+        label: "Nhóm thuộc tính",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-left">{value}</div>;
           },
         },
       },

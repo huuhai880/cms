@@ -5,10 +5,14 @@ import Select from "react-select";
 
 // Component(s)
 // Model(s)
+import AttributesModel from "../../models/AttributesModel";
 
 class AttributesFilter extends PureComponent {
   constructor(props) {
     super(props);
+
+    this._attributesModel = new AttributesModel();
+
     this.state = {
       is_active: { label: "Có", value: 1 },
       isActives: [
@@ -19,6 +23,7 @@ class AttributesFilter extends PureComponent {
     };
   }
 
+
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -26,6 +31,19 @@ class AttributesFilter extends PureComponent {
   handleChangeIsActive = (is_active) => {
     this.setState({ is_active });
   };
+
+  handleChangeGroup = (attributes_group_id) => {
+    this.setState({ attributes_group_id });
+  };
+
+  componentDidMount() {
+    (async () => {
+      let OptsGroup = await this._attributesModel
+      .getOptionGroup({ is_active: 1 });
+      this.setState({ OptsGroup });
+    })();
+    //.end
+  } 
 
   handleKeyDown = (event) => {
     if (1 * event.keyCode === 13) {
@@ -35,23 +53,21 @@ class AttributesFilter extends PureComponent {
   };
 
   onSubmit = () => {
-    const { inputValue, is_active } =
-      this.state;
+    const { inputValue, is_active, attributes_group_id} = this.state;
     const { handleSubmit } = this.props;
     handleSubmit(
       inputValue ? inputValue.trim() : "",
+      attributes_group_id? attributes_group_id.value: "",
       is_active ? is_active.value : undefined
     );
   };
 
   onClear = () => {
-    if (
-      this.state.inputValue ||
-      this.state.is_active 
-    ) {
+    if (this.state.inputValue || this.state.is_active) {
       this.setState(
         {
           inputValue: "",
+          attributes_group_id: "",
           is_active: { label: "Có", value: 1 },
         },
         () => {
@@ -66,7 +82,7 @@ class AttributesFilter extends PureComponent {
       <div className="ml-3 mr-3 mb-3 mt-3">
         <Form autoComplete="nope" className="zoom-scale-9">
           <Row>
-            <Col xs={12} sm={4}>
+            <Col xs={12} sm={3}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="inputValue" className="mr-sm-2">
                   Từ khóa
@@ -76,7 +92,7 @@ class AttributesFilter extends PureComponent {
                   autoComplete="nope"
                   type="text"
                   name="inputValue"
-                  placeholder="Nhập tên thuộc tính, số chủ đạo"
+                  placeholder="Nhập tên thuộc tính, chỉ số"
                   value={this.state.inputValue || ""}
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}
@@ -86,7 +102,26 @@ class AttributesFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={4}>
+            <Col xs={12} sm={3}>
+              <FormGroup className="mb-2 mb-sm-0 ">
+                <Label for="" className="mr-sm-2">
+                  Nhóm thuộc tính
+                </Label>
+                <Select
+                  className="MuiPaper-filter__custom--select"
+                  id="is_active"
+                  name="is_active"
+                  onChange={this.handleChangeGroup}
+                  isSearchable={true}
+                  placeholder={"-- Chọn --"}
+                  value={this.state.attributes_group_id}
+                  options={this.state.OptsGroup && this.state.OptsGroup.map(
+                    ({ name: label, id: value }) => ({ value, label })
+                  )}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs={12} sm={3}>
               <FormGroup className="mb-2 mb-sm-0 ">
                 <Label for="" className="mr-sm-2">
                   Kích hoạt
@@ -107,7 +142,7 @@ class AttributesFilter extends PureComponent {
             </Col>
             <Col
               xs={12}
-              sm={4}
+              sm={3}
               className="d-flex align-items-end justify-content-end mt-3 pl-0 pr-0"
             >
               <FormGroup className="mb-2 mb-sm-0">
@@ -121,7 +156,7 @@ class AttributesFilter extends PureComponent {
                   <span className="ml-1">Tìm kiếm</span>
                 </Button>
               </FormGroup>
-              <FormGroup className="mb-2 ml-2 mb-sm-0">
+              <FormGroup className="mb-2 ml-2 mb-sm-0 mr-3">
                 <Button
                   className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                   onClick={this.onClear}

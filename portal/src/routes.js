@@ -14,12 +14,14 @@ const UserChangePassword = React.lazy(() => import("./components/Users/UserChang
 const ChangePassword = React.lazy(() => import("./components/Users/ChangePassword"));
 //.end#Users
 
-// Letter
+// // Letter
 const Letter = React.lazy(() => import("./components/Letter/Letter"));
 const LetterAdd = React.lazy(() => import("./components/Letter/LetterAdd"));
-const LetterDetail = React.lazy(() => import("./components/Letter/LetterDetail"));
+const LetterDetail = React.lazy(() =>
+  import("./components/Letter/LetterDetail")
+);
 const LetterEdit = React.lazy(() => import("./components/Letter/LetterEdit"));
-//.end#Letter
+// //.end#Letter
 
 // MainNumber
 const MainNumber = React.lazy(() =>
@@ -2693,37 +2695,38 @@ const routes = [
   },
   // end#Attributes
 
-  //Calculation
+  // // Letter
   {
-    path: "/calculation",
+    path: "/letter",
     exact: true,
-    name: "Danh sách phép tính",
-    function: "MD_CALCULATION_VIEW",
-    component: Calculation,
+    name: "Bảng chữ cái",
+    function: "MD_LETTER_VIEW",
+    component: Letter,
   },
   {
-    path: "/calculation/add",
+    path: "/letter/add",
     exact: true,
     name: "Thêm mới",
-    function: "MD_CALCULATION_ADD",
-    component: CalculationAdd,
+    function: "MD_LETTER_VIEW",
+    component: LetterAdd,
   },
   {
-    path: "/calculation/detail/:id",
+    path: "/letter/detail/:id",
     exact: true,
     name: "Chi tiết",
-    function: "MD_CALCULATION_VIEW",
-    component: CalculationDetail,
+    function: "MD_LETTER_VIEW",
+    component: LetterDetail,
   },
   {
-    path: "/calculation/edit/:id",
+    path: "/letter/edit/:id",
     exact: true,
     name: "Chỉnh sửa",
-    function: "MD_CALCULATION_EDIT",
-    component: CalculationEdit,
+    function: "MD_LETTER_VIEW",
+    component: LetterEdit,
   },
-  // end#Calculation
-  // Letter
+  // // end#Letter
+
+  //Calculation
   {
     path: "/letter",
     exact: true,

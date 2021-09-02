@@ -30,6 +30,10 @@ const getListAttributes = async (queryParams = {}) => {
       .input('PAGESIZE', itemsPerPage)
       .input('PAGEINDEX', currentPage)
       .input('KEYWORD', keyword)
+      .input(
+        'ATTRIBUTESGROUPID',
+        apiHelper.getValueFromObject(queryParams, 'attributes_group_id')
+      )
       .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'is_active'))
       .execute(PROCEDURE_NAME.FOR_ATTRIBUTES_GETLIST_ADMINWEB);
     const datas = data.recordset;
@@ -79,14 +83,22 @@ const createAttributesOrUpdate = async (bodyParams) => {
       bodyParams,
       'list_attributes_image'
     );
-
-    // check name
+    let attribute_name = apiHelper.getValueFromObject(
+      bodyParams,
+      'attribute_name'
+    );
+    let attributes_group_name = apiHelper.getValueFromObject(
+      bodyParams,
+      'attributes_group_name'
+    );
+    // check mainnumber
     const dataCheckAttributenName = await pool
       .request()
       .input('ATTRIBUTEID', attribute_id)
+      .input('ATTRIBUTENAME', attribute_name)
       .input(
-        'ATTRIBUTENAME',
-        apiHelper.getValueFromObject(bodyParams, 'attribute_name')
+        'ATTRIBUTESGROUPID',
+        apiHelper.getValueFromObject(bodyParams, 'attributes_group_id')
       )
       .execute(PROCEDURE_NAME.FOR_ATTRIBUTES_CHECK_USERNAME);
     if (
@@ -95,7 +107,7 @@ const createAttributesOrUpdate = async (bodyParams) => {
     ) {
       return new ServiceResponse(
         false,
-        RESPONSE_MSG.ATTRIBUTES.EXISTS_NAME,
+        `Nhóm thuộc tính ${attributes_group_name} đã tồn tại tên thuộc tính ${attribute_name}.`,
         null
       );
     }
@@ -106,6 +118,10 @@ const createAttributesOrUpdate = async (bodyParams) => {
       .input(
         'ATTRIBUTENAME',
         apiHelper.getValueFromObject(bodyParams, 'attribute_name')
+      )
+      .input(
+        'ATTRIBUTESGROUPID',
+        apiHelper.getValueFromObject(bodyParams, 'attributes_group_id')
       )
       .input(
         'MAINNUMBERID',

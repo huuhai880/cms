@@ -121,7 +121,7 @@ class CalculationFilter extends PureComponent {
                   <span className="ml-1">Tìm kiếm</span>
                 </Button>
               </FormGroup>
-              <FormGroup className="mb-2 ml-2 mb-sm-0">
+              <FormGroup className="mb-2 ml-2 mb-sm-0 mr-3">
                 <Button
                   className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                   onClick={this.onClear}

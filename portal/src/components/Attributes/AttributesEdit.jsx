@@ -32,7 +32,7 @@ export default class AttributesEdit extends PureComponent {
       let AttributesEnt = await this._attributesModel.read(ID).catch(() => {
         setTimeout(() => window._$g.rdr("/404"));
       });
-      let OptsPartner = await this._attributesModel.getOptions({
+      let OptsPartner = await this._attributesModel.getOptionPartner({
         is_active: 1,
       });
       AttributesEnt.list_attributes_image =
@@ -53,6 +53,20 @@ export default class AttributesEdit extends PureComponent {
             );
           return item;
         });
+      AttributesEnt = Object.assign(
+        {},
+        {
+          ...AttributesEnt,
+          attributes_group_id: {
+            value: AttributesEnt.attributes_group_id,
+            label: AttributesEnt.group_name,
+          },
+          main_number_id: {
+            value: AttributesEnt.main_number_id,
+            label: AttributesEnt.main_number,
+          },
+        }
+      );
       AttributesEnt && this.setState({ AttributesEnt });
     })();
     //.end
