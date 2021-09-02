@@ -2,9 +2,12 @@ const Transform = require('../../common/helpers/transform.helper');
 const config = require('../../../config/config');
 const template = {
   attribute_id: '{{#? ATTRIBUTEID}}',
+  attributes_group_id: '{{#? ATTRIBUTESGROUPID}}',
+  group_name: '{{#? GROUPNAME}}',
   attribute_name: '{{#? ATTRIBUTENAME}}',
   description: '{{#? DESCRIPTION}}',
   main_number_id: '{{#? MAINNUMBERID}}',
+  main_number: '{{#? MAINNUMBER}}',
   imges_id: '{{#? IMGESID}}',
   partner_id: '{{#? PARTNERID}}',
   is_active: '{{ ISACTIVE? 1: 0}}',
@@ -25,9 +28,12 @@ let transform = new Transform(template);
 const list = (Attibutes = []) => {
   return transform.transform(Attibutes, [
     'attribute_id',
+    'attributes_group_id',
+    'group_name',
     'attribute_name',
     'description',
     'main_number_id',
+    'main_number',
     'is_active',
   ]);
 };
@@ -35,9 +41,12 @@ const list = (Attibutes = []) => {
 const detail = (Attibutes = []) => {
   return transform.transform(Attibutes, [
     'attribute_id',
+    'attributes_group_id',
+    'group_name',
     'attribute_name',
     'description',
     'main_number_id',
+    'main_number',
     'is_active',
   ]);
 };

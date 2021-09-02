@@ -1,3 +1,4 @@
+
 module.exports = {
   NOT_FOUND: 'Requested resource not found.',
   VALIDATION_FAILED: 'Invalid request params.',
@@ -725,5 +726,6 @@ module.exports = {
     DELETE_SUCCESS: 'Xóa thành công.',
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
     EXISTS_NAME: 'Tên phép tính đã tồn tại.',
+    EXISTS_MAIN_NUMBER: 'Tên phép tính đã tồn tại.',
   },
 };

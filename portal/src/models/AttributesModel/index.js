@@ -15,8 +15,11 @@ export default class AttributesModel extends Model {
   /** @var {String} */
   static API_ATTRIBUTES_GET_LIST = "attributes";
   static API_ATTRIBUTES_DETAIL = "attributes/:id";
-  static API_ATTRIBUTES_OPTS = "attributes/get-options";
+  static API_ATTRIBUTES_OPTS_PARTNER = "attributes/get-options-partner";
+  static API_ATTRIBUTES_OPTS_GROUP = "attributes/get-options-group";
+  static API_ATTRIBUTES_OPTS_MAINNUMBER = "attributes/get-options-main-number";
 
+  
   /**
    * @var {String} Primary Key
    */
@@ -34,7 +37,8 @@ export default class AttributesModel extends Model {
   fillable = () => ({
     attribute_id: "",
     attribute_name: "",
-    main_number_id: "",
+    attribute_group_id: null,
+    main_number_id: null,
     description: "",
     is_active: 1,
     list_attributes_image: [
@@ -46,7 +50,8 @@ export default class AttributesModel extends Model {
         is_active_image: "",
       },
     ],
-    check_is_default: ""
+    check_is_default: "",
+    check_image: "",
   });
 
   /**
@@ -70,8 +75,16 @@ export default class AttributesModel extends Model {
     );
   }
 
-  getOptions(opts) {
-    return this._api.get(_static.API_ATTRIBUTES_OPTS, opts);
+  getOptionPartner(opts) {
+    return this._api.get(_static.API_ATTRIBUTES_OPTS_PARTNER, opts);
+  }
+
+  getOptionGroup(opts) {
+    return this._api.get(_static.API_ATTRIBUTES_OPTS_GROUP, opts);
+  }
+
+  getOptionMainNumber(opts) {
+    return this._api.get(_static.API_ATTRIBUTES_OPTS_MAINNUMBER, opts);
   }
 
   create(_data = {}) {

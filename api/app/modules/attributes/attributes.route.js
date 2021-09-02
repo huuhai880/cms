@@ -12,7 +12,13 @@ routes.route('').get(attributesController.getListAtributes);
 routes.route('/:attribute_id(\\d+)').delete(attributesController.deleteAttributes);
 
 // Options
-routes.route('/get-options').get(attributesController.getOptions);
+routes.route('/get-options-partner').get(attributesController.getOptionPartner);
+
+// Options
+routes.route('/get-options-group').get(attributesController.getOptionGroup);
+
+// Options
+routes.route('/get-options-main-number').get(attributesController.getOptionMainNumber);
 
 // Create
 routes

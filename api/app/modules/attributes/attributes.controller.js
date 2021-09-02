@@ -103,9 +103,27 @@ const updateAttributes = async (req, res, next) => {
   }
 };
 
-const getOptions = async (req, res, next) => {
+const getOptionPartner = async (req, res, next) => {
   try {
     const serviceRes = await optionService('MD_PARTNER', req.query);
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getOptionGroup = async (req, res, next) => {
+  try {
+    const serviceRes = await optionService('FOR_ATTRIBUTESGROUP', req.query);
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getOptionMainNumber = async (req, res, next) => {
+  try {
+    const serviceRes = await optionService('FOR_MAINNUMBER', req.query);
     return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
     return next(error);
@@ -123,13 +141,15 @@ const detailAttributes = async (req, res, next) => {
     return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
     return next(error);
-  }
+}
 };
 
 module.exports = {
   getListAtributes,
   deleteAttributes,
-  getOptions,
+  getOptionPartner,
+  getOptionGroup,
+  getOptionMainNumber,
   updateAttributes,
   createAttributes,
   detailAttributes,
