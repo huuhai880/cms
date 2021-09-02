@@ -105,7 +105,10 @@ export default class CalculationAdd extends PureComponent {
   }
 
   formikValidationSchema = Yup.object().shape({
-    calculation: Yup.string().nullable().required("Tên phép tính là bắt buộc."),
+    calculation: Yup.string()
+      .trim()
+      .matches(/^[ -+*x\/]/, `Chỉ nhập các ký tự( x + - * / ).`)
+      .required("Tên phép tính là bắt buộc."),
   });
 
   handleFormikBeforeRender = ({ initialValues }) => {
@@ -331,7 +334,7 @@ export default class CalculationAdd extends PureComponent {
                                     Ghi chú
                                   </Label>
                                   <Col sm={9}>
-                                    <Field 
+                                    <Field
                                       name="description"
                                       render={({ field /* _form */ }) => (
                                         <Input

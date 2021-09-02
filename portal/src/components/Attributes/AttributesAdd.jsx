@@ -23,7 +23,6 @@ import Select from "react-select";
 import "./styles.scss";
 import "./styles.scss";
 import { Editor } from "@tinymce/tinymce-react";
-import ReactNumberFormat from "react-number-format";
 
 // Component(s)
 import { CheckAccess } from "../../navigation/VerifyAccess";
@@ -31,7 +30,6 @@ import Loading from "../Common/Loading";
 
 // Model(s)
 import AttributesModel from "../../models/AttributesModel";
-import { floralwhite } from "color-name";
 
 /**
  * @class AttributesAdd
@@ -97,8 +95,18 @@ export default class AttributesAdd extends PureComponent {
     let bundle = {};
     let all = [
       this._attributesModel
-        .getOptions({ is_active: 1 })
-        .then((data) => (bundle["Options"] = mapDataOptions4Select(data))),
+        .getOptionPartner({ is_active: 1 })
+        .then(
+          (data) => (bundle["OptionPartner"] = mapDataOptions4Select(data))
+        ),
+      this._attributesModel
+        .getOptionGroup({ is_active: 1 })
+        .then((data) => (bundle["OptionGroup"] = mapDataOptions4Select(data))),
+      this._attributesModel
+        .getOptionMainNumber({ is_active: 1 })
+        .then(
+          (data) => (bundle["OptionMainNumber"] = mapDataOptions4Select(data))
+        ),
     ];
 
     await Promise.all(all).catch((err) =>
@@ -123,7 +131,8 @@ export default class AttributesAdd extends PureComponent {
 
   formikValidationSchema = Yup.object().shape({
     attribute_name: Yup.string().required("Tên thuộc tính là bắt buộc."),
-    main_number_id: Yup.number().required("Chỉ số là bắt buộc."),
+    main_number_id: Yup.object().required("Chỉ số là bắt buộc."),
+    attributes_group_id: Yup.object().required("Nhóm thuộc tính là bắt buộc."),
     list_attributes_image: Yup.array()
       .of(
         Yup.object().shape({
@@ -138,17 +147,17 @@ export default class AttributesAdd extends PureComponent {
         })
       )
       .test("list_attributes_image", null, (arr) => {
-        let check = arr.filter((item) => {
+        let checkIsDefault = arr.filter((item) => {
           return item.is_default == true;
         });
-        if (check.length > 0) {
-          return true;
+        if (checkIsDefault.length === 0) {
+          return new Yup.ValidationError(
+            "Chọn một ảnh mặc định là bắt buộc.",
+            null,
+            "check_is_default"
+          );
         }
-        return new Yup.ValidationError(
-          "Chọn một ảnh mặc định là bắt buộc.",
-          null,
-          "check_is_default"
-        );
+        return true;
       }),
   });
 
@@ -181,15 +190,23 @@ export default class AttributesAdd extends PureComponent {
     // Build form data
     // +++
 
-    let { is_active, list_attributes_image } = values;
+    let {
+      is_active,
+      list_attributes_image,
+      attributes_group_id,
+      main_number_id,
+    } = values;
     list_attributes_image = list_attributes_image.map((item) => {
       item.partner_id = item.partner_id.value;
       return item;
     });
+
     let formData = Object.assign({}, values, {
       is_active: is_active ? 1 : 0,
+      attributes_group_id: attributes_group_id.value,
+      attributes_group_name: attributes_group_id.label,
+      main_number_id: main_number_id.value,
     });
-
     const attributeId =
       (AttributesEnt && AttributesEnt.attribute_id) ||
       formData[this._attributesModel];
@@ -306,7 +323,7 @@ export default class AttributesAdd extends PureComponent {
     /** @var {Object} */
     let initialValues = this.getInitialValues();
     const { noEdit, AttributesEnt } = this.props;
-    let { Options } = this.state;
+    let { OptionPartner, OptionGroup, OptionMainNumber } = this.state;
     return (
       <div className="animated fadeIn">
         <Row>
@@ -414,64 +431,91 @@ export default class AttributesAdd extends PureComponent {
                               </Col>
                             </Row>
                             <Row>
-                              <Col xs={6}>
+                              <Col xs={8}>
+                                <FormGroup row>
+                                  <Label
+                                    for="attributes_group_id"
+                                    className="text-left"
+                                    sm={3}
+                                  >
+                                    Nhóm thuộc tính
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
+                                  </Label>
+                                  <Col sm={9} style={{ zIndex: "4" }}>
+                                    <Field
+                                      render={({ field }) => (
+                                        <Select
+                                          {...field}
+                                          onBlur={null}
+                                          className="text-left"
+                                          value={
+                                            values.attributes_group_id || null
+                                          }
+                                          onChange={(item) => {
+                                            field.onChange({
+                                              target: {
+                                                name: "attributes_group_id",
+                                                value: item,
+                                              },
+                                            });
+                                          }}
+                                          options={OptionGroup}
+                                          placeholder="-- Chọn --"
+                                          isDisabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                    <ErrorMessage
+                                      name="attributes_group_id"
+                                      component={({ children }) => (
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
+                                          {children}
+                                        </Alert>
+                                      )}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col xs={8}>
                                 <FormGroup row>
                                   <Label
                                     for="main_number_id"
                                     className="text-left"
-                                    sm={4}
+                                    sm={3}
                                   >
                                     Chỉ số
                                     <span className="font-weight-bold red-text">
                                       *
                                     </span>
                                   </Label>
-                                  <Col sm={6}>
+                                  <Col sm={9} style={{ zIndex: "3" }}>
                                     <Field
                                       name="main_number_id"
                                       render={({ field /* _form */ }) => (
-                                        <ReactNumberFormat
-                                          decimalScale={0}
-                                          fixedDecimalScale={false}
-                                          isNumericString
-                                          mask="_"
-                                          type="text"
-                                          placeholder="0"
-                                          className="text-right"
-                                          customInput={Input}
-                                          name="main_number_id"
-                                          id="main_number_id"
-                                          onChange={(value) => {
-                                            this.formikProps.setFieldValue(
-                                              "main_number_id",
-                                              value.target.value
-                                            );
+                                        <Select
+                                          {...field}
+                                          onBlur={null}
+                                          className="text-left"
+                                          value={values.main_number_id || null}
+                                          onChange={(item) => {
+                                            field.onChange({
+                                              target: {
+                                                name: "main_number_id",
+                                                value: item,
+                                              },
+                                            });
                                           }}
-                                          value={values.main_number_id}
-                                          min={0}
+                                          options={OptionMainNumber}
+                                          placeholder="-- Chọn --"
+                                          isDisabled={noEdit}
                                         />
-                                        //   <Input
-                                        //     {...field}
-                                        //     className="text-right"
-                                        //     onChange={(item) => {
-                                        //       let regex = new RegExp(/[^0-9]/);
-                                        //       item = item.target.value.replace(
-                                        //         regex,
-                                        //         ""
-                                        //       );
-                                        //       field.onChange({
-                                        //         target: {
-                                        //           name: "main_number_id",
-                                        //           value: item,
-                                        //         },
-                                        //       });
-                                        //     }}
-                                        //     onBlur={null}
-                                        //     type="text"
-                                        //     id="main_number_id"
-                                        //     disabled={noEdit}
-                                        //     min="0"
-                                        //   />
                                       )}
                                     />
                                     <ErrorMessage
@@ -665,7 +709,7 @@ export default class AttributesAdd extends PureComponent {
                                                           },
                                                         });
                                                       }}
-                                                      options={Options}
+                                                      options={OptionPartner}
                                                       placeholder="-- Chọn --"
                                                       id={`partner_id_${index}`}
                                                       isDisabled={noEdit}
@@ -773,6 +817,30 @@ export default class AttributesAdd extends PureComponent {
                                                         let clone = [
                                                           ...values.list_attributes_image,
                                                         ];
+                                                        if (usrImgBase64[0]) {
+                                                          let checkImage =
+                                                            clone.filter(
+                                                              (item) => {
+                                                                return (
+                                                                  clone[index]
+                                                                    .partner_id ===
+                                                                    item.partner_id &&
+                                                                  usrImgBase64[0] ===
+                                                                    item.url_images
+                                                                );
+                                                              }
+                                                            );
+                                                          if (
+                                                            checkImage &&
+                                                            checkImage.length
+                                                          ) {
+                                                            return window._$g.dialogs.alert(
+                                                              window._$g._(
+                                                                "Không chọn trùng ảnh trên cùng một đối tác."
+                                                              )
+                                                            );
+                                                          }
+                                                        }
                                                         clone[
                                                           index
                                                         ].url_images = usrImgBase64[0]
@@ -782,10 +850,6 @@ export default class AttributesAdd extends PureComponent {
                                                           `list_attributes_image`,
                                                           clone
                                                         );
-                                                        // formik.setFieldValue(
-                                                        //   "image_avatar",
-                                                        //   usrImgBase64[0]
-                                                        // );
                                                       })
                                                       .catch((err) => {
                                                         window._$g.dialogs.alert(
@@ -1023,6 +1087,17 @@ export default class AttributesAdd extends PureComponent {
                                     </tbody>
                                   </Table>
                                 }
+                                <ErrorMessage
+                                  name="check_image"
+                                  component={({ children }) => (
+                                    <Alert
+                                      color="danger"
+                                      className="field-validation-error"
+                                    >
+                                      {children}
+                                    </Alert>
+                                  )}
+                                />
                                 <ErrorMessage
                                   name="check_is_default"
                                   component={({ children }) => (

@@ -18,6 +18,15 @@ const ChangePassword = React.lazy(() =>
 );
 //.end#Users
 
+// // Letter
+const Letter = React.lazy(() => import("./components/Letter/Letter"));
+const LetterAdd = React.lazy(() => import("./components/Letter/LetterAdd"));
+const LetterDetail = React.lazy(() =>
+  import("./components/Letter/LetterDetail")
+);
+const LetterEdit = React.lazy(() => import("./components/Letter/LetterEdit"));
+// //.end#Letter
+
 // MainNumber
 const MainNumber = React.lazy(() =>
   import("./components/MainNumber/MainNumber")
@@ -2957,6 +2966,37 @@ const routes = [
     component: AttributesEdit,
   },
   // end#Attributes
+
+  // // Letter
+  {
+    path: "/letter",
+    exact: true,
+    name: "Bảng chữ cái",
+    function: "MD_LETTER_VIEW",
+    component: Letter,
+  },
+  {
+    path: "/letter/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "MD_LETTER_VIEW",
+    component: LetterAdd,
+  },
+  {
+    path: "/letter/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "MD_LETTER_VIEW",
+    component: LetterDetail,
+  },
+  {
+    path: "/letter/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "MD_LETTER_VIEW",
+    component: LetterEdit,
+  },
+  // // end#Letter
 
   //Calculation
   {
