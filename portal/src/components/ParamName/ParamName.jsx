@@ -1,43 +1,40 @@
 import React, { Component } from "react";
 import { Card, CardBody, CardHeader, Button, Col, FormGroup } from "reactstrap";
-import fileDownload from "js-file-download";
-import moment from "moment";
+
 // Material
 import MUIDataTable from "mui-datatables";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
 import { CircularProgress } from "@material-ui/core";
 import CustomPagination from "../../utils/CustomPagination";
 
 // Component(s)
 import { CheckAccess } from "../../navigation/VerifyAccess";
-import DepartMentFilter from "../DepartMent/DepartMentFilter";
+import ParamNameFilter from "./ParamNameFilter";
+import "./style.scss"
 // Util(s)
 import { layoutFullWidthHeight } from "../../utils/html";
 import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
-import DepartmentModel from "../../models/DepartmentModel";
-import CompanyModel from "../../models/CompanyModel";
-import BusinessModel from "../../models/BusinessModel";
+import ParamNameModel from "../../models/ParamNameModel";
+
 // Set layout full-wh
 layoutFullWidthHeight();
 
 /**
- * @class Users
+ * @class ParamName
  */
-class DepartMent extends Component {
+class ParamName extends Component {
   /**
-   * @var {UserGroupModel}
+   * @var {Partner}
    */
-  _departmentModel;
+  _paramNameModel;
 
   constructor(props) {
     super(props);
 
     // Init model(s)
-    this._departmentModel = new DepartmentModel();
-    this._companyModel = window._companyModel = new CompanyModel();
-    this._businessModel = window._businessModel = new BusinessModel();
+    this._paramNameModel = new ParamNameModel();
+
+    // Bind method(s)
   }
 
   state = {
@@ -50,39 +47,35 @@ class DepartMent extends Component {
       itemsPerPage: 25,
       page: 1,
       is_active: 1,
-      is_deleted: 0,
-      //is_system: 2
     },
-    /** @var {Array} */
-    company: [{ name: "-- Chọn --", id: "" }],
-    /** @var {Array} */
-    business: [{ name: "-- Chọn --", id: "" }],
   };
 
   componentDidMount() {
-    this.getData({ ...this.state.query });
-
+    // Get bundle data
     this.setState({ isLoading: true });
     (async () => {
       let bundle = await this._getBundleData();
+      let { data, countries, provinces } = bundle;
+      let dataConfig = data ? data.items : [];
       let isLoading = false;
-
-      let { business = [], company = [] } = this.state;
-      company = company.concat(bundle.company || []);
-      business = business.concat(bundle.business || []);
-      //
+      let count = data ? data.totalItems : 0;
+      let page = 0;
       this.setState(
         {
           isLoading,
         },
         () => {
           this.setState({
-            business,
-            company,
+            data: dataConfig,
+            count,
+            page,
+            countries,
+            provinces,
           });
         }
       );
     })();
+    //.end
   }
 
   /**
@@ -90,14 +83,12 @@ class DepartMent extends Component {
    */
   async _getBundleData() {
     let bundle = {};
+    let { country_id } = this.state;
     let all = [
       // @TODO:
-      this._companyModel
-        .getOptions({ is_active: 1 })
-        .then((data) => (bundle["company"] = data)),
-      this._businessModel
-        .getOptions()
-        .then((data) => (bundle["business"] = data)),
+      this._paramNameModel
+        .getList(this.state.query)
+        .then((data) => (bundle["data"] = data)),
     ];
     await Promise.all(all).catch((err) => {
       window._$g.dialogs.alert(
@@ -113,15 +104,14 @@ class DepartMent extends Component {
   // get data
   getData = (query = {}) => {
     this.setState({ isLoading: true });
-    return this._departmentModel.getList(query).then((res) => {
-      let data = [...res.items];
-      //let data = res.items || [];
+    return this._paramNameModel.getList(query).then((res) => {
+      let data = res.items;
       let isLoading = false;
       let count = res.totalItems;
       let page = query["page"] - 1 || 0;
       this.setState({
-        isLoading,
         data,
+        isLoading,
         count,
         page,
         query,
@@ -129,56 +119,15 @@ class DepartMent extends Component {
     });
   };
 
-  handleClickRefresh = () => {
-    this.getData({ ...this.state.query });
-  };
-
   handleClickAdd = () => {
-    window._$g.rdr("/department/add");
+    window._$g.rdr("/param-name/add");
   };
 
-  handleChangeStatus = (status, id, rowIndex) => {
-    window._$g.dialogs.prompt(
-      "Bạn có chắc chắn muốn thay đổi trạng thái dữ liệu đang chọn?",
-      "Cập nhật",
-      (confirm) => this.onChangeStatus(confirm, status, id, rowIndex)
-    );
-  };
-
-  onChangeStatus = (confirm, status, id, idx) => {
-    if (confirm) {
-      let postData = { is_active: status ? 1 : 0 };
-      this._departmentModel
-        .changeStatus(id, postData)
-        .then(() => {
-          const cloneData = [...this.state.data];
-          cloneData[idx].is_active = status;
-          this.setState(
-            {
-              data: cloneData,
-            },
-            () => {
-              window._$g.toastr.show(
-                "Cập nhật trạng thái thành công.",
-                "success"
-              );
-            }
-          );
-        })
-        .catch(() => {
-          window._$g.toastr.show(
-            "Cập nhật trạng thái không thành công.",
-            "error"
-          );
-        });
-    }
-  };
-
-  handleActionItemClick = (type, id, rowIndex) => {
+  handleActionItemClick(type, id, rowIndex) {
     let routes = {
-      detail: "/department/detail/",
-      delete: "/department/delete/",
-      edit: "/department/edit/",
+      detail: "/param-name/detail/",
+      delete: "/param-name/delete/",
+      edit: "/param-name/edit/",
     };
     const route = routes[type];
     if (type.match(/detail|edit/i)) {
@@ -187,23 +136,21 @@ class DepartMent extends Component {
       window._$g.dialogs.prompt(
         "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
         "Xóa",
-        (confirm) => this.handleDelete(confirm, id, rowIndex)
+        (confirm) => this.handleClose(confirm, id, rowIndex)
       );
     }
-  };
+  }
 
-  handleDelete = (confirm, id, rowIndex) => {
+  handleClose(confirm, id, rowIndex) {
     const { data } = this.state;
     if (confirm) {
-      this._departmentModel
+      this._paramNameModel
         .delete(id)
         .then(() => {
-          const cloneData = [...data];
+          const cloneData = JSON.parse(JSON.stringify(data));
           cloneData.splice(rowIndex, 1);
-          const count = cloneData.length;
           this.setState({
             data: cloneData,
-            count,
           });
         })
         .catch(() => {
@@ -212,12 +159,24 @@ class DepartMent extends Component {
           );
         });
     }
-  };
+  }
 
-  handleSubmitFilter = (search, is_active, is_deleted, company_id) => {
+  handleSubmitFilter = (
+    search,
+    is_full_name,
+    is_last_name,
+    is_first_middle_name,
+    is_active
+  ) => {
     let query = { ...this.state.query };
     query.page = 1;
-    query = Object.assign(query, { search, is_active, is_deleted, company_id });
+    query = Object.assign(query, {
+      search,
+      is_full_name,
+      is_last_name,
+      is_first_middle_name,
+      is_active,
+    });
     this.getData(query).catch(() => {
       window._$g.dialogs.alert(
         window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
@@ -238,29 +197,16 @@ class DepartMent extends Component {
     this.getData(query);
   };
 
-  //Export excel
-  // handleExport = () => {
-  //   this._departmentModel
-  //     .exportExcel()
-  //     .then((response) => {
-  //       const configDate = moment().format("DDMMYYYY");
-  //       fileDownload(response, `StatusDataLeads_${configDate}.csv`);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
   render() {
     const columns = [
       configIDRowTable(
-        "department_id",
-        "/department/detail/",
+        "param_name_id",
+        "/param-name/detail/",
         this.state.query
       ),
       {
-        name: "department_name",
-        label: "Tên phòng ban",
+        name: "is_name_type",
+        label: "Loại",
         options: {
           filter: false,
           sort: false,
@@ -269,19 +215,20 @@ class DepartMent extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
+                style={{width: "30%"}}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
             );
           },
-          customBodyRender: (value) => {
-            return <span className="d-block">{value || 0}</span>;
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-left">{value}</div>;
           },
         },
       },
       {
-        name: "company_name",
-        label: "Trực thuộc công ty",
+        name: "is_last_name",
+        label: "Tên",
         options: {
           filter: false,
           sort: false,
@@ -290,19 +237,40 @@ class DepartMent extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
+                style={{width: "15%"}}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
             );
           },
-          customBodyRender: (value) => {
-            return <span className="d-block">{value || 0}</span>;
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return (
+              <div className="text-center">
+                <div className="checkmark">
+                  <div
+                    className={`checkmark_circle ${
+                      value ? "checkmark-active-bor" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_stem ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_kick ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                </div>
+              </div>
+            );
           },
         },
       },
       {
-        name: "company_address_full",
-        label: "Địa chỉ",
+        name: "is_full_name",
+        label: "Họ tên đầy đủ",
         options: {
           filter: false,
           sort: false,
@@ -311,17 +279,79 @@ class DepartMent extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
+                style={{width: "15%"}}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
             );
           },
-          customBodyRender: (value) => {
-            return <span className="d-block">{value || 0}</span>;
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return (
+              <div className="text-center">
+                <div className="checkmark">
+                  <div
+                    className={`checkmark_circle ${
+                      value ? "checkmark-active-bor" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_stem ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_kick ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                </div>
+              </div>
+            );
           },
         },
       },
-
+      {
+        name: "is_first_middle_name",
+        label: "Họ và tên đệm",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+                style={{width: "15%"}}
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return (
+              <div className="text-center">
+                <div className="checkmark">
+                  <div
+                    className={`checkmark_circle ${
+                      value ? "checkmark-active-bor" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_stem ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_kick ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                </div>
+              </div>
+            );
+          },
+        },
+      },
       {
         name: "is_active",
         label: "Kích hoạt",
@@ -333,27 +363,7 @@ class DepartMent extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">{value ? "Có" : "Không"}</div>;
-          },
-        },
-      },
-      {
-        name: "is_deleted",
-        label: "Đã xóa",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
+                style={{width: "15%"}}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
@@ -373,7 +383,7 @@ class DepartMent extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                <CheckAccess permission="MD_DEPARTMENT_EDIT">
+                <CheckAccess permission="MD_PARAMNAME_EDIT">
                   <Button
                     color="primary"
                     title="Chỉnh sửa"
@@ -381,7 +391,7 @@ class DepartMent extends Component {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "edit",
-                        this.state.data[tableMeta["rowIndex"]].department_id,
+                        this.state.data[tableMeta["rowIndex"]].param_name_id,
                         tableMeta["rowIndex"]
                       )
                     }
@@ -389,7 +399,7 @@ class DepartMent extends Component {
                     <i className="fa fa-edit" />
                   </Button>
                 </CheckAccess>
-                <CheckAccess permission="MD_DEPARTMENT_DEL">
+                <CheckAccess permission="MD_PARAMNAME_DEL">
                   <Button
                     color="danger"
                     title="Xóa"
@@ -397,7 +407,7 @@ class DepartMent extends Component {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "delete",
-                        this.state.data[tableMeta["rowIndex"]].department_id,
+                        this.state.data[tableMeta["rowIndex"]].param_name_id,
                         tableMeta["rowIndex"]
                       )
                     }
@@ -438,9 +448,7 @@ class DepartMent extends Component {
           {this.state.toggleSearch && (
             <CardBody className="px-0 py-0">
               <div className="MuiPaper-filter__custom z-index-2">
-                <DepartMentFilter
-                  businessArr={this.state.business}
-                  companyArr={this.state.company}
+                <ParamNameFilter
                   handleSubmit={this.handleSubmitFilter}
                 />
               </div>
@@ -453,7 +461,7 @@ class DepartMent extends Component {
           className="d-flex align-items-end mb-3"
           style={{ padding: 0 }}
         >
-          <CheckAccess permission="MD_DEPARTMENT_ADD">
+          <CheckAccess permission="MD_PARAMNAME_ADD">
             <FormGroup className="mb-2 mb-sm-0">
               <Button
                 className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
@@ -466,21 +474,7 @@ class DepartMent extends Component {
               </Button>
             </FormGroup>
           </CheckAccess>
-          {/* <CheckAccess permission="MD_DEPARTMENT_EXPORT">
-            <FormGroup className="ml-2 mb-2 mb-sm-0">
-              <Button
-                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                onClick={() => this.handleExport()}
-                color="excel"
-                size="sm"
-              >
-                <i className="fa fa-download mr-1" />
-                Xuất excel
-              </Button>
-            </FormGroup>
-          </CheckAccess> */}
         </Col>
-
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-root__custom">
@@ -512,4 +506,4 @@ class DepartMent extends Component {
   }
 }
 
-export default DepartMent;
+export default ParamName;
