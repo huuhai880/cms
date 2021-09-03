@@ -142,7 +142,7 @@ function PositionAdd() {
                           className="pull-left"
                           onBlur={null}
                           checked={formik.values.is_active}
-                          type="switch"
+                          type="checkbox"
                           id="is_active"
                           label="Kích hoạt"
                           name="is_active"

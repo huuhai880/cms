@@ -384,7 +384,7 @@ export default class DepartMentAdd extends Component {
                                           className="pull-left"
                                           onBlur={null}
                                           checked={values.is_active}
-                                          type="switch"
+                                          type="checkbox"
                                           id="is_active"
                                           label="Kích hoạt"
                                           disabled={noEdit}
