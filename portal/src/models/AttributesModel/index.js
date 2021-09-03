@@ -19,7 +19,6 @@ export default class AttributesModel extends Model {
   static API_ATTRIBUTES_OPTS_GROUP = "attributes/get-options-group";
   static API_ATTRIBUTES_OPTS_MAINNUMBER = "attributes/get-options-main-number";
 
-  
   /**
    * @var {String} Primary Key
    */

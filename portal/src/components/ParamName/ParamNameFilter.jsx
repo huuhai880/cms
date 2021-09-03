@@ -6,7 +6,7 @@ import Select from "react-select";
 // Component(s)
 // Model(s)
 
-class PartnerFilter extends PureComponent {
+class ParamNumberFilter extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,11 +14,19 @@ class PartnerFilter extends PureComponent {
       districts: [],
       provinces: [],
       countries: [],
+      is_full_name: { label: "Tất cả", value: 2 },
+      is_last_name: { label: "Tất cả", value: 2 },
+      is_first_middle_name: { label: "Tất cả", value: 2 },
       is_active: { label: "Có", value: 1 },
       isActives: [
         { name: "Tất cả", id: 2 },
         { name: "Có", id: 1 },
         { name: "Không", id: 0 },
+      ],
+      Opts: [
+        { label: "Tất cả", value: 2 },
+        { label: "Có", value: 1 },
+        { label: "Không", value: 0 },
       ],
     };
   }
@@ -27,27 +35,8 @@ class PartnerFilter extends PureComponent {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  handleChangeCountries = (country) => {
-    const province = null;
-    const district = null;
-    const ward = null;
-    this.setState({ country, province, district, ward });
-    this.props.handleChangeCountries(country.value || null);
-  };
-
-  handleChangeProvinces = (province) => {
-    const district = null;
-    const ward = null;
-    this.setState({ province, district, ward });
-    this.props.handleChangeProvinces(province.value || null);
-  };
-
-  handleChangeDistricts = (district) => {
-    this.setState({ district });
-    this.props.handleChangeDistricts(district.value || null);
-  };
-  handleChangeWards = (ward) => {
-    this.setState({ ward });
+  handleChangeName = (key, value) => {
+    this.setState({ [key]: value });
   };
 
   handleChangeIsActive = (is_active) => {
@@ -62,15 +51,19 @@ class PartnerFilter extends PureComponent {
   };
 
   onSubmit = () => {
-    const { inputValue, country, province, district, ward, is_active } =
-      this.state;
+    const {
+      inputValue,
+      is_full_name,
+      is_last_name,
+      is_first_middle_name,
+      is_active,
+    } = this.state;
     const { handleSubmit } = this.props;
     handleSubmit(
       inputValue ? inputValue.trim() : "",
-      country ? country.value : undefined,
-      province ? province.value : undefined,
-      district ? district.value : undefined,
-      ward ? ward.value : undefined,
+      is_full_name ? is_full_name.value : undefined,
+      is_last_name ? is_last_name.value : undefined,
+      is_first_middle_name ? is_first_middle_name.value : undefined,
       is_active ? is_active.value : undefined
     );
   };
@@ -78,19 +71,17 @@ class PartnerFilter extends PureComponent {
   onClear = () => {
     if (
       this.state.inputValue ||
-      this.state.country ||
-      this.state.province ||
-      this.state.district ||
-      this.state.is_active ||
-      this.state.ward
+      this.state.is_full_name ||
+      this.state.is_last_name ||
+      this.state.is_first_middle_name ||
+      this.state.is_active
     ) {
       this.setState(
         {
           inputValue: "",
-          country: null,
-          province: null,
-          district: null,
-          ward: null,
+          is_full_name: { label: "Tất cả", value: 2 },
+          is_last_name: { label: "Tất cả", value: 2 },
+          is_first_middle_name: { label: "Tất cả", value: 2 },
           is_active: { label: "Có", value: 1 },
         },
         () => {
@@ -101,12 +92,11 @@ class PartnerFilter extends PureComponent {
   };
 
   render() {
-    const { countries, provinces, districts, wards } = this.props;
     return (
       <div className="ml-3 mr-3 mb-3 mt-3">
         <Form autoComplete="nope" className="zoom-scale-9">
           <Row>
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={4} className="mb-3">
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="inputValue" className="mr-sm-2">
                   Từ khóa
@@ -116,7 +106,7 @@ class PartnerFilter extends PureComponent {
                   autoComplete="nope"
                   type="text"
                   name="inputValue"
-                  placeholder="Nhập tên công ty, số điện thoại, email"
+                  placeholder="Nhập loại biến số tên"
                   value={this.state.inputValue || ""}
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}
@@ -126,47 +116,66 @@ class PartnerFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
-              <FormGroup className="mb-2 mb-sm-0">
+            <Col xs={12} sm={4}>
+              <FormGroup className="mb-2 mb-sm-0 ">
                 <Label for="" className="mr-sm-2">
-                  Quốc gia
+                  Tên
                 </Label>
                 <Select
                   className="MuiPaper-filter__custom--select"
-                  id="country"
-                  name="country_id"
-                  onChange={this.handleChangeCountries}
+                  id="is_last_name"
+                  name="is_last_name"
+                  onChange={(item) =>
+                    this.handleChangeName("is_last_name", item)
+                  }
                   isSearchable={true}
                   placeholder={"-- Chọn --"}
-                  value={this.state.country}
-                  options={countries.map(({ name: label, id: value }) => ({
-                    value,
-                    label,
-                  }))}
+                  value={this.state.is_last_name}
+                  options={this.state.Opts}
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
-              <FormGroup className="mb-2 mb-sm-0">
+            <Col xs={12} sm={4}>
+              <FormGroup className="mb-2 mb-sm-0 ">
                 <Label for="" className="mr-sm-2">
-                  Tỉnh thành
+                  Họ và tên đầy đủ
                 </Label>
                 <Select
                   className="MuiPaper-filter__custom--select"
-                  id="province"
-                  name="province_id"
-                  onChange={this.handleChangeProvinces}
+                  id="is_full_name"
+                  name="is_full_name"
+                  onChange={(item) =>
+                    this.handleChangeName("is_full_name", item)
+                  }
                   isSearchable={true}
                   placeholder={"-- Chọn --"}
-                  value={this.state.province}
-                  options={provinces.map(({ name: label, id: value }) => ({
-                    value,
-                    label,
-                  }))}
+                  value={this.state.is_full_name}
+                  options={this.state.Opts}
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
+          </Row>
+          <Row>
+            <Col xs={12} sm={4}>
+              <FormGroup className="mb-2 mb-sm-0 ">
+                <Label for="" className="mr-sm-2">
+                  Họ và tên đệm
+                </Label>
+                <Select
+                  className="MuiPaper-filter__custom--select"
+                  id="is_first_middle_name"
+                  name="is_first_middle_name"
+                  onChange={(item) =>
+                    this.handleChangeName("is_first_middle_name", item)
+                  }
+                  isSearchable={true}
+                  placeholder={"-- Chọn --"}
+                  value={this.state.is_first_middle_name}
+                  options={this.state.Opts}
+                />
+              </FormGroup>
+            </Col>
+            <Col xs={12} sm={4}>
               <FormGroup className="mb-2 mb-sm-0 ">
                 <Label for="" className="mr-sm-2">
                   Kích hoạt
@@ -185,51 +194,9 @@ class PartnerFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-          </Row>
-          <Row>
-            <Col xs={12} sm={3}>
-              <FormGroup className="mb-2 mb-sm-0 mt-3">
-                <Label for="district" className="mr-sm-2">
-                  Quận huyện
-                </Label>
-                <Select
-                  className="MuiPaper-filter__custom--select"
-                  id="district"
-                  name="district_id"
-                  onChange={this.handleChangeDistricts}
-                  isSearchable={true}
-                  placeholder={"-- Chọn --"}
-                  value={this.state.district}
-                  options={districts.map(({ name: label, id: value }) => ({
-                    value,
-                    label,
-                  }))}
-                />
-              </FormGroup>
-            </Col>
-            <Col xs={12} sm={3}>
-              <FormGroup className="mb-2 mb-sm-0 mt-3">
-                <Label for="ward" className="mr-sm-2">
-                  Phường/xã
-                </Label>
-                <Select
-                  className="MuiPaper-filter__custom--select"
-                  id="ward"
-                  name="ward_id"
-                  onChange={this.handleChangeWards}
-                  isSearchable={true}
-                  placeholder={"-- Chọn --"}
-                  value={this.state.ward}
-                  options={wards.map(({ name: label, id: value }) => ({
-                    value,
-                    label,
-                  }))}
-                />
-              </FormGroup>
-            </Col>
             <Col
               xs={12}
-              sm={6}
+              sm={4}
               className="d-flex align-items-end justify-content-end mt-3 pl-0 pr-0"
             >
               <FormGroup className="mb-2 mb-sm-0">
@@ -243,7 +210,7 @@ class PartnerFilter extends PureComponent {
                   <span className="ml-1">Tìm kiếm</span>
                 </Button>
               </FormGroup>
-              <FormGroup className="mb-2 ml-2 mb-sm-0">
+              <FormGroup className="mb-2 ml-2 mb-sm-0 mr-3">
                 <Button
                   className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                   onClick={this.onClear}
@@ -261,8 +228,8 @@ class PartnerFilter extends PureComponent {
   }
 }
 
-PartnerFilter.propTypes = {
+ParamNumberFilter.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
 };
 
-export default PartnerFilter;
+export default ParamNumberFilter;

@@ -12,7 +12,7 @@ const template = {
   address: '{{#? ADDRESS}}',
   fax: '{{#? FAX}}',
   tax_id: '{{#? TAXID}}',
-  is_active: '{{#? ISACTIVE}}',
+  is_active: '{{ISACTIVE? 1: 0}}',
   bank_number: '{{#? BANKNUMBER}}',
   bank_account_name: '{{#? BANKACCOUNTNAME}}',
   bank_account_id: '{{#? BANKACCOUNTID}}',
@@ -39,6 +39,7 @@ const list = (Partner = []) => {
     'bank_name',
     'bank_account_name',
     'bank_account_id',
+    'is_active',
   ]);
 };
 
