@@ -3054,7 +3054,7 @@ const routes = [
     path: "/param-name/add",
     exact: true,
     name: "Thêm mới",
-    function: "MD_PARAMNAME_VIEW",
+    function: "MD_PARAMNAME_ADD",
     component: ParamNameAdd,
   },
   {
@@ -3068,7 +3068,7 @@ const routes = [
     path: "/param-name/edit/:id",
     exact: true,
     name: "Chỉnh sửa",
-    function: "MD_PARAMNAME_VIEW",
+    function: "MD_PARAMNAME_EDIT",
     component: ParamNameEdit,
   },
   // end#ParamName
