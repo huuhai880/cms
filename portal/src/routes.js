@@ -887,6 +887,21 @@ const ParamNameEdit = React.lazy(() =>
 );
 // end#ParamName
 
+//AttributesGroup
+const AttributesGroup = React.lazy(() =>
+  import("./components/AttributesGroup/AttributesGroup")
+);
+const AttributesGroupAdd = React.lazy(() =>
+  import("./components/AttributesGroup/AttributesGroupAdd")
+);
+const AttributesGroupDetail = React.lazy(() =>
+  import("./components/AttributesGroup/AttributesGroupDetail")
+);
+const AttributesGroupEdit = React.lazy(() =>
+  import("./components/AttributesGroup/AttributesGroupEdit")
+);
+// end#AttributesGroup
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   // dashboard
@@ -3072,6 +3087,37 @@ const routes = [
     component: ParamNameEdit,
   },
   // end#ParamName
+
+  //AttributesGroup
+  {
+    path: "/attributes-group",
+    exact: true,
+    name: "Danh sách nhóm thuộc tính",
+    function: "FOR_ATTRIBUTESGROUP_VIEW",
+    component: AttributesGroup,
+  },
+  {
+    path: "/attributes-group/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "FOR_ATTRIBUTESGROUPE_ADD",
+    component: AttributesGroupAdd,
+  },
+  {
+    path: "/attributes-group/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "FOR_ATTRIBUTESGROUP_VIEW",
+    component: AttributesGroupDetail,
+  },
+  {
+    path: "/attributes-group/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "FOR_ATTRIBUTESGROUP_EDIT",
+    component: AttributesGroupEdit,
+  },
+  // end#AttributesGroup
 ];
 
 export default routes;

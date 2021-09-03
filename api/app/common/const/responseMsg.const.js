@@ -737,4 +737,14 @@ module.exports = {
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
     EXISTS_NAME: 'Loại biến số tên đã tồn tại.',
   },
+
+  ATTRIBUTESGROUP: {
+    CREATE_SUCCESS: 'Thêm mới thành công.',
+    CREATE_FAILED: 'Thêm mới thất bại.',
+    UPDATE_SUCCESS: 'Cập nhật thành công.',
+    UPDATE_FAILED: 'Cập nhật thất bại.',
+    DELETE_SUCCESS: 'Xóa thành công.',
+    SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
+    EXISTS_NAME: 'Tên nhóm thuộc tính đã tồn tại.',
+  },
 };
