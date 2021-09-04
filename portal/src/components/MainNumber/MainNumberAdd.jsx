@@ -38,7 +38,7 @@ import { CheckAccess } from "../../navigation/VerifyAccess";
 
 layoutFullWidthHeight();
 
-function MainNumberAdd() {
+function MainNumberAdd({ noEdit }) {
   let { id } = useParams();
   const _mainNumberModel = new MainNumberModel();
   const [dataNumber, setDataNumber] = useState(initialValues);
@@ -59,17 +59,26 @@ function MainNumberAdd() {
   //// create Number
   const handleCreateOrNumber = async (values) => {
     try {
-      _mainNumberModel.create(values).then((data) => {
-        if (btnType == "save") {
-          // _initData();
-          window._$g.toastr.show("Lưu thành công!", "success");
-        } else if (btnType == "save&quit") {
-          window._$g.toastr.show("Lưu thành công!", "success");
-          //   setDataPosition(initialValues);
-          return window._$g.rdr("/main-number");
+      await _mainNumberModel.check({ main_number: values.main_number }).then((data) => {
+        // console.log(data)
+        if (data.MAINNUMBERID && formik.values.main_number != dataNumber.main_number) {
+          // setalert("Email đã tồn tại!");
+          formik.setFieldError("main_number", "Chỉ số đã tồn tại!");
+          // window.scrollTo(0, 0);
+        } else {
+          _mainNumberModel.create(values).then((data) => {
+            if (btnType == "save") {
+              // _initData();
+              window._$g.toastr.show("Lưu thành công!", "success");
+            } else if (btnType == "save&quit") {
+              window._$g.toastr.show("Lưu thành công!", "success");
+              //   setDataPosition(initialValues);
+              return window._$g.rdr("/main-number");
+            }
+          });
         }
-        // console.log(data);
       });
+      
     } catch (error) {}
   };
   //////get data detail
@@ -125,9 +134,21 @@ function MainNumberAdd() {
       img_is_active: 1,
     };
     if (!formik.values.main_number_img.find((x) => x.partner_id == null)) {
-      formik.setFieldValue("main_number_img", [...formik.values.main_number_img, AddRowPro]);
+      if (formik.values.main_number_img.length == 0) {
+        let AddRowProFirst = {
+          partner_id: null,
+          main_number_images_url: null,
+          partner_name: null,
+          img_is_default: 1,
+          img_is_active: 1,
+        };
+        formik.setFieldValue("main_number_img", [...formik.values.main_number_img, AddRowProFirst]);
+      } else {
+        formik.setFieldValue("main_number_img", [...formik.values.main_number_img, AddRowPro]);
+      }
     }
   };
+  // console.log()
   const handleDeleteRowNewImg = (index) => {
     let clone = [...formik.values.main_number_img];
     clone.splice(index, 1);
@@ -172,7 +193,7 @@ function MainNumberAdd() {
     listcl[index].partner_id = value ? value.value : null;
     formik.setFieldValue("main_number_img", listcl);
   };
-  // console.log(formik.values)
+  // console.log(formik.values);
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
@@ -193,23 +214,13 @@ function MainNumberAdd() {
                         <NumberFormat
                           name="main_number"
                           id="main_number"
+                          disabled={noEdit}
                           onChange={(value) => {
                             formik.setFieldValue("main_number", value.target.value);
                             // console.log(value)
                           }}
                           value={formik.values.main_number}
                         />
-                        {/* <NumberFormat
-                          name="main_number"
-                          onValueChange={(value) => {
-                            formik.setFieldValue("main_number", value);
-                          }}
-                          value={formik.values.main_number}
-                          max={99999}
-                          min={1}
-                          decimalScale={formik.values.main_number ? 2 : 0}
-                          //   disabled={noEdit}
-                        /> */}
 
                         {formik.errors.main_number && formik.touched.main_number ? (
                           <div
@@ -233,7 +244,7 @@ function MainNumberAdd() {
                           id="main_number_desc"
                           type="textarea"
                           placeholder=" Mô tả"
-                          //   disabled={noEdit}
+                          disabled={noEdit}
                           value={formik.values.main_number_desc}
                           onChange={formik.handleChange}
                         />
@@ -242,11 +253,18 @@ function MainNumberAdd() {
                   </Col>
                   <Col xs={12} sm={12}>
                     <FormGroup row>
-                      <Label for="is_active" sm={4}>
-                        {/* Tên chức vụ <span className="font-weight-bold red-text">*</span> */}
-                      </Label>
+                      <Label for="is_active" sm={4}></Label>
                       <Col sm={8}>
-                        <CustomInput
+                        <Checkbox
+                          disabled={noEdit}
+                          onChange={(e) => {
+                            formik.setFieldValue(`is_active`, e.target.checked ? 1 : 0);
+                          }}
+                          checked={formik.values.is_active}
+                        >
+                          Kích hoạt
+                        </Checkbox>
+                        {/* <CustomInput
                           className="pull-left"
                           onBlur={null}
                           checked={formik.values.is_active}
@@ -258,14 +276,27 @@ function MainNumberAdd() {
                           onChange={(e) => {
                             formik.setFieldValue("is_active", e.target.checked ? 1 : 0);
                           }}
-                        />
+                        /> */}
                       </Col>
                     </FormGroup>
                   </Col>
                   <Col xs={12}>
                     <Row className="mb15">
-                      <Col xs={12}>
+                      <Col xs={6}>
                         <b className="underline">Hình ảnh</b>
+                        <span className="font-weight-bold red-text">*</span>
+                      </Col>
+                      <Col xs={6} className="text-right">
+                        <button
+                          className="mr-2 btn-block-sm btn btn-success"
+                          onClick={addNewImg}
+                          disabled={noEdit}
+                          type="button"
+                        >
+                          {/* <i className="fa fa-save mr-1" /> */}
+                          <i className="fa fa-plus mr-1" />
+                          Thêm hình ảnh
+                        </button>
                       </Col>
                     </Row>
                   </Col>
@@ -299,45 +330,7 @@ function MainNumberAdd() {
                           </td>
                           <td className=" align-middle text-center" width="10%"></td>
                         </thead>
-                        <tbody>
-                          <tr>
-                            <td className="align-middle text-center" width="10%"></td>
-                            <td className=" align-middle text-center" width="20%"></td>
-                            <td className=" align-middle text-center" width="40%">
-                              <div className="ps-relative">
-                                <i
-                                  style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    padding: 0,
-                                  }}
-                                  className="fa fa-plus"
-                                />
-                              </div>
-                            </td>
-                            <td className=" align-middle text-center" width="10%">
-                              <Radio.Group>
-                                <Space direction="vertical">
-                                  <Radio value={false} isDisabled={true}></Radio>
-                                </Space>
-                              </Radio.Group>
-                            </td>
-                            <td className=" align-middle text-center" width="10%">
-                              <Checkbox isDisabled={true}></Checkbox>
-                            </td>
-                            <td className=" align-middle text-center" width="10%">
-                              <Button
-                                color="success"
-                                title="Thêm"
-                                type="button"
-                                className=""
-                                onClick={addNewImg}
-                              >
-                                <i className="fa fa-plus" />
-                              </Button>
-                            </td>
-                          </tr>
-                        </tbody>
+
                         {formik.values.main_number_img &&
                           formik.values.main_number_img.map((item, index) => {
                             return (
@@ -349,7 +342,7 @@ function MainNumberAdd() {
                                   <td className=" align-middle" width="20%">
                                     <Select
                                       styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                                      //   isDisabled={noEdit}
+                                      isDisabled={noEdit}
                                       placeholder={"-- Chọn --"}
                                       value={
                                         convertValue(item.partner_id, getOptionAttribute()) ||
@@ -390,6 +383,7 @@ function MainNumberAdd() {
                                         type="file"
                                         id="icon"
                                         className="input-overlay"
+                                        disabled={noEdit}
                                         onChange={(event) => {
                                           let { target } = event;
                                           if (target.files[0]) {
@@ -430,65 +424,16 @@ function MainNumberAdd() {
                                       />
                                     </div>
                                   </td>
-                                  {/* <td className=" align-middle text-center" width="10%">
-                                    <CustomInput
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={item.img_is_default}
-                                      type="checkbox"
-                                      id={`img_is_default${index}`}
-                                      label="Mặc định"
-                                      name={`img_is_default${index}`}
-                                      // disabled={noEdit}
-                                      onChange={(e) => {
-                                        let clone = [...formik.values.main_number_img];
-                                        // console.log(e.target.checked)
-                                        clone.clone[index].img_is_default = e
-                                          ? e.target.checked
-                                            ? 1
-                                            : 0
-                                          : null;
-                                        formik.setFieldValue(`main_number_img`, clone);
-                                      }}
-                                    />
-                                  </td> */}
-                                  <td className=" align-middle text-center" width="10%">
-                                    <Radio.Group
-                                      onChange={(e) => {
-                                        // console.log(e.target.value);
-                                        // console.log(e.target.value);
 
-                                        formik.values.main_number_img.map((item, index) => {
-                                          if (item.partner_id == e.target.value) {
-                                            item.img_is_default = 1;
-                                          } else {
-                                            item.img_is_default = 0;
-                                          }
-                                        });
-                                        setvalue(e.target.value);
-                                      }}
-                                      value={value}
-                                    >
-                                      <Space direction="vertical">
-                                        <Radio
-                                          // checked={item.img_is_default == 1}
-                                          value={item.partner_id}
-                                        ></Radio>
-                                      </Space>
-                                    </Radio.Group>
-                                    {/* <CustomInput
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={item.img_is_default}
-                                      type="radio"
-                                      id={`img_is_default${index}`}
-                                      label="Mặc định"
-                                      name={`img_is_default${index}`}
-                                      // disabled={noEdit}
+                                  <td className=" align-middle text-center" width="10%">
+                                    <Checkbox
+                                      disabled={noEdit}
                                       onChange={(e) => {
+                                        formik.values.main_number_img.map((value) => {
+                                          // console.log(value)
+                                          value.img_is_default = 0;
+                                        });
                                         let clone = [...formik.values.main_number_img];
-                                        // clone.img_is_default = 0
-                                        console.log(clone)
                                         clone[index].img_is_default = e
                                           ? e.target.checked
                                             ? 1
@@ -496,10 +441,12 @@ function MainNumberAdd() {
                                           : null;
                                         formik.setFieldValue(`main_number_img`, clone);
                                       }}
-                                    /> */}
+                                      checked={item.img_is_default}
+                                    ></Checkbox>
                                   </td>
                                   <td className=" align-middle text-center" width="10%">
                                     <Checkbox
+                                      disabled={noEdit}
                                       onChange={(e) => {
                                         let clone = [...formik.values.main_number_img];
                                         clone[index].img_is_active = e
@@ -511,31 +458,13 @@ function MainNumberAdd() {
                                       }}
                                       checked={item.img_is_active}
                                     ></Checkbox>
-                                    {/* <Checkbox
-                                      className="pull-left"
-                                      onBlur={null}
-                                      checked={item.img_is_active}
-                                      type="checkbox"
-                                      id={`img_is_active${index}`}
-                                      label="Kích hoạt"
-                                      name={`img_is_active${index}`}
-                                      // disabled={noEdit}
-                                      onChange={(e) => {
-                                        let clone = [...formik.values.main_number_img];
-                                        clone[index].img_is_active = e
-                                          ? e.target.checked
-                                            ? 1
-                                            : 0
-                                          : null;
-                                        formik.setFieldValue(`main_number_img`, clone);
-                                      }}
-                                    /> */}
                                   </td>
                                   <td className=" align-middle text-center" width="10%">
                                     <Button
                                       color="danger"
                                       title="Xóa"
                                       className=""
+                                      disabled={noEdit}
                                       type="button"
                                       onClick={() => handleDeleteRowNewImg(index)}
                                     >
@@ -548,53 +477,77 @@ function MainNumberAdd() {
                           })}
                       </table>
                       {formik.errors.main_number_img && formik.touched.main_number_img ? (
-                    <div
-                      className="col-xs-12 col-sm-12 col-md-12 col-lg-12 field-validation-error alert alert-danger fade show"
-                      role="alert"
-                    >
-                      {formik.errors.main_number_img}
-                    </div>
-                  ) : null}
+                        <div
+                          className="col-xs-12 col-sm-12 col-md-12 col-lg-12 field-validation-error alert alert-danger fade show"
+                          role="alert"
+                        >
+                          {formik.errors.main_number_img}
+                        </div>
+                      ) : null}
                     </div>
                   </Col>
-                  
                 </Row>
                 <div className="text-right mb-2 mt-2">
-                  <div>
-                    <CheckAccess permission={id ? `FOR_MAINNUMBER_EDIT` : `FOR_MAINNUMBER_ADD`}>
+                  {noEdit ? (
+                    <div>
+                      <CheckAccess permission={`FOR_MAINNUMBER_EDIT`}>
+                        <button
+                          className="mr-2 btn-block-sm btn btn-primary"
+                          onClick={() => {
+                            window._$g.rdr(`/main-number/edit/${id}`);
+                          }}
+                          type="button"
+                        >
+                          <i className="fa fa-save mr-1" />
+                          Chỉnh sửa
+                        </button>
+                      </CheckAccess>
                       <button
-                        className="mr-2 btn-block-sm btn btn-primary"
-                        onClick={() => {
-                          setbtnType("save");
-                        }}
-                        type="submit"
+                        className=" btn-block-sm btn btn-secondary"
+                        type="button"
+                        onClick={() => window._$g.rdr(`/main-number`)}
                       >
-                        <i className="fa fa-save mr-1" />
-                        Lưu
+                        <i className="fa fa-times-circle mr-1" />
+                        Đóng
                       </button>
-                    </CheckAccess>
-                    <CheckAccess permission={id ? `FOR_MAINNUMBER_EDIT` : `FOR_MAINNUMBER_ADD`}>
-                      <button
-                        className="mr-2 btn-block-sm btn btn-success"
-                        onClick={() => {
-                          setbtnType("save&quit");
-                        }}
-                        type="submit"
-                      >
-                        <i className="fa fa-save mr-1" />
-                        Lưu và đóng
-                      </button>
-                    </CheckAccess>
+                    </div>
+                  ) : (
+                    <div>
+                      <CheckAccess permission={id ? `FOR_MAINNUMBER_EDIT` : `FOR_MAINNUMBER_ADD`}>
+                        <button
+                          className="mr-2 btn-block-sm btn btn-primary"
+                          onClick={() => {
+                            setbtnType("save");
+                          }}
+                          type="submit"
+                        >
+                          <i className="fa fa-save mr-1" />
+                          Lưu
+                        </button>
+                      </CheckAccess>
+                      <CheckAccess permission={id ? `FOR_MAINNUMBER_EDIT` : `FOR_MAINNUMBER_ADD`}>
+                        <button
+                          className="mr-2 btn-block-sm btn btn-success"
+                          onClick={() => {
+                            setbtnType("save&quit");
+                          }}
+                          type="submit"
+                        >
+                          <i className="fa fa-save mr-1" />
+                          Lưu và đóng
+                        </button>
+                      </CheckAccess>
 
-                    <button
-                      className=" btn-block-sm btn btn-secondary"
-                      type="button"
-                      onClick={() => window._$g.rdr(`/main-number`)}
-                    >
-                      <i className="fa fa-times-circle mr-1" />
-                      Đóng
-                    </button>
-                  </div>
+                      <button
+                        className=" btn-block-sm btn btn-secondary"
+                        type="button"
+                        onClick={() => window._$g.rdr(`/main-number`)}
+                      >
+                        <i className="fa fa-times-circle mr-1" />
+                        Đóng
+                      </button>
+                    </div>
+                  )}
                 </div>
               </Form>
             </CardBody>

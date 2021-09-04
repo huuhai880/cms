@@ -4,6 +4,7 @@ export default class NewsCommentModel extends Model {
   static API_MAINNUMBER_IMAGES_LIST = "main-number/:mainNumber_id/image-by-numerid";
   static API_MAINNUMBER_PARTNER_LIST = "main-number/partner";
   static API_MAINNUMBER_PARTNER_DETAIL = "main-number/:mainNumber_id";
+  static API_MAINNUMBER_CHECK = "main-number/check-mainnumber";
 
   static API_MAINNUMBER_DELETE = "main-number/:mainNumber_id/delete";
   listNumImg(id, _data = {}) {
@@ -40,6 +41,12 @@ export default class NewsCommentModel extends Model {
     let data = Object.assign({}, _data);
     //
     return this._api.get(_static.API_MAINNUMBER_PARTNER_DETAIL.replace(":mainNumber_id", id), data);
+  }
+  check(_data = {}) {
+    // Validate data?!
+    let data = Object.assign({}, _data);
+    // console.log(id, data)
+    return this._api.get(_static.API_MAINNUMBER_CHECK, data);
   }
 }
 const _static = NewsCommentModel;

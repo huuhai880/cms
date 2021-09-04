@@ -35,11 +35,30 @@ const getPartnersList = async (queryParams = {}) => {
     return new ServiceResponse(true, '', {});
   }
 };
+/////check main number
+const CheckMainNumber = async (main_number) => {
+  // console.log(main_number)
+  try {
+    const pool = await mssql.pool;
+    const data = await pool
+      .request()
+      .input('MAINNUMBER', main_number)
+      .execute('FOR_MAINNUMBER_CheckMainNumber_AdminWeb');
+    const res = data.recordset[0];
+    if (res) {
+      return new ServiceResponse(true, '', res);
+    }
+    return new ServiceResponse(true, '', '');
+  } catch (error) {
+    return new ServiceResponse(false, error.message);
+  }
+};
 ///////get list main number
 const getMainNumberList = async (queryParams = {}) => {
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
+    // console.log(queryParams )
     const pool = await mssql.pool;
     const data = await pool
       .request()
@@ -66,7 +85,7 @@ const getMainNumberList = async (queryParams = {}) => {
       data: MainNumberClass.list(result),
       page: currentPage,
       limit: itemsPerPage,
-      total: apiHelper.getTotalData(result),
+      total: result.length,
     });
   } catch (e) {
     logger.error(e, {
@@ -152,7 +171,10 @@ const addMainNumber = async (body = {}) => {
     /////create or update number
     const requestMainNumber = new sql.Request(transaction);
     const resultMainNumber = await requestMainNumber
-      .input('MAINNUMBERID', apiHelper.getValueFromObject(body, 'main_number_id'))
+      .input(
+        'MAINNUMBERID',
+        apiHelper.getValueFromObject(body, 'main_number_id')
+      )
       .input('MAINNUMBER', apiHelper.getValueFromObject(body, 'main_number'))
 
       .input(
@@ -165,7 +187,8 @@ const addMainNumber = async (body = {}) => {
     const mainNumber_id = resultMainNumber.recordset[0].RESULT;
     // console.log(apiHelper.getValueFromObject(body, 'main_number_id'))
     if (apiHelper.getValueFromObject(body, 'main_number_id')) {
-      await pool.request()
+      await pool
+        .request()
         .input('MAINNUMBERID', mainNumber_id)
         .input('DELETEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
         .execute('FOR_MAINNUMBERIMAGE_DeleteByNumberId_AdminWeb');
@@ -255,5 +278,6 @@ module.exports = {
   detailMainNumber,
   getImageListByNum,
   getPartnersList,
+  CheckMainNumber,
   addMainNumber,
 };

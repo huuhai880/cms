@@ -21,12 +21,12 @@ export const initialValues = {
 ///// validate
 export const validationSchema = yup.object().shape({
   main_number: yup.string().required("Con số không được để trống .").nullable(),
-  main_number_img:yup.array().required("Danh sách hình ảnh không được để trống .").nullable(),
+  main_number_img: yup.array().required("Danh sách hình ảnh không được để trống .").nullable(),
 });
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   // console.log(data);
   return [
-    configIDRowTable("main_number_id", "/main-number/edit/", query),
+    configIDRowTable("main_number_id", "/main-number/detail/", query),
     {
       name: "main_number",
       label: "Chỉ số",

@@ -133,6 +133,27 @@ const detailMainNumber = async (req, res, next) => {
     );
   }
 };
+const CheckMainNumber = async (req, res, next) => {
+  // console.log()
+  try {
+    // Check ACCOUNT exists
+    const serviceRes = await MainNumberService.CheckMainNumber(
+      req.query.main_number
+    );
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+};
 module.exports = {
   getMainNumberList,
   getImageListByNum,
@@ -140,4 +161,5 @@ module.exports = {
   detailMainNumber,
   getPartnersList,
   addMainNumber,
+  CheckMainNumber,
 };
