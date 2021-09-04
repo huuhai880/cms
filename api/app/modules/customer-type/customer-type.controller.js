@@ -18,13 +18,19 @@ const apiHelper = require('../../common/helpers/api.helper');
 const getListCustomerType = async (req, res, next) => {
   try {
     const serviceRes = await customerTypeService.getListCustomerType(req.query);
-    if(serviceRes.isFailed()) {
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    const {data, total, page, limit} = serviceRes.getData();
+    const { data, total, page, limit } = serviceRes.getData();
     return res.json(new ListResponse(data, total, page, limit));
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 
@@ -36,16 +42,29 @@ const getListCustomerType = async (req, res, next) => {
  * @param next
  * @returns {Promise<*>}
  */
-const createCustomerType= async (req, res, next) => {
+const createCustomerType = async (req, res, next) => {
   try {
     // Insert CustomerType
-    const serviceRes = await customerTypeService.createCustomerTypeOrUpdate(req.body);
-    if(serviceRes.isFailed()) {
+    const serviceRes = await customerTypeService.createCustomerTypeOrUpdate(
+      req.body
+    );
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    return res.json(new SingleResponse(serviceRes.getData(), RESPONSE_MSG.CUSTOMERTYPE.CREATE_SUCCESS));
+    return res.json(
+      new SingleResponse(
+        serviceRes.getData(),
+        RESPONSE_MSG.CUSTOMERTYPE.CREATE_SUCCESS
+      )
+    );
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 
@@ -61,28 +80,37 @@ const updateCustomerType = async (req, res, next) => {
   try {
     const customer_type_id = req.params.customer_type_id;
     req.body.customer_type_id = customer_type_id;
+
     // Check CustomerType exists
-    const serviceResDetail = await customerTypeService.detailCustomerType(customer_type_id);
-    if(serviceResDetail.isFailed()) {
+    const serviceResDetail = await customerTypeService.detailCustomerType(
+      customer_type_id
+    );
+    if (serviceResDetail.isFailed()) {
       return next(serviceResDetail);
     }
-    const serviceResUsed = await customerTypeService.checkUsedCustomerType(customer_type_id);
-    if(serviceResUsed.isFailed()) {
-      return next(serviceResUsed);
-    }
-    const check = serviceResUsed.getData();
-    if(!check) {
-      return next(new ErrorResponse(null, null, RESPONSE_MSG.CUSTOMERTYPE.CHECK_USED_FAILED));
-    }
+
     // Update CustomerType
-    const serviceRes = await customerTypeService.createCustomerTypeOrUpdate(req.body);
-    if(serviceRes.isFailed()) {
+    const serviceRes = await customerTypeService.createCustomerTypeOrUpdate(
+      req.body
+    );
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
 
-    return res.json(new SingleResponse(serviceRes.getData(), RESPONSE_MSG.CUSTOMERTYPE.UPDATE_SUCCESS));
+    return res.json(
+      new SingleResponse(
+        serviceRes.getData(),
+        RESPONSE_MSG.CUSTOMERTYPE.UPDATE_SUCCESS
+      )
+    );
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 /**
@@ -93,31 +121,51 @@ const updateCustomerType = async (req, res, next) => {
  * @param next
  * @returns {Promise<*>}
  */
-const deleteCustomerType= async (req, res, next) => {
+const deleteCustomerType = async (req, res, next) => {
   try {
-
     const customer_type_id = req.params.customer_type_id;
     // Check CUSTOMERTYPE exists
-    const serviceResDetail = await customerTypeService.detailCustomerType(customer_type_id);
-    if(serviceResDetail.isFailed()) {
+    const serviceResDetail = await customerTypeService.detailCustomerType(
+      customer_type_id
+    );
+    if (serviceResDetail.isFailed()) {
       return next(serviceResDetail);
     }
-    const serviceResUsed = await customerTypeService.checkUsedCustomerType(customer_type_id);
-    if(serviceResUsed.isFailed()) {
+    const serviceResUsed = await customerTypeService.checkUsedCustomerType(
+      customer_type_id
+    );
+    if (serviceResUsed.isFailed()) {
       return next(serviceResUsed);
     }
     const check = serviceResUsed.getData();
-    if(!check) {
-      return next(new ErrorResponse(null, null, RESPONSE_MSG.CUSTOMERTYPE.CHECK_USED_FAILED));
+    if (!check) {
+      return next(
+        new ErrorResponse(
+          null,
+          null,
+          RESPONSE_MSG.CUSTOMERTYPE.CHECK_USED_FAILED
+        )
+      );
     }
     // Delete CUSTOMERTYPE
-    const serviceRes = await customerTypeService.deleteCustomerType(customer_type_id, req.body);
-    if(serviceRes.isFailed()) {
+    const serviceRes = await customerTypeService.deleteCustomerType(
+      customer_type_id,
+      req.body
+    );
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    return res.json(new SingleResponse(null, RESPONSE_MSG.CUSTOMERTYPE.DELETE_SUCCESS));
+    return res.json(
+      new SingleResponse(null, RESPONSE_MSG.CUSTOMERTYPE.DELETE_SUCCESS)
+    );
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 /**
@@ -133,16 +181,24 @@ const detailCustomerType = async (req, res, next) => {
     const customer_type_id = req.params.customer_type_id;
 
     // Check CUSTOMERTYPE exists
-    const serviceRes = await customerTypeService.detailCustomerType(customer_type_id);
-    if(serviceRes.isFailed()) {
+    const serviceRes = await customerTypeService.detailCustomerType(
+      customer_type_id
+    );
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
     return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
-  /**
+/**
  * change status a AM_BUSINESS
  *
  * @param req
@@ -154,17 +210,30 @@ const changeStatusCustomerType = async (req, res, next) => {
   try {
     const customer_type_id = req.params.customer_type_id;
     // Check function exists
-    const serviceResDetail = await customerTypeService.detailCustomerType(customer_type_id);
-    if(serviceResDetail.isFailed()) {
+    const serviceResDetail = await customerTypeService.detailCustomerType(
+      customer_type_id
+    );
+    if (serviceResDetail.isFailed()) {
       return next(serviceResDetail);
     }
-    const serviceRes = await customerTypeService.changeStatusCustomerType(customer_type_id, req.body);
-    if(serviceRes.isFailed()) {
+    const serviceRes = await customerTypeService.changeStatusCustomerType(
+      customer_type_id,
+      req.body
+    );
+    if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    return res.json(new SingleResponse(null, RESPONSE_MSG.CUSTOMERTYPE.CHANGE_STATUS_SUCCESS));
+    return res.json(
+      new SingleResponse(null, RESPONSE_MSG.CUSTOMERTYPE.CHANGE_STATUS_SUCCESS)
+    );
   } catch (error) {
-    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
   }
 };
 

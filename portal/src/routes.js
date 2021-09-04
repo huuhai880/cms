@@ -1834,7 +1834,7 @@ const routes = [
   {
     path: "/customer-type",
     exact: true,
-    name: "Loại khách hàng",
+    name: "Danh sách loại khách hàng",
     function: "CRM_CUSTOMERTYPE_VIEW",
     component: CustomerType,
   },
@@ -1853,7 +1853,7 @@ const routes = [
     component: CustomerTypeDetail,
   },
   {
-    path: "/customer-type/update/:id",
+    path: "/customer-type/edit/:id",
     exact: true,
     name: "Chỉnh sửa",
     function: "CRM_CUSTOMERTYPE_EDIT",

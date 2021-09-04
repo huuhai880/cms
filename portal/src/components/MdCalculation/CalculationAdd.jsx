@@ -107,7 +107,7 @@ export default class CalculationAdd extends PureComponent {
   formikValidationSchema = Yup.object().shape({
     calculation: Yup.string()
       .trim()
-      .matches(/^[ -+*x\/]/, `Chỉ nhập các ký tự( x + - * / ).`)
+      .matches(/[+x\-/]/, `Chỉ nhập các ký tự( + - x / )`)
       .required("Tên phép tính là bắt buộc."),
   });
 
