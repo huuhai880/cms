@@ -1,40 +1,24 @@
 import React, { useState, useEffect } from "react";
 import {
-  Alert,
   Card,
   CardBody,
   CardHeader,
   Col,
   Row,
-  Button,
   Form,
   FormGroup,
   Label,
   Input,
-  CustomInput,
-  Media,
-  Nav,
-  NavItem,
-  NavLink,
-  TabPane,
-  TabContent,
-  Table,
-  InputGroup,
-  InputGroupAddon,
 } from "reactstrap";
 import { useParams } from "react-router";
 import { layoutFullWidthHeight } from "../../utils/html";
 import { useFormik } from "formik";
 import { initialValues, validationSchema } from "./const";
-import { readFileAsBase64 } from "../../utils/html";
 import LetterModel from "../../models/LetterModel";
-import DatePicker from "../Common/DatePicker";
-import moment from "moment";
-import Upload from "../Common/Antd/Upload";
 import NumberFormat from "../Common/NumberFormat";
-import Select from "react-select";
-import { Radio, Space, Checkbox } from "antd";
 import { CheckAccess } from "../../navigation/VerifyAccess";
+import { Checkbox } from "antd";
+
 layoutFullWidthHeight();
 
 function LetterAdd({ noEdit }) {
