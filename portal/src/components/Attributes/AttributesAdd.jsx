@@ -21,7 +21,6 @@ import { readFileAsBase64 } from "../../utils/html";
 import { mapDataOptions4Select } from "../../utils/html";
 import Select from "react-select";
 import "./styles.scss";
-import "./styles.scss";
 import { Editor } from "@tinymce/tinymce-react";
 
 // Component(s)
@@ -270,7 +269,7 @@ export default class AttributesAdd extends PureComponent {
       partner_id: null,
       url_images: undefined,
       is_default: 0,
-      is_active_image: "",
+      is_active_image: 1,
     });
     setFieldValue("list_attributes_image", values.list_attributes_image);
   };
@@ -284,7 +283,7 @@ export default class AttributesAdd extends PureComponent {
           partner_id: null,
           url_images: "",
           is_default: 1,
-          is_active_image: "",
+          is_active_image: 1,
         },
       ]);
       return;

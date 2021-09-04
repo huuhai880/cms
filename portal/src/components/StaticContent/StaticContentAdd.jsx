@@ -489,7 +489,7 @@ export default class StaticContentAdd extends Component {
                                       placeholder=""
                                       disabled={noEdit}
                                       min="1"
-                                      className="text-right"
+                                      className="text-left"
                                     />
                                   )}
                                 />
