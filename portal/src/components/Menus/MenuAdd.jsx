@@ -427,8 +427,12 @@ export default class MenuAdd extends PureComponent {
                                     onBlur={null}
                                     type="number"
                                     name="order_index"
+                                    onKeyDown={(evt) =>
+                                      evt.key === "e" &&
+                                      evt.preventDefault()
+                                    }
                                     id="order_index"
-                                    className="text-right"
+                                    className="text-left"
                                     disabled={noEdit}
                                     min={0}
                                   />}

@@ -20,7 +20,7 @@ import {
 // Component(s)
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import Loading from "../Common/Loading";
-
+import "./styles.scss";
 // Util(s)
 // import { readFileAsBase64 } from '../../utils/html';
 
@@ -63,6 +63,7 @@ export default class FunctionGroupAdd extends PureComponent {
       functions: [],
       /** @var {Number} */
       order_index: 0,
+      cloneFunctions: [],
     };
   }
 
@@ -78,7 +79,7 @@ export default class FunctionGroupAdd extends PureComponent {
           return item;
         });
       }
-      this.setState({ ...bundle, ready: true });
+      this.setState({ ...bundle, ready: true, cloneFunctions: functions });
     })();
     //.end
   }
@@ -246,7 +247,7 @@ export default class FunctionGroupAdd extends PureComponent {
   }
 
   render() {
-    let { ready, alerts, functions } = this.state;
+    let { ready, alerts, functions, cloneFunctions } = this.state;
     let { funcGroupEnt, noEdit } = this.props;
     /** @var {Object} */
     let initialValues = this.getInitialValues();
@@ -374,8 +375,12 @@ export default class FunctionGroupAdd extends PureComponent {
                                           type="number"
                                           name="order_index"
                                           id="order_index"
+                                          onKeyDown={(evt) =>
+                                            evt.key === "e" &&
+                                            evt.preventDefault()
+                                          }
                                           placeholder="0"
-                                          className="text-right"
+                                          className="text-left"
                                           disabled={noEdit}
                                           min={0}
                                           // value={this.state.order_index}
@@ -451,7 +456,11 @@ export default class FunctionGroupAdd extends PureComponent {
                                       hover
                                       responsive
                                     >
-                                      <thead>
+                                      <thead
+                                        style={{
+                                          verticalAlign: "middle !important",
+                                        }}
+                                      >
                                         <tr>
                                           <th
                                             className="text-center"
@@ -461,6 +470,31 @@ export default class FunctionGroupAdd extends PureComponent {
                                           </th>
                                           <th className="text-center">
                                             Tên quyền
+                                            <Input
+                                              type="text"
+                                              className="mt-2"
+                                              placeholder="Nhập tên quyền"
+                                              onChange={(event) => {
+                                                let value = event.target.value;
+                                                functions = cloneFunctions;
+                                                if (event.target.value) {
+                                                  functions =
+                                                    cloneFunctions.filter(
+                                                      (item) => {
+                                                        return item.function_name
+                                                          .toUpperCase()
+                                                          .trim()
+                                                          .includes(
+                                                            value
+                                                              .toUpperCase()
+                                                              .trim()
+                                                          );
+                                                      }
+                                                    );
+                                                }
+                                                this.setState({ functions });
+                                              }}
+                                            />
                                           </th>
                                           <th className="text-center">Code</th>
                                           <th

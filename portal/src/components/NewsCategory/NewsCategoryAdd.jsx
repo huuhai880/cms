@@ -350,8 +350,12 @@ export default class NewsCategoryAdd extends PureComponent {
                                               }) => (
                                                 <Input
                                                   {...field}
-                                                  className="text-right"
+                                                  className="text-left"
                                                   onBlur={null}
+                                                  onKeyDown={(evt) =>
+                                                    evt.key === "e" &&
+                                                    evt.preventDefault()
+                                                  }
                                                   type="number"
                                                   id="order_index"
                                                   disabled={noEdit}

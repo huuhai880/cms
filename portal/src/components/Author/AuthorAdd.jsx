@@ -968,7 +968,11 @@ export default class AuthorAdd extends PureComponent {
                                           onBlur={null}
                                           type={`number`}
                                           name="order_index"
-                                          className="text-right"
+                                          onKeyDown={(evt) =>
+                                            evt.key === "e" &&
+                                            evt.preventDefault()
+                                          }
+                                          className="text-left"
                                           id="order_index"
                                           disabled={noEdit}
                                         />
