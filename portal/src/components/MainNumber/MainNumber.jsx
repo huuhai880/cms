@@ -18,7 +18,7 @@ function MainNumber() {
   const [toggleSearch, settoggleSearch] = useState(true);
   const [isLoading, setisLoading] = useState(true);
   const [query, setQuery] = useState({
-    itemsPerPage: 10,
+    itemsPerPage: 25,
     page: 1,
     selectdActive: 1,
   });
@@ -64,6 +64,16 @@ function MainNumber() {
         }
       }
     });
+  };
+  const handleChangeRowsPerPage = (event) => {
+    query.itemsPerPage = event.target.value;
+    query.page = 1;
+    _callAPI(query);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    query.page = newPage + 1;
+    _callAPI(query);
   };
   return (
     <div>
@@ -125,8 +135,8 @@ function MainNumber() {
                     count={dataNumber.totalItems}
                     rowsPerPage={query.itemsPerPage}
                     page={query.page - 1 || 0}
-                    // onChangePage={handleChangePage}
-                    // onChangeRowsPerPage={handleChangeRowsPerPage}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
                   />
                 </div>
               )}
