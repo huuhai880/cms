@@ -108,7 +108,7 @@ function Filter({ handleSubmitFillter }) {
                   autoComplete="nope"
                   type="text"
                   name="keyword"
-                  placeholder="Nhập chỉ số"
+                  placeholder="Nhập loại biến số"
                   value={searchValue.keyword}
                   onChange={(e) => {
                     setSearchValue({
