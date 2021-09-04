@@ -113,6 +113,7 @@ function LetterAdd({ noEdit }) {
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
+  
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">

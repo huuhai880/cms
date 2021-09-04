@@ -11,7 +11,9 @@ const rules = require('./mainNumber.rule');
 /////////list MainNumber
 routes.route('').get(MainNumberController.getMainNumberList);
 /////////list Image by numer id
-routes.route('/:mainNumber_id/image-by-numerid').get(MainNumberController.getImageListByNum);
+routes
+  .route('/:mainNumber_id/image-by-numerid')
+  .get(MainNumberController.getImageListByNum);
 routes.route('/partner').get(MainNumberController.getPartnersList);
 
 //////createOrupdate
@@ -26,7 +28,8 @@ routes
 routes
   .route('/:mainNumber_id/delete')
   .put(MainNumberController.deleteMainNumber);
-
+///check mainnumber
+routes.route('/check-mainnumber').get(MainNumberController.CheckMainNumber);
 module.exports = {
   prefix,
   routes,

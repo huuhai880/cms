@@ -1,3 +1,4 @@
+import MainNumberDetail from "components/MainNumber/MainNumberDetail";
 import React from "react";
 
 // Dashboard
@@ -2646,13 +2647,13 @@ const routes = [
     function: "FOR_MAINNUMBER_ADD",
     component: MainNumberAdd,
   },
-  // {
-  //   path: "/review/detail/:id",
-  //   exact: true,
-  //   name: "Chi tiết",
-  //   function: "MD_POSITION_VIEW",
-  //   component: ReviewDetail,
-  // },
+  {
+    path: "/main-number/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "FOR_MAINNUMBER_VIEW",
+    component: MainNumberDetail,
+  },
   {
     path: "/main-number/edit/:id",
     exact: true,
