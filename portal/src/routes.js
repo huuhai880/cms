@@ -273,6 +273,13 @@ const StoreDetail = React.lazy(() => import("./components/Store/StoreDetail"));
 const StoreEdit = React.lazy(() => import("./components/Store/StoreEdit"));
 //.end#Store
 
+// ParamType
+const ParamType = React.lazy(() => import("./components/ParamType/ParamType"));
+const ParamTypeAdd = React.lazy(() => import("./components/ParamType/ParamTypeAdd"));
+const ParamTypeDetail = React.lazy(() => import("./components/ParamType/ParamTypeDetail"));
+const ParamTypeEdit = React.lazy(() => import("./components/ParamType/ParamTypeEdit"));
+//.end#ParamType
+
 //DepartMent
 const DepartMent = React.lazy(() =>
   import("./components/DepartMent/DepartMent")
@@ -3038,7 +3045,7 @@ const routes = [
     path: "/letter/add",
     exact: true,
     name: "Thêm mới",
-    function: "MD_LETTER_VIEW",
+    function: "MD_LETTER_ADD",
     component: LetterAdd,
   },
   {
@@ -3052,7 +3059,7 @@ const routes = [
     path: "/letter/edit/:id",
     exact: true,
     name: "Chỉnh sửa",
-    function: "MD_LETTER_VIEW",
+    function: "MD_LETTER_EDIT",
     component: LetterEdit,
   },
   // end#Letter
@@ -3118,6 +3125,36 @@ const routes = [
     component: AttributesGroupEdit,
   },
   // end#AttributesGroup
+  //param-type
+  {
+    path: "/param-type",
+    exact: true,
+    name: "Danh sách biến số ngày sinh",
+    function: "MD_PARAMTYPE_VIEW",
+    component: ParamType,
+  },
+  {
+    path: "/param-type/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "MD_PARAMTYPE_ADD",
+    component: ParamTypeAdd,
+  },
+  {
+    path: "/param-type/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "MD_PARAMTYPE_VIEW",
+    component: ParamTypeDetail,
+  },
+  {
+    path: "/param-type/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "MD_PARAMTYPE_EDIT",
+    component: ParamTypeEdit,
+  },
+  // end#param-type
 ];
 
 export default routes;
