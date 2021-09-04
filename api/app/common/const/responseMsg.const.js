@@ -410,7 +410,7 @@ module.exports = {
     DELETE_FAILED: 'Xóa loại khách hàng thất bại.',
     CHANGE_STATUS_SUCCESS: 'Thay đổi trạng thái loại khách hàng thành công.',
     CHANGE_STATUS_FAILED: 'Thay đổi trạng thái loại khách hàng thất bại.',
-    CHECK_USED_FAILED: 'Loại khách hàng đã được sử dụng',
+    EXISTS_NAME: 'Loại khách hàng đã tồn tại.',
   },
   OUTPUTTYPE: {
     CREATE_SUCCESS: 'Thêm mới hình thức xuất thành công.',

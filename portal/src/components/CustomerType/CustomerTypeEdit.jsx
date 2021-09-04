@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
 // Component(s)
-import Loading from '../Common/Loading';
-import CustomerTypeAdd from './CustomerTypeAdd';
+import Loading from "../Common/Loading";
+import CustomerTypeAdd from "./CustomerTypeAdd";
 
 // Model(s)
 import CustomerTypeModel from "../../models/CustomerTypeModel";
@@ -23,7 +23,7 @@ export default class CustomerTypeEdit extends Component {
     // Init state
     this.state = {
       /** @var {SegmentEntity} */
-      CustomerTypeEnt: null
+      CustomerTypeEnt: null,
     };
   }
 
@@ -31,34 +31,28 @@ export default class CustomerTypeEdit extends Component {
     // Fetch record data
     (async () => {
       let ID = this.props.match.params.id;
-      let CustomerTypeEnt = await this._customerTypeModel.read(ID)
-        .catch(() => {
-          setTimeout(() => window._$g.rdr('/404'));
-        })
-      ;
-      
-      CustomerTypeEnt.color_text = CustomerTypeEnt.color;
-      CustomerTypeEnt.note_color_text = CustomerTypeEnt.color_text;
-      CustomerTypeEnt.customertype = (CustomerTypeEnt.is_member_type == 1) ? 1 : ((CustomerTypeEnt.is_sell == 1)? 2 : 0);
+      let CustomerTypeEnt = await this._customerTypeModel.read(ID).catch(() => {
+        setTimeout(() => window._$g.rdr("/404"));
+      });
       CustomerTypeEnt && this.setState({ CustomerTypeEnt });
-      console.log(CustomerTypeEnt)
     })();
     //.end
   }
 
   render() {
-    let {
-      CustomerTypeEnt,
-    } = this.state;
-    let {
-      noEdit,
-    } = this.props;
+    let { CustomerTypeEnt } = this.state;
+    let { noEdit } = this.props;
 
     // Ready?
     if (!CustomerTypeEnt) {
       return <Loading />;
     }
-    return <CustomerTypeAdd CustomerTypeEnt={CustomerTypeEnt} noEdit={noEdit || (!userAuth._isAdministrator() && CustomerTypeEnt.is_system !== 0)} {...this.props}/>
-    
+    return (
+      <CustomerTypeAdd
+        CustomerTypeEnt={CustomerTypeEnt}
+        noEdit={noEdit}
+        {...this.props}
+      />
+    );
   }
 }
