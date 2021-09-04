@@ -574,6 +574,10 @@ export default class CrmReviewAdd extends PureComponent {
                                           {...field}
                                           className="text-left"
                                           onBlur={null}
+                                          onKeyDown={(evt) =>
+                                            evt.key === "e" &&
+                                            evt.preventDefault()
+                                          }
                                           type="number"
                                           id="order_index"
                                           disabled={noEdit}
