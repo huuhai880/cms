@@ -111,7 +111,7 @@ class CustomerTypeFilter extends PureComponent {
                   autoComplete="nope"
                   type="text"
                   name="inputValue"
-                  placeholder="Tìm kiếm theo tên loại khách hàng"
+                  placeholder="Nhập tên loại khách hàng"
                   value={this.state.inputValue}
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}

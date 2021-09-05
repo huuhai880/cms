@@ -105,7 +105,7 @@ export default class ParamNameAdd extends PureComponent {
   }
 
   formikValidationSchema = Yup.object().shape({
-    is_name_type: Yup.string().trim().required("Tên loại biến số là bắt buộc."),
+    name_type: Yup.string().trim().required("Tên loại biến số là bắt buộc."),
   });
 
   handleFormikBeforeRender = ({ initialValues }) => {
@@ -137,13 +137,14 @@ export default class ParamNameAdd extends PureComponent {
     // Build form data
     // +++
 
-    let { is_active, is_full_name, is_last_name, is_first_middle_name } =
+    let { is_active, is_full_name, is_last_name, is_first_middle_name, is_first_name } =
       values;
 
     // +++
     let formData = Object.assign({}, values, {
       is_full_name: is_full_name ? 1 : 0,
       is_last_name: is_last_name ? 1 : 0,
+      is_first_name: is_first_name ? 1 : 0,
       is_first_middle_name: is_first_middle_name ? 1 : 0,
       is_active: is_active ? 1 : 0,
     });
@@ -285,7 +286,7 @@ export default class ParamNameAdd extends PureComponent {
                               <Col xs={12}>
                                 <FormGroup row>
                                   <Label
-                                    for="is_name_type"
+                                    for="name_type"
                                     className="text-left"
                                     sm={3}
                                   >
@@ -296,20 +297,20 @@ export default class ParamNameAdd extends PureComponent {
                                   </Label>
                                   <Col sm={9}>
                                     <Field
-                                      name="is_name_type"
+                                      name="name_type"
                                       render={({ field /* _form */ }) => (
                                         <Input
                                           {...field}
                                           className="text-left"
                                           onBlur={null}
                                           type="text"
-                                          id="is_name_type"
+                                          id="name_type"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="is_name_type"
+                                      name="name_type"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -408,9 +409,46 @@ export default class ParamNameAdd extends PureComponent {
                               <Col sm={12}>
                                 <FormGroup row>
                                   <Label
-                                    for="is_first_middle_name"
+                                    for="is_first_name"
                                     sm={3}
                                   ></Label>
+                                  <Col sm={3}>
+                                    <Field
+                                      name="is_first_name"
+                                      render={({ field /* _form */ }) => (
+                                        <CustomInput
+                                          {...field}
+                                          className="pull-left"
+                                          onBlur={null}
+                                          checked={values.is_first_name}
+                                          onChange={(event) => {
+                                            const { target } = event;
+                                            field.onChange({
+                                              target: {
+                                                name: "is_first_name",
+                                                value: target.checked,
+                                              },
+                                            });
+                                          }}
+                                          type="checkbox"
+                                          id="is_first_name"
+                                          label="Họ"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                    <ErrorMessage
+                                      name="is_first_name"
+                                      component={({ children }) => (
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
+                                          {children}
+                                        </Alert>
+                                      )}
+                                    />
+                                  </Col>
                                   <Col sm={3}>
                                     <Field
                                       name="is_first_middle_name"
@@ -448,6 +486,16 @@ export default class ParamNameAdd extends PureComponent {
                                       )}
                                     />
                                   </Col>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col sm={12}>
+                                <FormGroup row>
+                                  <Label
+                                    for="is_first_middle_name"
+                                    sm={3}
+                                  ></Label>
                                   <Col sm={3}>
                                     <Field
                                       name="is_active"
