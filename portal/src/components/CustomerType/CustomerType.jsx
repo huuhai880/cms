@@ -4,8 +4,8 @@ import {
   CardBody,
   CardHeader,
   Button,
-  // Badge,
-  // ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem
+  FormGroup,
+  Col,
 } from "reactstrap";
 
 // Assets
@@ -28,6 +28,8 @@ import { configTableOptions, configIDRowTable } from "../../utils/index";
 import CustomerTypeModel from "../../models/CustomerTypeModel";
 import CompanyModel from "../../models/CompanyModel";
 import BusinessModel from "../../models/BusinessModel";
+
+import './styles.scss'
 
 /** @var {Object} */
 const userAuth = window._$g.userAuth;
@@ -222,7 +224,7 @@ class CustomerType extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
-                style={{width: "40%"}}
+                style={{ width: "30%" }}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
@@ -244,7 +246,7 @@ class CustomerType extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
-                style={{width: "30%"}}
+                style={{ width: "30%" }}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
@@ -266,7 +268,7 @@ class CustomerType extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
-                style={{width: "10%"}}
+                style={{ width: "10%" }}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
@@ -294,7 +296,27 @@ class CustomerType extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">{value ? "Có" : "Không"}</div>;
+            return (
+              <div className="text-center">
+                <div className="checkmark">
+                  <div
+                    className={`checkmark_circle ${
+                      value ? "checkmark-active-bor" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_stem ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_kick ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                </div>
+              </div>
+            );
           },
         },
       },
@@ -405,27 +427,16 @@ class CustomerType extends Component {
             </CardBody>
           )}
         </Card>
-        {handlePick ? (
-          <div className="text-right mb-1">
-            <Button
-              color="success"
-              size="sm"
-              className="col-12 max-w-110 ml-2 mobile-reset-width"
-              onClick={() => {
-                let { _pickDataItems } = this;
-                handlePick(_pickDataItems);
-              }}
-            >
-              <i className="fa fa-plus mr-1" />
-              Chọn
-            </Button>
-          </div>
-        ) : null}
-        {!handlePick ? (
-          <div>
-            <CheckAccess permission="CRM_CUSTOMERTYPE_ADD">
+        <Col
+          xs={12}
+          sm={4}
+          className="d-flex align-items-end mb-3"
+          style={{ padding: 0 }}
+        >
+          <CheckAccess permission="CRM_CUSTOMERTYPE_ADD">
+            <FormGroup className="mb-2 mb-sm-0">
               <Button
-                className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                 onClick={() => this.handleClickAdd()}
                 color="success"
                 size="sm"
@@ -433,9 +444,9 @@ class CustomerType extends Component {
                 <i className="fa fa-plus mr-1" />
                 Thêm mới
               </Button>
-            </CheckAccess>
-          </div>
-        ) : null}
+            </FormGroup>
+          </CheckAccess>
+        </Col>
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-root__custom">
