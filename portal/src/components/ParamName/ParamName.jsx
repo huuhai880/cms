@@ -205,7 +205,7 @@ class ParamName extends Component {
         this.state.query
       ),
       {
-        name: "is_name_type",
+        name: "name_type",
         label: "Loại",
         options: {
           filter: false,
@@ -229,6 +229,48 @@ class ParamName extends Component {
       {
         name: "is_last_name",
         label: "Tên",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+                style={{width: "15%"}}
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return (
+              <div className="text-center">
+                <div className="checkmark">
+                  <div
+                    className={`checkmark_circle ${
+                      value ? "checkmark-active-bor" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_stem ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                  <div
+                    className={`checkmark_kick ${
+                      value ? "checkmark-active-bg" : ""
+                    }`}
+                  ></div>
+                </div>
+              </div>
+            );
+          },
+        },
+      },
+      {
+        name: "is_first_name",
+        label: "Họ",
         options: {
           filter: false,
           sort: false,

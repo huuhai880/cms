@@ -39,6 +39,10 @@ const getListParamName = async (queryParams = {}) => {
         apiHelper.getFilterBoolean(queryParams, 'is_last_name')
       )
       .input(
+        'ISFIRSTNAME',
+        apiHelper.getFilterBoolean(queryParams, 'is_first_name')
+      )
+      .input(
         'ISFIRSTMIDDLENAME',
         apiHelper.getFilterBoolean(queryParams, 'is_first_middle_name')
       )
@@ -96,8 +100,8 @@ const createParamNameOrUpdate = async (bodyParams) => {
       .request()
       .input('PARAMNAMEID', param_name_id)
       .input(
-        'ISNAMETYPE',
-        apiHelper.getValueFromObject(bodyParams, 'is_name_type')
+        'NAMETYPE',
+        apiHelper.getValueFromObject(bodyParams, 'name_type')
       )
       .execute(PROCEDURE_NAME.MD_PARAMNAME_CHECK_PARAMNAME);
     if (
@@ -115,8 +119,8 @@ const createParamNameOrUpdate = async (bodyParams) => {
       .request()
       .input('PARAMNAMEID', param_name_id)
       .input(
-        'ISNAMETYPE',
-        apiHelper.getValueFromObject(bodyParams, 'is_name_type')
+        'NAMETYPE',
+        apiHelper.getValueFromObject(bodyParams, 'name_type')
       )
       .input(
         'ISFULLNAME',
@@ -125,6 +129,10 @@ const createParamNameOrUpdate = async (bodyParams) => {
       .input(
         'ISLASTNAME',
         apiHelper.getValueFromObject(bodyParams, 'is_last_name')
+      )
+      .input(
+        'ISFIRSTNAME',
+        apiHelper.getValueFromObject(bodyParams, 'is_first_name')
       )
       .input(
         'ISFIRSTMIDDLENAME',
