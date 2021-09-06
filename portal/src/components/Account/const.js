@@ -33,7 +33,7 @@ export const initialValues = {
   id_card_front_image: "",
   id_card_back_image: "",
   live_image: "",
-  // country_id: "",
+  customer_type_id: 1,
   province_id: "",
   district_id: "",
   ward_id: "",

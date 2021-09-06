@@ -21,7 +21,10 @@ const config = require('../../../config/config');
  * @returns ServiceResponse
  */
 const getListCRMAccount = async (queryParams = {}) => {
-console.log("🚀 ~ file: account.service.js ~ line 24 ~ getListCRMAccount ~ queryParams", queryParams)
+  // console.log(
+  //   '🚀 ~ file: account.service.js ~ line 24 ~ getListCRMAccount ~ queryParams',
+  //   queryParams
+  // );
   // console.log(queryParams)
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
@@ -94,7 +97,7 @@ const checkEmail = async (email) => {
     const pool = await mssql.pool;
     const data = await pool
       .request()
-      .input('EMAIL',email)
+      .input('EMAIL', email)
       .execute('CRM_ACCOUNT_CheckEmail_AdminWeb');
     const res = data.recordset[0];
     if (res) {
@@ -149,6 +152,7 @@ const createCRMAccountOrUpdate = async (body = {}) => {
       .input('MEMBERID', apiHelper.getValueFromObject(body, 'member_id'))
       .input('USERNAME', apiHelper.getValueFromObject(body, 'user_name'))
       .input('PASSWORD', password)
+      .input('CUSTOMERTYPEID', apiHelper.getValueFromObject(body, 'customer_type_id'))
       .input('BIRTHDAY', apiHelper.getValueFromObject(body, 'birth_day'))
       .input(
         'CUSTOMERCODE',
@@ -339,6 +343,27 @@ const genCode = async () => {
     return new ServiceResponse(false, e.message);
   }
 };
+///// get customer type
+const getCustomerList = async (queryParams = {}) => {
+  try {
+    const pool = await mssql.pool;
+    const data = await pool
+      .request()
+      .execute('CRM_ACCOUNT_GetListCustomerType_AdminWeb');
+    const result = data.recordset;
+    // console.log(result);
+
+    return new ServiceResponse(true, '', {
+      data: crmAccountClass.listCustomerType(result),
+    });
+  } catch (e) {
+    logger.error(e, {
+      function: 'AccountService.getCustomerList',
+    });
+
+    return new ServiceResponse(true, '', {});
+  }
+};
 module.exports = {
   getListCRMAccount,
   createCRMAccount,
@@ -349,4 +374,5 @@ module.exports = {
   changePassCRMAccount,
   genCode,
   checkEmail,
+  getCustomerList,
 };

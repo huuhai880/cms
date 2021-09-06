@@ -50,7 +50,7 @@ function LetterAdd({ noEdit }) {
             if (btnType == "save") {
               setDataLetter(initialValues);
               // _initData();
-              _initDataDetail();
+              // _initDataDetail();
               window._$g.toastr.show("Lưu thành công!", "success");
             } else if (btnType == "save&quit") {
               window._$g.toastr.show("Lưu thành công!", "success");

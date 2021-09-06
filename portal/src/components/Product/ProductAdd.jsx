@@ -302,6 +302,8 @@ function ProductAdd({ noEdit = false, productId = null }) {
                   )}
                   options={optionAttributesGroup()}
                   isDisabled={noEdit}
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                  menuPortalTarget={document.querySelector("body")}
                 />
               </td>
               <td>
@@ -320,6 +322,8 @@ function ProductAdd({ noEdit = false, productId = null }) {
                   options={optionInterpretDetail(item.attributes_group_id)}
                   isMulti={true}
                   isDisabled={noEdit}
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                  menuPortalTarget={document.querySelector("body")}
                 />
               </td>
               <td

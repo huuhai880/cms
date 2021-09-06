@@ -1,4 +1,4 @@
-const LetterClass = require('./letter.class');
+const RelationshipClass = require('./relationship.class');
 const apiHelper = require('../../common/helpers/api.helper');
 const mssql = require('../../models/mssql');
 const sql = require('mssql');
@@ -9,7 +9,7 @@ const _ = require('lodash');
 // const folderName = 'mainNumber';
 // const config = require('../../../config/config');
 ///////get list main number
-const getLettersList = async (queryParams = {}) => {
+const getRelationshipsList = async (queryParams = {}) => {
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
@@ -31,52 +31,53 @@ const getLettersList = async (queryParams = {}) => {
         'ISACTIVE',
         apiHelper.getFilterBoolean(queryParams, 'selectdActive')
       )
-      .execute('MD_LETTERS_GetList_AdminWeb');
+      .execute('MD_RELATIONSHIPS_GetList_AdminWeb');
     const result = data.recordset;
     // console.log(apiHelper.getTotalData(result));
 
     return new ServiceResponse(true, '', {
-      data: LetterClass.list(result),
+      data: RelationshipClass.list(result),
       page: currentPage,
       limit: itemsPerPage,
       total: result.length,
     });
   } catch (e) {
     logger.error(e, {
-      function: 'letterService.getLettersList',
+      function: 'RelationshipService.getRelationshipsList',
     });
 
     return new ServiceResponse(true, '', {});
   }
 };
 ///////delete Letter
-const deleteLetter = async (letter_id, body) => {
+const deleteRelationship = async (relationships_id, body) => {
+  // console.log(relationships_id)
   const pool = await mssql.pool;
   try {
     await pool
       .request()
-      .input('LETTERID', letter_id)
+      .input('RELATIONSHIPID', relationships_id)
       .input('DELETEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-      .execute('MD_LETTERS_Delete_AdminWeb');
+      .execute('MD_RELATIONSHIPS_Delete_AdminWeb');
     return new ServiceResponse(true, '');
   } catch (e) {
     logger.error(e, {
-      function: 'letterService.deleteLetter',
+      function: 'RelationshipService.deleteRelationship',
     });
 
     // Return failed
     return new ServiceResponse(false, e.message);
   }
 };
-/////check letter
-const CheckLetter = async (letter) => {
-  // console.log(email)
+/////check Relationship
+const CheckRelationship = async (relationship) => {
+  // console.log(relationship)
   try {
     const pool = await mssql.pool;
     const data = await pool
       .request()
-      .input('LETTER', letter)
-      .execute('MD_LETTER_CheckLetter_AdminWeb');
+      .input('RELATIONSHIP', relationship)
+      .execute('MD_RELATIONSHIPS_CheckRelationship_AdminWeb');
     const res = data.recordset[0];
     if (res) {
       return new ServiceResponse(true, '', res);
@@ -86,8 +87,8 @@ const CheckLetter = async (letter) => {
     return new ServiceResponse(false, error.message);
   }
 };
-/// add or update letter
-const addLetter = async (body = {}) => {
+/// add or update Relationship
+const addRelationship = async (body = {}) => {
   // console.log(body);
 
   // console.log(body)
@@ -99,14 +100,15 @@ const addLetter = async (body = {}) => {
     /////create or update number
     const requestLetter = new sql.Request(transaction);
     const resultLetter = await requestLetter
-      .input('LETTERID', apiHelper.getValueFromObject(body, 'letter_id'))
-      .input('LETTER', apiHelper.getValueFromObject(body, 'letter'))
-      .input('NUMBER', apiHelper.getValueFromObject(body, 'number'))
-      .input('ISVOWEL', apiHelper.getValueFromObject(body, 'is_vowel'))
+      .input(
+        'RELATIONSHIPID',
+        apiHelper.getValueFromObject(body, 'relationship_id')
+      )
+      .input('RELATIONSHIP', apiHelper.getValueFromObject(body, 'relationship'))
       .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
-      .input('DESCRIPTION', apiHelper.getValueFromObject(body, 'desc'))
+      .input('NOTE', apiHelper.getValueFromObject(body, 'note'))
       .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-      .execute('MD_LETTERS_CreateOrUpdate_AdminWeb');
+      .execute('MD_RELATIONSHIPS_CreateOrUpdate_AdminWeb');
     const letter_id = resultLetter.recordset[0].RESULT;
 
     if (letter_id > 0) {
@@ -116,30 +118,30 @@ const addLetter = async (body = {}) => {
     return new ServiceResponse(true, '', letter_id);
   } catch (error) {
     logger.error(error, {
-      function: 'letterService.addLetter',
+      function: 'RelationshipService.addRelationship',
     });
-    console.error('letterService.addLetter', error);
+    // console.error('letterService.addLetter', error);
     return new ServiceResponse(false, e.message);
   }
 };
-///////detail list letter
-const detailLetter = async (letter_id) => {
+///////detail Relationship
+const detailRelationship = async (relationships_id) => {
   try {
     const pool = await mssql.pool;
 
     const data = await pool
       .request()
-      .input('LETTERID', letter_id)
-      .execute('MD_LETTER_GetById_AdminWeb');
+      .input('RELATIONSHIPID', relationships_id)
+      .execute('MD_RELATIONSHIPS_GetById_AdminWeb');
     const Letter = data.recordset[0];
     // console.log(Letter)
     if (Letter) {
-      return new ServiceResponse(true, '', LetterClass.list(Letter));
+      return new ServiceResponse(true, '', RelationshipClass.list(Letter));
     }
     return new ServiceResponse(false, '', null);
   } catch (e) {
     logger.error(e, {
-      function: 'letterService.detailLetter',
+      function: 'RelationshipService.detailRelationship',
     });
 
     return new ServiceResponse(false, e.message);
@@ -147,9 +149,9 @@ const detailLetter = async (letter_id) => {
 };
 
 module.exports = {
-  getLettersList,
-  deleteLetter,
-  addLetter,
-  detailLetter,
-  CheckLetter,
+  getRelationshipsList,
+  deleteRelationship,
+  detailRelationship,
+  CheckRelationship,
+  addRelationship,
 };

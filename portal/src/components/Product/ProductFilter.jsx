@@ -10,7 +10,7 @@ import { useEffect } from "react";
 
 const _productCategoryModel = new ProductCategoryModel();
 
-function ProductFilter({ query = {}, handleSubmitFilter }) {
+function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
   const [filter, setFilter] = useState({
     search: "",
     isActiveSelected: { label: "Tất cả", value: 2 },
@@ -113,10 +113,7 @@ function ProductFilter({ query = {}, handleSubmitFilter }) {
 
   return (
     <div className="ml-3 mr-3 mb-3 mt-3">
-      <Form
-        autoComplete="nope"
-        //   className="zoom-scale-9"
-      >
+      <Form autoComplete="nope" className="zoom-scale-9">
         <Row>
           <Col xs={12} sm={3}>
             <FormGroup className="mb-2 mb-sm-0">
@@ -224,6 +221,22 @@ function ProductFilter({ query = {}, handleSubmitFilter }) {
                 <span className="ml-1">Làm mới</span>
               </Button>
             </FormGroup>
+            {handlePick ? (
+              <FormGroup className="mb-2 ml-2 mb-sm-0">
+                <Button
+                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePick();
+                  }}
+                  color="success"
+                  size="sm"
+                >
+                  <i className="fa fa-plus" />
+                  <span className="ml-1"> Chọn </span>
+                </Button>
+              </FormGroup>
+            ) : null}
           </Col>
         </Row>
       </Form>
