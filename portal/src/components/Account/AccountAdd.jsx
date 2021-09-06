@@ -31,11 +31,12 @@ import moment from "moment";
 import { Radio } from "antd";
 import Upload from "../Common/Antd/Upload";
 import AcccountAddress from "./AcccountAddress";
-import { CheckAccess } from '../../navigation/VerifyAccess'
+import { CheckAccess } from "../../navigation/VerifyAccess";
 import { Modal } from "antd";
 import "./styles.scss";
 import "./style.css";
 import * as yup from "yup";
+import Select from "react-select";
 
 layoutFullWidthHeight();
 function AccountAdd({ noEdit }) {
@@ -50,6 +51,7 @@ function AccountAdd({ noEdit }) {
   const [password, setPassword] = useState("");
   const [password_confirm, setPasswordconfirm] = useState("");
   const [alerPassword, setAlerPassword] = useState("");
+  const [dataType, setDataType] = useState("");
   const validationSchema = yup.object().shape({
     user_name: yup
       .string()
@@ -59,12 +61,12 @@ function AccountAdd({ noEdit }) {
     pass_word: id
       ? undefined
       : yup
-        .string()
-        .required("Mật khẩu không được để trống .")
-        .matches(
-          /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*[0-9]){1})((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
-          "Mật khẩu tối thiêu 8 ký tự, 1 ký tự thường, 1 ký tự hoa và 1 số ."
-        ),
+          .string()
+          .required("Mật khẩu không được để trống .")
+          .matches(
+            /^.*(?=.{6,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*[0-9]){1})((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+            "Mật khẩu tối thiêu 6 ký tự, 1 ký tự thường, 1 ký tự đặc biệt, 1 ký tự hoa và 1 số ."
+          ),
     full_name: yup.string().required("Họ và tên khai sinh không được để trống .").nullable(),
     nick_name: yup.string().required("Họ và tên không được để trống .").nullable(),
     birth_day: yup.string().required("Ngày sinh không được để trống .").nullable(),
@@ -124,8 +126,23 @@ function AccountAdd({ noEdit }) {
           // console.log(data);
         }
       });
-    } catch (error) { }
+    } catch (error) {}
   };
+  ///// get data partnert
+  useEffect(() => {
+    const _callAPI = async () => {
+      try {
+        await _accountModel.getListCustomerType().then((data) => {
+          setDataType(data.items);
+          // console.log(data);
+        });
+      } catch (error) {
+        console.log(error);
+        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+      }
+    };
+    _callAPI();
+  }, []);
   // console.log(dataAccount)
   //// create account
   const handleCreateAcount = async (values) => {
@@ -151,7 +168,7 @@ function AccountAdd({ noEdit }) {
           });
         }
       });
-    } catch (error) { }
+    } catch (error) {}
   };
   //// scroll to error
   useEffect(() => {
@@ -246,6 +263,44 @@ function AccountAdd({ noEdit }) {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+  ////config select
+  const convertValue = (value, options) => {
+    // console.log(value)
+    if (!(typeof value === "object") && options && options.length) {
+      value = ((_val) => {
+        return options.find((item) => "" + item.value === "" + _val);
+      })(value);
+    } else if (Array.isArray(value) && options && options.length) {
+      return options.filter((item) => {
+        return value.find((e) => e == item.value);
+      });
+    }
+    // console.log(value)
+    return value;
+  };
+  const getOptionAttribute = () => {
+    if (dataType && dataType.length) {
+      return dataType.map((item) => {
+        // console.log(dataPartner);
+        return formik.values.customer_type_id == item.customer_type_id
+          ? {
+              value: item.customer_type_id,
+              label: item.customer_type_name,
+              isDisabled: true,
+            }
+          : {
+              value: item.customer_type_id,
+              label: item.customer_type_name,
+            };
+      });
+    }
+    return [];
+  };
+  const handleChangeAttribute = async (value, index) => {
+    // let listcl = [...formik.values.main_number_img];
+    // listcl[index].partner_id = value ? value.value : null;
+    formik.setFieldValue("customer_type_id", value.value);
+  };
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
@@ -261,7 +316,7 @@ function AccountAdd({ noEdit }) {
                   <NavItem>
                     <NavLink
                       className={`${activeTab === "INFO" ? "active" : ""}`}
-                    //   onClick={() => this.setState({ activeTab: "INFO" })}
+                      //   onClick={() => this.setState({ activeTab: "INFO" })}
                     >
                       Thông tin tài khoản
                     </NavLink>
@@ -381,7 +436,6 @@ function AccountAdd({ noEdit }) {
                                           </Button>
                                         </InputGroupAddon>
                                       </CheckAccess>
-
                                     ) : (
                                       <InputGroupAddon addonType="append">
                                         <Button
@@ -391,8 +445,9 @@ function AccountAdd({ noEdit }) {
                                           }}
                                         >
                                           <i
-                                            className={`fa ${passwordVisible ? "fa-eye" : "fa-eye-slash"
-                                              }`}
+                                            className={`fa ${
+                                              passwordVisible ? "fa-eye" : "fa-eye-slash"
+                                            }`}
                                           />
                                         </Button>
                                       </InputGroupAddon>
@@ -424,7 +479,7 @@ function AccountAdd({ noEdit }) {
                                     // placeholder="Tên đăng nhập"
                                     disabled={true}
                                     value={formik.values.customer_code}
-                                  // onChange={formik.handleChange}
+                                    // onChange={formik.handleChange}
                                   />
                                 </Col>
                               </FormGroup>
@@ -443,7 +498,7 @@ function AccountAdd({ noEdit }) {
                                       // placeholder="Tên đăng nhập"
                                       disabled={true}
                                       value={formik.values.register_date}
-                                    // onChange={formik.handleChange}
+                                      // onChange={formik.handleChange}
                                     />
                                   ) : (
                                     <DatePicker
@@ -453,6 +508,40 @@ function AccountAdd({ noEdit }) {
                                       maxToday
                                     />
                                   )}
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="user_name" sm={4}>
+                                  Loại khách hàng <span className="font-weight-bold red-text">*</span>
+                                </Label>
+                                <Col sm={8}>
+                                  <Select
+                                    styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                                    isDisabled={noEdit}
+                                    placeholder={"-- Chọn --"}
+                                    value={
+                                      convertValue(
+                                        formik.values.customer_type_id,
+                                        getOptionAttribute()
+                                      ) ||
+                                      convertValue(
+                                        {
+                                          value: formik.values.customer_type_id,
+                                          label: formik.values.customer_type_name,
+                                        },
+                                        getOptionAttribute()
+                                      )
+                                    }
+                                    options={getOptionAttribute(
+                                      formik.values.customer_type_id,
+                                      true
+                                    )}
+                                    onChange={(value) => handleChangeAttribute(value)}
+                                  />
                                 </Col>
                               </FormGroup>
                             </Col>
@@ -862,14 +951,21 @@ function AccountAdd({ noEdit }) {
                       </Row>
                       <div className="text-right mb-2">
                         <div>
-                          {
-                            noEdit ? (
-                              <CheckAccess permission="CRM_ACCOUNT_EDIT">
-                                <Button color="primary" className="mr-2 btn-block-sm" onClick={() => window._$g.rdr(`/account/edit/${dataAccount.member_id}`)}>
-                                  <i className="fa fa-edit mr-1" />Chỉnh sửa
-                                </Button>
-                              </CheckAccess>
-                            ) : <>
+                          {noEdit ? (
+                            <CheckAccess permission="CRM_ACCOUNT_EDIT">
+                              <Button
+                                color="primary"
+                                className="mr-2 btn-block-sm"
+                                onClick={() =>
+                                  window._$g.rdr(`/account/edit/${dataAccount.member_id}`)
+                                }
+                              >
+                                <i className="fa fa-edit mr-1" />
+                                Chỉnh sửa
+                              </Button>
+                            </CheckAccess>
+                          ) : (
+                            <>
                               <button
                                 className="mr-2 btn-block-sm btn btn-primary"
                                 onClick={() => {
@@ -891,8 +987,7 @@ function AccountAdd({ noEdit }) {
                                 Lưu và đóng
                               </button>
                             </>
-
-                          }
+                          )}
                           <button
                             className=" btn-block-sm btn btn-secondary"
                             type="button"
@@ -967,7 +1062,7 @@ function AccountAdd({ noEdit }) {
           )}
         </Col>
         <Col xs={12} className="px-0 text-right">
-        <button type="submit" onClick={handleOk} className=" btn-block-sm btn btn-primary mr-2">
+          <button type="submit" onClick={handleOk} className=" btn-block-sm btn btn-primary mr-2">
             Cập nhật
           </button>
           <button type="button" onClick={handleCancel} className=" btn-block-sm btn btn-secondary">
