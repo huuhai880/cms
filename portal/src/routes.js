@@ -910,6 +910,22 @@ const AttributesGroupEdit = React.lazy(() =>
 );
 // end#AttributesGroup
 
+
+//ProductCombo
+const ProductCombo = React.lazy(() =>
+  import("./components/ProductCombo/ProductCombo")
+);
+const ProductComboAdd = React.lazy(() =>
+  import("./components/ProductCombo/ProductComboAdd")
+);
+const ProductComboEdit = React.lazy(() =>
+  import("./components/ProductCombo/ProductComboEdit")
+);
+const ProductComboDetail = React.lazy(() =>
+  import("./components/ProductCombo/ProductComboDetail")
+);
+//end#ProductCombo
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   // dashboard
@@ -3156,6 +3172,38 @@ const routes = [
     component: ParamTypeEdit,
   },
   // end#param-type
+
+  //ProductCombo
+  {
+    path: "/product-combo",
+    exact: true,
+    name: "Danh sách Combo",
+    function: "PRO_COMBOS_VIEW",
+    component: ProductCombo,
+  },
+  {
+    path: "/product-combo/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "PRO_COMBOS_ADD",
+    component: ProductComboAdd,
+  },
+  {
+    path: "/product-combo/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "PRO_COMBOS_VIEW",
+    component: ProductComboDetail,
+  },
+  {
+    path: "/product-combo/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "PRO_COMBOS_EDIT",
+    component: ProductComboEdit,
+  },
+  // end#ProductCombo
+  
 ];
 
 export default routes;
