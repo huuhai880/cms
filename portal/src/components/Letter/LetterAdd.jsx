@@ -88,7 +88,7 @@ function LetterAdd({ noEdit }) {
   const _initDataDetail = async () => {
     try {
       await _letterModel.detail(id).then((data) => {
-        console.log(data)
+        // console.log(data)
         setDataLetter(data);
         // console.log()
       });
