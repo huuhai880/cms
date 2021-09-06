@@ -132,7 +132,7 @@ const detailLetter = async (letter_id) => {
       .input('LETTERID', letter_id)
       .execute('MD_LETTER_GetById_AdminWeb');
     const Letter = data.recordset[0];
-    // console.log(Account)
+    // console.log(Letter)
     if (Letter) {
       return new ServiceResponse(true, '', LetterClass.list(Letter));
     }

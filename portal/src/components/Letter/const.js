@@ -16,7 +16,7 @@ export const initialValues = {
   letter: "",
   number: "",
   is_vowel: 0,
-  is_active: 0,
+  is_active: 1,
   desc: "",
 };
 ///// validate
@@ -27,7 +27,12 @@ export const validationSchema = yup.object().shape({
     .max(1, "Chữ cái tối đa 1 kí tự .")
     .matches(/^[A-Za-z]+$/, "Chữ cái chỉ được nhập chữ .")
     .nullable(),
-  number: yup.number().required("Số không được để trống .").nullable(),
+  number: yup
+    .number()
+    .required("Số không được để trống .")
+    .min(0, "Số tối thiểu là 0")
+    .max(9, "Số tối đa là 9")
+    .nullable(),
 });
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   // console.log(data);
@@ -97,7 +102,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
       label: "Kích hoạt",
       options: {
         filter: false,
-        sort: true,
+        sort: false,
         customHeadRender: (columnMeta, handleToggleColumn) => {
           return (
             <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
@@ -107,13 +112,33 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
         },
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
-            <div className="text-center">
-              <Checkbox checked={value == 1}></Checkbox>
-            </div>
+            <div className="text-center">{value == 1 ? "Có" : value == 0 ? "Không" : "Không"}</div>
           );
         },
       },
     },
+    // {
+    //   name: "is_active",
+    //   label: "Kích hoạt",
+    //   options: {
+    //     filter: false,
+    //     sort: true,
+    //     customHeadRender: (columnMeta, handleToggleColumn) => {
+    //       return (
+    //         <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+    //           <div className="text-center">{columnMeta.label}</div>
+    //         </th>
+    //       );
+    //     },
+    //     customBodyRender: (value, tableMeta, updateValue) => {
+    //       return (
+    //         <div className="text-center">
+    //           <Checkbox checked={value == 1}></Checkbox>
+    //         </div>
+    //       );
+    //     },
+    //   },
+    // },
     {
       name: "desc",
       label: "Mô tả",
@@ -128,7 +153,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-center">{value}</div>;
+          return <div className="text-left">{value}</div>;
         },
       },
     },

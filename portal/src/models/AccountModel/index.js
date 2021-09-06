@@ -35,6 +35,7 @@ export default class AccountModel extends Model {
   static API_EXPORT_EXCEL = "account/export-excel";
   /** @var {String} */
   static API_ACCOUNT_CHANGE_PASSWORD = "account/:id/change-password"; // PUT
+  static API_ACCOUNT_TYPE_LIST = "account/customer-type";
   /**
    * @var {String} Primary Key
    */
@@ -359,6 +360,10 @@ export default class AccountModel extends Model {
     let data = Object.assign({}, _data);
     //
     return this._api.put(_static.API_ACCOUNT_CHANGE_PASSWORD.replace(":id", id), data);
+  }
+  getListCustomerType(_data = {}) {
+    let data = Object.assign({}, _data);
+    return this._api.get(_static.API_ACCOUNT_TYPE_LIST, data);
   }
 }
 // Make alias
