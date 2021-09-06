@@ -22,11 +22,14 @@ function UploadImage(props) {
     props.imageUrl ? getImageUrl(props.imageUrl, props.id) : []
   );
 
-  // useEffect(() => {
-  //   if (props.imageUrl) {
-  //     setFileList(getImageUrl(props.imageUrl));
-  //   }
-  // }, [props]);
+  useEffect(() => {
+    if (props.imageUrl) {
+      setFileList(getImageUrl(props.imageUrl, props.id));
+    }
+    else{
+      setFileList([])
+    }
+  }, [props]);
 
   const handleCancel = () => setPreviewVisible(false);
 
@@ -116,7 +119,6 @@ function UploadImage(props) {
 //export default UploadImage;
 function MemoizedUploadImageProfile(props) {
   return useMemo(() => {
-    console.log("props.imageUrl", props.imageUrl? 1: 0)
     return (
       <UploadImage
         onChange={props.onChange}
