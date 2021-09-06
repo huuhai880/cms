@@ -1,0 +1,27 @@
+.combo-image-upload {
+  // width: 400px;
+  .ant-upload-list-picture-card-container {
+    height: 190px;
+    width: 100%;
+    margin-top: 0;
+    .ant-upload-list-item-list-type-picture-card {
+      width: 100%;
+    }
+  }
+  .ant-upload-select-picture-card {
+    height: 190px;
+    width: 100%;
+  }
+  .ant-upload.ant-upload-select-picture-card {
+    height: 190px;
+    width: 100%;
+    margin-top: 0;
+  }
+  .ant-upload-list-item-image {
+    // object-fit: contain !important;
+  }
+}
+
+.wrap-chbx > .col > .custom-checkbox {
+  padding-left: 30px;
+}

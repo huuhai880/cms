@@ -145,7 +145,6 @@ const createProduct = async (bodyParams = {}) => {
           image.picture_url = image_url
         }
         else {
-
           return new ServiceResponse(false, RESPONSE_MSG.NEWS.UPLOAD_FAILED);
         }
       }
