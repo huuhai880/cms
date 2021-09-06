@@ -40,6 +40,8 @@ routes
   .put(crmAccountController.changePassCRMAccount);
 // gen-code
 routes.route('/gen-code').get(crmAccountController.genCode);
+//// get customer type
+routes.route('/customer-type').get(crmAccountController.getCustomerList);
 module.exports = {
   prefix,
   routes,

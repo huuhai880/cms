@@ -75,7 +75,8 @@ const template = {
   gen_customer_code: '{{#? GEN_CUSTOMER_CODE}}',
   facebook: '{{#? FACEBOOKURL}}',
   twitter: '{{#? TWITTERURL}}',
-
+  customer_type_id: '{{#? CUSTOMERTYPEID}}',
+  customer_type_name: '{{#? CUSTOMERTYPENAME}}',
 };
 
 let transform = new Transform(template);
@@ -107,7 +108,8 @@ const detail = (user) => {
     'ward_id',
     'is_active',
     'facebook',
-    'twitter'
+    'twitter',
+    'customer_type_id',
   ]);
 };
 const genCode = (user) => {
@@ -126,6 +128,9 @@ const list = (users = []) => {
     'is_active',
   ]);
 };
+const listCustomerType = (users = []) => {
+  return transform.transform(users, ['customer_type_id', 'customer_type_name']);
+};
 // options
 const templateOptions = {
   id: '{{#? ID}}',
@@ -141,4 +146,5 @@ module.exports = {
   list,
   options,
   genCode,
+  listCustomerType,
 };
