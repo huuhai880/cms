@@ -6,6 +6,7 @@ import {
   Button,
   FormGroup,
   Col,
+  CustomInput,
 } from "reactstrap";
 
 // Assets
@@ -28,8 +29,6 @@ import { configTableOptions, configIDRowTable } from "../../utils/index";
 import CustomerTypeModel from "../../models/CustomerTypeModel";
 import CompanyModel from "../../models/CompanyModel";
 import BusinessModel from "../../models/BusinessModel";
-
-import './styles.scss'
 
 /** @var {Object} */
 const userAuth = window._$g.userAuth;
@@ -298,23 +297,7 @@ class CustomerType extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                <div className="checkmark">
-                  <div
-                    className={`checkmark_circle ${
-                      value ? "checkmark-active-bor" : ""
-                    }`}
-                  ></div>
-                  <div
-                    className={`checkmark_stem ${
-                      value ? "checkmark-active-bg" : ""
-                    }`}
-                  ></div>
-                  <div
-                    className={`checkmark_kick ${
-                      value ? "checkmark-active-bg" : ""
-                    }`}
-                  ></div>
-                </div>
+                <CustomInput type="checkbox" checked={value} />
               </div>
             );
           },

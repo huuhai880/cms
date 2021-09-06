@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardHeader, Button, Col, FormGroup, CustomInput } from "reactstrap";
+import { Card, CardBody, CardHeader, Button, Col, FormGroup } from "reactstrap";
 
 // Material
 import MUIDataTable from "mui-datatables";
@@ -8,31 +8,32 @@ import CustomPagination from "../../utils/CustomPagination";
 
 // Component(s)
 import { CheckAccess } from "../../navigation/VerifyAccess";
-import ParamNameFilter from "./ParamNameFilter";
-
+import FormulaFilter from "./FormulaFilter";
 // Util(s)
 import { layoutFullWidthHeight } from "../../utils/html";
 import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
-import ParamNameModel from "../../models/ParamNameModel";
+import AttributesModel from "../../models/AttributesModel";
+import FormulaModel from "../../models/FormulaModel";
 
 // Set layout full-wh
 layoutFullWidthHeight();
 
 /**
- * @class ParamName
+ * @class Formula
  */
-class ParamName extends Component {
+class Formula extends Component {
   /**
    * @var {Partner}
    */
-  _paramNameModel;
+  _partnerModel;
 
   constructor(props) {
     super(props);
 
     // Init model(s)
-    this._paramNameModel = new ParamNameModel();
+    this._attributesModel = new AttributesModel();
+    this._formulaModel = new FormulaModel();
 
     // Bind method(s)
   }
@@ -55,7 +56,7 @@ class ParamName extends Component {
     this.setState({ isLoading: true });
     (async () => {
       let bundle = await this._getBundleData();
-      let { data, countries, provinces } = bundle;
+      let { data } = bundle;
       let dataConfig = data ? data.items : [];
       let isLoading = false;
       let count = data ? data.totalItems : 0;
@@ -69,8 +70,6 @@ class ParamName extends Component {
             data: dataConfig,
             count,
             page,
-            countries,
-            provinces,
           });
         }
       );
@@ -83,10 +82,9 @@ class ParamName extends Component {
    */
   async _getBundleData() {
     let bundle = {};
-    let { country_id } = this.state;
     let all = [
       // @TODO:
-      this._paramNameModel
+      this._attributesModel
         .getList(this.state.query)
         .then((data) => (bundle["data"] = data)),
     ];
@@ -104,7 +102,7 @@ class ParamName extends Component {
   // get data
   getData = (query = {}) => {
     this.setState({ isLoading: true });
-    return this._paramNameModel.getList(query).then((res) => {
+    return this._attributesModel.getList(query).then((res) => {
       let data = res.items;
       let isLoading = false;
       let count = res.totalItems;
@@ -120,14 +118,14 @@ class ParamName extends Component {
   };
 
   handleClickAdd = () => {
-    window._$g.rdr("/param-name/add");
+    window._$g.rdr("/formula/add");
   };
 
   handleActionItemClick(type, id, rowIndex) {
     let routes = {
-      detail: "/param-name/detail/",
-      delete: "/param-name/delete/",
-      edit: "/param-name/edit/",
+      detail: "/formula/detail/",
+      delete: "/formula/delete/",
+      edit: "/formula/edit/",
     };
     const route = routes[type];
     if (type.match(/detail|edit/i)) {
@@ -144,7 +142,7 @@ class ParamName extends Component {
   handleClose(confirm, id, rowIndex) {
     const { data } = this.state;
     if (confirm) {
-      this._paramNameModel
+      this._attributesModel
         .delete(id)
         .then(() => {
           const cloneData = JSON.parse(JSON.stringify(data));
@@ -161,20 +159,12 @@ class ParamName extends Component {
     }
   }
 
-  handleSubmitFilter = (
-    search,
-    is_full_name,
-    is_last_name,
-    is_first_middle_name,
-    is_active
-  ) => {
+  handleSubmitFilter = (search, attributes_group_id, is_active) => {
     let query = { ...this.state.query };
     query.page = 1;
     query = Object.assign(query, {
       search,
-      is_full_name,
-      is_last_name,
-      is_first_middle_name,
+      attributes_group_id,
       is_active,
     });
     this.getData(query).catch(() => {
@@ -199,14 +189,10 @@ class ParamName extends Component {
 
   render() {
     const columns = [
-      configIDRowTable(
-        "param_name_id",
-        "/param-name/detail/",
-        this.state.query
-      ),
+      configIDRowTable("attribute_id", "/formula/detail/", this.state.query),
       {
-        name: "name_type",
-        label: "Loại",
+        name: "formula_name",
+        label: "Tên công thức",
         options: {
           filter: false,
           sort: false,
@@ -215,7 +201,6 @@ class ParamName extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
-                style={{width: "30%"}}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
@@ -227,8 +212,8 @@ class ParamName extends Component {
         },
       },
       {
-        name: "is_last_name",
-        label: "Tên",
+        name: "attributes_name",
+        label: "Tên thuộc tính",
         options: {
           filter: false,
           sort: false,
@@ -237,22 +222,19 @@ class ParamName extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
-                style={{width: "15%"}}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">
-              <CustomInput type="checkbox" checked={value}/>
-            </div>;
+            return <div className="text-center">{value}</div>;
           },
         },
       },
       {
-        name: "is_first_name",
-        label: "Họ",
+        name: "description",
+        label: "Mô tả",
         options: {
           filter: false,
           sort: false,
@@ -261,64 +243,26 @@ class ParamName extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
-                style={{width: "15%"}}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">
-              <CustomInput type="checkbox" checked={value}/>
-            </div>;
-          },
-        },
-      },
-      {
-        name: "is_full_name",
-        label: "Họ tên đầy đủ",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
             return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-                style={{width: "15%"}}
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
+              <p
+                className="text-left mb-0"
+                dangerouslySetInnerHTML={{
+                  __html: value
+                    ? value
+                        .replace(/(<([^>]+)>)/gi, "")
+                        .split(" ")
+                        .slice(0, 15)
+                        .join(" ")
+                    : "",
+                }}
+              />
             );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">
-              <CustomInput type="checkbox" checked={value}/>
-            </div>;
-          },
-        },
-      },
-      {
-        name: "is_first_middle_name",
-        label: "Họ và tên đệm",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-                style={{width: "15%"}}
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">
-              <CustomInput type="checkbox" checked={value}/>
-            </div>;
           },
         },
       },
@@ -333,7 +277,6 @@ class ParamName extends Component {
               <th
                 key={`head-th-${columnMeta.label}`}
                 className="MuiTableCell-root MuiTableCell-head"
-                style={{width: "15%"}}
               >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
@@ -353,7 +296,7 @@ class ParamName extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                <CheckAccess permission="MD_PARAMNAME_EDIT">
+                <CheckAccess permission="FOR_FORMULA_EDIT">
                   <Button
                     color="primary"
                     title="Chỉnh sửa"
@@ -361,7 +304,7 @@ class ParamName extends Component {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "edit",
-                        this.state.data[tableMeta["rowIndex"]].param_name_id,
+                        this.state.data[tableMeta["rowIndex"]].attribute_id,
                         tableMeta["rowIndex"]
                       )
                     }
@@ -369,7 +312,7 @@ class ParamName extends Component {
                     <i className="fa fa-edit" />
                   </Button>
                 </CheckAccess>
-                <CheckAccess permission="MD_PARAMNAME_DEL">
+                <CheckAccess permission="FOR_FORMULA_DEL">
                   <Button
                     color="danger"
                     title="Xóa"
@@ -377,7 +320,7 @@ class ParamName extends Component {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "delete",
-                        this.state.data[tableMeta["rowIndex"]].param_name_id,
+                        this.state.data[tableMeta["rowIndex"]].attribute_id,
                         tableMeta["rowIndex"]
                       )
                     }
@@ -418,9 +361,7 @@ class ParamName extends Component {
           {this.state.toggleSearch && (
             <CardBody className="px-0 py-0">
               <div className="MuiPaper-filter__custom z-index-2">
-                <ParamNameFilter
-                  handleSubmit={this.handleSubmitFilter}
-                />
+                <FormulaFilter handleSubmit={this.handleSubmitFilter} />
               </div>
             </CardBody>
           )}
@@ -431,7 +372,7 @@ class ParamName extends Component {
           className="d-flex align-items-end mb-3"
           style={{ padding: 0 }}
         >
-          <CheckAccess permission="MD_PARAMNAME_ADD">
+          <CheckAccess permission="FOR_FORMULA_ADD">
             <FormGroup className="mb-2 mb-sm-0">
               <Button
                 className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
@@ -476,4 +417,4 @@ class ParamName extends Component {
   }
 }
 
-export default ParamName;
+export default Formula;

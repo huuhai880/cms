@@ -276,9 +276,15 @@ const StoreEdit = React.lazy(() => import("./components/Store/StoreEdit"));
 
 // ParamType
 const ParamType = React.lazy(() => import("./components/ParamType/ParamType"));
-const ParamTypeAdd = React.lazy(() => import("./components/ParamType/ParamTypeAdd"));
-const ParamTypeDetail = React.lazy(() => import("./components/ParamType/ParamTypeDetail"));
-const ParamTypeEdit = React.lazy(() => import("./components/ParamType/ParamTypeEdit"));
+const ParamTypeAdd = React.lazy(() =>
+  import("./components/ParamType/ParamTypeAdd")
+);
+const ParamTypeDetail = React.lazy(() =>
+  import("./components/ParamType/ParamTypeDetail")
+);
+const ParamTypeEdit = React.lazy(() =>
+  import("./components/ParamType/ParamTypeEdit")
+);
 //.end#ParamType
 
 //DepartMent
@@ -909,6 +915,32 @@ const AttributesGroupEdit = React.lazy(() =>
   import("./components/AttributesGroup/AttributesGroupEdit")
 );
 // end#AttributesGroup
+
+//Formula
+const Formula = React.lazy(() => import("./components/Formula/Formula"));
+const FormulaAdd = React.lazy(() => import("./components/Formula/FormulaAdd"));
+const FormulaDetail = React.lazy(() =>
+  import("./components/Formula/FormulaDetail")
+);
+const FormulaEdit = React.lazy(() =>
+  import("./components/Formula/FormulaEdit")
+);
+// end#Formula
+
+//FormulaByName
+const FormulaByName = React.lazy(() =>
+  import("./components/FormulaByName/FormulaByName")
+);
+const FormulaByNameAdd = React.lazy(() =>
+  import("./components/FormulaByName/FormulaByNameAdd")
+);
+// const FormulaByNameDetail = React.lazy(() =>
+//   import("./components/FormulaByName/FormulaByNameDetail")
+// );
+// const FormulaByNameEdit = React.lazy(() =>
+//   import("./components/FormulaByName/FormulaByNameEdit")
+// );
+// end#FormulaByName
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -3126,6 +3158,7 @@ const routes = [
     component: AttributesGroupEdit,
   },
   // end#AttributesGroup
+
   //param-type
   {
     path: "/param-type",
@@ -3156,6 +3189,68 @@ const routes = [
     component: ParamTypeEdit,
   },
   // end#param-type
+
+  //formula
+  {
+    path: "/formula",
+    exact: true,
+    name: "Danh sách công thức theo ngày sinh",
+    function: "FOR_FORMULA_VIEW",
+    component: Formula,
+  },
+  {
+    path: "/formula/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "FOR_FORMULA_ADD",
+    component: FormulaAdd,
+  },
+  {
+    path: "/formula/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "FOR_FORMULA_VIEW",
+    component: FormulaDetail,
+  },
+  {
+    path: "/formula/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "FOR_FORMULA_EDIT",
+    component: FormulaEdit,
+  },
+  // end#formula
+
+  //formula-by-name
+  {
+    path: "/formula-by-name",
+    exact: true,
+    name: "Danh sách công thức theo tên",
+    function: "FOR_FORMULABYNAME_VIEW",
+    component: FormulaByName,
+  },
+  {
+    path: "/formula-by-name/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "FOR_FORMULABYNAME_ADD",
+    component: FormulaByNameAdd,
+  },
+  // {
+  //   path: "/formula-by-name/detail/:id",
+  //   exact: true,
+  //   name: "Chi tiết",
+  //   function: "FOR_FORMULABYNAME_VIEW",
+  //   component: FormulaByNameDetail,
+  // },
+  // {
+  //   path: "/formula-by-name/edit/:id",
+  //   exact: true,
+  //   name: "Chỉnh sửa",
+  //   function: "FOR_FORMULABYNAME_EDIT",
+  //   component: FormulaByNameEdit,
+  // },
+  // end#formula-by-name
 ];
 
 export default routes;
