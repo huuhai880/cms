@@ -11,65 +11,39 @@ const UserAdd = React.lazy(() => import("./components/Users/UserAdd"));
 const UserDetail = React.lazy(() => import("./components/Users/UserDetail"));
 const UserEdit = React.lazy(() => import("./components/Users/UserEdit"));
 const UserDelete = React.lazy(() => import("./components/Users/UserDelete"));
-const UserChangePassword = React.lazy(() =>
-  import("./components/Users/UserChangePassword")
-);
-const ChangePassword = React.lazy(() =>
-  import("./components/Users/ChangePassword")
-);
+const UserChangePassword = React.lazy(() => import("./components/Users/UserChangePassword"));
+const ChangePassword = React.lazy(() => import("./components/Users/ChangePassword"));
 //.end#Users
 
 // // Letter
 const Letter = React.lazy(() => import("./components/Letter/Letter"));
 const LetterAdd = React.lazy(() => import("./components/Letter/LetterAdd"));
-const LetterDetail = React.lazy(() =>
-  import("./components/Letter/LetterDetail")
-);
+const LetterDetail = React.lazy(() => import("./components/Letter/LetterDetail"));
 const LetterEdit = React.lazy(() => import("./components/Letter/LetterEdit"));
 // //.end#Letter
 
 // MainNumber
-const MainNumber = React.lazy(() =>
-  import("./components/MainNumber/MainNumber")
-);
-const MainNumberAdd = React.lazy(() =>
-  import("./components/MainNumber/MainNumberAdd")
-);
+const MainNumber = React.lazy(() => import("./components/MainNumber/MainNumber"));
+const MainNumberAdd = React.lazy(() => import("./components/MainNumber/MainNumberAdd"));
 // const UserDetail = React.lazy(() => import("./components/Users/UserDetail"));
-const MainNumberEdit = React.lazy(() =>
-  import("./components/MainNumber/MainNumberEdit")
-);
+const MainNumberEdit = React.lazy(() => import("./components/MainNumber/MainNumberEdit"));
 //.end#MainNumber
 
 // UserGroups
-const UserGroups = React.lazy(() =>
-  import("./components/UserGroups/UserGroups")
-);
-const UserGroupsAdd = React.lazy(() =>
-  import("./components/UserGroups/UserGroupsAdd")
-);
-const UserGroupsEdit = React.lazy(() =>
-  import("./components/UserGroups/UserGroupsEdit")
-);
+const UserGroups = React.lazy(() => import("./components/UserGroups/UserGroups"));
+const UserGroupsAdd = React.lazy(() => import("./components/UserGroups/UserGroupsAdd"));
+const UserGroupsEdit = React.lazy(() => import("./components/UserGroups/UserGroupsEdit"));
 //const UserGroupsDelete = React.lazy(() => import('./components/UserGroups/UserGroupsDelete'))
-const UserGroupsDetail = React.lazy(() =>
-  import("./components/UserGroups/UserGroupsDetail")
-);
+const UserGroupsDetail = React.lazy(() => import("./components/UserGroups/UserGroupsDetail"));
 //.end#UsersGroups
 
 // FunctionGroups
-const FunctionGroups = React.lazy(() =>
-  import("./components/FunctionGroups/FunctionGroups")
-);
-const FunctionGroupAdd = React.lazy(() =>
-  import("./components/FunctionGroups/FunctionGroupAdd")
-);
+const FunctionGroups = React.lazy(() => import("./components/FunctionGroups/FunctionGroups"));
+const FunctionGroupAdd = React.lazy(() => import("./components/FunctionGroups/FunctionGroupAdd"));
 const FunctionGroupDetail = React.lazy(() =>
   import("./components/FunctionGroups/FunctionGroupDetail")
 );
-const FunctionGroupEdit = React.lazy(() =>
-  import("./components/FunctionGroups/FunctionGroupEdit")
-);
+const FunctionGroupEdit = React.lazy(() => import("./components/FunctionGroups/FunctionGroupEdit"));
 const FunctionGroupDelete = React.lazy(() =>
   import("./components/FunctionGroups/FunctionGroupDelete")
 );
@@ -77,18 +51,10 @@ const FunctionGroupDelete = React.lazy(() =>
 
 // Function
 const Functions = React.lazy(() => import("./components/Functions/Functions"));
-const FunctionAdd = React.lazy(() =>
-  import("./components/Functions/FunctionAdd")
-);
-const FunctionDetail = React.lazy(() =>
-  import("./components/Functions/FunctionDetail")
-);
-const FunctionEdit = React.lazy(() =>
-  import("./components/Functions/FunctionEdit")
-);
-const FunctionDelete = React.lazy(() =>
-  import("./components/Functions/FunctionDelete")
-);
+const FunctionAdd = React.lazy(() => import("./components/Functions/FunctionAdd"));
+const FunctionDetail = React.lazy(() => import("./components/Functions/FunctionDetail"));
+const FunctionEdit = React.lazy(() => import("./components/Functions/FunctionEdit"));
+const FunctionDelete = React.lazy(() => import("./components/Functions/FunctionDelete"));
 //.end#Function
 
 // Menu
@@ -101,99 +67,61 @@ const MenuDelete = React.lazy(() => import("./components/Menus/MenuDelete"));
 
 //CRM
 const Campaigns = React.lazy(() => import("./components/Campaigns/Campaigns"));
-const CampaignDetail = React.lazy(() =>
-  import("./components/Campaigns/CampaignDetail")
-);
-const CampaignEdit = React.lazy(() =>
-  import("./components/Campaigns/CampaignEdit")
-);
-const CampaignAdd = React.lazy(() =>
-  import("./components/Campaigns/CampaignAdd")
-);
+const CampaignDetail = React.lazy(() => import("./components/Campaigns/CampaignDetail"));
+const CampaignEdit = React.lazy(() => import("./components/Campaigns/CampaignEdit"));
+const CampaignAdd = React.lazy(() => import("./components/Campaigns/CampaignAdd"));
 const CampaignInitialization = React.lazy(() =>
   import("./components/Campaigns/CampaignInitialization")
 );
 //.end#CRM
 
 //Campaign-type
-const CampaignTypes = React.lazy(() =>
-  import("./components/CampaignTypes/CampaignTypes")
-);
+const CampaignTypes = React.lazy(() => import("./components/CampaignTypes/CampaignTypes"));
 const CampaignTypeDetail = React.lazy(() =>
   import("./components/CampaignTypes/CampaignTypeDetail")
 );
-const CampaignTypeEdit = React.lazy(() =>
-  import("./components/CampaignTypes/CampaignTypeEdit")
-);
-const CampaignTypeAdd = React.lazy(() =>
-  import("./components/CampaignTypes/CampaignTypeAdd")
-);
+const CampaignTypeEdit = React.lazy(() => import("./components/CampaignTypes/CampaignTypeEdit"));
+const CampaignTypeAdd = React.lazy(() => import("./components/CampaignTypes/CampaignTypeAdd"));
 //.end#Campaign-type
 
 //CRM-campaign-status
-const CampaignStatus = React.lazy(() =>
-  import("./components/CampaignStatus/CampaignStatus")
-);
+const CampaignStatus = React.lazy(() => import("./components/CampaignStatus/CampaignStatus"));
 const CampaignStatusDetail = React.lazy(() =>
   import("./components/CampaignStatus/CampaignStatusDetail")
 );
 const CampaignStatusEdit = React.lazy(() =>
   import("./components/CampaignStatus/CampaignStatusEdit")
 );
-const CampaignStatusAdd = React.lazy(() =>
-  import("./components/CampaignStatus/CampaignStatusAdd")
-);
+const CampaignStatusAdd = React.lazy(() => import("./components/CampaignStatus/CampaignStatusAdd"));
 //.end#CRM-campaign-status
 
 // Business
-const Businesses = React.lazy(() =>
-  import("./components/Businesses/Businesses")
-);
-const BusinessAdd = React.lazy(() =>
-  import("./components/Businesses/BusinessAdd")
-);
-const BusinessDetail = React.lazy(() =>
-  import("./components/Businesses/BusinessDetail")
-);
-const BusinessEdit = React.lazy(() =>
-  import("./components/Businesses/BusinessEdit")
-);
+const Businesses = React.lazy(() => import("./components/Businesses/Businesses"));
+const BusinessAdd = React.lazy(() => import("./components/Businesses/BusinessAdd"));
+const BusinessDetail = React.lazy(() => import("./components/Businesses/BusinessDetail"));
+const BusinessEdit = React.lazy(() => import("./components/Businesses/BusinessEdit"));
 //.end#Businesses
 
 // BusinessType
-const BusinessesType = React.lazy(() =>
-  import("./components/BusinessesType/BusinessesType")
-);
-const BusinessTypeAdd = React.lazy(() =>
-  import("./components/BusinessesType/BusinessTypeAdd")
-);
+const BusinessesType = React.lazy(() => import("./components/BusinessesType/BusinessesType"));
+const BusinessTypeAdd = React.lazy(() => import("./components/BusinessesType/BusinessTypeAdd"));
 const BusinessTypeDetail = React.lazy(() =>
   import("./components/BusinessesType/BusinessTypeDetail")
 );
-const BusinessTypeEdit = React.lazy(() =>
-  import("./components/BusinessesType/BusinessTypeEdit")
-);
+const BusinessTypeEdit = React.lazy(() => import("./components/BusinessesType/BusinessTypeEdit"));
 //.end#BusinessType
 
 // Company
 const Companies = React.lazy(() => import("./components/Companies/Companies"));
-const CompaniesAdd = React.lazy(() =>
-  import("./components/Companies/CompaniesAdd")
-);
-const CompaniesDetail = React.lazy(() =>
-  import("./components/Companies/CompaniesDetail")
-);
+const CompaniesAdd = React.lazy(() => import("./components/Companies/CompaniesAdd"));
+const CompaniesDetail = React.lazy(() => import("./components/Companies/CompaniesDetail"));
 // end#Company
 
 // Segment
 const Segment = React.lazy(() => import("./components/Segment/Segment"));
 const SegmentAdd = React.lazy(() => import("./components/Segment/SegmentAdd"));
-const SegmentDetail = React.lazy(() =>
-  import("./components/Segment/SegmentDetail")
-);
-const SegmentEdit = React.lazy(() =>
-  import("./components/Segment/SegmentEdit")
-);
+const SegmentDetail = React.lazy(() => import("./components/Segment/SegmentDetail"));
+const SegmentEdit = React.lazy(() => import("./components/Segment/SegmentEdit"));
 //.end#Segment
 
 // Area
@@ -204,33 +132,19 @@ const AreaEdit = React.lazy(() => import("./components/Area/AreaEdit"));
 //.end#Area
 
 // Manufacturer
-const Manufacturer = React.lazy(() =>
-  import("./components/Manufacturer/Manufacturer")
-);
-const ManufacturerAdd = React.lazy(() =>
-  import("./components/Manufacturer/ManufacturerAdd")
-);
-const ManufacturerDetail = React.lazy(() =>
-  import("./components/Manufacturer/ManufacturerDetail")
-);
-const ManufacturerEdit = React.lazy(() =>
-  import("./components/Manufacturer/ManufacturerEdit")
-);
+const Manufacturer = React.lazy(() => import("./components/Manufacturer/Manufacturer"));
+const ManufacturerAdd = React.lazy(() => import("./components/Manufacturer/ManufacturerAdd"));
+const ManufacturerDetail = React.lazy(() => import("./components/Manufacturer/ManufacturerDetail"));
+const ManufacturerEdit = React.lazy(() => import("./components/Manufacturer/ManufacturerEdit"));
 //.end#Manufacturer
 
 // Permissions
-const Permissions = React.lazy(() =>
-  import("./components/Permissions/Permissions")
-);
+const Permissions = React.lazy(() => import("./components/Permissions/Permissions"));
 //.end#Permissions
 
 //Thent:  StatusDataLead
-const StatusDataLead = React.lazy(() =>
-  import("./components/StatusDataLead/StatusDataLead")
-);
-const StatusDataLeadAdd = React.lazy(() =>
-  import("./components/StatusDataLead/StatusDataLeadAdd")
-);
+const StatusDataLead = React.lazy(() => import("./components/StatusDataLead/StatusDataLead"));
+const StatusDataLeadAdd = React.lazy(() => import("./components/StatusDataLead/StatusDataLeadAdd"));
 const StatusDataLeadDetail = React.lazy(() =>
   import("./components/StatusDataLead/StatusDataLeadDetail")
 );
@@ -240,31 +154,19 @@ const StatusDataLeadEdit = React.lazy(() =>
 //.end StatusDataLead
 
 //Task-Workflows
-const TaskWorkflows = React.lazy(() =>
-  import("./components/TaskWorkflows/TaskWorkflows")
-);
+const TaskWorkflows = React.lazy(() => import("./components/TaskWorkflows/TaskWorkflows"));
 const TaskWorkflowDetail = React.lazy(() =>
   import("./components/TaskWorkflows/TaskWorkflowDetail")
 );
-const TaskWorkflowEdit = React.lazy(() =>
-  import("./components/TaskWorkflows/TaskWorkflowEdit")
-);
-const TaskWorkflowAdd = React.lazy(() =>
-  import("./components/TaskWorkflows/TaskWorkflowAdd")
-);
+const TaskWorkflowEdit = React.lazy(() => import("./components/TaskWorkflows/TaskWorkflowEdit"));
+const TaskWorkflowAdd = React.lazy(() => import("./components/TaskWorkflows/TaskWorkflowAdd"));
 //.end#Task-Workflows
 
 //Task-Types
 const TaskTypes = React.lazy(() => import("./components/TaskTypes/TaskTypes"));
-const TaskTypeDetail = React.lazy(() =>
-  import("./components/TaskTypes/TaskTypeDetail")
-);
-const TaskTypeEdit = React.lazy(() =>
-  import("./components/TaskTypes/TaskTypeEdit")
-);
-const TaskTypeAdd = React.lazy(() =>
-  import("./components/TaskTypes/TaskTypeAdd")
-);
+const TaskTypeDetail = React.lazy(() => import("./components/TaskTypes/TaskTypeDetail"));
+const TaskTypeEdit = React.lazy(() => import("./components/TaskTypes/TaskTypeEdit"));
+const TaskTypeAdd = React.lazy(() => import("./components/TaskTypes/TaskTypeAdd"));
 //.end#Task-Types
 
 // Store
@@ -280,20 +182,19 @@ const ParamTypeAdd = React.lazy(() => import("./components/ParamType/ParamTypeAd
 const ParamTypeDetail = React.lazy(() => import("./components/ParamType/ParamTypeDetail"));
 const ParamTypeEdit = React.lazy(() => import("./components/ParamType/ParamTypeEdit"));
 //.end#ParamType
-
+// RelationShips
+const RelationShips = React.lazy(() => import("./components/RelationShips/RelationShips"));
+const RelationShipsAdd = React.lazy(() => import("./components/RelationShips/RelationShipsAdd"));
+const RelationShipsDetail = React.lazy(() =>
+  import("./components/RelationShips/RelationShipsDetail")
+);
+const RelationShipsEdit = React.lazy(() => import("./components/RelationShips/RelationShipsEdit"));
+//.end#RelationShips
 //DepartMent
-const DepartMent = React.lazy(() =>
-  import("./components/DepartMent/DepartMent")
-);
-const DepartMentAdd = React.lazy(() =>
-  import("./components/DepartMent/DepartMentAdd")
-);
-const DepartMentDetail = React.lazy(() =>
-  import("./components/DepartMent/DepartMentDetail")
-);
-const DepartMentEdit = React.lazy(() =>
-  import("./components/DepartMent/DepartMentEdit")
-);
+const DepartMent = React.lazy(() => import("./components/DepartMent/DepartMent"));
+const DepartMentAdd = React.lazy(() => import("./components/DepartMent/DepartMentAdd"));
+const DepartMentDetail = React.lazy(() => import("./components/DepartMent/DepartMentDetail"));
+const DepartMentEdit = React.lazy(() => import("./components/DepartMent/DepartMentEdit"));
 //.end#DepartMent
 
 //CustomerDataLead
@@ -322,21 +223,13 @@ const TaskCustomerDataLeadDetail = React.lazy(() =>
 //.end#Task
 // Position
 const Position = React.lazy(() => import("./components/Position/Position"));
-const PositionAdd = React.lazy(() =>
-  import("./components/Position/PositionAdd")
-);
+const PositionAdd = React.lazy(() => import("./components/Position/PositionAdd"));
 // const TaskDetail = React.lazy(() => import("./components/Task/TaskDetail"));
-const PositonEdit = React.lazy(() =>
-  import("./components/Position/PositonEdit")
-);
+const PositonEdit = React.lazy(() => import("./components/Position/PositonEdit"));
 //.end#Positions
 // BusinessUser
-const BusinessUser = React.lazy(() =>
-  import("./components/BusinessUser/BusinessUser")
-);
-const BusinessUserAdd = React.lazy(() =>
-  import("./components/BusinessUser/BusinessUserAdd")
-);
+const BusinessUser = React.lazy(() => import("./components/BusinessUser/BusinessUser"));
+const BusinessUserAdd = React.lazy(() => import("./components/BusinessUser/BusinessUserAdd"));
 //.end#BusinessUser
 
 //CustomerDataLeadCare
@@ -346,9 +239,7 @@ const CustomerDataLeadCareByTask = React.lazy(() =>
 //.end#CustomerDataLeadCare
 
 // ProductCategory
-const ProductCategory = React.lazy(() =>
-  import("./components/ProductCategory/ProductCategory")
-);
+const ProductCategory = React.lazy(() => import("./components/ProductCategory/ProductCategory"));
 const ProductCategoryAdd = React.lazy(() =>
   import("./components/ProductCategory/ProductCategoryAdd")
 );
@@ -383,27 +274,15 @@ const ProductAttributeDetail = React.lazy(() =>
 // Product
 const Product = React.lazy(() => import("./components/Product/Product"));
 const ProductAdd = React.lazy(() => import("./components/Product/ProductAdd"));
-const ProductDetail = React.lazy(() =>
-  import("./components/Product/ProductDetail")
-);
-const ProductEdit = React.lazy(() =>
-  import("./components/Product/ProductEdit")
-);
+const ProductDetail = React.lazy(() => import("./components/Product/ProductDetail"));
+const ProductEdit = React.lazy(() => import("./components/Product/ProductEdit"));
 //.end#Product
 
 // Promotions
-const Promotions = React.lazy(() =>
-  import("./components/Promotions/Promotions")
-);
-const PromotionAdd = React.lazy(() =>
-  import("./components/Promotions/PromotionAdd")
-);
-const PromotionDetail = React.lazy(() =>
-  import("./components/Promotions/PromotionDetail")
-);
-const PromotionEdit = React.lazy(() =>
-  import("./components/Promotions/PromotionEdit")
-);
+const Promotions = React.lazy(() => import("./components/Promotions/Promotions"));
+const PromotionAdd = React.lazy(() => import("./components/Promotions/PromotionAdd"));
+const PromotionDetail = React.lazy(() => import("./components/Promotions/PromotionDetail"));
+const PromotionEdit = React.lazy(() => import("./components/Promotions/PromotionEdit"));
 //.end#Promotions
 
 // Prices
@@ -414,24 +293,14 @@ const PricesList = React.lazy(() => import("./components/Prices/PricesList"));
 //.end#Prices
 
 // customertype
-const CustomerType = React.lazy(() =>
-  import("./components/CustomerType/CustomerType")
-);
-const CustomerTypeAdd = React.lazy(() =>
-  import("./components/CustomerType/CustomerTypeAdd")
-);
-const CustomerTypeDetail = React.lazy(() =>
-  import("./components/CustomerType/CustomerTypeDetail")
-);
-const CustomerTypeEdit = React.lazy(() =>
-  import("./components/CustomerType/CustomerTypeEdit")
-);
+const CustomerType = React.lazy(() => import("./components/CustomerType/CustomerType"));
+const CustomerTypeAdd = React.lazy(() => import("./components/CustomerType/CustomerTypeAdd"));
+const CustomerTypeDetail = React.lazy(() => import("./components/CustomerType/CustomerTypeDetail"));
+const CustomerTypeEdit = React.lazy(() => import("./components/CustomerType/CustomerTypeEdit"));
 //.end customertype
 
 // PromotionOffers
-const PromotionOffers = React.lazy(() =>
-  import("./components/PromotionOffers/PromotionOffers")
-);
+const PromotionOffers = React.lazy(() => import("./components/PromotionOffers/PromotionOffers"));
 const PromotionOfferAdd = React.lazy(() =>
   import("./components/PromotionOffers/PromotionOfferAdd")
 );
@@ -444,18 +313,10 @@ const PromotionOfferEdit = React.lazy(() =>
 //.end#PromotionOffers
 
 // OutputType
-const OutputType = React.lazy(() =>
-  import("./components/OutputType/OutputType")
-);
-const OutputTypeAdd = React.lazy(() =>
-  import("./components/OutputType/OutputTypeAdd")
-);
-const OutputTypeDetail = React.lazy(() =>
-  import("./components/OutputType/OutputTypeDetail")
-);
-const OutputTypeEdit = React.lazy(() =>
-  import("./components/OutputType/OutputTypeEdit")
-);
+const OutputType = React.lazy(() => import("./components/OutputType/OutputType"));
+const OutputTypeAdd = React.lazy(() => import("./components/OutputType/OutputTypeAdd"));
+const OutputTypeDetail = React.lazy(() => import("./components/OutputType/OutputTypeDetail"));
+const OutputTypeEdit = React.lazy(() => import("./components/OutputType/OutputTypeEdit"));
 //.end#OutputType
 
 // Customer Time Keeping
@@ -474,12 +335,8 @@ const TopicEdit = React.lazy(() => import("./components/Topic/TopicEdit"));
 // Admin Website: Account
 const Account = React.lazy(() => import("./components/Account/Account"));
 const AccountAdd = React.lazy(() => import("./components/Account/AccountAdd"));
-const AccountDetail = React.lazy(() =>
-  import("./components/Account/AccountDetail")
-);
-const AccountEdit = React.lazy(() =>
-  import("./components/Account/AccountEdit")
-);
+const AccountDetail = React.lazy(() => import("./components/Account/AccountDetail"));
+const AccountEdit = React.lazy(() => import("./components/Account/AccountEdit"));
 //.End
 // Admin Website: News
 const News = React.lazy(() => import("./components/News/News"));
@@ -492,85 +349,47 @@ const NewsComment = React.lazy(() => import("./components/Comment/Comment"));
 // Banner
 const Banner = React.lazy(() => import("./components/Banner/Banner"));
 const BannerAdd = React.lazy(() => import("./components/Banner/BannerAdd"));
-const BannerDetail = React.lazy(() =>
-  import("./components/Banner/BannerDetail")
-);
+const BannerDetail = React.lazy(() => import("./components/Banner/BannerDetail"));
 const BannerEdit = React.lazy(() => import("./components/Banner/BannerEdit"));
 //.end#Banner
 
 // BannerType
-const BannerType = React.lazy(() =>
-  import("./components/BannerType/BannerType")
-);
-const BannerTypeAdd = React.lazy(() =>
-  import("./components/BannerType/BannerTypeAdd")
-);
-const BannerTypeDetail = React.lazy(() =>
-  import("./components/BannerType/BannerTypeDetail")
-);
-const BannerTypeEdit = React.lazy(() =>
-  import("./components/BannerType/BannerTypeEdit")
-);
+const BannerType = React.lazy(() => import("./components/BannerType/BannerType"));
+const BannerTypeAdd = React.lazy(() => import("./components/BannerType/BannerTypeAdd"));
+const BannerTypeDetail = React.lazy(() => import("./components/BannerType/BannerTypeDetail"));
+const BannerTypeEdit = React.lazy(() => import("./components/BannerType/BannerTypeEdit"));
 //.end#BannerType
 
 // NewsCategory
-const NewsCategory = React.lazy(() =>
-  import("./components/NewsCategory/NewsCategory")
-);
-const NewsCategoryAdd = React.lazy(() =>
-  import("./components/NewsCategory/NewsCategoryAdd")
-);
-const NewsCategoryDetail = React.lazy(() =>
-  import("./components/NewsCategory/NewsCategoryDetail")
-);
-const NewsCategoryEdit = React.lazy(() =>
-  import("./components/NewsCategory/NewsCategoryEdit")
-);
+const NewsCategory = React.lazy(() => import("./components/NewsCategory/NewsCategory"));
+const NewsCategoryAdd = React.lazy(() => import("./components/NewsCategory/NewsCategoryAdd"));
+const NewsCategoryDetail = React.lazy(() => import("./components/NewsCategory/NewsCategoryDetail"));
+const NewsCategoryEdit = React.lazy(() => import("./components/NewsCategory/NewsCategoryEdit"));
 //.end#NewsCategory
 
 // NewsStatus
-const NewsStatus = React.lazy(() =>
-  import("./components/NewsStatus/NewsStatus")
-);
-const NewsStatusAdd = React.lazy(() =>
-  import("./components/NewsStatus/NewsStatusAdd")
-);
-const NewsStatusDetail = React.lazy(() =>
-  import("./components/NewsStatus/NewsStatusDetail")
-);
-const NewsStatusEdit = React.lazy(() =>
-  import("./components/NewsStatus/NewsStatusEdit")
-);
+const NewsStatus = React.lazy(() => import("./components/NewsStatus/NewsStatus"));
+const NewsStatusAdd = React.lazy(() => import("./components/NewsStatus/NewsStatusAdd"));
+const NewsStatusDetail = React.lazy(() => import("./components/NewsStatus/NewsStatusDetail"));
+const NewsStatusEdit = React.lazy(() => import("./components/NewsStatus/NewsStatusEdit"));
 //.end#NewsCategory
 
 //Start: Recruit
 const Recruit = React.lazy(() => import("./components/Recruit/Recruit"));
 const RecruitAdd = React.lazy(() => import("./components/Recruit/RecruitAdd"));
-const RecruitDetail = React.lazy(() =>
-  import("./components/Recruit/RecruitDetail")
-);
-const RecruitEdit = React.lazy(() =>
-  import("./components/Recruit/RecruitEdit")
-);
+const RecruitDetail = React.lazy(() => import("./components/Recruit/RecruitDetail"));
+const RecruitEdit = React.lazy(() => import("./components/Recruit/RecruitEdit"));
 //End: Recruit
 
 //Start: Candidate
 const Candidate = React.lazy(() => import("./components/Candidate/Candidate"));
-const CandidateAdd = React.lazy(() =>
-  import("./components/Candidate/CandidateAdd")
-);
-const CandidateDetail = React.lazy(() =>
-  import("./components/Candidate/CandidateDetail")
-);
-const CandidateEdit = React.lazy(() =>
-  import("./components/Candidate/CandidateEdit")
-);
+const CandidateAdd = React.lazy(() => import("./components/Candidate/CandidateAdd"));
+const CandidateDetail = React.lazy(() => import("./components/Candidate/CandidateDetail"));
+const CandidateEdit = React.lazy(() => import("./components/Candidate/CandidateEdit"));
 //End: Candidate
 
 // WebsiteCategory
-const WebsiteCategory = React.lazy(() =>
-  import("./components/WebsiteCategory/WebsiteCategory")
-);
+const WebsiteCategory = React.lazy(() => import("./components/WebsiteCategory/WebsiteCategory"));
 const WebsiteCategoryAdd = React.lazy(() =>
   import("./components/WebsiteCategory/WebsiteCategoryAdd")
 );
@@ -585,27 +404,17 @@ const WebsiteCategoryEdit = React.lazy(() =>
 // Support
 const Support = React.lazy(() => import("./components/Support/Support"));
 const SupportAdd = React.lazy(() => import("./components/Support/SupportAdd"));
-const SupportDetail = React.lazy(() =>
-  import("./components/Support/SupportDetail")
-);
-const SupportEdit = React.lazy(() =>
-  import("./components/Support/SupportEdit")
-);
+const SupportDetail = React.lazy(() => import("./components/Support/SupportDetail"));
+const SupportEdit = React.lazy(() => import("./components/Support/SupportEdit"));
 //.end#Support
 
 // StaticContent
-const StaticContent = React.lazy(() =>
-  import("./components/StaticContent/StaticContent")
-);
-const StaticContentAdd = React.lazy(() =>
-  import("./components/StaticContent/StaticContentAdd")
-);
+const StaticContent = React.lazy(() => import("./components/StaticContent/StaticContent"));
+const StaticContentAdd = React.lazy(() => import("./components/StaticContent/StaticContentAdd"));
 const StaticContentDetail = React.lazy(() =>
   import("./components/StaticContent/StaticContentDetail")
 );
-const StaticContentEdit = React.lazy(() =>
-  import("./components/StaticContent/StaticContentEdit")
-);
+const StaticContentEdit = React.lazy(() => import("./components/StaticContent/StaticContentEdit"));
 //.end#StaticContent
 
 // SetupServiceRegister
@@ -626,85 +435,49 @@ const SetupServiceRegisterEdit = React.lazy(() =>
 //Start: Booking
 const Booking = React.lazy(() => import("./components/Booking/Booking"));
 const BookingAdd = React.lazy(() => import("./components/Booking/BookingAdd"));
-const BookingDetail = React.lazy(() =>
-  import("./components/Booking/BookingDetail")
-);
-const BookingEdit = React.lazy(() =>
-  import("./components/Booking/BookingEdit")
-);
+const BookingDetail = React.lazy(() => import("./components/Booking/BookingDetail"));
+const BookingEdit = React.lazy(() => import("./components/Booking/BookingEdit"));
 //End: Booking
 
 //Memberships
-const Memberships = React.lazy(() =>
-  import("./components/Memberships/Memberships")
-);
-const MembershipDetail = React.lazy(() =>
-  import("./components/Memberships/MembershipDetail")
-);
-const MembershipEdit = React.lazy(() =>
-  import("./components/Memberships/MembershipEdit")
-);
-const MembershipAdd = React.lazy(() =>
-  import("./components/Memberships/MembershipAdd")
-);
+const Memberships = React.lazy(() => import("./components/Memberships/Memberships"));
+const MembershipDetail = React.lazy(() => import("./components/Memberships/MembershipDetail"));
+const MembershipEdit = React.lazy(() => import("./components/Memberships/MembershipEdit"));
+const MembershipAdd = React.lazy(() => import("./components/Memberships/MembershipAdd"));
 //.end#Memberships
 
 //Contract
 const Contracts = React.lazy(() => import("./components/Contracts/Contracts"));
-const ContractDetail = React.lazy(() =>
-  import("./components/Contracts/ContractDetail")
-);
-const ContractEdit = React.lazy(() =>
-  import("./components/Contracts/ContractEdit")
-);
-const ContractPrint = React.lazy(() =>
-  import("./components/Contracts/ContractPrint")
-);
-const ContractAdd = React.lazy(() =>
-  import("./components/Contracts/ContractAdd")
-);
-const ContractTransfer = React.lazy(() =>
-  import("./components/Contracts/ContractTransfer")
-);
+const ContractDetail = React.lazy(() => import("./components/Contracts/ContractDetail"));
+const ContractEdit = React.lazy(() => import("./components/Contracts/ContractEdit"));
+const ContractPrint = React.lazy(() => import("./components/Contracts/ContractPrint"));
+const ContractAdd = React.lazy(() => import("./components/Contracts/ContractAdd"));
+const ContractTransfer = React.lazy(() => import("./components/Contracts/ContractTransfer"));
 const ContractPrintTransfer = React.lazy(() =>
   import("./components/Contracts/ContractPrintTransfer")
 );
-const ContractFreeze = React.lazy(() =>
-  import("./components/Contracts/ContractFreeze")
-);
-const ContractPrintFreeze = React.lazy(() =>
-  import("./components/Contracts/ContractPrintFreeze")
-);
+const ContractFreeze = React.lazy(() => import("./components/Contracts/ContractFreeze"));
+const ContractPrintFreeze = React.lazy(() => import("./components/Contracts/ContractPrintFreeze"));
 //.end#Contract
 
 //ContractTypes
-const ContractTypes = React.lazy(() =>
-  import("./components/ContractTypes/ContractTypes")
-);
+const ContractTypes = React.lazy(() => import("./components/ContractTypes/ContractTypes"));
 const ContractTypeDetail = React.lazy(() =>
   import("./components/ContractTypes/ContractTypeDetail")
 );
-const ContractTypeEdit = React.lazy(() =>
-  import("./components/ContractTypes/ContractTypeEdit")
-);
-const ContractTypeAdd = React.lazy(() =>
-  import("./components/ContractTypes/ContractTypeAdd")
-);
+const ContractTypeEdit = React.lazy(() => import("./components/ContractTypes/ContractTypeEdit"));
+const ContractTypeAdd = React.lazy(() => import("./components/ContractTypes/ContractTypeAdd"));
 //.end#ContractTypes
 
 // User Time Keeping
-const TimekeepingUsers = React.lazy(() =>
-  import("./components/Timekeeping/TimekeepingUsers")
-);
+const TimekeepingUsers = React.lazy(() => import("./components/Timekeeping/TimekeepingUsers"));
 //.end#User Time Keeping
 
 //ProductComment
 const ProductListComment = React.lazy(() =>
   import("./components/ProductComment/ProductListComment")
 );
-const ProductComment = React.lazy(() =>
-  import("./components/ProductComment/ProductComment")
-);
+const ProductComment = React.lazy(() => import("./components/ProductComment/ProductComment"));
 const ProductCommentDetail = React.lazy(() =>
   import("./components/ProductComment/ProductCommentDetail")
 );
@@ -717,52 +490,30 @@ const ProductCommentReplyAdd = React.lazy(() =>
 //.end#ProductComment
 
 //ProductComment
-const SetupServices = React.lazy(() =>
-  import("./components/SetupServices/SetupServices")
-);
-const SetupServicesAdd = React.lazy(() =>
-  import("./components/SetupServices/SetupServicesAdd")
-);
+const SetupServices = React.lazy(() => import("./components/SetupServices/SetupServices"));
+const SetupServicesAdd = React.lazy(() => import("./components/SetupServices/SetupServicesAdd"));
 const SetupServicesDetail = React.lazy(() =>
   import("./components/SetupServices/SetupServicesDetail")
 );
-const SetupServicesEdit = React.lazy(() =>
-  import("./components/SetupServices/SetupServicesEdit")
-);
+const SetupServicesEdit = React.lazy(() => import("./components/SetupServices/SetupServicesEdit"));
 //.end#ProductComment
 
 // Author
 const Author = React.lazy(() => import("./components/Author/Author"));
 const AuthorAdd = React.lazy(() => import("./components/Author/AuthorAdd"));
-const AuthorDetail = React.lazy(() =>
-  import("./components/Author/AuthorDetail")
-);
+const AuthorDetail = React.lazy(() => import("./components/Author/AuthorDetail"));
 const AuthorEdit = React.lazy(() => import("./components/Author/AuthorEdit"));
-const AuthorDelete = React.lazy(() =>
-  import("./components/Author/AuthorDelete")
-);
-const AuthorChangePassword = React.lazy(() =>
-  import("./components/Author/AuthorChangePassword")
-);
+const AuthorDelete = React.lazy(() => import("./components/Author/AuthorDelete"));
+const AuthorChangePassword = React.lazy(() => import("./components/Author/AuthorChangePassword"));
 // const ChangePassword = React.lazy(() => import('./components/Author/ChangePassword'));
 //.end#Author
 
 //plan category
-const PlanCategory = React.lazy(() =>
-  import("./components/PlanCategory/PlanCategory")
-);
-const PlanCategoryAdd = React.lazy(() =>
-  import("./components/PlanCategory/PlanCategoryAdd")
-);
-const PlanCategoryDetail = React.lazy(() =>
-  import("./components/PlanCategory/PlanCategoryDetail")
-);
-const PlanCategoryEdit = React.lazy(() =>
-  import("./components/PlanCategory/PlanCategoryEdit")
-);
-const PlanCategoryDelete = React.lazy(() =>
-  import("./components/PlanCategory/PlanCategoryDelete")
-);
+const PlanCategory = React.lazy(() => import("./components/PlanCategory/PlanCategory"));
+const PlanCategoryAdd = React.lazy(() => import("./components/PlanCategory/PlanCategoryAdd"));
+const PlanCategoryDetail = React.lazy(() => import("./components/PlanCategory/PlanCategoryDetail"));
+const PlanCategoryEdit = React.lazy(() => import("./components/PlanCategory/PlanCategoryEdit"));
+const PlanCategoryDelete = React.lazy(() => import("./components/PlanCategory/PlanCategoryDelete"));
 //end#plan category
 
 //plan
@@ -774,9 +525,7 @@ const PlanEdit = React.lazy(() => import("./components/Plan/PlanEdit"));
 //end#plan
 
 //contact customer
-const ContactCustomer = React.lazy(() =>
-  import("./components/ContactCustomer/ContactCustomer")
-);
+const ContactCustomer = React.lazy(() => import("./components/ContactCustomer/ContactCustomer"));
 // const ContactCustomerAdd = React.lazy(() => import('./components/ContactCustomer/ContactCustomerAdd'));
 const ContactCustomerDetail = React.lazy(() =>
   import("./components/ContactCustomer/ContactCustomerDetail")
@@ -802,12 +551,8 @@ const PublishingCompanyDetail = React.lazy(() =>
 //Service
 const Service = React.lazy(() => import("./components/Service/Service"));
 const ServiceAdd = React.lazy(() => import("./components/Service/ServiceAdd"));
-const ServiceDetail = React.lazy(() =>
-  import("./components/Service/ServiceDetail")
-);
-const ServiceEdit = React.lazy(() =>
-  import("./components/Service/ServiceEdit")
-);
+const ServiceDetail = React.lazy(() => import("./components/Service/ServiceDetail"));
+const ServiceEdit = React.lazy(() => import("./components/Service/ServiceEdit"));
 //end#Service
 
 //Faq
@@ -818,87 +563,49 @@ const FaqEdit = React.lazy(() => import("./components/Faq/FaqEdit"));
 //end#Faq
 
 //Comment rating
-const CommentRating = React.lazy(() =>
-  import("./components/CommentRating/CommentRating")
-);
+const CommentRating = React.lazy(() => import("./components/CommentRating/CommentRating"));
 
 //PageSetting
 //Comment rating
-const PageSetting = React.lazy(() =>
-  import("./components/PageSetting/PageSetting")
-);
+const PageSetting = React.lazy(() => import("./components/PageSetting/PageSetting"));
 
 //Partner
 const Partner = React.lazy(() => import("./components/Partner/Partner"));
 const PartnerAdd = React.lazy(() => import("./components/Partner/PartnerAdd"));
-const PartnerDetail = React.lazy(() =>
-  import("./components/Partner/PartnerDetail")
-);
-const PartnerEdit = React.lazy(() =>
-  import("./components/Partner/PartnerEdit")
-);
+const PartnerDetail = React.lazy(() => import("./components/Partner/PartnerDetail"));
+const PartnerEdit = React.lazy(() => import("./components/Partner/PartnerEdit"));
 //end#Partner
 
 //Review
 const Review = React.lazy(() => import("./components/CrmReview/CrmReview"));
-const ReviewAdd = React.lazy(() =>
-  import("./components/CrmReview/CrmReviewAdd")
-);
-const ReviewDetail = React.lazy(() =>
-  import("./components/CrmReview/CrmReviewDetail")
-);
-const ReviewEdit = React.lazy(() =>
-  import("./components/CrmReview/CrmReviewEdit")
-);
+const ReviewAdd = React.lazy(() => import("./components/CrmReview/CrmReviewAdd"));
+const ReviewDetail = React.lazy(() => import("./components/CrmReview/CrmReviewDetail"));
+const ReviewEdit = React.lazy(() => import("./components/CrmReview/CrmReviewEdit"));
 //end#Review
 
 //Attributes
-const Attributes = React.lazy(() =>
-  import("./components/Attributes/Attributes")
-);
-const AttributesAdd = React.lazy(() =>
-  import("./components/Attributes/AttributesAdd")
-);
-const AttributesDetail = React.lazy(() =>
-  import("./components/Attributes/AttributesDetail")
-);
-const AttributesEdit = React.lazy(() =>
-  import("./components/Attributes/AttributesEdit")
-);
+const Attributes = React.lazy(() => import("./components/Attributes/Attributes"));
+const AttributesAdd = React.lazy(() => import("./components/Attributes/AttributesAdd"));
+const AttributesDetail = React.lazy(() => import("./components/Attributes/AttributesDetail"));
+const AttributesEdit = React.lazy(() => import("./components/Attributes/AttributesEdit"));
 // end#Attributes
 
 //Calculation
-const Calculation = React.lazy(() =>
-  import("./components/MdCalculation/Calculation")
-);
-const CalculationAdd = React.lazy(() =>
-  import("./components/MdCalculation/CalculationAdd")
-);
-const CalculationDetail = React.lazy(() =>
-  import("./components/MdCalculation/CalculationDetail")
-);
-const CalculationEdit = React.lazy(() =>
-  import("./components/MdCalculation/CalculationEdit")
-);
+const Calculation = React.lazy(() => import("./components/MdCalculation/Calculation"));
+const CalculationAdd = React.lazy(() => import("./components/MdCalculation/CalculationAdd"));
+const CalculationDetail = React.lazy(() => import("./components/MdCalculation/CalculationDetail"));
+const CalculationEdit = React.lazy(() => import("./components/MdCalculation/CalculationEdit"));
 // end#Calculation
 
 //ParamName
 const ParamName = React.lazy(() => import("./components/ParamName/ParamName"));
-const ParamNameAdd = React.lazy(() =>
-  import("./components/ParamName/ParamNameAdd")
-);
-const ParamNameDetail = React.lazy(() =>
-  import("./components/ParamName/ParamNameDetail")
-);
-const ParamNameEdit = React.lazy(() =>
-  import("./components/ParamName/ParamNameEdit")
-);
+const ParamNameAdd = React.lazy(() => import("./components/ParamName/ParamNameAdd"));
+const ParamNameDetail = React.lazy(() => import("./components/ParamName/ParamNameDetail"));
+const ParamNameEdit = React.lazy(() => import("./components/ParamName/ParamNameEdit"));
 // end#ParamName
 
 //AttributesGroup
-const AttributesGroup = React.lazy(() =>
-  import("./components/AttributesGroup/AttributesGroup")
-);
+const AttributesGroup = React.lazy(() => import("./components/AttributesGroup/AttributesGroup"));
 const AttributesGroupAdd = React.lazy(() =>
   import("./components/AttributesGroup/AttributesGroupAdd")
 );

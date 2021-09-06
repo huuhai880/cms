@@ -8,34 +8,26 @@ import { CheckAccess } from "../../navigation/VerifyAccess";
 import React from "react";
 import { Button } from "reactstrap";
 import { Checkbox } from "antd";
-
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import * as yup from "yup";
 export const initialValues = {
-  param_type_id: "",
-  param_type: "",
-  is_day: 0,
-  is_month: 0,
-  is_year: 0,
+  relationship_id: "",
+  relationship: "",
   is_active: 1,
+  note: "",
 };
 ///// validate
 export const validationSchema = yup.object().shape({
-  param_type: yup
-    .string()
-    .required("Biến số ngày sinh không được để trống .")
-    // .matches(/^[A-Za-z]+$/, "Chữ cái chỉ được nhập chữ .")
-    .nullable(),
-  // number: yup.number().required("Số không được để trống .").nullable(),
+  relationship: yup.string().required("Mối quan hệ không được để trống .").nullable(),
 });
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   // console.log(data);
   return [
-    configIDRowTable("param_type_id", "/param-type/detail/", query),
+    configIDRowTable("relationship_id", "/relationShips/detail/", query),
     {
-      name: "param_type",
-      label: "loại",
+      name: "relationship",
+      label: "Mối quan hệ",
       options: {
         filter: false,
         sort: true,
@@ -51,79 +43,12 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
         },
       },
     },
-
-    {
-      name: "is_day",
-      label: "Ngày",
-      options: {
-        filter: false,
-        sort: true,
-        customHeadRender: (columnMeta, handleToggleColumn) => {
-          return (
-            <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
-              <div className="text-center">{columnMeta.label}</div>
-            </th>
-          );
-        },
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <div className="text-center">
-              <Checkbox checked={value == 1}></Checkbox>
-            </div>
-          );
-        },
-      },
-    },
-    {
-      name: "is_month",
-      label: "Tháng",
-      options: {
-        filter: false,
-        sort: true,
-        customHeadRender: (columnMeta, handleToggleColumn) => {
-          return (
-            <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
-              <div className="text-center">{columnMeta.label}</div>
-            </th>
-          );
-        },
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <div className="text-center">
-              <Checkbox checked={value == 1}></Checkbox>
-            </div>
-          );
-        },
-      },
-    },
-    {
-      name: "is_year",
-      label: "Năm",
-      options: {
-        filter: false,
-        sort: true,
-        customHeadRender: (columnMeta, handleToggleColumn) => {
-          return (
-            <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
-              <div className="text-center">{columnMeta.label}</div>
-            </th>
-          );
-        },
-        customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <div className="text-center">
-              <Checkbox checked={value == 1}></Checkbox>
-            </div>
-          );
-        },
-      },
-    },
     {
       name: "is_active",
       label: "Kích hoạt",
       options: {
         filter: false,
-        sort: true,
+        sort: false,
         customHeadRender: (columnMeta, handleToggleColumn) => {
           return (
             <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
@@ -133,12 +58,48 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
         },
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
-            <div className="text-center">
-              <div className="text-center">
-                {value == 1 ? "Có" : value == 0 ? "Không" : "Không"}
-              </div>
-            </div>
+            <div className="text-center">{value == 1 ? "Có" : value == 0 ? "Không" : "Không"}</div>
           );
+        },
+      },
+    },
+    // {
+    //   name: "is_active",
+    //   label: "Kích hoạt",
+    //   options: {
+    //     filter: false,
+    //     sort: true,
+    //     customHeadRender: (columnMeta, handleToggleColumn) => {
+    //       return (
+    //         <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+    //           <div className="text-center">{columnMeta.label}</div>
+    //         </th>
+    //       );
+    //     },
+    //     customBodyRender: (value, tableMeta, updateValue) => {
+    //       return (
+    //         <div className="text-center">
+    //           <Checkbox checked={value == 1}></Checkbox>
+    //         </div>
+    //       );
+    //     },
+    //   },
+    // },
+    {
+      name: "note",
+      label: "Ghi chú",
+      options: {
+        filter: false,
+        sort: true,
+        customHeadRender: (columnMeta, handleToggleColumn) => {
+          return (
+            <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+              <div className="text-center">{columnMeta.label}</div>
+            </th>
+          );
+        },
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return <div className="text-left">{value}</div>;
         },
       },
     },
@@ -151,25 +112,27 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <div className="text-center">
-              <CheckAccess permission="MD_PARAMTYPE_EDIT">
+              <CheckAccess permission="MD_RELATIONSHIPS_EDIT">
                 <Button
                   color="primary"
                   title="Chỉnh sửa"
                   className="mr-1"
                   onClick={(evt) => {
-                    window._$g.rdr(`/param-type/edit/${data[tableMeta["rowIndex"]].param_type_id}`);
+                    window._$g.rdr(
+                      `/relationShips/edit/${data[tableMeta["rowIndex"]].relationship_id}`
+                    );
                   }}
                 >
                   <i className="fa fa-edit" />
                 </Button>
               </CheckAccess>
-              <CheckAccess permission="MD_PARAMTYPE_DEL">
+              <CheckAccess permission="MD_RELATIONSHIPS_DEL">
                 <Button
                   color="danger"
                   title="Xóa"
                   className=""
                   onClick={(evt) =>
-                    handleDelete(data[tableMeta["rowIndex"]].param_type_id, tableMeta["rowIndex"])
+                    handleDelete(data[tableMeta["rowIndex"]].relationship_id, tableMeta["rowIndex"])
                   }
                 >
                   <i className="fa fa-trash" />
