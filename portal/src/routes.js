@@ -178,9 +178,15 @@ const StoreEdit = React.lazy(() => import("./components/Store/StoreEdit"));
 
 // ParamType
 const ParamType = React.lazy(() => import("./components/ParamType/ParamType"));
-const ParamTypeAdd = React.lazy(() => import("./components/ParamType/ParamTypeAdd"));
-const ParamTypeDetail = React.lazy(() => import("./components/ParamType/ParamTypeDetail"));
-const ParamTypeEdit = React.lazy(() => import("./components/ParamType/ParamTypeEdit"));
+const ParamTypeAdd = React.lazy(() =>
+  import("./components/ParamType/ParamTypeAdd")
+);
+const ParamTypeDetail = React.lazy(() =>
+  import("./components/ParamType/ParamTypeDetail")
+);
+const ParamTypeEdit = React.lazy(() =>
+  import("./components/ParamType/ParamTypeEdit")
+);
 //.end#ParamType
 // RelationShips
 const RelationShips = React.lazy(() => import("./components/RelationShips/RelationShips"));
@@ -617,21 +623,31 @@ const AttributesGroupEdit = React.lazy(() =>
 );
 // end#AttributesGroup
 
+//Formula
+const Formula = React.lazy(() => import("./components/Formula/Formula"));
+const FormulaAdd = React.lazy(() => import("./components/Formula/FormulaAdd"));
+const FormulaDetail = React.lazy(() =>
+  import("./components/Formula/FormulaDetail")
+);
+const FormulaEdit = React.lazy(() =>
+  import("./components/Formula/FormulaEdit")
+);
+// end#Formula
 
-//ProductCombo
-const ProductCombo = React.lazy(() =>
-  import("./components/ProductCombo/ProductCombo")
+//FormulaByName
+const FormulaByName = React.lazy(() =>
+  import("./components/FormulaByName/FormulaByName")
 );
-const ProductComboAdd = React.lazy(() =>
-  import("./components/ProductCombo/ProductComboAdd")
+const FormulaByNameAdd = React.lazy(() =>
+  import("./components/FormulaByName/FormulaByNameAdd")
 );
-const ProductComboEdit = React.lazy(() =>
-  import("./components/ProductCombo/ProductComboEdit")
-);
-const ProductComboDetail = React.lazy(() =>
-  import("./components/ProductCombo/ProductComboDetail")
-);
-//end#ProductCombo
+// const FormulaByNameDetail = React.lazy(() =>
+//   import("./components/FormulaByName/FormulaByNameDetail")
+// );
+// const FormulaByNameEdit = React.lazy(() =>
+//   import("./components/FormulaByName/FormulaByNameEdit")
+// );
+// end#FormulaByName
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -2849,6 +2865,7 @@ const routes = [
     component: AttributesGroupEdit,
   },
   // end#AttributesGroup
+
   //param-type
   {
     path: "/param-type",
@@ -2880,37 +2897,67 @@ const routes = [
   },
   // end#param-type
 
-  //ProductCombo
+  //formula
   {
-    path: "/product-combo",
+    path: "/formula",
     exact: true,
-    name: "Danh sách Combo",
-    function: "PRO_COMBOS_VIEW",
-    component: ProductCombo,
+    name: "Danh sách công thức theo ngày sinh",
+    function: "FOR_FORMULA_VIEW",
+    component: Formula,
   },
   {
-    path: "/product-combo/add",
+    path: "/formula/add",
     exact: true,
     name: "Thêm mới",
-    function: "PRO_COMBOS_ADD",
-    component: ProductComboAdd,
+    function: "FOR_FORMULA_ADD",
+    component: FormulaAdd,
   },
   {
-    path: "/product-combo/detail/:id",
+    path: "/formula/detail/:id",
     exact: true,
     name: "Chi tiết",
-    function: "PRO_COMBOS_VIEW",
-    component: ProductComboDetail,
+    function: "FOR_FORMULA_VIEW",
+    component: FormulaDetail,
   },
   {
-    path: "/product-combo/edit/:id",
+    path: "/formula/edit/:id",
     exact: true,
     name: "Chỉnh sửa",
-    function: "PRO_COMBOS_EDIT",
-    component: ProductComboEdit,
+    function: "FOR_FORMULA_EDIT",
+    component: FormulaEdit,
   },
-  // end#ProductCombo
-  
+  // end#formula
+
+  //formula-by-name
+  {
+    path: "/formula-by-name",
+    exact: true,
+    name: "Danh sách công thức theo tên",
+    function: "FOR_FORMULABYNAME_VIEW",
+    component: FormulaByName,
+  },
+  {
+    path: "/formula-by-name/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "FOR_FORMULABYNAME_ADD",
+    component: FormulaByNameAdd,
+  },
+  // {
+  //   path: "/formula-by-name/detail/:id",
+  //   exact: true,
+  //   name: "Chi tiết",
+  //   function: "FOR_FORMULABYNAME_VIEW",
+  //   component: FormulaByNameDetail,
+  // },
+  // {
+  //   path: "/formula-by-name/edit/:id",
+  //   exact: true,
+  //   name: "Chỉnh sửa",
+  //   function: "FOR_FORMULABYNAME_EDIT",
+  //   component: FormulaByNameEdit,
+  // },
+  // end#formula-by-name
 ];
 
 export default routes;

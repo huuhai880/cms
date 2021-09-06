@@ -137,8 +137,13 @@ export default class ParamNameAdd extends PureComponent {
     // Build form data
     // +++
 
-    let { is_active, is_full_name, is_last_name, is_first_middle_name, is_first_name } =
-      values;
+    let {
+      is_active,
+      is_full_name,
+      is_last_name,
+      is_first_middle_name,
+      is_first_name,
+    } = values;
 
     // +++
     let formData = Object.assign({}, values, {
@@ -327,34 +332,34 @@ export default class ParamNameAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
-                                  <Label for="is_last_name" sm={3}></Label>
+                                  <Label for="is_first_name" sm={3}></Label>
                                   <Col sm={3}>
                                     <Field
-                                      name="is_last_name"
+                                      name="is_first_name"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.is_last_name}
+                                          checked={values.is_first_name}
                                           onChange={(event) => {
                                             const { target } = event;
                                             field.onChange({
                                               target: {
-                                                name: "is_last_name",
+                                                name: "is_first_name",
                                                 value: target.checked,
                                               },
                                             });
                                           }}
                                           type="checkbox"
-                                          id="is_last_name"
+                                          id="is_first_name"
                                           label="Tên"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="is_last_name"
+                                      name="is_first_name"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -408,37 +413,34 @@ export default class ParamNameAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="is_first_name"
-                                    sm={3}
-                                  ></Label>
+                                  <Label for="is_last_name" sm={3}></Label>
                                   <Col sm={3}>
                                     <Field
-                                      name="is_first_name"
+                                      name="is_last_name"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.is_first_name}
+                                          checked={values.is_last_name}
                                           onChange={(event) => {
                                             const { target } = event;
                                             field.onChange({
                                               target: {
-                                                name: "is_first_name",
+                                                name: "is_last_name",
                                                 value: target.checked,
                                               },
                                             });
                                           }}
                                           type="checkbox"
-                                          id="is_first_name"
+                                          id="is_last_name"
                                           label="Họ"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="is_first_name"
+                                      name="is_last_name"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
