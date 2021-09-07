@@ -92,27 +92,27 @@ export const getColumnTable = (data, query, handleActionItemClick, handlePick = 
             },
         },
 
-        {
-            name: "price",
-            label: "Giá sản phẩm",
-            options: {
-                filter: false,
-                sort: true,
-                customHeadRender: (columnMeta, handleToggleColumn) => {
-                    return (
-                        <th
-                            key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head"
-                        >
-                            <div className="text-center">{columnMeta.label}</div>
-                        </th>
-                    );
-                },
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{numberFormat(value)}</div>;
-                },
-            },
-        },
+        // {
+        //     name: "price",
+        //     label: "Giá sản phẩm",
+        //     options: {
+        //         filter: false,
+        //         sort: true,
+        //         customHeadRender: (columnMeta, handleToggleColumn) => {
+        //             return (
+        //                 <th
+        //                     key={`head-th-${columnMeta.label}`}
+        //                     className="MuiTableCell-root MuiTableCell-head"
+        //                 >
+        //                     <div className="text-center">{columnMeta.label}</div>
+        //                 </th>
+        //             );
+        //         },
+        //         customBodyRender: (value, tableMeta, updateValue) => {
+        //             return <div className="text-center">{numberFormat(value)}</div>;
+        //         },
+        //     },
+        // },
         {
             name: "is_active",
             label: "Kích hoạt",

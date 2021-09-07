@@ -93,12 +93,12 @@ function ProductAdd({ noEdit = false, productId = null }) {
       if (productId) {
         let product = await _productModel.read(productId);
         let value = {
-            ...initialValues,
-            ...product
-        }
+          ...initialValues,
+          ...product,
+        };
         setProduct(value);
       }
-      
+
       let data = await _productCategoryModel.getOptions({ is_active: 1 });
       let productCategoryOption = mapDataOptions4Select(data);
 
@@ -165,7 +165,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
       }
     } catch (error) {
       let { errors, statusText, message } = error;
-   
+
       let msg = [`<b>${statusText || message}</b>`]
         .concat(errors || [])
         .join("<br/>");
@@ -273,6 +273,28 @@ function ProductAdd({ noEdit = false, productId = null }) {
     formik.setFieldValue("product_attributes", attrProduct);
   };
 
+  const changeAlias = (val) => {
+
+    var str = val;
+    str = str.trim();
+    str = str.toLowerCase();
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(
+      /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+      " "
+    );
+    str = str.replace(/ + /g, "-");
+    str = str.replace(/[ ]/g, "-");
+    str = str.trim();
+    return str;
+  };
+
   const renderProductAttributes = () => {
     return formik.values.product_attributes &&
       formik.values.product_attributes.length ? (
@@ -372,7 +394,8 @@ function ProductAdd({ noEdit = false, productId = null }) {
                     key={`alert-${idx}`}
                     color={color}
                     isOpen={true}
-                    toggle={() => setAlerts([])}>
+                    toggle={() => setAlerts([])}
+                  >
                     <span dangerouslySetInnerHTML={{ __html: msg }} />
                   </Alert>
                 );
@@ -445,7 +468,18 @@ function ProductAdd({ noEdit = false, productId = null }) {
                               placeholder="Tên sản phẩm"
                               disabled={noEdit}
                               name="product_name"
-                              {...formik.getFieldProps("product_name")}
+                              value={formik.values.product_name}
+                              onChange={({ target }) => {
+                                formik.setFieldValue(
+                                  "product_name",
+                                  target.value
+                                );
+                                formik.setFieldValue(
+                                  "url_product",
+                                  changeAlias(target.value)
+                                );
+                              }}
+                              // {...formik.getFieldProps("product_name")}
                             />
                             <MessageError formik={formik} name="product_name" />
                           </Col>
@@ -484,37 +518,16 @@ function ProductAdd({ noEdit = false, productId = null }) {
                             <Input
                               type="text"
                               placeholder="Url sản phẩm"
-                              disabled={noEdit}
+                              disabled={true}
                               name="url_product"
+                              // readOnly={true}
+                              // value={changeAlias(formik.values.product_name)}
                               {...formik.getFieldProps("url_product")}
                             />
                             {/* <MessageError formik={formik} name="url_product" /> */}
                           </Col>
                         </FormGroup>
                       </Col>
-
-                      {/* <Col xs={12} sm={12}>
-                        <FormGroup row>
-                          <Label className="col-sm-4 col-form-label">
-                            Giá sản phẩm
-                            <span className="font-weight-bold red-text">*</span>
-                          </Label>
-                          <Col sm={8}>
-                            <NumberFormat
-                              name="price"
-                              value={1 * formik.values.price}
-                              disabled={noEdit}
-                              onValueChange={({ value }) => {
-                                let price = 1 * value.replace(/,/g, "");
-                                formik.setFieldValue("price", price);
-                              }}
-                              min={0}
-                              style={{ width: "100%" }}
-                            />
-                            <MessageError formik={formik} name="price" />
-                          </Col>
-                        </FormGroup>
-                      </Col> */}
 
                       <Col xs={12} sm={12}>
                         <FormGroup row>

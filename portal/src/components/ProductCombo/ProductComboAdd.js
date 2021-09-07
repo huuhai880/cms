@@ -183,7 +183,7 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
    }
 
    const handleDeleteProduct = index => {
-      let { combo_products = [] } = formik.values.combo_products;
+      let { combo_products = [] } = formik.values;
       combo_products.splice(index, 1)
       formik.setFieldValue('combo_products', combo_products)
    }
@@ -274,6 +274,29 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
                                        </Col>
                                     </FormGroup>
                                  </Col>
+
+                                 <Col sm={12}>
+                                    <FormGroup row>
+                                       <Label className="col-sm-3 col-form-label">
+
+                                       </Label>
+                                       <Col sm={9}>
+                                          <CustomInput
+                                             className="pull-left"
+                                             onBlur={null}
+                                             checked={formik.values.is_active}
+                                             type="checkbox"
+                                             id="is_active"
+                                             onChange={(e) => {
+                                                formik.setFieldValue("is_active", e.target.checked);
+                                             }}
+                                             label="Kích hoạt"
+                                             disabled={noEdit}
+                                          />
+                                       </Col>
+                                    </FormGroup>
+                                 </Col>
+
                               </Row>
                            </Col>
 
@@ -372,11 +395,18 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
                                                       verticalAlign: "middle",
                                                    }}
                                                 >
-                                                   <Checkbox
+                                                   <CustomInput
+                                                      className="check-limit"
+                                                      onBlur={null}
                                                       checked={item.is_time_limit}
-                                                      onChange={({ target }) => handleChangeValueProduct(target.checked, 'is_time_limit', index)}
+                                                      type="checkbox"
+                                                      id={`is_time_limit${index}`}
+                                                      onChange={({ target }) => {
+                                                         handleChangeValueProduct(target.checked, 'is_time_limit', index)
+                                                      }}
                                                       disabled={noEdit}
                                                    />
+
                                                 </td>
                                                 <td>
 
@@ -428,28 +458,7 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
                            </Col>
                         </Row>
 
-                        <Row>
-                           <Col xs={12} className="m-t-10 mb-2 mt-2">
-                              <FormGroup row>
-                                 <Col sm={2} xs={12}>
-                                    <CustomInput
-                                       className="pull-left"
-                                       onBlur={null}
-                                       checked={formik.values.is_active}
-                                       type="checkbox"
-                                       id="is_active"
-                                       onChange={(e) => {
-                                          formik.setFieldValue("is_active", e.target.checked);
-                                       }}
-                                       label="Kích hoạt"
-                                       disabled={noEdit}
-                                    />
-                                 </Col>
-                              </FormGroup>
-                           </Col>
-                        </Row>
-
-                        <Row className="mt-2">
+                        <Row className="mt-4">
                            <Col xs={12} sm={12} style={{ padding: "0px" }}>
                               <ActionButton
                                  isSubmitting={formik.isSubmitting}

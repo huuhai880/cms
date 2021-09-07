@@ -11,6 +11,8 @@ function SelectProductCategory({
   isDisabled = false,
   id = null,
   listOption,
+  className,
+  isTarget = true,
 }) {
 
     
@@ -70,10 +72,13 @@ function SelectProductCategory({
       options={formatTreeList(listOption)}
       isDisabled={isDisabled}
       isMulti={false}
-      menuPortalTarget={document.querySelector(portalTarget)}
+      menuPortalTarget={
+        isTarget ? document.querySelector(portalTarget) : null
+      }
       isClearable={isClearable}
       onChange={onChange}
       components={{ Option }}
+      className={className}
     />
   );
 }
