@@ -50,7 +50,7 @@ class ProductFilter extends PureComponent {
     const { inputValue, selectedOption, company, productOptions } = this.state;
     const { handleSubmit } = this.props;
     handleSubmit(
-      inputValue,
+      inputValue ? inputValue.trim() : null,
       selectedOption ? selectedOption.value : 2,
       company ? company.value : undefined,
       productOptions ? productOptions.value : undefined
@@ -91,7 +91,7 @@ class ProductFilter extends PureComponent {
                   autoComplete="nope"
                   type="text"
                   name="inputValue"
-                  placeholder="Nhập tên danh mục sách"
+                  placeholder="Nhập tên danh mục sản phẩm"
                   value={this.state.inputValue}
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}
@@ -118,18 +118,7 @@ class ProductFilter extends PureComponent {
                     portalTarget={null}
                     isObject
                   />
-                  {/* <Select
-                    className="MuiPaper-filter__custom--select"
-                    id="productOptions"
-                    name="productOptions"
-                    onChange={this.handleChangeProductOptions}
-                    isSearchable={true}
-                    placeholder={"-- Chọn --"}
-                    value={this.state.productOptions}
-                    options={productOptions.map(
-                      ({ name: label, id: value }) => ({ value, label })
-                    )}
-                  /> */}
+                  
                 </Col>
               </FormGroup>
             </Col>
@@ -152,33 +141,36 @@ class ProductFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
+
+            <Col
+              xs={12}
+              sm={12}
+              className="d-flex align-items-end justify-content-end mt-3"
+            >
+              <FormGroup className="mb-2 mb-sm-0">
+                <Button
+                  className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={this.onSubmit}
+                  color="primary"
+                  size="sm"
+                >
+                  <i className="fa fa-search" />
+                  <span className="ml-1">Tìm kiếm</span>
+                </Button>
+              </FormGroup>
+              <FormGroup className="mb-2 ml-2 mb-sm-0">
+                <Button
+                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={this.onClear}
+                  size="sm"
+                >
+                  <i className="fa fa-refresh" />
+                  <span className="ml-1">Làm mới</span>
+                </Button>
+              </FormGroup>
+            </Col>
           </Row>
         </Form>
-        <div className="d-flex align-items-center mt-3">
-          <div className="d-flex flex-fill justify-content-end">
-            <FormGroup className="mb-2 ml-2 mb-sm-0">
-              <Button
-                className="col-12 MuiPaper-filter__custom--button"
-                onClick={this.onSubmit}
-                color="primary"
-                size="sm"
-              >
-                <i className="fa fa-search" />
-                <span className="ml-1">Tìm kiếm</span>
-              </Button>
-            </FormGroup>
-            <FormGroup className="mb-2 ml-2 mb-sm-0">
-              <Button
-                className="mr-1 col-12 MuiPaper-filter__custom--button"
-                onClick={this.onClear}
-                size="sm"
-              >
-                <i className="fa fa-refresh" />
-                <span className="ml-1">Làm mới</span>
-              </Button>
-            </FormGroup>
-          </div>
-        </div>
       </div>
     );
   }

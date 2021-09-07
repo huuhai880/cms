@@ -12,11 +12,13 @@ const UploadImage = ({
   isRequired = true,
   isTitleCenter,
   isHorizontal = false,
-  textColor = 'text-primary',
+  textColor = "text-primary",
   labelSm = 4,
   inputSm = 12,
   isBoldLabel = true,
-  dropzoneText
+  dropzoneText,
+  isShowLabel = true,
+  style
 }) => {
   const [image, setImage] = useState(urlImageEdit);
 
@@ -32,86 +34,96 @@ const UploadImage = ({
   };
 
   return (
-    <Col xs={12} sm={12} style={{ padding: !isHorizontal ? "0px" : 'auto'  }}>
+    <Col xs={12} sm={12} style={{ padding: !isHorizontal ? "0px" : "auto" }}>
       <FormGroup row={isHorizontal}>
-        <Label
-          style={{ padding: !isHorizontal ? "0px" : 'auto' }}
-          for={name}
-          className={!isHorizontal ? (isTitleCenter ? "col-12 text-center" : "col-12") : `col-sm-${labelSm}`}
-        >
-          { isBoldLabel ? 
-          <b className={`title_page_h1 ${textColor} mt-2`}>
-            {title}
-            {isRequired && <span className="font-weight-bold red-text">*</span>}
-          </b> : 
-            <>
-              {title}
-              {isRequired && <span className="font-weight-bold red-text">*</span>}
-            </>
-          }
-
-        </Label>
+        {isShowLabel && (
+          <Label
+            style={{ padding: !isHorizontal ? "0px" : "auto" }}
+            for={name}
+            className={
+              !isHorizontal
+                ? isTitleCenter
+                  ? "col-12 text-center"
+                  : "col-12"
+                : `col-sm-${labelSm}`
+            }
+          >
+            {isBoldLabel ? (
+              <b className={`title_page_h1 ${textColor} mt-2`}>
+                {title}
+                {isRequired && (
+                  <span className="font-weight-bold red-text">*</span>
+                )}
+              </b>
+            ) : (
+              <>
+                {title}
+                {isRequired && (
+                  <span className="font-weight-bold red-text">*</span>
+                )}
+              </>
+            )}
+          </Label>
+        )}
         {!clearImage && (
-          <Col sm={inputSm}>
-          <Field
-            name={name}
-            render={({ field }) => {
-              // render image edit
-              if (image) {
+          <Col sm={inputSm} style={style}>
+            <Field
+              name={name}
+              render={({ field }) => {
+                // render image edit
+                if (image) {
+                  return (
+                    <div className="tl-render-image">
+                      <img
+                        src={image}
+                        alt="images"
+                        style={{ maxHeight: "220px" }}
+                      />
+                      {isEdit ? (
+                        <button onClick={() => setImage("")}>
+                          <i className="fa fa-trash" aria-hidden="true"></i>
+                        </button>
+                      ) : null}
+                    </div>
+                  );
+                }
                 return (
-                  <div className="tl-render-image">
-                    <img
-                      src={image}
-                      alt="images"
-                      style={{ maxHeight: "220px" }}
+                  <div>
+                    <DropzoneArea
+                      acceptedFiles={[".jpg", ".png", ".jpeg"]}
+                      filesLimit={1}
+                      dropzoneText={""}
+                      disabled={!isEdit}
+                      onDrop={(files) => onDropImage(files, field)}
+                      onDelete={() =>
+                        field.onChange({
+                          target: {
+                            type: "text",
+                            name,
+                            value: "",
+                          },
+                        })
+                      }
                     />
-                    {isEdit ? (
-                      <button onClick={() => setImage("")}>
-                        <i className="fa fa-trash" aria-hidden="true"></i>
-                      </button>
-                    ) : null}
                   </div>
                 );
-              }
-              console.log({field})
-              return (
-                <div >
-                  <DropzoneArea
-                    acceptedFiles={[".jpg", ".png", ".jpeg"]}
-                    filesLimit={1}
-                    dropzoneText={""}
-                    disabled={!isEdit}
-                    onDrop={(files) => onDropImage(files, field)}
-                    onDelete={() =>
-                      field.onChange({
-                        target: {
-                          type: "text",
-                          name,
-                          value: "",
-                        },
-                      })
-                    }
-                  />
-                 
-                </div>
-              );
-            }}
-          />
-           {
-                    dropzoneText && <small><b>{dropzoneText}</b></small>
-                  }
-          <ErrorMessage
-          name={name}
-          component={({ children }) => (
-            <Alert color="danger" className="field-validation-error">
-              {children}
-            </Alert>
-          )}
-        />
+              }}
+            />
+            {dropzoneText && (
+              <small>
+                <b>{dropzoneText}</b>
+              </small>
+            )}
+            <ErrorMessage
+              name={name}
+              component={({ children }) => (
+                <Alert color="danger" className="field-validation-error">
+                  {children}
+                </Alert>
+              )}
+            />
           </Col>
         )}
-
-        
       </FormGroup>
     </Col>
   );

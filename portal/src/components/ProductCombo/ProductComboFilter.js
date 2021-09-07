@@ -50,7 +50,7 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter }) {
         } = filter;
 
         handleSubmitFilter({
-            search,
+            search: search ? search.trim() : null,
             is_active: isActiveSelected ? isActiveSelected.value : 2,
             start_date: startDate ? startDate.format("DD/MM/YYYY") : null,
             end_date: endDate ? endDate.format("DD/MM/YYYY") : null,
@@ -152,9 +152,9 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter }) {
                     </Col>
 
                     <Col
-                       xs={12}
-                       sm={3}
-                       className="d-flex align-items-end justify-content-end"
+                        xs={12}
+                        sm={3}
+                        className="d-flex align-items-end justify-content-end"
                     >
                         <FormGroup className="mb-2 mb-sm-0">
                             <Button

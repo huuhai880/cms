@@ -34,14 +34,14 @@ export default class ProductCategoryEdit extends PureComponent {
         ]);
         ProductCategoryEnt.images_url = categoryImages;
         let AttributeEnts = {};
-        if (ProductCategoryEnt && ProductCategoryEnt.list_attribute) {
-          ProductCategoryEnt.list_attribute.map((item) => {
-            return (AttributeEnts[item.product_attribute_id] = Object.assign(
-              {},
-              item
-            ));
-          });
-        }
+        // if (ProductCategoryEnt && ProductCategoryEnt.list_attribute) {
+        //   ProductCategoryEnt.list_attribute.map((item) => {
+        //     return (AttributeEnts[item.product_attribute_id] = Object.assign(
+        //       {},
+        //       item
+        //     ));
+        //   });
+        // }
         ProductCategoryEnt &&
           this.setState({ ProductCategoryEnt, AttributeEnts });
       } catch (_) {

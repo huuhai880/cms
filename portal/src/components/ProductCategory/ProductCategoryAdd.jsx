@@ -13,6 +13,7 @@ import {
   FormGroup,
   Label,
   Table,
+  CustomInput,
 } from "reactstrap";
 import { DropzoneArea } from "material-ui-dropzone";
 
@@ -63,11 +64,11 @@ export default class ProductCategoryAdd extends PureComponent {
       /** @var {Array} */
       companies: [{ label: "-- Công ty --", id: "" }],
       /** @var {Array} */
-      attributes: {},
+      // attributes: {},
       /** @var {Array} */
-      attributesRender: [],
+      // attributesRender: [],
       /** @var {Boolean} */
-      toggleAttribute: false,
+      // toggleAttribute: false,
       /** @var {Boolean} */
       clearImage: false,
       /** @var {String} */
@@ -81,7 +82,7 @@ export default class ProductCategoryAdd extends PureComponent {
       let bundle = await this._getBundleData();
       this.setState({ ...bundle, ready: true });
     })();
-    this.props.AttributeEnts && this.handleAdd(this.props.AttributeEnts);
+    // this.props.AttributeEnts && this.handleAdd(this.props.AttributeEnts);
     //.end
   }
 
@@ -168,36 +169,36 @@ export default class ProductCategoryAdd extends PureComponent {
     return bundle;
   }
 
-  handleAdd = (attributes) => {
-    this.setState({
-      toggleAttribute: false,
-      attributesRender: Object.entries(attributes),
-      attributes,
-    });
+  // handleAdd = (attributes) => {
+  //   this.setState({
+  //     toggleAttribute: false,
+  //     attributesRender: Object.entries(attributes),
+  //     attributes,
+  //   });
 
-    if (this.formikProps) {
-      let { values, setValues } = this.formikProps;
-      // attributes
-      setValues(Object.assign(values, { list_attribute: attributes }));
-    }
-  };
+  //   if (this.formikProps) {
+  //     let { values, setValues } = this.formikProps;
+  //     // attributes
+  //     setValues(Object.assign(values, { list_attribute: attributes }));
+  //   }
+  // };
 
-  toggleAttribute = () =>
-    this.setState({ toggleAttribute: !this.state.toggleAttribute });
+  // toggleAttribute = () =>
+  //   this.setState({ toggleAttribute: !this.state.toggleAttribute });
 
-  handleRemoveAttribute = (item, event) => {
-    let attributes = Object.assign({}, this.state.attributes);
-    delete attributes[item[0]];
-    this.setState({
-      attributesRender: Object.entries(attributes),
-      attributes,
-    });
+  // handleRemoveAttribute = (item, event) => {
+  //   let attributes = Object.assign({}, this.state.attributes);
+  //   delete attributes[item[0]];
+  //   this.setState({
+  //     attributesRender: Object.entries(attributes),
+  //     attributes,
+  //   });
 
-    if (this.formikProps && Object.keys(attributes).length === 0) {
-      let { values, setValues } = this.formikProps;
-      setValues(Object.assign(values, { list_attribute: "" }));
-    }
-  };
+  //   if (this.formikProps && Object.keys(attributes).length === 0) {
+  //     let { values, setValues } = this.formikProps;
+  //     setValues(Object.assign(values, { list_attribute: "" }));
+  //   }
+  // };
 
   handleSubmit(btnType) {
     let { submitForm } = this.formikProps;
@@ -213,11 +214,11 @@ export default class ProductCategoryAdd extends PureComponent {
     let willRedirect = false;
     let alerts = [];
 
-    // get list_attribute
-    let list_attribute = [];
-    for (var key in this.state.attributes) {
-      list_attribute.push({ product_attribute_id: key });
-    }
+    // // get list_attribute
+    // let list_attribute = [];
+    // for (var key in this.state.attributes) {
+    //   list_attribute.push({ product_attribute_id: key });
+    // }
 
     function capitalizeFirstLetter(str) {
       return str.charAt(0).toUpperCase() + str.slice(1);
@@ -228,7 +229,7 @@ export default class ProductCategoryAdd extends PureComponent {
       ...values,
       is_active: 1 * values.is_active,
       is_show_web: 1 * values.is_show_web,
-      list_attribute,
+      list_attribute: [],
       category_name: capitalizeFirstLetter(values.category_name),
     };
 
@@ -331,8 +332,8 @@ export default class ProductCategoryAdd extends PureComponent {
       this.setState({
         ...bundle,
         ready: true,
-        attributes: {},
-        attributesRender: [],
+        // attributes: {},
+        // attributesRender: [],
         clearImage: false,
       });
     })();
@@ -340,8 +341,7 @@ export default class ProductCategoryAdd extends PureComponent {
   }
 
   render() {
-    let { _id, ready, alerts, parents, companies, attributesRender } =
-      this.state;
+    let { _id, ready, alerts, parents, companies } = this.state;
 
     let { ProductCategoryEnt, noEdit } = this.props;
     let initialValues = this.getInitialValues();
@@ -354,7 +354,7 @@ export default class ProductCategoryAdd extends PureComponent {
     return (
       <div key={`view-${_id}`} className="animated fadeIn">
         <Row className="d-flex justify-content-center">
-          <Col xs={12} hidden={this.state.toggleAttribute}>
+          <Col xs={12}>
             <Card>
               <CardHeader>
                 <b>
@@ -443,11 +443,6 @@ export default class ProductCategoryAdd extends PureComponent {
                               />
                             </Row>
                             <Row>
-                              <Col xs={12}>
-                                <b className="title_page_h1 text-primary">
-                                  Thông tin danh mục
-                                </b>
-                              </Col>
                               <FormInput
                                 label="Tên SEO"
                                 name="seo_name"
@@ -460,6 +455,83 @@ export default class ProductCategoryAdd extends PureComponent {
                                 isEdit={!noEdit}
                                 type="textarea"
                               />
+                              <Col sm={12} xs={12} className="mb-4">
+                                <FormGroup row>
+                                  <Label sm={4}>
+                                    Ảnh danh mục sản phẩm
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
+                                  </Label>
+                                  <Col xs={8} sm={8}>
+                                    <ListImage
+                                      // title="Ảnh danh mục sản phẩm"
+                                      canEdit={!noEdit}
+                                      name="images_url"
+                                      values={initialValues.images_url}
+                                      isRequired={false}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                              </Col>
+
+                              <Col sm={12} xs={12}>
+                                <FormGroup row>
+                                  <Col sm={4}></Col>
+                                  <Col sm={2} xs={12}>
+                                    <Field
+                                      name="is_active"
+                                      render={({ field /* _form */ }) => (
+                                        <CustomInput
+                                          {...field}
+                                          className="pull-left"
+                                          onBlur={null}
+                                          checked={values.is_active}
+                                          onChange={(event) => {
+                                            const { target } = event;
+                                            field.onChange({
+                                              target: {
+                                                name: "is_active",
+                                                value: target.checked,
+                                              },
+                                            });
+                                          }}
+                                          type="checkbox"
+                                          id="is_active"
+                                          label="Kích hoạt"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                  </Col>
+                                  <Col sm={2} xs={12}>
+                                    <Field
+                                      name="is_show_web"
+                                      render={({ field /* _form */ }) => (
+                                        <CustomInput
+                                          {...field}
+                                          className="pull-left"
+                                          onBlur={null}
+                                          checked={values.is_show_web}
+                                          onChange={(event) => {
+                                            const { target } = event;
+                                            field.onChange({
+                                              target: {
+                                                name: "is_show_web",
+                                                value: target.checked,
+                                              },
+                                            });
+                                          }}
+                                          type="checkbox"
+                                          id="is_show_web"
+                                          label="Hiển thị Web"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                              </Col>
                             </Row>
                           </Col>
 
@@ -473,133 +545,22 @@ export default class ProductCategoryAdd extends PureComponent {
                                   isEdit={!noEdit}
                                   name="banner_url"
                                   title="Ảnh banner danh mục"
+                                  // isShowLabel={false}
+                                  style={{ paddingLeft: 0, paddingRight: 0 }}
                                 />
                               </Col>
-                              <Col xs={12}>
+                              {/* <Col xs={12}>
                                 <ListImage
                                   title="Ảnh danh mục sản phẩm"
                                   canEdit={!noEdit}
                                   name="images_url"
                                   values={initialValues.images_url}
                                 />
-                              </Col>
+                              </Col> */}
                             </Row>
                           </Col>
                         </Row>
 
-                        {/* thuoc tinh */}
-                        <Row>
-                          <Col xs={12}>
-                            <b className="title_page_h1 text-primary">
-                              Thuộc tính sản phẩm theo danh mục
-                            </b>
-                          </Col>
-                          {!noEdit && (
-                            <Col xs={12} className="flex justify-content-end">
-                              <CheckAccess
-                                permission="PRO_PRODUCTATTRIBUTE_VIEW"
-                                key={3}
-                              >
-                                <Button
-                                  color="primary"
-                                  onClick={() => {
-                                    this.setState({ toggleAttribute: true });
-                                  }}
-                                >
-                                  Chọn thuộc tính
-                                </Button>
-                              </CheckAccess>
-                            </Col>
-                          )}
-
-                          <Col xs={12} className="mt-2">
-                            <Col xs={12}>
-                              <FormGroup row>
-                                <Table size="sm" bordered striped>
-                                  <thead>
-                                    <tr>
-                                      <th style={{ minWidth: "130px" }}>
-                                        Tên thuộc tính
-                                      </th>
-                                      <th style={{ minWidth: "130px" }}>
-                                        Đơn vị tính
-                                      </th>
-                                      <th style={{ width: "1%" }}>Xóa</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {attributesRender.map((item, idx) => {
-                                      let { attribute_name, unit_name } =
-                                        item[1];
-                                      //
-                                      return item
-                                        ? [
-                                            <tr key={`campaign_rlevel-0${idx}`}>
-                                              <td className="align-middle">
-                                                <Label>{attribute_name}</Label>
-                                              </td>
-                                              <td className="align-middle">
-                                                <Label>{unit_name}</Label>
-                                              </td>
-                                              <td className="text-center align-middle">
-                                                <Button
-                                                  color="danger"
-                                                  disabled={noEdit}
-                                                  size={"sm"}
-                                                  onClick={(event) =>
-                                                    this.handleRemoveAttribute(
-                                                      item,
-                                                      event
-                                                    )
-                                                  }
-                                                >
-                                                  <i className="fa fa-minus-circle" />
-                                                </Button>
-                                              </td>
-                                            </tr>,
-                                          ]
-                                        : null;
-                                    })}
-                                  </tbody>
-                                </Table>
-                                <div style={{ width: "100%" }}>
-                                  <ErrorMessage
-                                    name="list_attribute"
-                                    component={({ children }) => (
-                                      <Alert
-                                        color="danger"
-                                        className="field-validation-error"
-                                      >
-                                        {children}
-                                      </Alert>
-                                    )}
-                                  />
-                                </div>
-                              </FormGroup>
-                            </Col>
-                          </Col>
-                        </Row>
-
-                        <Row>
-                          <FormSwitch
-                            name="is_show_web"
-                            label="Hiển thị web"
-                            checked={values.is_show_web}
-                            isEdit={!noEdit}
-                            sm={6}
-                            type="checkbox"
-                          />
-                          <FormSwitch
-                            name="is_active"
-                            label="Kích hoạt"
-                            isEdit={!noEdit}
-                            checked={values.is_active}
-                            sm={6}
-                            type="checkbox"
-                          />
-                        </Row>
-
-                        {/* action button */}
                         <ActionButton
                           isSubmitting={isSubmitting}
                           buttonList={[
@@ -656,18 +617,6 @@ export default class ProductCategoryAdd extends PureComponent {
             </Card>
           </Col>
         </Row>
-        {this.state.toggleAttribute ? (
-          <div className="modal-view">
-            <div onClick={this.toggleAttribute}></div>
-            <Col xs={12} style={{ height: "90%" }}>
-              <AttributeList
-                handleAdd={this.handleAdd}
-                attributesSelect={this.state.attributes}
-                toggleAttribute={this.toggleAttribute}
-              />
-            </Col>
-          </div>
-        ) : null}
       </div>
     );
   }

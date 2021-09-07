@@ -25,3 +25,12 @@
 .wrap-chbx > .col > .custom-checkbox {
   padding-left: 30px;
 }
+
+.check-limit .custom-control-label {
+  &::before {
+    left: -1.4rem !important;
+  }
+  &::after {
+    left: -1.4rem !important;
+  }
+}

@@ -7,13 +7,15 @@ import DatePicker from "../Common/DatePicker";
 import { useState } from "react";
 import ProductCategoryModel from "models/ProductCategoryModel/index";
 import { useEffect } from "react";
-
+import SelectProductCategory from "./SelectProductCategory";
+import { mapDataOptions4Select } from "../../utils/html";
+import { FormSelectGroup } from "@widget";
 const _productCategoryModel = new ProductCategoryModel();
 
 function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
   const [filter, setFilter] = useState({
     search: "",
-    isActiveSelected: { label: "Tất cả", value: 2 },
+    isActiveSelected: { label: "Có", value: 1 },
     productCategorySelected: null,
     startDate: null,
     endDate: null,
@@ -34,7 +36,18 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
   const getProductCategoryOption = async () => {
     try {
       let data = await _productCategoryModel.getOptions({ is_active: 1 });
-      setProductCategory(data);
+      let productCategoryOption = mapDataOptions4Select(data);
+
+      productCategoryOption = productCategoryOption.map((item) => {
+        return {
+          ...item,
+          parent_id: item.parent_id ? item.parent_id : 0,
+        };
+      });
+
+      console.log({ productCategoryOption });
+
+      setProductCategory(productCategoryOption);
     } catch (error) {
       window._$g.dialogs.alert(
         window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
@@ -73,11 +86,9 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
     } = filter;
 
     handleSubmitFilter({
-      search,
+      search: search ? search.trim() : null,
       is_active: isActiveSelected ? isActiveSelected.value : 2,
-      product_category_id: productCategorySelected
-        ? productCategorySelected.value
-        : null,
+      product_category_id: productCategorySelected,
       start_date: startDate ? startDate.format("DD/MM/YYYY") : null,
       end_date: endDate ? endDate.format("DD/MM/YYYY") : null,
       page: 1,
@@ -87,7 +98,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
   const handleClear = () => {
     setFilter({
       search: "",
-      isActiveSelected: { label: "Tất cả", value: 2 },
+      isActiveSelected: { label: "Có", value: 1 },
       productCategorySelected: null,
       startDate: null,
       endDate: null,
@@ -125,7 +136,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
                 autoComplete="nope"
                 type="text"
                 name="search"
-                placeholder="Nhập mã sản phẩm, tên sản phẩm"
+                placeholder="Nhập tên sản phẩm"
                 value={filter.search}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
@@ -140,7 +151,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
               <Label for="" className="mr-sm-2">
                 Danh mục sản phẩm
               </Label>
-              <Select
+              {/* <Select
                 className="MuiPaper-filter__custom--select"
                 id="productCategorySelected"
                 name="productCategorySelected"
@@ -155,7 +166,27 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
                   label,
                 }))}
                 isClearable={true}
-              />
+              /> */}
+              <Col className="pl-0 pr-0">
+                <SelectProductCategory
+                  name="productCategorySelected"
+                  onChange={(item) => {
+                    let product_category_id = item ? item.value : null;
+                    handleChangeSelect(
+                      product_category_id,
+                      "productCategorySelected"
+                    );
+                  }}
+                  isSearchable={true}
+                  defaultValue={(productCategory || []).find(
+                    ({ value }) => 1 * value == 1 * filter.productCategorySelected
+                  )}
+                  listOption={productCategory}
+                  isClearable={true}
+                  id="productCategorySelected"
+                  isTarget={false}
+                />
+              </Col>
             </FormGroup>
           </Col>
           <Col xs={12} sm={3}>

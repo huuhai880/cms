@@ -35,7 +35,7 @@ function Product({ handlePick = null, isOpenModal = false, products = [] }) {
   const [query, setQuery] = useState({
     itemsPerPage: handlePick ? 10 : 25,
     page: 1,
-    is_active: 2,
+    is_active: 1,
     search: "",
     product_category_id: null,
     start_date: null,
