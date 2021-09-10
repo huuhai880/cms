@@ -123,7 +123,7 @@ const getListAttributesGroup = async () => {
 
     return new ServiceResponse(true, "", listAttributesGroup)
 
-  } catch (error) {
+  } catch (e) {
     logger.error(e, {
       function: 'product.service.getListAttributesGroup',
     });

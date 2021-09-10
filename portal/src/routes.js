@@ -425,12 +425,12 @@ const PromotionEdit = React.lazy(() =>
 );
 //.end#Promotions
 
-// Prices
-const Prices = React.lazy(() => import("./components/Prices/Prices"));
-const PriceReview = React.lazy(() => import("./components/Prices/PriceReview"));
-const PriceEdit = React.lazy(() => import("./components/Prices/PriceEdit"));
-const PricesList = React.lazy(() => import("./components/Prices/PricesList"));
-//.end#Prices
+// Price
+const Price = React.lazy(() => import("./components/Price/Price"));
+const PriceAdd = React.lazy(() => import("./components/Price/PriceAdd"));
+const PriceEdit = React.lazy(() => import("./components/Price/PriceEdit"));
+const PriceDetail = React.lazy(() => import("./components/Price/PriceDetail"));
+//.end#Price
 
 // customertype
 const CustomerType = React.lazy(() =>
@@ -1862,41 +1862,34 @@ const routes = [
   },
   //.end#Promotions
 
-  // Prices
+  // Price
   {
-    path: "/prices",
+    path: "/price",
     exact: true,
     name: "Danh sách giá sản phẩm",
-    function: "SL_PRICES_VIEW",
-    component: Prices,
+    function: "SL_PRICE_VIEW",
+    component: Price,
   },
   {
-    path: "/prices/add/:productId",
+    path: "/price/add",
     exact: true,
     name: "Làm giá",
-    function: "SL_PRICES_ADD",
+    function: "SL_PRICE_ADD",
+    component: PriceAdd,
+  },
+  {
+    path: "/price/detail/:id",
+    exact: true,
+    name: "Chi tiết giá",
+    function: "SL_PRICE_VIEW",
+    component: PriceDetail,
+  },
+  {
+    path: "/price/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa giá",
+    function: "SL_PRICE_EDIT",
     component: PriceEdit,
-  },
-  {
-    path: "/prices/review/:productId",
-    exact: true,
-    name: "Duyệt giá",
-    function: "SL_PRICES_VIEW",
-    component: PriceReview,
-  },
-  {
-    path: "/prices/edit/:productId",
-    exact: true,
-    name: "Làm giá",
-    function: "SL_PRICES_EDIT",
-    component: PriceEdit,
-  },
-  {
-    path: "/prices-list",
-    exact: true,
-    name: "Danh sách làm giá sản phẩm",
-    function: "SL_PRICES_VIEW",
-    component: PricesList,
   },
   //.end#Prices
 

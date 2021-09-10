@@ -45,8 +45,6 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
         };
       });
 
-      console.log({ productCategoryOption });
-
       setProductCategory(productCategoryOption);
     } catch (error) {
       window._$g.dialogs.alert(
@@ -87,7 +85,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
 
     handleSubmitFilter({
       search: search ? search.trim() : null,
-      is_active: isActiveSelected ? isActiveSelected.value : 2,
+      is_active: isActiveSelected ? isActiveSelected.value : 1,
       product_category_id: productCategorySelected,
       start_date: startDate ? startDate.format("DD/MM/YYYY") : null,
       end_date: endDate ? endDate.format("DD/MM/YYYY") : null,
@@ -106,7 +104,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
 
     handleSubmitFilter({
       search: "",
-      is_active: 2,
+      is_active: 1,
       product_category_id: null,
       start_date: null,
       end_date: null,

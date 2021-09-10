@@ -54,11 +54,12 @@ class CustomerType extends Component {
     count: 1,
     data: [],
     query: {
-      itemsPerPage: 25,
+      itemsPerPage: this.props.handlePick ? 10 : 25,
       page: 1,
       is_default: 2,
       is_active: 1,
     },
+    _pickDataItems: {},
   };
 
   componentDidMount() {
@@ -71,6 +72,14 @@ class CustomerType extends Component {
       let isLoading = false;
       let count = data ? data.totalItems : 0;
       let page = 0;
+
+      const _pickDataItems = this.props.customerTypes
+        ? (this.props.customerTypes || []).reduce((obj, item) => {
+            obj[item.customer_type_id] = item;
+            return obj;
+          }, {})
+        : {};
+
       this.setState(
         {
           isLoading,
@@ -80,6 +89,7 @@ class CustomerType extends Component {
             data: dataConfig,
             count,
             page,
+            _pickDataItems,
           });
         }
       );
@@ -202,6 +212,13 @@ class CustomerType extends Component {
     let query = { ...this.state.query };
     query.page = newPage + 1;
     this.getData(query);
+  };
+
+  handlePickCustomerType = () => {
+    const { handlePick } = this.props;
+    if (handlePick) {
+      handlePick(this.state._pickDataItems);
+    }
   };
 
   render() {
@@ -332,6 +349,26 @@ class CustomerType extends Component {
           sort: false,
           empty: true,
           customBodyRender: (value, tableMeta, updateValue) => {
+            if (handlePick) {
+              let item = this.state.data[tableMeta["rowIndex"]];
+              let { _pickDataItems = {} } = this.state;
+              return (
+                <div className="text-center mb-1">
+                  <Checkbox
+                    checked={!!_pickDataItems[item.customer_type_id]}
+                    onChange={({ target }) => {
+                      if (target.checked) {
+                        _pickDataItems[item.customer_type_id] = item;
+                      } else {
+                        delete _pickDataItems[item.customer_type_id];
+                      }
+                      this.setState({ _pickDataItems });
+                    }}
+                  />
+                </div>
+              );
+            }
+
             return (
               <div className="text-center">
                 <CheckAccess permission="CRM_CUSTOMERTYPE_EDIT">
@@ -378,23 +415,41 @@ class CustomerType extends Component {
 
     return (
       <div>
-        <Card className="animated fadeIn z-index-222 mb-3">
-          <CardHeader className="d-flex">
-            <div className="flex-fill font-weight-bold">Thông tin tìm kiếm</div>
-            <div
-              className="minimize-icon cur-pointer"
-              onClick={() =>
-                this.setState((prevState) => ({
-                  toggleSearch: !prevState.toggleSearch,
-                }))
-              }
-            >
-              <i
-                className={`fa ${
-                  this.state.toggleSearch ? "fa-minus" : "fa-plus"
-                }`}
-              />
+        <Card
+          className={`animated fadeIn z-index-222 mb-3 ${
+            handlePick ? "news-header-no-border" : ""
+          }`}
+        >
+          <CardHeader
+            className="d-flex"
+            style={{
+              padding: handlePick ? "0.55rem" : "0.55rem 1.25rem",
+              alignItems: handlePick ? "center" : "unset",
+            }}
+          >
+            <div className="flex-fill font-weight-bold">
+              {handlePick ? "Thêm Loại khách hàng" : "Thông tin tìm kiếm"}
             </div>
+            {handlePick ? (
+              <Button color="danger" size="md" onClick={() => handlePick({})}>
+                <i className={`fa fa-remove`} />
+              </Button>
+            ) : (
+              <div
+                className="minimize-icon cur-pointer"
+                onClick={() =>
+                  this.setState((prevState) => ({
+                    toggleSearch: !prevState.toggleSearch,
+                  }))
+                }
+              >
+                <i
+                  className={`fa ${
+                    this.state.toggleSearch ? "fa-minus" : "fa-plus"
+                  }`}
+                />
+              </div>
+            )}
           </CardHeader>
           {this.state.toggleSearch && (
             <CardBody className="px-0 py-0">
@@ -406,31 +461,34 @@ class CustomerType extends Component {
                   companyArr={this.state.company}
                   handleSubmit={this.handleSubmitFilter}
                   {...this.props.filterProps}
+                  handlePick={handlePick ? this.handlePickCustomerType : null}
                 />
               </div>
             </CardBody>
           )}
         </Card>
-        <Col
-          xs={12}
-          sm={4}
-          className="d-flex align-items-end mb-3"
-          style={{ padding: 0 }}
-        >
-          <CheckAccess permission="CRM_CUSTOMERTYPE_ADD">
-            <FormGroup className="mb-2 mb-sm-0">
-              <Button
-                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                onClick={() => this.handleClickAdd()}
-                color="success"
-                size="sm"
-              >
-                <i className="fa fa-plus mr-1" />
-                Thêm mới
-              </Button>
-            </FormGroup>
-          </CheckAccess>
-        </Col>
+        {!handlePick && (
+          <Col
+            xs={12}
+            sm={4}
+            className="d-flex align-items-end mb-3"
+            style={{ padding: 0 }}
+          >
+            <CheckAccess permission="CRM_CUSTOMERTYPE_ADD">
+              <FormGroup className="mb-2 mb-sm-0">
+                <Button
+                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  onClick={() => this.handleClickAdd()}
+                  color="success"
+                  size="sm"
+                >
+                  <i className="fa fa-plus mr-1" />
+                  Thêm mới
+                </Button>
+              </FormGroup>
+            </CheckAccess>
+          </Col>
+        )}
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-root__custom">
@@ -449,6 +507,9 @@ class CustomerType extends Component {
                     count={count}
                     rowsPerPage={query.itemsPerPage}
                     page={page}
+                    rowsPerPageOptions={
+                      handlePick ? [10, 25, 50, 75, 100] : [25, 50, 75, 100]
+                    }
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                   />
