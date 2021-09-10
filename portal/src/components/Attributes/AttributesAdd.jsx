@@ -123,7 +123,6 @@ export default class AttributesAdd extends PureComponent {
       }
       bundle[key] = data;
     });
-    // console.log('bundle: ', bundle);
     //
     return bundle;
   }
@@ -1119,7 +1118,7 @@ export default class AttributesAdd extends PureComponent {
                                       <Col sm={6}>
                                         <Field
                                           name="is_active"
-                                          render={({ field /* _form */ }) => (
+                                          render={({ field }) => (
                                             <CustomInput
                                               {...field}
                                               className="pull-left"

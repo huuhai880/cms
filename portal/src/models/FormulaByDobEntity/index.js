@@ -2,9 +2,9 @@
 import Entity from "../Entity";
 
 /**
- * @class FormulaEntity
+ * @class FormulaByDobEntity
  */
-export default class FormulaEntity extends Entity {
+export default class FormulaByDobEntity extends Entity {
   /**
    * @var {String} Primary Key
    */

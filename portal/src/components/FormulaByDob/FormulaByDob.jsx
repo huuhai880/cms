@@ -8,13 +8,12 @@ import CustomPagination from "../../utils/CustomPagination";
 
 // Component(s)
 import { CheckAccess } from "../../navigation/VerifyAccess";
-import FormulaFilter from "./FormulaFilter";
+import FormulaByDobFilter from "./FormulaByDobFilter";
 // Util(s)
 import { layoutFullWidthHeight } from "../../utils/html";
 import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
-import AttributesModel from "../../models/AttributesModel";
-import FormulaModel from "../../models/FormulaModel";
+import FormulaByDobModel from "../../models/FormulaByDobModel";
 
 // Set layout full-wh
 layoutFullWidthHeight();
@@ -32,8 +31,7 @@ class Formula extends Component {
     super(props);
 
     // Init model(s)
-    this._attributesModel = new AttributesModel();
-    this._formulaModel = new FormulaModel();
+    this._formulaByDobModel = new FormulaByDobModel();
 
     // Bind method(s)
   }
@@ -84,7 +82,7 @@ class Formula extends Component {
     let bundle = {};
     let all = [
       // @TODO:
-      this._attributesModel
+      this._formulaByDobModel
         .getList(this.state.query)
         .then((data) => (bundle["data"] = data)),
     ];
@@ -102,7 +100,7 @@ class Formula extends Component {
   // get data
   getData = (query = {}) => {
     this.setState({ isLoading: true });
-    return this._attributesModel.getList(query).then((res) => {
+    return this._formulaByDobModel.getList(query).then((res) => {
       let data = res.items;
       let isLoading = false;
       let count = res.totalItems;
@@ -118,14 +116,14 @@ class Formula extends Component {
   };
 
   handleClickAdd = () => {
-    window._$g.rdr("/formula/add");
+    window._$g.rdr("/formula-by-dob/add");
   };
 
   handleActionItemClick(type, id, rowIndex) {
     let routes = {
-      detail: "/formula/detail/",
-      delete: "/formula/delete/",
-      edit: "/formula/edit/",
+      detail: "/formula-by-dob/detail/",
+      delete: "/formula-by-dob/delete/",
+      edit: "/formula-by-dob/edit/",
     };
     const route = routes[type];
     if (type.match(/detail|edit/i)) {
@@ -142,7 +140,7 @@ class Formula extends Component {
   handleClose(confirm, id, rowIndex) {
     const { data } = this.state;
     if (confirm) {
-      this._attributesModel
+      this._formulaByDobModel
         .delete(id)
         .then(() => {
           const cloneData = JSON.parse(JSON.stringify(data));
@@ -189,7 +187,7 @@ class Formula extends Component {
 
   render() {
     const columns = [
-      configIDRowTable("attribute_id", "/formula/detail/", this.state.query),
+      configIDRowTable("formula_id", "/formula-by-dob/detail/", this.state.query),
       {
         name: "formula_name",
         label: "Tên công thức",
@@ -212,7 +210,7 @@ class Formula extends Component {
         },
       },
       {
-        name: "attributes_name",
+        name: "attribute_name",
         label: "Tên thuộc tính",
         options: {
           filter: false,
@@ -228,7 +226,7 @@ class Formula extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">{value}</div>;
+            return <div className="text-left">{value}</div>;
           },
         },
       },
@@ -296,7 +294,7 @@ class Formula extends Component {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                <CheckAccess permission="FOR_FORMULA_EDIT">
+                <CheckAccess permission="FOR_FORMULABYDOB_EDIT">
                   <Button
                     color="primary"
                     title="Chỉnh sửa"
@@ -304,7 +302,7 @@ class Formula extends Component {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "edit",
-                        this.state.data[tableMeta["rowIndex"]].attribute_id,
+                        this.state.data[tableMeta["rowIndex"]].formula_id,
                         tableMeta["rowIndex"]
                       )
                     }
@@ -312,7 +310,7 @@ class Formula extends Component {
                     <i className="fa fa-edit" />
                   </Button>
                 </CheckAccess>
-                <CheckAccess permission="FOR_FORMULA_DEL">
+                <CheckAccess permission="FOR_FORMULABYDOB_DEL">
                   <Button
                     color="danger"
                     title="Xóa"
@@ -320,7 +318,7 @@ class Formula extends Component {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "delete",
-                        this.state.data[tableMeta["rowIndex"]].attribute_id,
+                        this.state.data[tableMeta["rowIndex"]].formula_id,
                         tableMeta["rowIndex"]
                       )
                     }
@@ -361,7 +359,7 @@ class Formula extends Component {
           {this.state.toggleSearch && (
             <CardBody className="px-0 py-0">
               <div className="MuiPaper-filter__custom z-index-2">
-                <FormulaFilter handleSubmit={this.handleSubmitFilter} />
+                <FormulaByDobFilter handleSubmit={this.handleSubmitFilter} />
               </div>
             </CardBody>
           )}
@@ -372,7 +370,7 @@ class Formula extends Component {
           className="d-flex align-items-end mb-3"
           style={{ padding: 0 }}
         >
-          <CheckAccess permission="FOR_FORMULA_ADD">
+          <CheckAccess permission="FOR_FORMULABYDOB_ADD">
             <FormGroup className="mb-2 mb-sm-0">
               <Button
                 className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"

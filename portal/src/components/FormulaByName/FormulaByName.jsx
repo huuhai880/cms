@@ -13,8 +13,7 @@ import FormulaByNameFilter from "./FormulaByNameFilter";
 import { layoutFullWidthHeight } from "../../utils/html";
 import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
-import AttributesModel from "../../models/AttributesModel";
-import FormulaModel from "../../models/FormulaModel";
+import FormulaByNameModel from "../../models/FormulaByNameModel";
 
 // Set layout full-wh
 layoutFullWidthHeight();
@@ -32,8 +31,7 @@ class FormulaByName extends Component {
     super(props);
 
     // Init model(s)
-    this._attributesModel = new AttributesModel();
-    this._formulaModel = new FormulaModel();
+    this._formulaByNameModel = new FormulaByNameModel();
 
     // Bind method(s)
   }
@@ -84,7 +82,7 @@ class FormulaByName extends Component {
     let bundle = {};
     let all = [
       // @TODO:
-      this._attributesModel
+      this._formulaByNameModel
         .getList(this.state.query)
         .then((data) => (bundle["data"] = data)),
     ];
@@ -102,7 +100,7 @@ class FormulaByName extends Component {
   // get data
   getData = (query = {}) => {
     this.setState({ isLoading: true });
-    return this._attributesModel.getList(query).then((res) => {
+    return this._formulaByNameModel.getList(query).then((res) => {
       let data = res.items;
       let isLoading = false;
       let count = res.totalItems;
@@ -142,7 +140,7 @@ class FormulaByName extends Component {
   handleClose(confirm, id, rowIndex) {
     const { data } = this.state;
     if (confirm) {
-      this._attributesModel
+      this._formulaByNameModel
         .delete(id)
         .then(() => {
           const cloneData = JSON.parse(JSON.stringify(data));
@@ -159,12 +157,11 @@ class FormulaByName extends Component {
     }
   }
 
-  handleSubmitFilter = (search, attributes_group_id, is_active) => {
+  handleSubmitFilter = (search, is_active) => {
     let query = { ...this.state.query };
     query.page = 1;
     query = Object.assign(query, {
       search,
-      attributes_group_id,
       is_active,
     });
     this.getData(query).catch(() => {
@@ -189,7 +186,11 @@ class FormulaByName extends Component {
 
   render() {
     const columns = [
-      configIDRowTable("attribute_id", "/formula-by-name/detail/", this.state.query),
+      configIDRowTable(
+        "formula_id",
+        "/formula-by-name/detail/",
+        this.state.query
+      ),
       {
         name: "formula_name",
         label: "Tên công thức",
@@ -212,7 +213,7 @@ class FormulaByName extends Component {
         },
       },
       {
-        name: "attributes_name",
+        name: "attribute_name",
         label: "Tên thuộc tính",
         options: {
           filter: false,
@@ -228,7 +229,7 @@ class FormulaByName extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">{value}</div>;
+            return <div className="text-left">{value}</div>;
           },
         },
       },
@@ -304,7 +305,7 @@ class FormulaByName extends Component {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "edit",
-                        this.state.data[tableMeta["rowIndex"]].attribute_id,
+                        this.state.data[tableMeta["rowIndex"]].formula_id,
                         tableMeta["rowIndex"]
                       )
                     }
@@ -320,7 +321,7 @@ class FormulaByName extends Component {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "delete",
-                        this.state.data[tableMeta["rowIndex"]].attribute_id,
+                        this.state.data[tableMeta["rowIndex"]].formula_id,
                         tableMeta["rowIndex"]
                       )
                     }

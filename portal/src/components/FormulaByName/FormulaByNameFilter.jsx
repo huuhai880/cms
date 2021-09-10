@@ -5,16 +5,12 @@ import Select from "react-select";
 
 // Component(s)
 // Model(s)
-import AttributesModel from "../../models/AttributesModel";
-import FormulaModel from "../../models/FormulaModel";
 
 
 class FormulaByNameFilter extends PureComponent {
   constructor(props) {
     super(props);
 
-    this._attributesModel = new AttributesModel();
-    this._formulaModel = new FormulaModel();
 
     this.state = {
       is_active: { label: "Có", value: 1 },
@@ -35,15 +31,6 @@ class FormulaByNameFilter extends PureComponent {
     this.setState({ is_active });
   };
 
-  componentDidMount() {
-    (async () => {
-      let OptsGroup = await this._attributesModel
-      .getOptionGroup({ is_active: 1 });
-      this.setState({ OptsGroup });
-    })();
-    //.end
-  } 
-
   handleKeyDown = (event) => {
     if (1 * event.keyCode === 13) {
       event.preventDefault();
@@ -52,11 +39,10 @@ class FormulaByNameFilter extends PureComponent {
   };
 
   onSubmit = () => {
-    const { inputValue, is_active, attributes_group_id} = this.state;
+    const { inputValue, is_active} = this.state;
     const { handleSubmit } = this.props;
     handleSubmit(
       inputValue ? inputValue.trim() : "",
-      attributes_group_id? attributes_group_id.value: "",
       is_active ? is_active.value : undefined
     );
   };
@@ -66,7 +52,6 @@ class FormulaByNameFilter extends PureComponent {
       this.setState(
         {
           inputValue: "",
-          attributes_group_id: "",
           is_active: { label: "Có", value: 1 },
         },
         () => {
