@@ -218,6 +218,7 @@ export default class FormulaByDobAdd extends PureComponent {
       parent_formula_id,
       parent_calculation_id,
       calculation_id,
+      formula_name,
     } = values;
 
     // +++
@@ -235,6 +236,7 @@ export default class FormulaByDobAdd extends PureComponent {
         ? parent_calculation_id.value
         : "",
       calculation_id: calculation_id ? calculation_id.value : "",
+      formula_name: formula_name? formula_name.trim(): "",
     });
     //
     const formuladobId =
@@ -1256,7 +1258,7 @@ export default class FormulaByDobAdd extends PureComponent {
                             <Row>
                               <Col sm={12} className="text-right mt-3">
                                 {noEdit ? (
-                                  <CheckAccess permission="FOR_FORMULA_EDIT">
+                                  <CheckAccess permission="FOR_FORMULABYDOB_EDIT">
                                     <Button
                                       color="primary"
                                       className="mr-2 btn-block-sm"

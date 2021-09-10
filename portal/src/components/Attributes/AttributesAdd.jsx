@@ -193,6 +193,7 @@ export default class AttributesAdd extends PureComponent {
       list_attributes_image,
       attributes_group_id,
       main_number_id,
+      attribute_name,
     } = values;
     list_attributes_image = list_attributes_image.map((item) => {
       item.partner_id = item.partner_id.value;
@@ -204,6 +205,7 @@ export default class AttributesAdd extends PureComponent {
       attributes_group_id: attributes_group_id.value,
       attributes_group_name: attributes_group_id.label,
       main_number_id: main_number_id.value,
+      attribute_name: attribute_name? attribute_name.trim(): "",
     });
     const attributeId =
       (AttributesEnt && AttributesEnt.attribute_id) ||
