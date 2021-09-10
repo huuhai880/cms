@@ -5,16 +5,11 @@ import Select from "react-select";
 
 // Component(s)
 // Model(s)
-import AttributesModel from "../../models/AttributesModel";
-import FormulaModel from "../../models/FormulaModel";
 
 
-class FormulaFilter extends PureComponent {
+class FormulaByDobFilter extends PureComponent {
   constructor(props) {
     super(props);
-
-    this._attributesModel = new AttributesModel();
-    this._formulaModel = new FormulaModel();
 
     this.state = {
       is_active: { label: "Có", value: 1 },
@@ -34,15 +29,6 @@ class FormulaFilter extends PureComponent {
   handleChangeIsActive = (is_active) => {
     this.setState({ is_active });
   };
-
-  componentDidMount() {
-    (async () => {
-      let OptsGroup = await this._attributesModel
-      .getOptionGroup({ is_active: 1 });
-      this.setState({ OptsGroup });
-    })();
-    //.end
-  } 
 
   handleKeyDown = (event) => {
     if (1 * event.keyCode === 13) {
@@ -154,8 +140,8 @@ class FormulaFilter extends PureComponent {
   }
 }
 
-FormulaFilter.propTypes = {
+FormulaByDobFilter.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
 };
 
-export default FormulaFilter;
+export default FormulaByDobFilter;

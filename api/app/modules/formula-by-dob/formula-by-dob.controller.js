@@ -1,14 +1,14 @@
-const formulaService = require('./formula.service');
+const formulaService = require('./formula-by-dob.service');
 const SingleResponse = require('../../common/responses/single.response');
 const ListResponse = require('../../common/responses/list.response');
 const RESPONSE_MSG = require('../../common/const/responseMsg.const');
 const optionService = require('../../common/services/options.service');
 /**
- * Get list FOR_ATTRIBUTES
+ * Get list FOR_FORMULABYDOB
  */
-const getListFormula = async (req, res, next) => {
+const getListFormulaByDob = async (req, res, next) => {
   try {
-    const serviceRes = await formulaService.getListFormula(req.query);
+    const serviceRes = await formulaService.getListFormulaByDob(req.query);
     const { data, total, page, limit } = serviceRes.getData();
     return res.json(new ListResponse(data, total, page, limit));
   } catch (error) {
@@ -16,11 +16,11 @@ const getListFormula = async (req, res, next) => {
   }
 };
 
-const deleteFormula = async (req, res, next) => {
+const deleteFormulaByDob = async (req, res, next) => {
   try {
     const formula_id = req.params.formula_id;
     // Check exists
-    const serviceResDetail = await formulaService.detailFormula(
+    const serviceResDetail = await formulaService.detailFormulaByDob(
       formula_id
     );
     if (serviceResDetail.isFailed()) {
@@ -28,7 +28,7 @@ const deleteFormula = async (req, res, next) => {
     }
 
     // Delete
-    const serviceRes = await formulaService.deleteFormula(
+    const serviceRes = await formulaService.deleteFormulaByDob(
       formula_id,
       req.body
     );
@@ -36,7 +36,7 @@ const deleteFormula = async (req, res, next) => {
       return next(serviceRes);
     }
     return res.json(
-      new SingleResponse(null, RESPONSE_MSG.FORMULA.DELETE_SUCCESS)
+      new SingleResponse(null, RESPONSE_MSG.FORMULADOB.DELETE_SUCCESS)
     );
   } catch (error) {
     return next(error);
@@ -46,10 +46,10 @@ const deleteFormula = async (req, res, next) => {
 /**
  * Create
  */
-const createFormula = async (req, res, next) => {
+const createFormulaByDob = async (req, res, next) => {
   try {
     req.body.formula_id = null;
-    const serviceRes = await formulaService.createFormulaOrUpdate(
+    const serviceRes = await formulaService.createFormulaByDobOrUpdate(
       req.body
     );
     if (serviceRes.isFailed()) {
@@ -59,7 +59,7 @@ const createFormula = async (req, res, next) => {
     return res.json(
       new SingleResponse(
         serviceRes.getData(),
-        RESPONSE_MSG.FORMULA.CREATE_SUCCESS
+        RESPONSE_MSG.FORMULADOB.CREATE_SUCCESS
       )
     );
   } catch (error) {
@@ -70,13 +70,13 @@ const createFormula = async (req, res, next) => {
 /**
  * Update
  */
-const updateFormula = async (req, res, next) => {
+const updateFormulaByDob = async (req, res, next) => {
   try {
     const formula_id = req.params.formula_id;
     req.body.formula_id = formula_id;
 
     // Check exists
-    const serviceResDetail = await formulaService.detailFormula(
+    const serviceResDetail = await formulaService.detailFormulaByDob(
       formula_id
     );
     if (serviceResDetail.isFailed()) {
@@ -85,7 +85,7 @@ const updateFormula = async (req, res, next) => {
 
     // Update
     const serviceRes =
-      await formulaService.createFormulaOrUpdate(
+      await formulaService.createFormulaByDobOrUpdate(
         req.body
       );
     if (serviceRes.isFailed()) {
@@ -95,9 +95,18 @@ const updateFormula = async (req, res, next) => {
     return res.json(
       new SingleResponse(
         serviceRes.getData(),
-        RESPONSE_MSG.FORMULA.UPDATE_SUCCESS
+        RESPONSE_MSG.FORMULADOB.UPDATE_SUCCESS
       )
     );
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getOptionParamdbo = async (req, res, next) => {
+  try {
+    const serviceRes = await optionService('MD_PARAMDOB', req.query);
+    return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
     return next(error);
   }
@@ -112,9 +121,9 @@ const getOptionAttributes = async (req, res, next) => {
   }
 };
 
-const getOptionFormula = async (req, res, next) => {
+const getOptionFormulaByDob = async (req, res, next) => {
   try {
-    const serviceRes = await optionService('FOR_FORMULA', req.query);
+    const serviceRes = await optionService('FOR_FORMULABYDOB', req.query);
     return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
     return next(error);
@@ -130,9 +139,9 @@ const getOptionCalculation = async (req, res, next) => {
   }
 };
 
-const detailFormula = async (req, res, next) => {
+const detailFormulaByDob = async (req, res, next) => {
   try {
-    const serviceRes = await formulaService.detailFormula(
+    const serviceRes = await formulaService.detailFormulaByDob(
       req.params.formula_id
     );
     if (serviceRes.isFailed()) {
@@ -145,12 +154,13 @@ const detailFormula = async (req, res, next) => {
 };
 
 module.exports = {
-  getListFormula,
-  deleteFormula,
+  getListFormulaByDob,
+  deleteFormulaByDob,
+  getOptionParamdbo,
   getOptionAttributes,
-  getOptionFormula,
+  getOptionFormulaByDob,
   getOptionCalculation,
-  updateFormula,
-  createFormula,
-  detailFormula,
+  updateFormulaByDob,
+  createFormulaByDob,
+  detailFormulaByDob,
 };

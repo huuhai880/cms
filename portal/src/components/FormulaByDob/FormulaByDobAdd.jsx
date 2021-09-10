@@ -23,13 +23,12 @@ import { CheckAccess } from "../../navigation/VerifyAccess";
 import Loading from "../Common/Loading";
 
 // Model(s)
-import ParamNameModel from "../../models/ParamNameModel";
-import FormulaModel from "../../models/FormulaModel";
+import FormulaByDobModel from "../../models/FormulaByDobModel";
 
 /**
- * @class FormulaAdd
+ * @class FormulaByDobAdd
  */
-export default class FormulaAdd extends PureComponent {
+export default class FormulaByDobAdd extends PureComponent {
   /** @var {Object} */
   formikProps = null;
 
@@ -37,8 +36,7 @@ export default class FormulaAdd extends PureComponent {
     super(props);
 
     // Init model(s)
-    this._paramNameModel = new ParamNameModel();
-    this._formulaModel = new FormulaModel();
+    this._formulaByDobModel = new FormulaByDobModel();
 
     // Init state
     // +++
@@ -64,8 +62,12 @@ export default class FormulaAdd extends PureComponent {
    * @return {Object}
    */
   getInitialValues = () => {
-    let { FormulaEnt } = this.props;
-    let values = Object.assign({}, this._formulaModel.fillable(), FormulaEnt);
+    let { FormulaByDobEnt } = this.props;
+    let values = Object.assign(
+      {},
+      this._formulaByDobModel.fillable(),
+      FormulaByDobEnt
+    );
 
     // Format
     Object.keys(values).forEach((key) => {
@@ -83,15 +85,20 @@ export default class FormulaAdd extends PureComponent {
   async _getBundleData() {
     let bundle = {};
     let all = [
-      this._formulaModel
+      this._formulaByDobModel
+        .getOptionParamdob({ is_active: 1 })
+        .then((data) => (bundle["OptParamdob"] = mapDataOptions4Select(data))),
+      this._formulaByDobModel
         .getOptionAttributes({ is_active: 1 })
         .then(
           (data) => (bundle["OptAttributes"] = mapDataOptions4Select(data))
         ),
-      this._formulaModel
-        .getOptionFormula({ is_active: 1 })
-        .then((data) => (bundle["OptFormula"] = mapDataOptions4Select(data))),
-      this._formulaModel
+      this._formulaByDobModel
+        .getOptionFormulaDob({ is_active: 1 })
+        .then(
+          (data) => (bundle["OptFormuladob"] = mapDataOptions4Select(data))
+        ),
+      this._formulaByDobModel
         .getOptionMainCalculaion({ is_active: 1 })
         .then(
           (data) => (bundle["OptCalculation"] = mapDataOptions4Select(data))
@@ -118,10 +125,57 @@ export default class FormulaAdd extends PureComponent {
     return bundle;
   }
 
-  formikValidationSchema = Yup.object().shape({
-    formula_name: Yup.string().trim().required("Tên công thức là bắt buộc."),
-    attribute_id: Yup.object().required("Tên thuộc tính là bắt buộc."),
-  });
+  formikValidationSchema = Yup.object()
+    .shape({
+      formula_name: Yup.string().trim().required("Tên công thức là bắt buộc."),
+      attribute_id: Yup.object().required("Tên thuộc tính là bắt buộc."),
+      param_id: Yup.object().required("Biến số theo ngày sinh là bắt buộc."),
+      index_1: Yup.string().required("Vị trí số là bắt buộc."),
+      index_2: Yup.string().required("Vị trí số là bắt buộc."),
+      age_milestones: Yup.string().required("Tuổi là bắt buộc."),
+      year_milestones: Yup.string().required("Năm là bắt buộc."),
+      values: Yup.string().required("Giá trị là bắt buộc."),
+      calculation_id: Yup.object().required("Phép tính là bắt buộc."),
+    })
+    .test("", "", function (item) {
+      let { is_total_shortened, last_2_digits } = item;
+      if (is_total_shortened || last_2_digits) {
+        return true;
+      }
+      return new Yup.ValidationError(
+        "Chọn một dạng là bắt buộc.",
+        null,
+        "check_short"
+      );
+    })
+    .test("", "", function (item) {
+      let { parent_formula_id, parent_calculation_id } = item;
+      if (parent_formula_id && !parent_calculation_id) {
+        return new Yup.ValidationError(
+          "Chọn phép tính cha là bắt buộc.",
+          null,
+          "parent_calculation_id"
+        );
+      }
+      if (parent_calculation_id && !parent_formula_id) {
+        return new Yup.ValidationError(
+          "Chọn công thức cha là bắt buộc.",
+          null,
+          "parent_formula_id"
+        );
+      }
+    })
+    .test("", "", function (item) {
+      let { key_milestones, second_milestones, challenging_milestones } = item;
+      if (key_milestones || second_milestones || challenging_milestones) {
+        return true;
+      }
+      return new Yup.ValidationError(
+        "Chọn một mốc phát triển là bắt buộc.",
+        null,
+        "check_milestones"
+      );
+    });
 
   handleFormikBeforeRender = ({ initialValues }) => {
     let { values } = this.formikProps;
@@ -148,40 +202,54 @@ export default class FormulaAdd extends PureComponent {
     let { setSubmitting } = formProps;
     let willRedirect = false;
     let alerts = [];
-    let { FormulaEnt } = this.props;
+    let { FormulaByDobEnt } = this.props;
     // Build form data
     // +++
 
     let {
       is_active,
-      is_full_name,
-      is_last_name,
-      is_first_middle_name,
-      is_first_name,
+      is_total_shortened,
+      last_2_digits,
+      key_milestones,
+      second_milestones,
+      challenging_milestones,
+      attribute_id,
+      param_id,
+      parent_formula_id,
+      parent_calculation_id,
+      calculation_id,
     } = values;
 
     // +++
     let formData = Object.assign({}, values, {
-      is_full_name: is_full_name ? 1 : 0,
-      is_last_name: is_last_name ? 1 : 0,
-      is_first_name: is_first_name ? 1 : 0,
-      is_first_middle_name: is_first_middle_name ? 1 : 0,
+      is_total_shortened: is_total_shortened ? 1 : 0,
+      last_2_digits: last_2_digits ? 1 : 0,
+      key_milestones: key_milestones ? 1 : 0,
+      second_milestones: second_milestones ? 1 : 0,
+      challenging_milestones: challenging_milestones ? 1 : 0,
       is_active: is_active ? 1 : 0,
+      attribute_id: attribute_id ? attribute_id.value : "",
+      param_id: param_id ? param_id.value : "",
+      parent_formula_id: parent_formula_id ? parent_formula_id.value : "",
+      parent_calculation_id: parent_calculation_id
+        ? parent_calculation_id.value
+        : "",
+      calculation_id: calculation_id ? calculation_id.value : "",
     });
     //
-    const calculationId =
-      (FormulaEnt && FormulaEnt.param_name_id) ||
-      formData[this._paramNameModel];
-    let apiCall = calculationId
-      ? this._paramNameModel.update(calculationId, formData)
-      : this._paramNameModel.create(formData);
+    const formuladobId =
+      (FormulaByDobEnt && FormulaByDobEnt.formula_id) ||
+      formData[this._formulaByDobModel];
+    let apiCall = formuladobId
+      ? this._formulaByDobModel.update(formuladobId, formData)
+      : this._formulaByDobModel.create(formData);
     apiCall
       .then((data) => {
         // OK
         window._$g.toastr.show("Lưu thành công!", "success");
         if (this._btnType === "save_n_close") {
           willRedirect = true;
-          return window._$g.rdr("/param-name");
+          return window._$g.rdr("/formula-by-dob");
         }
         // Chain
         return data;
@@ -198,7 +266,7 @@ export default class FormulaAdd extends PureComponent {
         // Submit form is done!
         setSubmitting(false);
         //
-        if (!FormulaEnt && !willRedirect && !alerts.length) {
+        if (!FormulaByDobEnt && !willRedirect && !alerts.length) {
           this.handleFormikReset();
         }
 
@@ -233,11 +301,12 @@ export default class FormulaAdd extends PureComponent {
       return <Loading />;
     }
 
-    let { alerts, OptAttributes, OptCalculation, OptFormula } = this.state;
+    let { alerts, OptAttributes, OptCalculation, OptFormuladob, OptParamdob } =
+      this.state;
 
     /** @var {Object} */
     let initialValues = this.getInitialValues();
-    const { noEdit, FormulaEnt } = this.props;
+    const { noEdit, FormulaByDobEnt } = this.props;
     return (
       <div className="animated fadeIn">
         <Row>
@@ -245,13 +314,13 @@ export default class FormulaAdd extends PureComponent {
             <Card>
               <CardHeader>
                 <b>
-                  {FormulaEnt && FormulaEnt.param_name_id
+                  {FormulaByDobEnt && FormulaByDobEnt.formula_id
                     ? noEdit
                       ? "Chi tiết"
                       : "Chỉnh sửa"
                     : "Thêm mới"}{" "}
-                  công thức theo ngày sinh{" "}
-                  {FormulaEnt ? FormulaEnt.calculation : ""}
+                  công thức{" "}
+                  {FormulaByDobEnt ? FormulaByDobEnt.formula_name : ""}
                 </b>
               </CardHeader>
               <CardBody>
@@ -356,8 +425,16 @@ export default class FormulaAdd extends PureComponent {
                                           {...field}
                                           className="text-left"
                                           onBlur={null}
+                                          onChange={(value) => {
+                                            field.onChange({
+                                              target: {
+                                                name: "attribute_id",
+                                                value,
+                                              },
+                                            });
+                                          }}
                                           id="attribute_id"
-                                          disabled={noEdit}
+                                          isDisabled={noEdit}
                                           placeholder="-- Chọn --"
                                           options={OptAttributes}
                                         />
@@ -422,134 +499,37 @@ export default class FormulaAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="is_day"
-                                    className="text-left"
-                                    sm={2}
-                                  >
+                                  <Label className="text-left" sm={2}>
                                     Theo
                                     <span className="font-weight-bold red-text">
                                       *
                                     </span>
                                   </Label>
-                                  <Col
-                                    sm={2}
-                                    className="d-flex align-items-center"
-                                  >
+                                  <Col sm={6}>
                                     <Field
-                                      name="is_day"
+                                      name="param_id"
                                       render={({ field /* _form */ }) => (
-                                        <CustomInput
+                                        <Select
                                           {...field}
-                                          className="pull-left"
                                           onBlur={null}
-                                          checked={values.is_day}
-                                          onChange={(event) => {
-                                            const { target } = event;
+                                          value={values.param_id}
+                                          onChange={(item) => {
                                             field.onChange({
                                               target: {
-                                                name: "is_first_name",
-                                                value: target.checked,
+                                                name: "param_id",
+                                                value: item,
                                               },
                                             });
                                           }}
-                                          type="checkbox"
-                                          id="is_day"
-                                          label="Ngày sinh"
-                                          disabled={noEdit}
+                                          placeholder="-- Chọn biến số theo ngày sinh --"
+                                          options={OptParamdob}
+                                          id="param_id"
+                                          isDisabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="is_day"
-                                      component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
-                                          {children}
-                                        </Alert>
-                                      )}
-                                    />
-                                  </Col>
-                                  <Col
-                                    sm={2}
-                                    className="d-flex align-items-center"
-                                  >
-                                    <Field
-                                      name="is_month"
-                                      render={({ field /* _form */ }) => (
-                                        <CustomInput
-                                          {...field}
-                                          className="pull-left"
-                                          onBlur={null}
-                                          checked={values.is_month}
-                                          onChange={(event) => {
-                                            const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "is_month",
-                                                value: target.checked,
-                                              },
-                                            });
-                                          }}
-                                          type="checkbox"
-                                          id="is_month"
-                                          label="Tháng sinh"
-                                          disabled={noEdit}
-                                        />
-                                      )}
-                                    />
-                                    <ErrorMessage
-                                      name="is_month"
-                                      component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
-                                          {children}
-                                        </Alert>
-                                      )}
-                                    />
-                                  </Col>
-                                  <Col
-                                    sm={2}
-                                    className="d-flex align-items-center"
-                                  >
-                                    <Field
-                                      name="is_year"
-                                      render={({ field /* _form */ }) => (
-                                        <CustomInput
-                                          {...field}
-                                          className="pull-left"
-                                          onBlur={null}
-                                          checked={values.is_year}
-                                          onChange={(event) => {
-                                            const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "is_year",
-                                                value: target.checked,
-                                              },
-                                            });
-                                            if (!target.checked) {
-                                              field.onChange({
-                                                target: {
-                                                  name: "last_2_digits",
-                                                  value: "",
-                                                },
-                                              });
-                                            }
-                                          }}
-                                          type="checkbox"
-                                          id="is_year"
-                                          label="Năm sinh"
-                                          disabled={noEdit}
-                                        />
-                                      )}
-                                    />
-                                    <ErrorMessage
-                                      name="is_year"
+                                      name="param_id"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -567,7 +547,6 @@ export default class FormulaAdd extends PureComponent {
                               <Col sm={12}>
                                 <FormGroup row>
                                   <Label
-                                    for="is_total_shortened"
                                     className="text-left d-flex align-items-center"
                                     sm={2}
                                   >
@@ -589,10 +568,18 @@ export default class FormulaAdd extends PureComponent {
                                           checked={values.is_total_shortened}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            if (target.checked) {
+                                              field.onChange({
+                                                target: {
+                                                  name: "last_2_digits",
+                                                  value: false,
+                                                },
+                                              });
+                                            }
                                             field.onChange({
                                               target: {
                                                 name: "is_total_shortened",
-                                                value: target.checked,
+                                                value: true,
                                               },
                                             });
                                           }}
@@ -628,22 +615,46 @@ export default class FormulaAdd extends PureComponent {
                                           checked={values.last_2_digits}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            if (target.checked) {
+                                              field.onChange({
+                                                target: {
+                                                  name: "is_total_shortened",
+                                                  value: false,
+                                                },
+                                              });
+                                            }
                                             field.onChange({
                                               target: {
                                                 name: "last_2_digits",
-                                                value: target.checked,
+                                                value: true,
                                               },
                                             });
                                           }}
                                           type="checkbox"
                                           id="last_2_digits"
                                           label="Lấy 2 số cuối cùng"
-                                          disabled={noEdit || !values.is_year}
+                                          disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
                                       name="last_2_digits"
+                                      component={({ children }) => (
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
+                                          {children}
+                                        </Alert>
+                                      )}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                                <FormGroup row>
+                                  <Label sm={2}></Label>
+                                  <Col sm={6}>
+                                    <ErrorMessage
+                                      name="check_short"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -662,6 +673,9 @@ export default class FormulaAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="parent_formula_id" sm={2}>
                                     Công thức
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={3}>
                                     <Field
@@ -669,12 +683,20 @@ export default class FormulaAdd extends PureComponent {
                                       render={({ field /* _form */ }) => (
                                         <Select
                                           {...field}
+                                          isClearable
                                           onBlur={null}
                                           value={values.parent_formula_id}
+                                          onChange={(item) => {
+                                            field.onChange({
+                                              target: {
+                                                name: "parent_formula_id",
+                                                value: item,
+                                              },
+                                            });
+                                          }}
                                           placeholder="-- Chọn công thức cha --"
-                                          options={OptFormula}
+                                          options={OptFormuladob}
                                           id="parent_formula_id"
-                                          label="Kích hoạt"
                                           isDisabled={noEdit}
                                         />
                                       )}
@@ -697,7 +719,16 @@ export default class FormulaAdd extends PureComponent {
                                       render={({ field /* _form */ }) => (
                                         <Select
                                           {...field}
+                                          isClearable
                                           onBlur={null}
+                                          onChange={(item) => {
+                                            field.onChange({
+                                              target: {
+                                                name: "parent_calculation_id",
+                                                value: item,
+                                              },
+                                            });
+                                          }}
                                           value={values.parent_calculation_id}
                                           placeholder="-- Chọn phép tính --"
                                           options={OptCalculation}
@@ -724,17 +755,16 @@ export default class FormulaAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
+                                  <Label className="text-left" sm={2}></Label>
                                   <Label
-                                    for="name_type"
-                                    className="text-left"
-                                    sm={2}
-                                  ></Label>
-                                  <Label
-                                    for="name_type"
+                                    for="index_1"
                                     className="text-left pr-0"
                                     sm={1}
                                   >
                                     Vị trí số
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={1} className="pl-0">
                                     <Field
@@ -743,18 +773,21 @@ export default class FormulaAdd extends PureComponent {
                                         <Input
                                           {...field}
                                           onBlur={null}
-                                          checked={values.index_1}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            let rg = new RegExp(/[^0-9]/);
+                                            let value = target.value.replace(rg, "");
                                             field.onChange({
                                               target: {
                                                 name: "index_1",
-                                                value: target.checked,
+                                                value,
                                               },
                                             });
                                           }}
+                                          value={values.index_1}
+                                          type="text"
                                           id="index_1"
-                                          disabled={noEdit || !values.parent_calculation_id.value}
+                                          disabled={noEdit}
                                         />
                                       )}
                                     />
@@ -777,12 +810,19 @@ export default class FormulaAdd extends PureComponent {
                                         <Select
                                           {...field}
                                           onBlur={null}
-                                          checked={values.calculation_id}
                                           value={values.calculation_id}
+                                          onChange={(item) => {
+                                            field.onChange({
+                                              target: {
+                                                name: "calculation_id",
+                                                value: item,
+                                              },
+                                            });
+                                          }}
                                           options={OptCalculation}
                                           placeholder=" -- Chọn --"
                                           id="calculation_id"
-                                          isDisabled={noEdit || !values.parent_calculation_id.value}
+                                          isDisabled={noEdit}
                                         />
                                       )}
                                     />
@@ -798,16 +838,15 @@ export default class FormulaAdd extends PureComponent {
                                       )}
                                     />
                                   </Col>
-                                  <Label
-                                    for="name_type"
-                                    className="text-left"
-                                    sm={1}
-                                  >
+                                  <Label className="text-left" sm={1}>
                                     Vị trí số
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
-                                  <Col sm={1}>
+                                  <Col sm={1} className="pl-0">
                                     <Field
-                                      name="is_first_middle_name"
+                                      name="index_2"
                                       className="pl-0"
                                       render={({ field /* _form */ }) => (
                                         <Input
@@ -815,15 +854,19 @@ export default class FormulaAdd extends PureComponent {
                                           onBlur={null}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            let rg = new RegExp(/[^0-9]/);
+                                            let value = target.value.replace(rg, "");
                                             field.onChange({
                                               target: {
                                                 name: "index_2",
-                                                value: target.checked,
+                                                value,
                                               },
                                             });
                                           }}
+                                          value={values.index_2}
+                                          type="text"
                                           id="index_2"
-                                          disabled={noEdit || !values.parent_calculation_id.value}
+                                          disabled={noEdit}
                                         />
                                       )}
                                     />
@@ -869,10 +912,24 @@ export default class FormulaAdd extends PureComponent {
                                           checked={values.key_milestones}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            if (target.checked) {
+                                              field.onChange({
+                                                target: {
+                                                  name: "second_milestones",
+                                                  value: false,
+                                                },
+                                              });
+                                              field.onChange({
+                                                target: {
+                                                  name: "second_milestones",
+                                                  value: false,
+                                                },
+                                              });
+                                            }
                                             field.onChange({
                                               target: {
                                                 name: "key_milestones",
-                                                value: target.checked,
+                                                value: true,
                                               },
                                             });
                                           }}
@@ -909,10 +966,24 @@ export default class FormulaAdd extends PureComponent {
                                           checked={values.second_milestones}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            if (target.checked) {
+                                              field.onChange({
+                                                target: {
+                                                  name: "key_milestones",
+                                                  value: false,
+                                                },
+                                              });
+                                              field.onChange({
+                                                target: {
+                                                  name: "challenging_milestones",
+                                                  value: false,
+                                                },
+                                              });
+                                            }
                                             field.onChange({
                                               target: {
                                                 name: "second_milestones",
-                                                value: target.checked,
+                                                value: true,
                                               },
                                             });
                                           }}
@@ -951,10 +1022,24 @@ export default class FormulaAdd extends PureComponent {
                                           }
                                           onChange={(event) => {
                                             const { target } = event;
+                                            if (target.checked) {
+                                              field.onChange({
+                                                target: {
+                                                  name: "key_milestones",
+                                                  value: false,
+                                                },
+                                              });
+                                              field.onChange({
+                                                target: {
+                                                  name: "second_milestones",
+                                                  value: false,
+                                                },
+                                              });
+                                            }
                                             field.onChange({
                                               target: {
                                                 name: "challenging_milestones",
-                                                value: target.checked,
+                                                value: true,
                                               },
                                             });
                                           }}
@@ -978,6 +1063,22 @@ export default class FormulaAdd extends PureComponent {
                                     />
                                   </Col>
                                 </FormGroup>
+                                <FormGroup row>
+                                  <Label sm={2}></Label>
+                                  <Col sm={6}>
+                                    <ErrorMessage
+                                      name="check_milestones"
+                                      component={({ children }) => (
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
+                                          {children}
+                                        </Alert>
+                                      )}
+                                    />
+                                  </Col>
+                                </FormGroup>
                               </Col>
                             </Row>
                             <Row>
@@ -986,17 +1087,20 @@ export default class FormulaAdd extends PureComponent {
                                   <Label className="text-left" sm={2}></Label>
                                   <Label className="text-left pr-0" sm={1}>
                                     Tuổi
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={2}>
                                     <Field
                                       name="age_milestones"
                                       render={({ field /* _form */ }) => (
-                                        <Select
+                                        <Input
                                           {...field}
                                           onBlur={null}
                                           value={values.age_milestones}
                                           options={OptCalculation}
-                                          placeholder=" -- Chọn --"
+                                          type="text"
                                           id="age_milestones"
                                           disabled={noEdit}
                                         />
@@ -1020,17 +1124,20 @@ export default class FormulaAdd extends PureComponent {
                                     sm={1}
                                   >
                                     Năm
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={2}>
                                     <Field
                                       name="year_milestones"
                                       render={({ field /* _form */ }) => (
-                                        <Select
+                                        <Input
                                           {...field}
                                           onBlur={null}
                                           value={values.year_milestones}
                                           options={OptCalculation}
-                                          placeholder=" -- Chọn --"
+                                          type="text"
                                           id="year_milestones"
                                           disabled={noEdit}
                                         />
@@ -1065,17 +1172,20 @@ export default class FormulaAdd extends PureComponent {
                                     sm={1}
                                   >
                                     Giá trị
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={2}>
                                     <Field
                                       name="values"
                                       render={({ field /* _form */ }) => (
-                                        <Select
+                                        <Input
                                           {...field}
                                           onBlur={null}
                                           value={values.values}
                                           options={OptCalculation}
-                                          placeholder=" -- Chọn --"
+                                          type="text"
                                           id="values"
                                           disabled={noEdit}
                                         />
@@ -1152,7 +1262,7 @@ export default class FormulaAdd extends PureComponent {
                                       className="mr-2 btn-block-sm"
                                       onClick={() =>
                                         window._$g.rdr(
-                                          `/param-name/edit/${FormulaEnt.param_name_id}`
+                                          `/param-name/edit/${FormulaByDobEnt.param_name_id}`
                                         )
                                       }
                                     >
@@ -1190,7 +1300,9 @@ export default class FormulaAdd extends PureComponent {
                                 )}
                                 <Button
                                   disabled={isSubmitting}
-                                  onClick={() => window._$g.rdr("/formula")}
+                                  onClick={() =>
+                                    window._$g.rdr("/formula-by-dob")
+                                  }
                                   className="btn-block-sm mt-md-0 mt-sm-2"
                                 >
                                   <i className="fa fa-times-circle mr-1" />

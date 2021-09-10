@@ -8,7 +8,9 @@ const optionService = require('../../common/services/options.service');
  */
 const getListFormulaByName = async (req, res, next) => {
   try {
-    const serviceRes = await FormulaByName.getListFormulaByName(req.query);
+    const serviceRes = await formulaByNameService.getListFormulaByName(
+      req.query
+    );
     const { data, total, page, limit } = serviceRes.getData();
     return res.json(new ListResponse(data, total, page, limit));
   } catch (error) {
@@ -20,7 +22,7 @@ const deleteFormulaByName = async (req, res, next) => {
   try {
     const formula_id = req.params.formula_id;
     // Check exists
-    const serviceResDetail = await FormulaByName.detailFormulaByName(
+    const serviceResDetail = await formulaByNameService.detailFormulaByName(
       formula_id
     );
     if (serviceResDetail.isFailed()) {
@@ -28,7 +30,7 @@ const deleteFormulaByName = async (req, res, next) => {
     }
 
     // Delete
-    const serviceRes = await FormulaByName.deleteFormulaByName(
+    const serviceRes = await formulaByNameService.deleteFormulaByName(
       formula_id,
       req.body
     );
@@ -36,7 +38,7 @@ const deleteFormulaByName = async (req, res, next) => {
       return next(serviceRes);
     }
     return res.json(
-      new SingleResponse(null, RESPONSE_MSG.FORMULA.DELETE_SUCCESS)
+      new SingleResponse(null, RESPONSE_MSG.FORMULABYNAME.DELETE_SUCCESS)
     );
   } catch (error) {
     return next(error);
@@ -49,7 +51,7 @@ const deleteFormulaByName = async (req, res, next) => {
 const createFormulaByName = async (req, res, next) => {
   try {
     req.body.formula_id = null;
-    const serviceRes = await FormulaByName.createFormulaByNameOrUpdate(
+    const serviceRes = await formulaByNameService.createFormulaByNameOrUpdate(
       req.body
     );
     if (serviceRes.isFailed()) {
@@ -59,7 +61,7 @@ const createFormulaByName = async (req, res, next) => {
     return res.json(
       new SingleResponse(
         serviceRes.getData(),
-        RESPONSE_MSG.FORMULA.CREATE_SUCCESS
+        RESPONSE_MSG.FORMULABYNAME.CREATE_SUCCESS
       )
     );
   } catch (error) {
@@ -74,9 +76,8 @@ const updateFormulaByName = async (req, res, next) => {
   try {
     const formula_id = req.params.formula_id;
     req.body.formula_id = formula_id;
-
     // Check exists
-    const serviceResDetail = await FormulaByName.detailFormulaByName(
+    const serviceResDetail = await formulaByNameService.detailFormulaByName(
       formula_id
     );
     if (serviceResDetail.isFailed()) {
@@ -84,7 +85,7 @@ const updateFormulaByName = async (req, res, next) => {
     }
 
     // Update
-    const serviceRes = await FormulaByName.createFormulaByNameOrUpdate(
+    const serviceRes = await formulaByNameService.createFormulaByNameOrUpdate(
       req.body
     );
     if (serviceRes.isFailed()) {
@@ -94,7 +95,7 @@ const updateFormulaByName = async (req, res, next) => {
     return res.json(
       new SingleResponse(
         serviceRes.getData(),
-        RESPONSE_MSG.FORMULA.UPDATE_SUCCESS
+        RESPONSE_MSG.FORMULABYNAME.UPDATE_SUCCESS
       )
     );
   } catch (error) {
@@ -111,9 +112,9 @@ const getOptionAttributes = async (req, res, next) => {
   }
 };
 
-const getOptionLetter = async (req, res, next) => {
+const getOptionParamName = async (req, res, next) => {
   try {
-    const serviceRes = await optionService('MD_LETTERS', req.query);
+    const serviceRes = await optionService('MD_PARAMNAME', req.query);
     return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
     return next(error);
@@ -122,7 +123,7 @@ const getOptionLetter = async (req, res, next) => {
 
 const getOptionFormulaByName = async (req, res, next) => {
   try {
-    const serviceRes = await optionService('FOR_FORMULA', req.query);
+    const serviceRes = await optionService('FOR_FORMULABYNAME', req.query);
     return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
     return next(error);
@@ -140,7 +141,7 @@ const getOptionCalculation = async (req, res, next) => {
 
 const detailFormulaByName = async (req, res, next) => {
   try {
-    const serviceRes = await FormulaByName.detailFormulaByName(
+    const serviceRes = await formulaByNameService.detailFormulaByName(
       req.params.formula_id
     );
     if (serviceRes.isFailed()) {
@@ -156,7 +157,7 @@ module.exports = {
   getListFormulaByName,
   deleteFormulaByName,
   getOptionAttributes,
-  getOptionLetter,
+  getOptionParamName,
   getOptionFormulaByName,
   getOptionCalculation,
   updateFormulaByName,

@@ -930,13 +930,17 @@ const AttributesGroupEdit = React.lazy(() =>
 // end#AttributesGroup
 
 //Formula
-const Formula = React.lazy(() => import("./components/Formula/Formula"));
-const FormulaAdd = React.lazy(() => import("./components/Formula/FormulaAdd"));
-const FormulaDetail = React.lazy(() =>
-  import("./components/Formula/FormulaDetail")
+const FormulaByDob = React.lazy(() =>
+  import("./components/FormulaByDob/FormulaByDob")
 );
-const FormulaEdit = React.lazy(() =>
-  import("./components/Formula/FormulaEdit")
+const FormulaByDobAdd = React.lazy(() =>
+  import("./components/FormulaByDob/FormulaByDobAdd")
+);
+const FormulaByDobDetail = React.lazy(() =>
+  import("./components/FormulaByDob/FormulaByDobDetail")
+);
+const FormulaByDobEdit = React.lazy(() =>
+  import("./components/FormulaByDob/FormulaByDobEdit")
 );
 // end#Formula
 
@@ -947,12 +951,12 @@ const FormulaByName = React.lazy(() =>
 const FormulaByNameAdd = React.lazy(() =>
   import("./components/FormulaByName/FormulaByNameAdd")
 );
-// const FormulaByNameDetail = React.lazy(() =>
-//   import("./components/FormulaByName/FormulaByNameDetail")
-// );
-// const FormulaByNameEdit = React.lazy(() =>
-//   import("./components/FormulaByName/FormulaByNameEdit")
-// );
+const FormulaByNameDetail = React.lazy(() =>
+  import("./components/FormulaByName/FormulaByNameDetail")
+);
+const FormulaByNameEdit = React.lazy(() =>
+  import("./components/FormulaByName/FormulaByNameEdit")
+);
 // end#FormulaByName
 
 const ProductCombo = React.lazy(() =>
@@ -3218,32 +3222,32 @@ const routes = [
 
   //formula
   {
-    path: "/formula",
+    path: "/formula-by-dob",
     exact: true,
     name: "Danh sách công thức theo ngày sinh",
-    function: "FOR_FORMULA_VIEW",
-    component: Formula,
+    function: "FOR_FORMULABYDOB_VIEW",
+    component: FormulaByDob,
   },
   {
-    path: "/formula/add",
+    path: "/formula-by-dob/add",
     exact: true,
     name: "Thêm mới",
-    function: "FOR_FORMULA_ADD",
-    component: FormulaAdd,
+    function: "FOR_FORMULABYDOB_ADD",
+    component: FormulaByDobAdd,
   },
   {
-    path: "/formula/detail/:id",
+    path: "/formula-by-dob/detail/:id",
     exact: true,
     name: "Chi tiết",
-    function: "FOR_FORMULA_VIEW",
-    component: FormulaDetail,
+    function: "FOR_FORMULABYDOB_VIEW",
+    component: FormulaByDobDetail,
   },
   {
-    path: "/formula/edit/:id",
+    path: "/formula-by-dob/edit/:id",
     exact: true,
     name: "Chỉnh sửa",
-    function: "FOR_FORMULA_EDIT",
-    component: FormulaEdit,
+    function: "FOR_FORMULABYDOB_EDIT",
+    component: FormulaByDobEdit,
   },
   // end#formula
 
@@ -3262,20 +3266,20 @@ const routes = [
     function: "FOR_FORMULABYNAME_ADD",
     component: FormulaByNameAdd,
   },
-  // {
-  //   path: "/formula-by-name/detail/:id",
-  //   exact: true,
-  //   name: "Chi tiết",
-  //   function: "FOR_FORMULABYNAME_VIEW",
-  //   component: FormulaByNameDetail,
-  // },
-  // {
-  //   path: "/formula-by-name/edit/:id",
-  //   exact: true,
-  //   name: "Chỉnh sửa",
-  //   function: "FOR_FORMULABYNAME_EDIT",
-  //   component: FormulaByNameEdit,
-  // },
+  {
+    path: "/formula-by-name/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "FOR_FORMULABYNAME_VIEW",
+    component: FormulaByNameDetail,
+  },
+  {
+    path: "/formula-by-name/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "FOR_FORMULABYNAME_EDIT",
+    component: FormulaByNameEdit,
+  },
   // end#formula-by-name
 
   //relationShips
