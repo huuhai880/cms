@@ -32,7 +32,6 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter, han
         }
     };
 
-
     const handleChangeSelect = (selected, name) => {
         setFilter((preState) => ({
             ...preState,
