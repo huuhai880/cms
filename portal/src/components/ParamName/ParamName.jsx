@@ -227,7 +227,7 @@ class ParamName extends Component {
         },
       },
       {
-        name: "is_last_name",
+        name: "is_first_name",
         label: "Tên",
         options: {
           filter: false,
@@ -251,7 +251,7 @@ class ParamName extends Component {
         },
       },
       {
-        name: "is_first_name",
+        name: "is_last_name",
         label: "Họ",
         options: {
           filter: false,

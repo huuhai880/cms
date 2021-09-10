@@ -98,7 +98,6 @@ export default class CustomerTypeAdd extends PureComponent {
       }
       bundle[key] = data;
     });
-    // console.log('bundle: ', bundle);
     //
     return bundle;
   }
@@ -140,11 +139,12 @@ export default class CustomerTypeAdd extends PureComponent {
     // Build form data
     // +++
 
-    let { is_active, is_default } = values;
+    let { is_active, is_default, customer_type_name } = values;
     // +++
     let formData = Object.assign({}, values, {
       is_active: is_active ? 1 : 0,
       is_default: is_default ? 1 : 0,
+      customer_type_name: customer_type_name? customer_type_name.trim(): "",
     });
     //
     const calculationId =

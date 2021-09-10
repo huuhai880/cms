@@ -15,8 +15,8 @@ export default class FormulaByNameModel extends Model {
   /** @var {String} */
   static API_FOR_FOMULABYNAME_GET_LIST = "formula-by-name";
   static API_FOR_FOMULABYNAME_DETAIL = "formula-by-name/:id";
-  static API_FOR_FOMULABYNAME_OPTS_LETTER =
-    "formula-by-name/get-options-letter";
+  static API_FOR_FOMULABYNAME_OPTS_PARAMNAME =
+    "formula-by-name/get-options-param-name";
   static API_FOR_FOMULABYNAME_OPTS_ATTRIBUTES =
     "formula-by-name/get-options-attributes";
   static API_FOR_FOMULABYNAME_OPTS_FORMULA =
@@ -39,25 +39,27 @@ export default class FormulaByNameModel extends Model {
    * @return {Object}
    */
   fillable = () => ({
-    formula_name_id: "",
+    formula_id: "",
     formula_name: "",
     attribute_id: "",
     description: "",
-    is_total_shortened: null,
+    is_not_shortened: "",
     is_2_digit: "",
     is_1_digit: "",
-    first_letter: "",
-    last_letter: "",
-    only_first_vowel: "",
-    total_vowels: "",
-    total_values: "",
-    count_of_num: "",
-    total_consonant: "",
-    total_letters: "",
-    num_show_3_time: "",
-    total_first_letter: "",
-    num_of_letters: "",
-    num_show_0_time: "",
+    is_first_letter: "",
+    is_last_letter: "",
+    is_only_first_vowel: "",
+    check_format: "", // kiểm tra hình thức
+    is_total_vowels: "",
+    is_total_values: "",
+    is_count_of_num: "",
+    is_total_consonant: "",
+    is_total_letters: "",
+    is_num_show_3_time: "",
+    is_total_first_letter: "",
+    is_num_of_letters: "",
+    is_num_show_0_time: "",
+    check_calculation: "", // kiểm tra cách tính
     param_name_id: "",
     is_expression: "",
     calculation_id: "",
@@ -86,15 +88,15 @@ export default class FormulaByNameModel extends Model {
     );
   }
 
-  getOptionLetter(opts) {
-    return this._api.get(_static.API_FOR_FOMULABYNAME_OPTS_LETTER, opts);
+  getOptionParamName(opts) {
+    return this._api.get(_static.API_FOR_FOMULABYNAME_OPTS_PARAMNAME, opts);
   }
 
   getOptionAttributes(opts) {
     return this._api.get(_static.API_FOR_FOMULABYNAME_OPTS_ATTRIBUTES, opts);
   }
 
-  getOptionFormula(opts) {
+  getOptionFormulaByName(opts) {
     return this._api.get(_static.API_FOR_FOMULABYNAME_OPTS_FORMULA, opts);
   }
 

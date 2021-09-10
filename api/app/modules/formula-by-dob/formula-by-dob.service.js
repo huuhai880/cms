@@ -1,4 +1,4 @@
-const formulaByNameClass = require('./formula-by-name.class');
+const formulaByDobClass = require('./formula-by-dob.class');
 const PROCEDURE_NAME = require('../../common/const/procedureName.const');
 const apiHelper = require('../../common/helpers/api.helper');
 const mssql = require('../../models/mssql');
@@ -11,13 +11,13 @@ const fileHelper = require('../../common/helpers/file.helper');
 const stringHelper = require('../../common/helpers/string.helper');
 
 /**
- * Get list FOR_FORMULA
+ * Get list FOR_FORMULADOB
  *
  * @param queryParams
  * @returns ServiceResponse
  */
 
-const getListFormulaByName = async (queryParams = {}) => {
+const getListFormulaByDob = async (queryParams = {}) => {
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
@@ -30,24 +30,22 @@ const getListFormulaByName = async (queryParams = {}) => {
       .input('PAGEINDEX', currentPage)
       .input('KEYWORD', keyword)
       .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'is_active'))
-      .execute(PROCEDURE_NAME.FOR_FORMULABYNAME_GETLIST_ADMINWEB);
+      .execute(PROCEDURE_NAME.FOR_FORMULADOB_GETLIST_ADMINWEB);
     const datas = data.recordset;
 
     return new ServiceResponse(true, '', {
-      data: formulaByNameClass.list(datas),
+      data: formulaByDobClass.list(datas),
       page: currentPage,
       limit: itemsPerPage,
       total: apiHelper.getTotalData(datas),
     });
   } catch (e) {
-    logger.error(e, {
-      function: 'formulaByNameService.getListFormulaByNameByName',
-    });
+    logger.error(e, { function: 'formulaService.getListFormulaByDob' });
     return new ServiceResponse(true, '', {});
   }
 };
 
-const deleteFormulaByName = async (formula_id, bodyParams) => {
+const deleteFormulaByDob = async (formula_id, bodyParams) => {
   try {
     const pool = await mssql.pool;
     await pool
@@ -57,44 +55,44 @@ const deleteFormulaByName = async (formula_id, bodyParams) => {
         'DELETEDUSER',
         apiHelper.getValueFromObject(bodyParams, 'auth_name')
       )
-      .execute(PROCEDURE_NAME.FOR_FORMULABYNAME_DELETE_ADMINWEB);
+      .execute(PROCEDURE_NAME.FOR_FORMULADOB_DELETE_ADMINWEB);
     removeCacheOptions();
     return new ServiceResponse(true);
   } catch (e) {
     logger.error(e, {
-      function: 'formulaByNameService.deleteFormulaByName',
+      function: 'formulaService.deleteFormulaByDob',
     });
     return new ServiceResponse(false, e.message);
   }
 };
 
 const removeCacheOptions = () => {
-  return cacheHelper.removeByKey(CACHE_CONST.FOR_FORMULABYNAME_OPTIONS);
+  return cacheHelper.removeByKey(CACHE_CONST.FOR_FORMULADOB_OPTIONS);
 };
 
-const createFormulaByNameOrUpdate = async (bodyParams) => {
+const createFormulaByDobOrUpdate = async (bodyParams) => {
   try {
     let pool = await mssql.pool;
     let formula_id = apiHelper.getValueFromObject(bodyParams, 'formula_id');
     let formula_name = apiHelper.getValueFromObject(bodyParams, 'formula_name');
     // check formula
-    const dataCheckFormulaByName = await pool
+    const dataCheckFormuladob = await pool
       .request()
       .input('FORMULAID', formula_id)
       .input('FORMULANAME', formula_name)
-      .execute(PROCEDURE_NAME.FOR_FORMULABYNAME_CHECKNAME_ADMINWEB);
+      .execute(PROCEDURE_NAME.FOR_FORMULADOB_CHECKNAME_ADMINWEB);
     if (
-      !dataCheckFormulaByName.recordset ||
-      dataCheckFormulaByName.recordset[0].RESULT
+      !dataCheckFormuladob.recordset ||
+      dataCheckFormuladob.recordset[0].RESULT
     ) {
       return new ServiceResponse(
         false,
-        RESPONSE_MSG.FORMULABYNAME.EXISTS_NAME,
+        RESPONSE_MSG.FORMULADOB.EXISTS_NAME,
         null
       );
     }
 
-    const dataFormulaByName = await pool
+    const datas = await pool
       .request()
       .input('FORMULAID', formula_id)
       .input(
@@ -109,117 +107,94 @@ const createFormulaByNameOrUpdate = async (bodyParams) => {
         'DESCRIPTION',
         apiHelper.getValueFromObject(bodyParams, 'description')
       )
-      .input('IS2DIGIT', apiHelper.getValueFromObject(bodyParams, 'is_2_digit'))
-      .input('IS1DIGIT', apiHelper.getValueFromObject(bodyParams, 'is_1_digit'))
+      .input('PARAMID', apiHelper.getValueFromObject(bodyParams, 'param_id'))
       .input(
-        'ISFIRSTLETTER',
-        apiHelper.getValueFromObject(bodyParams, 'is_first_letter')
+        'ISTOTALSHORTENED',
+        apiHelper.getValueFromObject(bodyParams, 'is_total_shortened')
       )
       .input(
-        'ISNOTSHORTENED',
-        apiHelper.getValueFromObject(bodyParams, 'is_not_shortened')
-      )
-      .input(
-        'ISLASTLETTER',
-        apiHelper.getValueFromObject(bodyParams, 'is_last_letter')
-      )
-      .input(
-        'ISONLYFIRSTVOWEL',
-        apiHelper.getValueFromObject(bodyParams, 'is_only_first_vowel')
-      )
-      .input(
-        'ISTOTALVOWELS',
-        apiHelper.getValueFromObject(bodyParams, 'is_total_vowels')
-      )
-      .input(
-        'ISTOTALVALUES',
-        apiHelper.getValueFromObject(bodyParams, 'is_total_values')
-      )
-      .input(
-        'ISCOUNTOFNUM',
-        apiHelper.getValueFromObject(bodyParams, 'is_count_of_num')
-      )
-      .input(
-        'ISTOTALCONSONANT',
-        apiHelper.getValueFromObject(bodyParams, 'is_total_consonant')
-      )
-      .input(
-        'ISTOTALLETTERS',
-        apiHelper.getValueFromObject(bodyParams, 'is_total_letters')
-      )
-      .input(
-        'ISNUMSHOW3TIME',
-        apiHelper.getValueFromObject(bodyParams, 'is_num_show_3_time')
-      )
-      .input(
-        'ISTOTALFIRSTLETTERS',
-        apiHelper.getValueFromObject(bodyParams, 'is_total_first_letters')
-      )
-      .input(
-        'ISNUMOFLETTERS',
-        apiHelper.getValueFromObject(bodyParams, 'is_num_of_letters')
-      )
-      .input(
-        'ISNUMSHOW0TIME',
-        apiHelper.getValueFromObject(bodyParams, 'is_num_show_0_time')
-      )
-      .input(
-        'PARAMNAMEID',
-        apiHelper.getValueFromObject(bodyParams, 'param_name_id')
-      )
-      .input(
-        'ISEXPRESSION',
-        apiHelper.getValueFromObject(bodyParams, 'is_expression')
-      )
-      .input(
-        'CALCULATIONID',
-        apiHelper.getValueFromObject(bodyParams, 'calculation_id')
+        'LAST2DIGITS',
+        apiHelper.getValueFromObject(bodyParams, 'last_2_digits')
       )
       .input(
         'PARENTFORMULAID',
         apiHelper.getValueFromObject(bodyParams, 'parent_formula_id')
       )
+      .input(
+        'PARENTCALCULATIONID',
+        apiHelper.getValueFromObject(bodyParams, 'parent_calculation_id')
+      )
+      .input(
+        'CALCULATIONID',
+        apiHelper.getValueFromObject(bodyParams, 'calculation_id')
+      )
+      .input('INDEX1', apiHelper.getValueFromObject(bodyParams, 'index_1'))
+      .input('INDEX2', apiHelper.getValueFromObject(bodyParams, 'index_2'))
+      .input(
+        'KEYMILESTONES',
+        apiHelper.getValueFromObject(bodyParams, 'key_milestones')
+      )
+      .input(
+        'SECONDMILESTONES',
+        apiHelper.getValueFromObject(
+          bodyParams,
+          'second_milestones'
+        )
+      )
+      .input(
+        'CHALLENGINGMILESTONES',
+        apiHelper.getValueFromObject(bodyParams, 'challenging_milestones')
+      )
+      .input(
+        'AGEMILESTONES',
+        apiHelper.getValueFromObject(bodyParams, 'age_milestones')
+      )
+      .input(
+        'YEARMILESTONES',
+        apiHelper.getValueFromObject(bodyParams, 'year_milestones')
+      )
+      .input('VALUES', apiHelper.getValueFromObject(bodyParams, 'values'))
       .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active'))
       .input(
         'CREATEDUSER',
         apiHelper.getValueFromObject(bodyParams, 'auth_name')
       )
-      .execute(PROCEDURE_NAME.FOR_FORMULABYNAME_CREATEORUPDATE_ADMINWEB);
+      .execute(PROCEDURE_NAME.FOR_FORMULADOB_CREATEORUPDATE_ADMINWEB);
 
-    const formulaByNameId = dataFormulaByName.recordset[0].RESULT;
+    const formuladobId = datas.recordset[0].RESULT;
 
-    return new ServiceResponse(true, '', formulaByNameId);
+    return new ServiceResponse(true, '', formuladobId);
   } catch (e) {
     logger.error(e, {
-      function: 'FormulaByNameService.creatFormulaByNameOrUpdate',
+      function: 'FormuladobService.creatFormuladobOrUpdate',
     });
     return new ServiceResponse(false);
   }
 };
 
-const detailFormulaByName = async (formula_id) => {
+const detailFormulaByDob = async (formula_id) => {
   try {
     const pool = await mssql.pool;
     const data = await pool
       .request()
       .input('FORMULAID', formula_id)
-      .execute(PROCEDURE_NAME.FOR_FORMULABYNAME_GETBYID_ADMINWEB);
+      .execute(PROCEDURE_NAME.FOR_FORMULADOB_GETBYID_ADMINWEB);
     let datas = data.recordset;
     // If exists partner
     if (datas && datas.length > 0) {
-      datas = formulaByNameClass.detail(datas[0]);
+      datas = formulaByDobClass.detail(datas[0]);
       return new ServiceResponse(true, '', datas);
     }
     return new ServiceResponse(false, RESPONSE_MSG.NOT_FOUND);
   } catch (e) {
-    logger.error(e, { function: 'formulaByNameService.detailFormulaByName' });
+    logger.error(e, { function: 'formulaService.detailFormulaByDob' });
     return new ServiceResponse(false, e.message);
   }
 };
 
 module.exports = {
-  getListFormulaByName,
-  deleteFormulaByName,
-  createFormulaByNameOrUpdate,
-  detailFormulaByName,
+  getListFormulaByDob,
+  deleteFormulaByDob,
+  createFormulaByDobOrUpdate,
+  detailFormulaByDob,
 };

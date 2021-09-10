@@ -166,6 +166,7 @@ class CustomerType extends Component {
         .then(() => {
           const cloneData = JSON.parse(JSON.stringify(data));
           cloneData.splice(rowIndex, 1);
+          cloneData[0].is_default = 1
           const count = cloneData.length;
           this.setState({
             data: cloneData,

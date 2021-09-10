@@ -51,7 +51,6 @@ const getListCustomerType = async (queryParams = {}) => {
 
 const createCustomerTypeOrUpdate = async (body = {}) => {
   const pool = await mssql.pool;
-
   const dataCheckCustomerTypeName = await pool
     .request()
     .input(
@@ -68,6 +67,7 @@ const createCustomerTypeOrUpdate = async (body = {}) => {
     !dataCheckCustomerTypeName.recordset ||
     dataCheckCustomerTypeName.recordset[0].RESULT
   ) {
+      
     return new ServiceResponse(
       false,
       RESPONSE_MSG.CUSTOMERTYPE.EXISTS_NAME,

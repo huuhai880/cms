@@ -23,7 +23,6 @@ import { CheckAccess } from "../../navigation/VerifyAccess";
 import Loading from "../Common/Loading";
 
 // Model(s)
-import ParamNameModel from "../../models/ParamNameModel";
 import FormulaByNameModel from "../../models/FormulaByNameModel";
 
 /**
@@ -37,7 +36,6 @@ export default class FormulaByNameAdd extends PureComponent {
     super(props);
 
     // Init model(s)
-    this._paramNameModel = new ParamNameModel();
     this._formulaByNameModel = new FormulaByNameModel();
 
     // Init state
@@ -64,11 +62,11 @@ export default class FormulaByNameAdd extends PureComponent {
    * @return {Object}
    */
   getInitialValues = () => {
-    let { FormulaEnt } = this.props;
+    let { FormulaByNameEnt } = this.props;
     let values = Object.assign(
       {},
       this._formulaByNameModel.fillable(),
-      FormulaEnt
+      FormulaByNameEnt
     );
 
     // Format
@@ -93,10 +91,10 @@ export default class FormulaByNameAdd extends PureComponent {
           (data) => (bundle["OptAttributes"] = mapDataOptions4Select(data))
         ),
       this._formulaByNameModel
-        .getOptionLetter({ is_active: 1 })
-        .then((data) => (bundle["OptLetter"] = mapDataOptions4Select(data))),
+        .getOptionParamName({ is_active: 1 })
+        .then((data) => (bundle["OptParamName"] = mapDataOptions4Select(data))),
       this._formulaByNameModel
-        .getOptionFormula({ is_active: 1 })
+        .getOptionFormulaByName({ is_active: 1 })
         .then((data) => (bundle["OptFormula"] = mapDataOptions4Select(data))),
       this._formulaByNameModel
         .getOptionMainCalculaion({ is_active: 1 })
@@ -120,18 +118,84 @@ export default class FormulaByNameAdd extends PureComponent {
       }
       bundle[key] = data;
     });
-    // console.log('bundle: ', bundle);
     //
     return bundle;
   }
 
-  formikValidationSchema = Yup.object().shape({
-    formula_name: Yup.string().trim().required("Tên công thức là bắt buộc."),
-    attribute_id: Yup.object().required("Tên thuộc tính là bắt buộc."),
-    is_total_shortened: Yup.boolean().oneOf([true], "Must Accept Terms of Service"),
-    is_2_digit: Yup.boolean().oneOf([true], "Must Accept Cookie Policy"),
-    is_1_digit: Yup.boolean().oneOf([true], "Must Accept Privacy Policy"),
-  });
+  formikValidationSchema = Yup.object()
+    .shape({
+      formula_name: Yup.string().trim().required("Tên công thức là bắt buộc."),
+      attribute_id: Yup.object()
+        .nullable()
+        .required("Tên thuộc tính là bắt buộc."),
+      param_name_id: Yup.object().required("Tên biến số là bắt buộc."),
+      calculation_id: Yup.object().when("is_expression", {
+        is: true,
+        then: Yup.object().nullable().required("Phép tính là bắt buộc."),
+        otherwise: Yup.object().nullable().notRequired(true),
+      }),
+      parent_formula_id: Yup.object().when("is_expression", {
+        is: true,
+        then: Yup.object().nullable().required("Công thức cha là bắt buộc."),
+        otherwise: Yup.object().nullable().notRequired(true),
+      }),
+    })
+    .test("", "", function (item) {
+      let {
+        is_not_shortened,
+        is_2_digit,
+        is_1_digit,
+        is_first_letter,
+        is_last_letter,
+        is_only_first_vowel,
+      } = item;
+      if (
+        is_not_shortened ||
+        is_2_digit ||
+        is_1_digit ||
+        is_first_letter ||
+        is_last_letter ||
+        is_only_first_vowel
+      ) {
+        return true;
+      }
+      return new Yup.ValidationError(
+        "Chọn một hình thức là bắt buộc.",
+        null,
+        "check_format"
+      );
+    })
+    .test("", "", function (item) {
+      let {
+        is_total_vowels,
+        is_total_values,
+        is_count_of_num,
+        is_total_consonant,
+        is_total_letters,
+        is_num_show_3_time,
+        is_total_first_letters,
+        is_num_of_letters,
+        is_num_show_0_time,
+      } = item;
+      if (
+        is_total_vowels ||
+        is_total_values ||
+        is_count_of_num ||
+        is_total_consonant ||
+        is_total_letters ||
+        is_num_show_3_time ||
+        is_total_first_letters ||
+        is_num_of_letters ||
+        is_num_show_0_time
+      ) {
+        return true;
+      }
+      return new Yup.ValidationError(
+        "Chọn một cách tính là bắt buộc.",
+        null,
+        "check_calculation"
+      );
+    });
 
   handleFormikBeforeRender = ({ initialValues }) => {
     let { values } = this.formikProps;
@@ -158,40 +222,73 @@ export default class FormulaByNameAdd extends PureComponent {
     let { setSubmitting } = formProps;
     let willRedirect = false;
     let alerts = [];
-    let { FormulaEnt } = this.props;
+    let { FormulaByNameEnt } = this.props;
     // Build form data
     // +++
 
     let {
       is_active,
-      is_full_name,
-      is_last_name,
-      is_first_middle_name,
-      is_first_name,
+      is_not_shortened,
+      is_2_digit,
+      is_1_digit,
+      is_first_letter,
+      is_last_letter,
+      is_only_first_vowel,
+      is_total_vowels,
+      is_total_values,
+      is_count_of_num,
+      is_total_consonant,
+      is_total_letters,
+      is_num_show_3_time,
+      is_total_first_letters,
+      is_num_of_letters,
+      is_num_show_0_time,
+      attribute_id,
+      param_name_id,
+      is_expression,
+      calculation_id,
+      parent_formula_id,
     } = values;
 
     // +++
     let formData = Object.assign({}, values, {
-      is_full_name: is_full_name ? 1 : 0,
-      is_last_name: is_last_name ? 1 : 0,
-      is_first_name: is_first_name ? 1 : 0,
-      is_first_middle_name: is_first_middle_name ? 1 : 0,
+      is_not_shortened: is_not_shortened ? 1 : 0,
+      is_2_digit: is_2_digit ? 1 : 0,
+      is_1_digit: is_1_digit ? 1 : 0,
+      is_first_letter: is_first_letter ? 1 : 0,
+      is_last_letter: is_last_letter ? 1 : 0,
+      is_only_first_vowel: is_only_first_vowel ? 1 : 0,
+      is_total_vowels: is_total_vowels ? 1 : 0,
+      is_total_values: is_total_values ? 1 : 0,
+      is_count_of_num: is_count_of_num ? 1 : 0,
+      is_total_consonant: is_total_consonant ? 1 : 0,
+      is_total_letters: is_total_letters ? 1 : 0,
+      is_num_show_3_time: is_num_show_3_time ? 1 : 0,
+      is_total_first_letters: is_total_first_letters ? 1 : 0,
+      is_num_of_letters: is_num_of_letters ? 1 : 0,
+      is_num_show_0_time: is_num_show_0_time ? 1 : 0,
       is_active: is_active ? 1 : 0,
+      attribute_id: attribute_id ? attribute_id.value : "",
+      param_name_id: param_name_id ? param_name_id.value : "",
+      is_expression: is_expression ? 1 : 0,
+      calculation_id: calculation_id ? calculation_id.value : "",
+      parent_formula_id: parent_formula_id ? parent_formula_id.value : "",
     });
+
     //
-    const calculationId =
-      (FormulaEnt && FormulaEnt.param_name_id) ||
-      formData[this._paramNameModel];
-    let apiCall = calculationId
-      ? this._paramNameModel.update(calculationId, formData)
-      : this._paramNameModel.create(formData);
+    const formulaByNameId =
+      (FormulaByNameEnt && FormulaByNameEnt.formula_id) ||
+      formData[this._formulaByNameModel];
+    let apiCall = formulaByNameId
+      ? this._formulaByNameModel.update(formulaByNameId, formData)
+      : this._formulaByNameModel.create(formData);
     apiCall
       .then((data) => {
         // OK
         window._$g.toastr.show("Lưu thành công!", "success");
         if (this._btnType === "save_n_close") {
           willRedirect = true;
-          return window._$g.rdr("/param-name");
+          return window._$g.rdr("/formula-by-name");
         }
         // Chain
         return data;
@@ -208,7 +305,7 @@ export default class FormulaByNameAdd extends PureComponent {
         // Submit form is done!
         setSubmitting(false);
         //
-        if (!FormulaEnt && !willRedirect && !alerts.length) {
+        if (!FormulaByNameEnt && !willRedirect && !alerts.length) {
           this.handleFormikReset();
         }
 
@@ -243,12 +340,32 @@ export default class FormulaByNameAdd extends PureComponent {
       return <Loading />;
     }
 
-    let { alerts, OptAttributes, OptCalculation, OptFormula, OptLetter } =
+    let { alerts, OptAttributes, OptCalculation, OptFormula, OptParamName } =
       this.state;
 
+    let check_format = [
+      "is_not_shortened",
+      "is_2_digit",
+      "is_1_digit",
+      "is_first_letter",
+      "is_last_letter",
+      "is_only_first_vowel",
+    ];
+
+    let check_calculation = [
+      "is_total_vowels",
+      "is_total_values",
+      "is_count_of_num",
+      "is_total_consonant",
+      "is_total_letters",
+      "is_num_show_3_time",
+      "is_total_first_letters",
+      "is_num_of_letters",
+      "is_num_show_0_time",
+    ];
     /** @var {Object} */
     let initialValues = this.getInitialValues();
-    const { noEdit, FormulaEnt } = this.props;
+    const { noEdit, FormulaByNameEnt } = this.props;
     return (
       <div className="animated fadeIn">
         <Row>
@@ -256,12 +373,13 @@ export default class FormulaByNameAdd extends PureComponent {
             <Card>
               <CardHeader>
                 <b>
-                  {FormulaEnt && FormulaEnt.param_name_id
+                  {FormulaByNameEnt && FormulaByNameEnt.formula_id
                     ? noEdit
                       ? "Chi tiết"
                       : "Chỉnh sửa"
                     : "Thêm mới"}{" "}
-                  công thức theo tên {FormulaEnt ? FormulaEnt.calculation : ""}
+                  công thức{" "}
+                  {FormulaByNameEnt ? FormulaByNameEnt.formula_name : ""}
                 </b>
               </CardHeader>
               <CardBody>
@@ -286,7 +404,7 @@ export default class FormulaByNameAdd extends PureComponent {
                   {(formikProps) => {
                     let {
                       values,
-                      // errors,
+                      errors,
                       // status,
                       // touched, handleChange, handleBlur,
                       //submitForm,
@@ -365,7 +483,17 @@ export default class FormulaByNameAdd extends PureComponent {
                                           {...field}
                                           className="text-left"
                                           onBlur={null}
+                                          name="attribute_id"
                                           id="attribute_id"
+                                          onChange={(item) => {
+                                            field.onChange({
+                                              target: {
+                                                name: "attribute_id",
+                                                value: item,
+                                              },
+                                            });
+                                          }}
+                                          value={values.attribute_id}
                                           disabled={noEdit}
                                           placeholder="-- Chọn --"
                                           options={OptAttributes}
@@ -446,31 +574,45 @@ export default class FormulaByNameAdd extends PureComponent {
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="is_total_shortened"
-                                      render={({ field /* _form */ }) => (
+                                      name="is_not_shortened"
+                                      render={({ field }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.is_total_shortened}
+                                          name="is_not_shortened"
+                                          checked={values.is_not_shortened}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            check_format.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                field.onChange({
+                                                  target: {
+                                                    name: item,
+                                                    value: false,
+                                                  },
+                                                });
+                                              }
+                                            });
                                             field.onChange({
                                               target: {
-                                                name: "is_total_shortened",
-                                                value: target.checked,
+                                                name: target.name,
+                                                value: true,
                                               },
                                             });
                                           }}
                                           type="checkbox"
-                                          id="is_total_shortened"
+                                          id="is_not_shortened"
                                           label="Không rút gọn"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="is_first_name"
+                                      name="is_not_shortened"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -492,15 +634,25 @@ export default class FormulaByNameAdd extends PureComponent {
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
+                                          name="is_2_digit"
                                           checked={values.is_2_digit}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "is_2_digit",
-                                                value: target.checked,
-                                              },
+                                            check_format.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                this.formikProps.setFieldValue(
+                                                  item,
+                                                  ""
+                                                );
+                                              }
                                             });
+                                            this.formikProps.setFieldValue(
+                                              target.name,
+                                              true
+                                            );
                                           }}
                                           type="checkbox"
                                           id="is_2_digit"
@@ -532,15 +684,25 @@ export default class FormulaByNameAdd extends PureComponent {
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
+                                          name="is_1_digit"
                                           checked={values.is_1_digit}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "is_1_digit",
-                                                value: target.checked,
-                                              },
+                                            check_format.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                this.formikProps.setFieldValue(
+                                                  item,
+                                                  ""
+                                                );
+                                              }
                                             });
+                                            this.formikProps.setFieldValue(
+                                              target.name,
+                                              true
+                                            );
                                           }}
                                           type="checkbox"
                                           id="is_1_digit"
@@ -577,31 +739,41 @@ export default class FormulaByNameAdd extends PureComponent {
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="first_letter"
+                                      name="is_first_letter"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.is_first_name}
+                                          name="is_first_letter"
+                                          checked={values.is_first_letter}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "first_letter",
-                                                value: target.checked,
-                                              },
+                                            check_format.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                this.formikProps.setFieldValue(
+                                                  item,
+                                                  ""
+                                                );
+                                              }
                                             });
+                                            this.formikProps.setFieldValue(
+                                              target.name,
+                                              true
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="first_letter"
+                                          id="is_first_letter"
                                           label="Ký tự đầu tiên"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="first_letter"
+                                      name="is_first_letter"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -617,31 +789,41 @@ export default class FormulaByNameAdd extends PureComponent {
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="last_letter"
+                                      name="is_last_letter"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.last_letter}
+                                          name="is_last_letter"
+                                          checked={values.is_last_letter}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "last_letter",
-                                                value: target.checked,
-                                              },
+                                            check_format.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                this.formikProps.setFieldValue(
+                                                  item,
+                                                  ""
+                                                );
+                                              }
                                             });
+                                            this.formikProps.setFieldValue(
+                                              target.name,
+                                              true
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="last_letter"
+                                          id="is_last_letter"
                                           label="Ký tự cuối cùng"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="last_letter"
+                                      name="is_last_letter"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -657,31 +839,41 @@ export default class FormulaByNameAdd extends PureComponent {
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="only_first_vowel"
+                                      name="is_only_first_vowel"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.only_first_vowel}
+                                          name="is_only_first_vowel"
+                                          checked={values.is_only_first_vowel}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "only_first_vowel",
-                                                value: target.checked,
-                                              },
+                                            check_format.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                this.formikProps.setFieldValue(
+                                                  item,
+                                                  ""
+                                                );
+                                              }
                                             });
+                                            this.formikProps.setFieldValue(
+                                              target.name,
+                                              true
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="only_first_vowel"
+                                          id="is_only_first_vowel"
                                           label="Chỉ lấy nguyên âm đầu tiên"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="only_first_vowel"
+                                      name="is_only_first_vowel"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -693,6 +885,24 @@ export default class FormulaByNameAdd extends PureComponent {
                                     />
                                   </Col>
                                 </FormGroup>
+                                <Col xs={12}>
+                                  <FormGroup row>
+                                    <Label className="text-left" sm={2}></Label>
+                                    <Col sm={8} className="pl-0">
+                                      <ErrorMessage
+                                        name="check_format"
+                                        component={({ children }) => (
+                                          <Alert
+                                            color="danger"
+                                            className="field-validation-error"
+                                          >
+                                            {children}
+                                          </Alert>
+                                        )}
+                                      />
+                                    </Col>
+                                  </FormGroup>
+                                </Col>
                               </Col>
                             </Row>
                             <Row>
@@ -704,37 +914,52 @@ export default class FormulaByNameAdd extends PureComponent {
                                     sm={2}
                                   >
                                     Cách tính
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col
                                     sm={2}
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="total_vowels"
+                                      name="is_total_vowels"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.total_vowels}
+                                          name="is_total_vowels"
+                                          checked={values.is_total_vowels}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "total_vowels",
-                                                value: target.checked,
-                                              },
-                                            });
+                                            check_calculation.forEach(
+                                              (item) => {
+                                                if (
+                                                  values[item] &&
+                                                  item !== target.name
+                                                ) {
+                                                  this.formikProps.setFieldValue(
+                                                    item,
+                                                    ""
+                                                  );
+                                                }
+                                                this.formikProps.setFieldValue(
+                                                  target.name,
+                                                  true
+                                                );
+                                              }
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="total_vowels"
+                                          id="is_total_vowels"
                                           label="Tổng nguyên âm"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="total_vowels"
+                                      name="is_total_vowels"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -750,31 +975,43 @@ export default class FormulaByNameAdd extends PureComponent {
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="total_values"
+                                      name="is_total_values"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.is_full_name}
+                                          name="is_total_values"
+                                          checked={values.is_total_values}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "total_values",
-                                                value: target.checked,
-                                              },
-                                            });
+                                            check_calculation.forEach(
+                                              (item) => {
+                                                if (
+                                                  values[item] &&
+                                                  item !== target.name
+                                                ) {
+                                                  this.formikProps.setFieldValue(
+                                                    item,
+                                                    ""
+                                                  );
+                                                }
+                                                this.formikProps.setFieldValue(
+                                                  target.name,
+                                                  true
+                                                );
+                                              }
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="total_values"
+                                          id="is_total_values"
                                           label="Tổng các giá trị"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="total_values"
+                                      name="is_total_values"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -790,31 +1027,43 @@ export default class FormulaByNameAdd extends PureComponent {
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="count_of_num"
+                                      name="is_count_of_num"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.count_of_num}
+                                          name="is_count_of_num"
+                                          checked={values.is_count_of_num}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "count_of_num",
-                                                value: target.checked,
-                                              },
-                                            });
+                                            check_calculation.forEach(
+                                              (item) => {
+                                                if (
+                                                  values[item] &&
+                                                  item !== target.name
+                                                ) {
+                                                  this.formikProps.setFieldValue(
+                                                    item,
+                                                    ""
+                                                  );
+                                                }
+                                                this.formikProps.setFieldValue(
+                                                  target.name,
+                                                  true
+                                                );
+                                              }
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="count_of_num"
+                                          id="is_count_of_num"
                                           label="Số lượng con số"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="count_of_num"
+                                      name="is_count_of_num"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -831,41 +1080,49 @@ export default class FormulaByNameAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="total_consonant"
-                                    className="text-left"
-                                    sm={2}
-                                  ></Label>
+                                  <Label className="text-left" sm={2}></Label>
                                   <Col
                                     sm={2}
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="total_consonant"
+                                      name="is_total_consonant"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.total_consonant}
+                                          name="is_total_consonant"
+                                          checked={values.is_total_consonant}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "total_consonant",
-                                                value: target.checked,
-                                              },
-                                            });
+                                            check_calculation.forEach(
+                                              (item) => {
+                                                if (
+                                                  values[item] &&
+                                                  item !== target.name
+                                                ) {
+                                                  this.formikProps.setFieldValue(
+                                                    item,
+                                                    ""
+                                                  );
+                                                }
+                                                this.formikProps.setFieldValue(
+                                                  target.name,
+                                                  true
+                                                );
+                                              }
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="total_consonant"
+                                          id="is_total_consonant"
                                           label="Tổng phụ âm"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="total_consonant"
+                                      name="is_total_consonant"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -881,31 +1138,43 @@ export default class FormulaByNameAdd extends PureComponent {
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="total_letters"
+                                      name="is_total_letters"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.total_letters}
+                                          name="is_total_letters"
+                                          checked={values.is_total_letters}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "total_letters",
-                                                value: target.checked,
-                                              },
-                                            });
+                                            check_calculation.forEach(
+                                              (item) => {
+                                                if (
+                                                  values[item] &&
+                                                  item !== target.name
+                                                ) {
+                                                  this.formikProps.setFieldValue(
+                                                    item,
+                                                    ""
+                                                  );
+                                                }
+                                                this.formikProps.setFieldValue(
+                                                  target.name,
+                                                  true
+                                                );
+                                              }
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="total_letters"
+                                          id="is_total_letters"
                                           label="Tổng các chữ cái"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="total_letters"
+                                      name="is_total_letters"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -921,31 +1190,43 @@ export default class FormulaByNameAdd extends PureComponent {
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="num_show_3_time"
+                                      name="is_num_show_3_time"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.num_show_3_time}
+                                          name="is_num_show_3_time"
+                                          checked={values.is_num_show_3_time}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "num_show_3_time",
-                                                value: target.checked,
-                                              },
-                                            });
+                                            check_calculation.forEach(
+                                              (item) => {
+                                                if (
+                                                  values[item] &&
+                                                  item !== target.name
+                                                ) {
+                                                  this.formikProps.setFieldValue(
+                                                    item,
+                                                    ""
+                                                  );
+                                                }
+                                                this.formikProps.setFieldValue(
+                                                  target.name,
+                                                  true
+                                                );
+                                              }
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="num_show_3_time"
+                                          id="is_num_show_3_time"
                                           label="Số xuất hiện >= 3 lần"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="num_show_3_time"
+                                      name="is_num_show_3_time"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -962,41 +1243,51 @@ export default class FormulaByNameAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="total_first_letter"
-                                    className="text-left"
-                                    sm={2}
-                                  ></Label>
+                                  <Label className="text-left" sm={2}></Label>
                                   <Col
                                     sm={2}
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="total_first_letter"
+                                      name="is_total_first_letters"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.total_first_letter}
+                                          name="is_total_first_letters"
+                                          checked={
+                                            values.is_total_first_letters
+                                          }
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "total_first_letter",
-                                                value: target.checked,
-                                              },
-                                            });
+                                            check_calculation.forEach(
+                                              (item) => {
+                                                if (
+                                                  values[item] &&
+                                                  item !== target.name
+                                                ) {
+                                                  this.formikProps.setFieldValue(
+                                                    item,
+                                                    ""
+                                                  );
+                                                }
+                                                this.formikProps.setFieldValue(
+                                                  target.name,
+                                                  true
+                                                );
+                                              }
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="total_first_letter"
+                                          id="is_total_first_letters"
                                           label="Tổng chữ cái đầu tiên"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="total_first_letter"
+                                      name="is_total_first_letters"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -1012,31 +1303,43 @@ export default class FormulaByNameAdd extends PureComponent {
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="num_of_letters"
+                                      name="is_num_of_letters"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.is_full_name}
+                                          checked={values.is_num_of_letters}
+                                          name="is_num_of_letters"
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "num_of_letters",
-                                                value: target.checked,
-                                              },
-                                            });
+                                            check_calculation.forEach(
+                                              (item) => {
+                                                if (
+                                                  values[item] &&
+                                                  item !== target.name
+                                                ) {
+                                                  this.formikProps.setFieldValue(
+                                                    item,
+                                                    false
+                                                  );
+                                                }
+                                                this.formikProps.setFieldValue(
+                                                  target.name,
+                                                  true
+                                                );
+                                              }
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="num_of_letters"
+                                          id="is_num_of_letters"
                                           label="Số lượng các chữ cái"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="num_of_letters"
+                                      name="is_num_of_letters"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -1052,31 +1355,43 @@ export default class FormulaByNameAdd extends PureComponent {
                                     className="d-flex align-items-center"
                                   >
                                     <Field
-                                      name="num_show_0_time"
+                                      name="is_num_show_0_time"
                                       render={({ field /* _form */ }) => (
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={values.num_show_0_time}
+                                          name="is_num_show_0_time"
+                                          checked={values.is_num_show_0_time}
                                           onChange={(event) => {
                                             const { target } = event;
-                                            field.onChange({
-                                              target: {
-                                                name: "num_show_0_time",
-                                                value: target.checked,
-                                              },
-                                            });
+                                            check_calculation.forEach(
+                                              (item) => {
+                                                if (
+                                                  values[item] &&
+                                                  item !== target.name
+                                                ) {
+                                                  this.formikProps.setFieldValue(
+                                                    item,
+                                                    ""
+                                                  );
+                                                }
+                                                this.formikProps.setFieldValue(
+                                                  target.name,
+                                                  true
+                                                );
+                                              }
+                                            );
                                           }}
                                           type="checkbox"
-                                          id="num_show_0_time"
+                                          id="is_num_show_0_time"
                                           label="Số xuất hiện 0 lần"
                                           disabled={noEdit}
                                         />
                                       )}
                                     />
                                     <ErrorMessage
-                                      name="num_show_0_time"
+                                      name="is_num_show_0_time"
                                       component={({ children }) => (
                                         <Alert
                                           color="danger"
@@ -1088,6 +1403,24 @@ export default class FormulaByNameAdd extends PureComponent {
                                     />
                                   </Col>
                                 </FormGroup>
+                                <Col xs={12}>
+                                  <FormGroup row>
+                                    <Label className="text-left" sm={2}></Label>
+                                    <Col sm={8} className="pl-0">
+                                      <ErrorMessage
+                                        name="check_calculation"
+                                        component={({ children }) => (
+                                          <Alert
+                                            color="danger"
+                                            className="field-validation-error"
+                                          >
+                                            {children}
+                                          </Alert>
+                                        )}
+                                      />
+                                    </Col>
+                                  </FormGroup>
+                                </Col>
                               </Col>
                             </Row>
                             <Row>
@@ -1095,6 +1428,9 @@ export default class FormulaByNameAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="param_name_id" sm={2}>
                                     Biến số
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={4}>
                                     <Field
@@ -1105,7 +1441,15 @@ export default class FormulaByNameAdd extends PureComponent {
                                           onBlur={null}
                                           value={values.param_name_id}
                                           placeholder="-- Chọn --"
-                                          options={OptLetter}
+                                          onChange={(item) => {
+                                            field.onChange({
+                                              target: {
+                                                name: "param_name_id",
+                                                value: item,
+                                              },
+                                            });
+                                          }}
+                                          options={OptParamName}
                                           id="param_name_id"
                                           disabled={noEdit}
                                         />
@@ -1129,11 +1473,7 @@ export default class FormulaByNameAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="is_expression"
-                                    className="text-left"
-                                    sm={2}
-                                  ></Label>
+                                  <Label className="text-left" sm={2}></Label>
                                   <Col
                                     sm={2}
                                     className="d-flex align-items-center"
@@ -1154,6 +1494,20 @@ export default class FormulaByNameAdd extends PureComponent {
                                                 value: target.checked,
                                               },
                                             });
+                                            if (!target.checked) {
+                                              field.onChange({
+                                                target: {
+                                                  name: "calculation_id",
+                                                  value: null,
+                                                },
+                                              });
+                                              field.onChange({
+                                                target: {
+                                                  name: "parent_formula_id",
+                                                  value: null,
+                                                },
+                                              });
+                                            }
                                           }}
                                           type="checkbox"
                                           id="is_expression"
@@ -1176,79 +1530,85 @@ export default class FormulaByNameAdd extends PureComponent {
                                   </Col>
                                   <Col sm={3}>
                                     <Field
-                                      name="is_first_middle_name"
+                                      name="calculation_id"
                                       render={({ field /* _form */ }) => (
                                         <Select
                                           {...field}
                                           onBlur={null}
-                                          checked={values.is_first_middle_name}
-                                          onChange={(event) => {
-                                            const { target } = event;
+                                          value={values.calculation_id || ""}
+                                          onChange={(item) => {
                                             field.onChange({
                                               target: {
-                                                name: "is_first_middle_name",
-                                                value: target.checked,
+                                                name: "calculation_id",
+                                                value: item,
                                               },
                                             });
                                           }}
                                           options={OptCalculation}
                                           placeholder=" -- Chọn phép tính --"
-                                          id="is_first_middle_name"
+                                          id="calculation_id"
                                           isDisabled={
                                             noEdit || !values.is_expression
                                           }
                                         />
                                       )}
                                     />
-                                    <ErrorMessage
-                                      name="is_first_middle_name"
-                                      component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
-                                          {children}
-                                        </Alert>
-                                      )}
-                                    />
+                                    {values.is_expression ? (
+                                      <ErrorMessage
+                                        name="calculation_id"
+                                        component={({ children }) => (
+                                          <Alert
+                                            color="danger"
+                                            className="field-validation-error"
+                                          >
+                                            {children}
+                                          </Alert>
+                                        )}
+                                      />
+                                    ) : (
+                                      ""
+                                    )}
                                   </Col>
                                   <Col sm={3}>
                                     <Field
-                                      name="is_first_middle_name"
+                                      name="parent_formula_id"
                                       render={({ field /* _form */ }) => (
                                         <Select
                                           {...field}
                                           onBlur={null}
-                                          checked={values.is_first_middle_name}
-                                          onChange={(event) => {
-                                            const { target } = event;
+                                          value={values.parent_formula_id || ""}
+                                          onChange={(item) => {
                                             field.onChange({
                                               target: {
-                                                name: "is_first_middle_name",
-                                                value: target.checked,
+                                                name: "parent_formula_id",
+                                                value: item,
                                               },
                                             });
                                           }}
                                           options={OptFormula}
                                           placeholder=" -- Chọn công thức cha --"
-                                          id="is_first_middle_name"
+                                          id="parent_formula_id"
                                           isDisabled={
                                             noEdit || !values.is_expression
                                           }
                                         />
                                       )}
                                     />
-                                    <ErrorMessage
-                                      name="is_first_middle_name"
-                                      component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
-                                          {children}
-                                        </Alert>
-                                      )}
-                                    />
+                                    {values.is_expression ? (
+                                      <ErrorMessage
+                                        name="parent_formula_id"
+                                        component={({ children }) => (
+                                          <Alert
+                                            color="danger"
+                                            className="field-validation-error"
+                                          >
+                                            {children}
+                                          </Alert>
+                                        )}
+                                      />
+                                    ) : (
+                                      ""
+                                    )}
                                   </Col>
                                 </FormGroup>
                               </Col>
@@ -1303,13 +1663,13 @@ export default class FormulaByNameAdd extends PureComponent {
                             <Row>
                               <Col sm={12} className="text-right mt-3">
                                 {noEdit ? (
-                                  <CheckAccess permission="FOR_FORMULA_EDIT">
+                                  <CheckAccess permission="FOR_FORMULABYNAME_EDIT">
                                     <Button
                                       color="primary"
                                       className="mr-2 btn-block-sm"
                                       onClick={() =>
                                         window._$g.rdr(
-                                          `/param-name/edit/${FormulaEnt.param_name_id}`
+                                          `/formula-by-name/edit/${FormulaByNameEnt.formula_id}`
                                         )
                                       }
                                     >
@@ -1347,7 +1707,9 @@ export default class FormulaByNameAdd extends PureComponent {
                                 )}
                                 <Button
                                   disabled={isSubmitting}
-                                  onClick={() => window._$g.rdr("/formula")}
+                                  onClick={() =>
+                                    window._$g.rdr("/formula-by-name")
+                                  }
                                   className="btn-block-sm mt-md-0 mt-sm-2"
                                 >
                                   <i className="fa fa-times-circle mr-1" />
