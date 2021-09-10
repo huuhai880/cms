@@ -246,11 +246,12 @@ export default class PartnerAdd extends PureComponent {
     let { partnerEnt } = this.props;
     // Build form data
     // +++
-    let { open_date, address_full, is_active } = values;
+    let { open_date, address_full, is_active, partner_name } = values;
     // let bdArr = (open_date && moment(open_date).format("DD/MM/YYYY")) || [];
     // +++
     let formData = Object.assign({}, values, {
       is_active: is_active ? 1 : 0,
+      partner_name: partner_name? partner_name.trim(): ""
       // open_date: bdArr.length ? bdArr : "",
     });
     //
