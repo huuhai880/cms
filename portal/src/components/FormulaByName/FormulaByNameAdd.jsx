@@ -248,6 +248,7 @@ export default class FormulaByNameAdd extends PureComponent {
       is_expression,
       calculation_id,
       parent_formula_id,
+      formula_name,
     } = values;
 
     // +++
@@ -273,6 +274,7 @@ export default class FormulaByNameAdd extends PureComponent {
       is_expression: is_expression ? 1 : 0,
       calculation_id: calculation_id ? calculation_id.value : "",
       parent_formula_id: parent_formula_id ? parent_formula_id.value : "",
+      formula_name: formula_name? formula_name.trim(): "",
     });
 
     //
