@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 
 // Component(s)
 import Loading from '../Common/Loading';
-import PriceAdd from './PriceAdd';
+import PriceAdd from './PriceOldAdd';
 
 // Model(s)
 import PriceModel from "../../models/PriceModel";

@@ -1,6 +1,4 @@
 import React from "react";
-// import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import {
   Alert,
   Card,
@@ -10,15 +8,6 @@ import {
   Row,
   Button,
   Table,
-  TabContent,
-  TabPane,
-  Nav,
-  NavItem,
-  NavLink,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   CustomInput,
   FormGroup,
   Label,
@@ -26,27 +15,13 @@ import {
   Form,
 } from "reactstrap";
 import "react-image-lightbox/style.css";
-import {
-  FormInput,
-  FormSwitch,
-  FormSelect,
-  FormSelectGroup,
-  ListImage,
-  FormRichEditor,
-  ActionButton,
-  FormCreateSelect,
-  YoutubePreview,
-  FormDatePicker,
-  GenQR,
-} from "@widget";
+import {ActionButton} from "@widget";
 import { useState } from "react";
 import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
-import NumberFormat from "../Common/NumberFormat";
 import {
   convertValue,
   mapDataOptions4Select,
-  readFileAsBase64,
   readImageAsBase64,
 } from "../../utils/html";
 import AuthorModel from "../../models/AuthorModel/index";

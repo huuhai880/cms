@@ -186,7 +186,7 @@ const numberFormatIntl = new Intl.NumberFormat("vi-VN", {
  * @param {Number|String} val
  * @return {String}
  */
-export function numberFormat(val) {
+export function   numberFormat(val) {
   return numberFormatIntl.format(val);
 }
 

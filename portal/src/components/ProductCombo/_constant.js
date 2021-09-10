@@ -1,26 +1,12 @@
 import React from 'react'
-import { configTableOptions, configIDRowTable, numberFormat } from "../../utils/index";
+import { configIDRowTable } from "../../utils/index";
 import { CheckAccess } from "../../navigation/VerifyAccess";
-import {
-   Card,
-   CardBody,
-   CardHeader,
-   Button,
-   Modal,
-   ModalHeader,
-   ModalBody,
-   ModalFooter,
-   Input,
-   Row,
-   Col,
-   Label,
-   FormGroup,
-} from "reactstrap";
+import { Button } from "reactstrap";
 import * as yup from "yup";
-
+import { Checkbox } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
-export const getColumnTable = (data, query, handleActionItemClick) => {
+export const getColumnTable = (data, query, handleActionItemClick, handlePick = null, pickItems = {}, setPickItem) => {
    return [
       configIDRowTable("combo_id", "/produc-combo/detail/", query),
       {
@@ -122,43 +108,62 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
             sort: false,
             empty: true,
             customBodyRender: (value, tableMeta, updateValue) => {
-               return (
-                  <div className="text-center">
-                     <CheckAccess permission="PRO_COMBOS_EDIT">
-                        <Button
-                           color="primary"
-                           title="Chỉnh sửa"
-                           className="mr-1"
-                           onClick={(evt) =>
-                              handleActionItemClick(
-                                 "edit",
-                                 data[tableMeta["rowIndex"]].combo_id,
-                                 tableMeta["rowIndex"]
-                              )
-                           }
-                        >
-                           <i className="fa fa-edit" />
-                        </Button>
-                     </CheckAccess>
+               if (handlePick) {
+                  let item = data[tableMeta["rowIndex"]];
+                  return (
+                     <div className="text-center mb-1">
+                        <Checkbox
+                           checked={!!pickItems[item.combo_id]}
+                           onChange={({ target }) => {
+                              if (target.checked) {
+                                 pickItems[item.combo_id] = item;
+                              } else {
+                                 delete pickItems[item.combo_id];
+                              }
+                              setPickItem(pickItems)
+                           }}
+                        />
+                     </div>
+                  );
+               }
+               else
+                  return (
+                     <div className="text-center">
+                        <CheckAccess permission="PRO_COMBOS_EDIT">
+                           <Button
+                              color="primary"
+                              title="Chỉnh sửa"
+                              className="mr-1"
+                              onClick={(evt) =>
+                                 handleActionItemClick(
+                                    "edit",
+                                    data[tableMeta["rowIndex"]].combo_id,
+                                    tableMeta["rowIndex"]
+                                 )
+                              }
+                           >
+                              <i className="fa fa-edit" />
+                           </Button>
+                        </CheckAccess>
 
-                     <CheckAccess permission="PRO_COMBOS_DEL">
-                        <Button
-                           color="danger"
-                           title="Xóa"
-                           className=""
-                           onClick={(evt) =>
-                              handleActionItemClick(
-                                 "delete",
-                                 data[tableMeta["rowIndex"]].combo_id,
-                                 tableMeta["rowIndex"]
-                              )
-                           }
-                        >
-                           <i className="fa fa-trash" />
-                        </Button>
-                     </CheckAccess>
-                  </div>
-               );
+                        <CheckAccess permission="PRO_COMBOS_DEL">
+                           <Button
+                              color="danger"
+                              title="Xóa"
+                              className=""
+                              onClick={(evt) =>
+                                 handleActionItemClick(
+                                    "delete",
+                                    data[tableMeta["rowIndex"]].combo_id,
+                                    tableMeta["rowIndex"]
+                                 )
+                              }
+                           >
+                              <i className="fa fa-trash" />
+                           </Button>
+                        </CheckAccess>
+                     </div>
+                  );
             },
          },
       },
