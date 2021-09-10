@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 
 // Component(s)
-import PriceEdit from './PriceEdit';
+import PriceEdit from './PriceOldEdit';
 
 /**
  * @class PriceDetail

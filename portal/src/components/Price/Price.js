@@ -12,19 +12,17 @@ import { CheckAccess } from "../../navigation/VerifyAccess";
 // Util(s)
 import { layoutFullWidthHeight } from "../../utils/html";
 import { configTableOptions } from "../../utils/index";
-
-import ProductComboFilter from "./ProductComboFilter";
+import PriceFilter from "components/Price/PriceFilter";
 import { getColumnTable } from "./_constant";
 
-import ProductComboModel from "../../models/ProductComboModel/index";
+import PriceModel from "../../models/PriceModel/index";
 
 // Set layout full-wh
 layoutFullWidthHeight();
 
-const _productComboModel = new ProductComboModel();
+const _priceModel = new PriceModel();
 
-export default function ProductCombo({ handlePick = null, isOpenModal = false, combos = [] }) {
-
+function Price(props) {
     const [toggleSearch, setToggleSearch] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState({
@@ -32,33 +30,23 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
         total: 0,
     });
     const [query, setQuery] = useState({
-        itemsPerPage: handlePick ? 10 : 25,
+        itemsPerPage: 25,
         page: 1,
-        is_active: 1,
+        is_active: 2,
         search: "",
         start_date: null,
         end_date: null,
     });
 
-    const [pickItems, setPickItems] = useState({})
-
-
     useEffect(() => {
-        getListProductCombo(query);
-
-        const _pickItems = combos ? (combos || []).reduce((obj, item) => {
-            obj[item.combo_id] = item;
-            return obj;
-        }, {}) : {};
-        setPickItems(_pickItems)
-
+        getListPrice(query);
     }, []);
 
 
-    const getListProductCombo = async (query) => {
+    const getListPrice = async (query) => {
         setIsLoading(true);
         try {
-            let data = await _productComboModel.getList(query);
+            let data = await _priceModel.getList(query);
             setData(data);
         } catch (error) {
             window._$g.dialogs.alert(
@@ -77,18 +65,18 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
             itemsPerPage: 25,
         };
         setQuery(query_params);
-        getListProductCombo(query_params);
+        getListPrice(query_params);
     };
 
     const handleClickAdd = () => {
-        window._$g.rdr("/product-combo/add");
+        window._$g.rdr("/price/add");
     };
 
     const handleActionItemClick = (type, id, rowIndex) => {
         let routes = {
-            detail: "/product-combo/detail/",
-            delete: "/product-combo/delete/",
-            edit: "/product-combo/edit/",
+            detail: "/price/detail/",
+            delete: "/price/delete/",
+            edit: "/price/edit/",
         };
         const route = routes[type];
 
@@ -106,7 +94,7 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
     const handleClose = (confirm, id, rowIndex) => {
         const { list } = data;
         if (confirm) {
-            _productComboModel
+            _priceModel
                 .delete(id)
                 .then(() => {
                     const cloneData = JSON.parse(JSON.stringify(list));
@@ -126,7 +114,7 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
         let filter = { ...query };
         filter.page = newPage + 1;
         setQuery(filter);
-        getListProductCombo(filter);
+        getListPrice(filter);
     };
 
     const handleChangeRowsPerPage = (event) => {
@@ -134,60 +122,38 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
         filter.itemsPerPage = event.target.value;
         filter.page = 1;
         setQuery(filter);
-        getListProductCombo(filter);
+        getListPrice(filter);
     };
 
-    const handleAddCombo = () => {
-        if (handlePick) {
-            handlePick(pickItems)
-            setPickItems({})
-        }
-    };
 
     return (
         <div>
-            <Card className={`animated fadeIn z-index-222 mb-3 ${handlePick ? "news-header-no-border" : ""
-                }`}>
-                <CardHeader className="d-flex"
-                    style={{
-                        padding: handlePick ? '0.55rem' : '0.55rem 1.25rem',
-                        alignItems: handlePick ? 'center' : 'unset'
-                    }}>
-                    <div className="flex-fill font-weight-bold">
-                        {handlePick ? "Thêm Combo" : "Thông tin tìm kiếm"}
+            <Card className={`animated fadeIn z-index-222 mb-3`}>
+                <CardHeader className="d-flex">
+                    <div className="flex-fill font-weight-bold">Thông tin tìm kiếm</div>
+                    <div
+                        className="minimize-icon cur-pointer "
+                        onClick={() => setToggleSearch((p) => !p)}
+                    >
+                        <i className={`fa ${toggleSearch ? "fa-minus" : "fa-plus"}`} />
                     </div>
-                    {handlePick ? (
-                        <Button color="danger" size="md" onClick={() => handlePick({})}>
-                            <i className={`fa fa-remove`} />
-                        </Button>
-                    ) :
-                        <div
-                            className="minimize-icon cur-pointer "
-                            onClick={() => setToggleSearch((p) => !p)}
-                        >
-                            <i className={`fa ${toggleSearch ? "fa-minus" : "fa-plus"}`} />
-                        </div>
-                    }
                 </CardHeader>
                 {toggleSearch && (
                     <CardBody className="px-0 py-0">
                         <div className="MuiPaper-filter__custom z-index-2">
-                            <ProductComboFilter
-                                handleSubmitFilter={handleSubmitFilter}
-                                handlePick={handlePick ? handleAddCombo : null}
-                            />
+                            <PriceFilter handleSubmitFilter={handleSubmitFilter} />
                         </div>
                     </CardBody>
                 )}
             </Card>
 
-            {!handlePick && <Col
+            <Col
                 xs={12}
                 sm={4}
                 className="d-flex align-items-end mb-3"
                 style={{ padding: 0 }}
             >
-                <CheckAccess permission="PRO_COMBOS_ADD">
+                <CheckAccess permission="SL_PRICE_ADD">
                     <FormGroup className="mb-2 mb-sm-0">
                         <Button
                             className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
@@ -201,11 +167,9 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
                     </FormGroup>
                 </CheckAccess>
             </Col>
-            }
 
-            <Card className="animated fadeIn"
-                style={{ marginBottom: handlePick ? 0 : "1.5rem", border: "none" }}>
-                <CardBody className={`py-0 ${!isOpenModal ? "px-0" : ""}`}>
+            <Card className="animated fadeIn">
+                <CardBody className={`py-0 px-0`}>
                     <div className="MuiPaper-root__custom MuiPaper-user">
                         {isLoading ? (
                             <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
@@ -218,10 +182,7 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
                                     columns={getColumnTable(
                                         data.list,
                                         query,
-                                        handleActionItemClick,
-                                        handlePick,
-                                        { ...pickItems },
-                                        setPickItems
+                                        handleActionItemClick
                                     )}
                                     options={configTableOptions(data.total, 0, query)}
                                 />
@@ -229,9 +190,7 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
                                     count={data.total}
                                     rowsPerPage={query.itemsPerPage}
                                     page={query.page - 1 || 0}
-                                    rowsPerPageOptions={
-                                        handlePick ? [10, 25, 50, 75, 100] : [25, 50, 75, 100]
-                                    }
+                                    rowsPerPageOptions={[25, 50, 75, 100]}
                                     onChangePage={handleChangePage}
                                     onChangeRowsPerPage={handleChangeRowsPerPage}
                                 />
@@ -243,3 +202,5 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
         </div>
     );
 }
+
+export default Price;

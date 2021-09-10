@@ -4,7 +4,7 @@ import Select from "react-select";
 import DatePicker from "../Common/DatePicker";
 
 
-export default function ProductComboFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
+function PriceFilter({ query = {}, handleSubmitFilter }) {
     const [filter, setFilter] = useState({
         search: "",
         isActiveSelected: { label: "Có", value: 1 },
@@ -89,9 +89,10 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter, han
         <div className="ml-3 mr-3 mb-3 mt-3">
             <Form
                 autoComplete="nope"
-                className="zoom-scale-9">
+                // className="zoom-scale-9"
+                >
                 <Row>
-                    <Col xs={12} sm={handlePick ? 4 : 3}>
+                    <Col xs={12} sm={3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="inputValue" className="mr-sm-2">
                                 Từ khóa
@@ -101,7 +102,7 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter, han
                                 autoComplete="nope"
                                 type="text"
                                 name="search"
-                                placeholder="Nhập tên combo"
+                                placeholder="Nhập tên Sản phẩm/Combo"
                                 value={filter.search}
                                 onChange={handleChange}
                                 onKeyDown={handleKeyDown}
@@ -112,7 +113,7 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter, han
                         </FormGroup>
                     </Col>
 
-                    <Col xs={12} sm={handlePick ? 4 : 3}>
+                    <Col xs={12} sm={3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="" className="mr-sm-2">
                                 Ngày tạo từ
@@ -131,7 +132,7 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter, han
                     </Col>
 
 
-                    <Col xs={12} sm={handlePick ? 4 : 3}>
+                    <Col xs={12} sm={3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="" className="mr-sm-2">
                                 Kích hoạt
@@ -153,8 +154,8 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter, han
 
                     <Col
                         xs={12}
-                        sm={handlePick ? 12 : 3}
-                        className={`d-flex align-items-end justify-content-end ${handlePick ? 'mt-3' : ''}`}
+                        sm={3}
+                        className="d-flex align-items-end justify-content-end"
                     >
                         <FormGroup className="mb-2 mb-sm-0">
                             <Button
@@ -177,25 +178,11 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter, han
                                 <span className="ml-1">Làm mới</span>
                             </Button>
                         </FormGroup>
-                        {handlePick ? (
-                            <FormGroup className="mb-2 ml-2 mb-sm-0">
-                                <Button
-                                    className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handlePick();
-                                    }}
-                                    color="success"
-                                    size="sm"
-                                >
-                                    <i className="fa fa-plus" />
-                                    <span className="ml-1"> Chọn </span>
-                                </Button>
-                            </FormGroup>
-                        ) : null}
                     </Col>
                 </Row>
             </Form>
         </div>
     );
 }
+
+export default PriceFilter;

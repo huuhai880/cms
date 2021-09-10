@@ -9,55 +9,26 @@ import {
    Row,
    Button,
    Table,
-   TabContent,
-   TabPane,
-   Nav,
-   NavItem,
-   NavLink,
    Modal,
-   ModalHeader,
    ModalBody,
-   ModalFooter,
    CustomInput,
    FormGroup,
    Label,
    Input,
    Form,
 } from "reactstrap";
-import {
-   FormInput,
-   FormSwitch,
-   FormSelect,
-   FormSelectGroup,
-   ListImage,
-   FormRichEditor,
-   ActionButton,
-   FormCreateSelect,
-   YoutubePreview,
-   FormDatePicker,
-   GenQR,
-} from "@widget";
+import {ActionButton} from "@widget";
 
 import { useState } from "react";
-import Select from "react-select";
-import { Editor } from "@tinymce/tinymce-react";
 import NumberFormat from "../Common/NumberFormat";
-import {
-   convertValue,
-   mapDataOptions4Select,
-   readFileAsBase64,
-   readImageAsBase64,
-} from "../../utils/html";
 import { useEffect } from "react";
 import { useFormik } from "formik";
 import { initialValues, validationSchema } from "./_constant";
-import ProductModel from "models/ProductModel/index";
 import MessageError from "../Product/MessageError";
 import Loading from "../Common/Loading";
 import './style.scss'
 import Upload from "../Common/Antd/Upload";
 import Product from 'components/Product/Product';
-import { CircularProgress, Checkbox } from "@material-ui/core";
 import ProductComboModel from 'models/ProductComboModel/index';
 
 const _productComboModel = new ProductComboModel();

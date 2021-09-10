@@ -1,24 +1,10 @@
 
 import React from 'react'
-import { configTableOptions, configIDRowTable, numberFormat } from "../../utils/index";
+import { configIDRowTable } from "../../utils/index";
 import { CheckAccess } from "../../navigation/VerifyAccess";
-import {
-    Card,
-    CardBody,
-    CardHeader,
-    Button,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    Input,
-    Row,
-    Col,
-    Label,
-    FormGroup
-} from "reactstrap";
+import { Button } from "reactstrap";
 import * as yup from "yup";
-import { CircularProgress, Checkbox } from "@material-ui/core";
+import { Checkbox } from "@material-ui/core";
 
 import { Link } from "react-router-dom";
 

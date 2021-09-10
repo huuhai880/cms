@@ -10,12 +10,12 @@ import Switch from '@material-ui/core/Switch'
 
 // Component(s)
 import { CheckAccess } from '../../navigation/VerifyAccess'
-import PriceFilter from './PriceFilter'
+import PriceFilter from './PriceFilterOld'
 // Util(s)
 import { layoutFullWidthHeight } from '../../utils/html'
 import { configTableOptions, configIDRowTable } from '../../utils/index';
 // Model(s)
-import PriceModel from '../../models/PriceModel'
+import PriceModel from '../../models/PriceModelOld'
 import BusinessModel from "../../models/BusinessModel";
 import OutputTypeModel from "../../models/OutputTypeModel";
 // Constant(s)
