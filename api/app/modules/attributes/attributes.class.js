@@ -10,6 +10,7 @@ const template = {
   main_number: '{{#? MAINNUMBER}}',
   imges_id: '{{#? IMGESID}}',
   partner_id: '{{#? PARTNERID}}',
+  partner_name: '{{#? PARTNERNAME}}',
   is_active: '{{ ISACTIVE? 1: 0}}',
   is_active_image: '{{ ISACTIVEIMAGE? 1: 0}}',
   is_default: '{{ ISDEFAULT? 1: 0}}',
@@ -55,6 +56,7 @@ const detailAttributeImage = (AttibuteImage = []) => {
   return transform.transform(AttibuteImage, [
     'imges_id',
     'partner_id',
+    'partner_name',
     'url_images',
     'is_active_image',
     'is_default',

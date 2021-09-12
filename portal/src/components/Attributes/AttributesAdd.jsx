@@ -76,7 +76,6 @@ export default class AttributesAdd extends PureComponent {
       this._attributesModel.fillable(),
       AttributesEnt
     );
-
     // Format
     Object.keys(values).forEach((key) => {
       if (null === values[key]) {
@@ -195,17 +194,13 @@ export default class AttributesAdd extends PureComponent {
       main_number_id,
       attribute_name,
     } = values;
-    list_attributes_image = list_attributes_image.map((item) => {
-      item.partner_id = item.partner_id.value;
-      return item;
-    });
 
     let formData = Object.assign({}, values, {
       is_active: is_active ? 1 : 0,
       attributes_group_id: attributes_group_id.value,
       attributes_group_name: attributes_group_id.label,
       main_number_id: main_number_id.value,
-      attribute_name: attribute_name? attribute_name.trim(): "",
+      attribute_name: attribute_name ? attribute_name.trim() : "",
     });
     const attributeId =
       (AttributesEnt && AttributesEnt.attribute_id) ||
@@ -267,7 +262,7 @@ export default class AttributesAdd extends PureComponent {
     let { values, setFieldValue } = this.formikProps;
     values.list_attributes_image.unshift({
       images_id: "",
-      partner_id: null,
+      partner_id: "",
       url_images: undefined,
       is_default: 0,
       is_active_image: 1,
@@ -281,7 +276,7 @@ export default class AttributesAdd extends PureComponent {
       setFieldValue("list_attributes_image", [
         {
           images_id: "",
-          partner_id: null,
+          partner_id: "",
           url_images: "",
           is_default: 1,
           is_active_image: 1,
@@ -694,7 +689,7 @@ export default class AttributesAdd extends PureComponent {
                                                               .list_attributes_image[
                                                               index
                                                             ].partner_id
-                                                          : null
+                                                          : ""
                                                       }
                                                       onChange={(item) => {
                                                         values.list_attributes_image[
