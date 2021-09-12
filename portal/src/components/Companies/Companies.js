@@ -368,7 +368,7 @@ class Companies extends PureComponent {
             );
           },
           customBodyRender: (value) => {
-            return <span className="d-block text-right">{value || ""}</span>;
+            return <span className="d-block text-cemter">{value || ""}</span>;
           },
         },
       },
@@ -589,7 +589,7 @@ class Companies extends PureComponent {
               </Button>
             </FormGroup>
           </CheckAccess>
-          <CheckAccess permission="AM_COMPANY_EXPORT">
+          {/* <CheckAccess permission="AM_COMPANY_EXPORT">
             <FormGroup className="mb-2 mb-sm-0 ml-2">
               <Button
                 className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
@@ -601,7 +601,7 @@ class Companies extends PureComponent {
                 Xuất excel
               </Button>
             </FormGroup>
-          </CheckAccess>
+          </CheckAccess> */}
         </Col>
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">
