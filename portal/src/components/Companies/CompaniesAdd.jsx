@@ -865,7 +865,16 @@ export default class CompaniesAdd extends PureComponent {
                                       className="pull-left"
                                       onBlur={null}
                                       checked={values.is_active}
-                                      type="switch"
+                                      onChange={(event) => {
+                                        let { target } = event;
+                                        field.onChange({
+                                          target: {
+                                            name: "is_active",
+                                            value: target.checked
+                                          }
+                                        })
+                                      }}
+                                      type="checkbox"
                                       id="is_active"
                                       label="Kích hoạt?"
                                       disabled={noEdit}

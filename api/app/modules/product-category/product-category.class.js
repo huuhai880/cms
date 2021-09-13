@@ -60,6 +60,7 @@ const list = (areas = []) => {
     'created_full_name',
     'created_date',
     'is_active',
+    'is_show_web'
   ]);
 };
 const listAttributeByCategory = (areas = []) => {

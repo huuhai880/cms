@@ -66,7 +66,7 @@ class DatePicker extends PureComponent {
 
   render() {
     const { isMultiple, minToday, maxToday, ...other } = this.props;
-    const now = moment();
+    const now = moment().startOf("day")
     if (other.renderMonthElement) {
       other.renderMonthElement = this.renderMonthElement;
     }

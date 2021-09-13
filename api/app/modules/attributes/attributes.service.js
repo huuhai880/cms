@@ -165,7 +165,7 @@ const createAttributesOrUpdate = async (bodyParams) => {
           .request()
           .input('ATTRIBUTEID', attributeId)
           .input('IMGESID', apiHelper.getValueFromObject(item, 'imges_id'))
-          .input('PARTNERID', apiHelper.getValueFromObject(item, 'partner_id'))
+          .input('PARTNERID', apiHelper.getValueFromObject(item, 'partner_id').value || null)
           .input('URLIMAGES', url_images)
           .input('ISDEFAULT', apiHelper.getValueFromObject(item, 'is_default'))
           .input(

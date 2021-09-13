@@ -139,10 +139,11 @@ export default class AttrubtesGroupAdd extends PureComponent {
     // Build form data
     // +++
 
-    let { is_active } = values;
+    let { is_active, group_name } = values;
     // +++
     let formData = Object.assign({}, values, {
       is_active: is_active ? 1 : 0,
+      group_name: group_name? group_name.trim(): "",
     });
     //
     const group_nameId =

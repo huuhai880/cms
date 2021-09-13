@@ -133,7 +133,8 @@ class PriceFilter extends PureComponent {
                   isSearchable={true}
                   placeholder={"-- Chọn --"}
                   value={this.state.productCategory}
-                  options={productCategoryArray.map(({ name: label, id: value }) => ({ value, label }))}
+                  // options={productCategoryArray.map(({ name: label, id: value }) => ({ value, label }))}
+                  options={[]}
                 />
               </FormGroup>
             </Col>

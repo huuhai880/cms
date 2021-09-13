@@ -131,22 +131,7 @@ const deleteCustomerType = async (req, res, next) => {
     if (serviceResDetail.isFailed()) {
       return next(serviceResDetail);
     }
-    const serviceResUsed = await customerTypeService.checkUsedCustomerType(
-      customer_type_id
-    );
-    if (serviceResUsed.isFailed()) {
-      return next(serviceResUsed);
-    }
-    const check = serviceResUsed.getData();
-    if (!check) {
-      return next(
-        new ErrorResponse(
-          null,
-          null,
-          RESPONSE_MSG.CUSTOMERTYPE.CHECK_USED_FAILED
-        )
-      );
-    }
+ 
     // Delete CUSTOMERTYPE
     const serviceRes = await customerTypeService.deleteCustomerType(
       customer_type_id,

@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { Card, CardBody, CardHeader, Button, Badge } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Button,
+  Badge,
+  FormGroup,
+  Col,
+} from "reactstrap";
 
 // Material
 import MUIDataTable from "mui-datatables";
@@ -225,7 +233,7 @@ class ProductCategory extends Component {
       ),
       {
         name: "category_name",
-        label: "Tên danh mục sách",
+        label: "Tên danh mục sản phẩm",
         options: {
           filter: false,
           sort: false,
@@ -261,7 +269,7 @@ class ProductCategory extends Component {
       },
       {
         name: "parent_name",
-        label: "Thuộc danh mục sách",
+        label: "Thuộc danh mục sản phẩm",
         options: {
           filter: false,
           sort: false,
@@ -353,6 +361,27 @@ class ProductCategory extends Component {
         },
       },
       {
+        name: "is_show_web",
+        label: "Hiển thị Web",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-center">{value ? "Có" : "Không"}</div>;
+          },
+        },
+      },
+      {
         name: "Thao tác",
         options: {
           filter: false,
@@ -412,8 +441,30 @@ class ProductCategory extends Component {
             </CardBody>
           )}
         </Card>
-        <div>
+
+        <Col
+          xs={12}
+          sm={4}
+          className="d-flex align-items-end mb-3"
+          style={{ padding: 0 }}
+        >
           <CheckAccess permission="MD_PRODUCTCATEGORY_ADD">
+            <FormGroup className="mb-2 mb-sm-0">
+              <Button
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                onClick={() => this.handleClickAdd()}
+                color="success"
+                size="sm"
+              >
+                <i className="fa fa-plus mr-1" />
+                Thêm mới
+              </Button>
+            </FormGroup>
+          </CheckAccess>
+        </Col>
+
+        {/* <div> */}
+        {/* <CheckAccess permission="MD_PRODUCTCATEGORY_ADD">
             <Button
               className="col-12 max-w-110 mb-2 mobile-reset-width mr-2"
               onClick={() => this.handleClickAdd()}
@@ -423,13 +474,13 @@ class ProductCategory extends Component {
               <i className="fa fa-plus mr-1" />
               Thêm mới
             </Button>
-          </CheckAccess>
-          {/* <CheckAccess permission="MD_PRODUCTCATEGORY_EXPORT">
+          </CheckAccess> */}
+        {/* <CheckAccess permission="MD_PRODUCTCATEGORY_EXPORT">
             <Button className="col-12 max-w-110 mb-2 mobile-reset-width" color="excel"  size="sm">
               <i className="fa fa-download mr-1" />Xuất excel
             </Button>
           </CheckAccess> */}
-        </div>
+        {/* </div> */}
         <Card className="animated fadeIn">
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-root__custom">

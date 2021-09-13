@@ -23,7 +23,7 @@ layoutFullWidthHeight();
 
 const _productComboModel = new ProductComboModel();
 
-export default function ProductCombo(props) {
+export default function ProductCombo({ handlePick = null, isOpenModal = false, combos = [] }) {
 
     const [toggleSearch, setToggleSearch] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
@@ -32,17 +32,26 @@ export default function ProductCombo(props) {
         total: 0,
     });
     const [query, setQuery] = useState({
-        itemsPerPage: 25,
+        itemsPerPage: handlePick ? 10 : 25,
         page: 1,
-        is_active: 2,
+        is_active: 1,
         search: "",
         start_date: null,
         end_date: null,
     });
 
+    const [pickItems, setPickItems] = useState({})
+
 
     useEffect(() => {
         getListProductCombo(query);
+
+        const _pickItems = combos ? (combos || []).reduce((obj, item) => {
+            obj[item.combo_id] = item;
+            return obj;
+        }, {}) : {};
+        setPickItems(_pickItems)
+
     }, []);
 
 
@@ -128,28 +137,51 @@ export default function ProductCombo(props) {
         getListProductCombo(filter);
     };
 
+    const handleAddCombo = () => {
+        if (handlePick) {
+            handlePick(pickItems)
+            setPickItems({})
+        }
+    };
+
     return (
         <div>
-            <Card className={`animated fadeIn z-index-222 mb-3`}>
-                <CardHeader className="d-flex">
-                    <div className="flex-fill font-weight-bold">Thông tin tìm kiếm</div>
-                    <div
-                        className="minimize-icon cur-pointer "
-                        onClick={() => setToggleSearch((p) => !p)}
-                    >
-                        <i className={`fa ${toggleSearch ? "fa-minus" : "fa-plus"}`} />
+            <Card className={`animated fadeIn z-index-222 mb-3 ${handlePick ? "news-header-no-border" : ""
+                }`}>
+                <CardHeader className="d-flex"
+                    style={{
+                        padding: handlePick ? '0.55rem' : '0.55rem 1.25rem',
+                        alignItems: handlePick ? 'center' : 'unset'
+                    }}>
+                    <div className="flex-fill font-weight-bold">
+                        {handlePick ? "Thêm Combo" : "Thông tin tìm kiếm"}
                     </div>
+                    {handlePick ? (
+                        <Button color="danger" size="md" onClick={() => handlePick({})}>
+                            <i className={`fa fa-remove`} />
+                        </Button>
+                    ) :
+                        <div
+                            className="minimize-icon cur-pointer "
+                            onClick={() => setToggleSearch((p) => !p)}
+                        >
+                            <i className={`fa ${toggleSearch ? "fa-minus" : "fa-plus"}`} />
+                        </div>
+                    }
                 </CardHeader>
                 {toggleSearch && (
                     <CardBody className="px-0 py-0">
                         <div className="MuiPaper-filter__custom z-index-2">
-                            <ProductComboFilter handleSubmitFilter={handleSubmitFilter} />
+                            <ProductComboFilter
+                                handleSubmitFilter={handleSubmitFilter}
+                                handlePick={handlePick ? handleAddCombo : null}
+                            />
                         </div>
                     </CardBody>
                 )}
             </Card>
 
-            <Col
+            {!handlePick && <Col
                 xs={12}
                 sm={4}
                 className="d-flex align-items-end mb-3"
@@ -169,9 +201,11 @@ export default function ProductCombo(props) {
                     </FormGroup>
                 </CheckAccess>
             </Col>
+            }
 
-            <Card className="animated fadeIn">
-                <CardBody className={`py-0 px-0`}>
+            <Card className="animated fadeIn"
+                style={{ marginBottom: handlePick ? 0 : "1.5rem", border: "none" }}>
+                <CardBody className={`py-0 ${!isOpenModal ? "px-0" : ""}`}>
                     <div className="MuiPaper-root__custom MuiPaper-user">
                         {isLoading ? (
                             <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
@@ -184,7 +218,10 @@ export default function ProductCombo(props) {
                                     columns={getColumnTable(
                                         data.list,
                                         query,
-                                        handleActionItemClick
+                                        handleActionItemClick,
+                                        handlePick,
+                                        { ...pickItems },
+                                        setPickItems
                                     )}
                                     options={configTableOptions(data.total, 0, query)}
                                 />
@@ -192,7 +229,9 @@ export default function ProductCombo(props) {
                                     count={data.total}
                                     rowsPerPage={query.itemsPerPage}
                                     page={query.page - 1 || 0}
-                                    rowsPerPageOptions={[25, 50, 75, 100]}
+                                    rowsPerPageOptions={
+                                        handlePick ? [10, 25, 50, 75, 100] : [25, 50, 75, 100]
+                                    }
                                     onChangePage={handleChangePage}
                                     onChangeRowsPerPage={handleChangeRowsPerPage}
                                 />

@@ -735,7 +735,7 @@ module.exports = {
     UPDATE_FAILED: 'Cập nhật thất bại.',
     DELETE_SUCCESS: 'Xóa thành công.',
     SAVEIMG_FAILED: 'Lỗi tải hình ảnh.',
-    EXISTS_NAME: 'Loại biến số tên đã tồn tại.',
+    EXISTS_NAME: 'Tên loại biến số đã tồn tại.',
   },
 
   ATTRIBUTESGROUP: {
@@ -748,7 +748,7 @@ module.exports = {
     EXISTS_NAME: 'Tên nhóm thuộc tính đã tồn tại.',
   },
 
-  FORMULA: {
+  FORMULADOB: {
     CREATE_SUCCESS: 'Thêm mới thành công.',
     CREATE_FAILED: 'Thêm mới thất bại.',
     UPDATE_SUCCESS: 'Cập nhật thành công.',

@@ -65,7 +65,7 @@ class CompaniesFilter extends PureComponent {
       this.state;
     const { handleSubmit } = this.props;
     handleSubmit(
-      inputValue,
+      inputValue? inputValue.trim(): "",
       country ? country.value : undefined,
       province ? province.value : undefined,
       district ? district.value : undefined,
@@ -90,7 +90,7 @@ class CompaniesFilter extends PureComponent {
           province: null,
           district: null,
           ward: null,
-          is_active: null,
+          is_active: { label: "Có", value: 1 },
         },
         () => {
           this.onSubmit();

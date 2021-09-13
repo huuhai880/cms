@@ -99,7 +99,6 @@ export default class ParamNameAdd extends PureComponent {
       }
       bundle[key] = data;
     });
-    // console.log('bundle: ', bundle);
     //
     return bundle;
   }
@@ -143,6 +142,7 @@ export default class ParamNameAdd extends PureComponent {
       is_last_name,
       is_first_middle_name,
       is_first_name,
+      name_type,
     } = values;
 
     // +++
@@ -152,6 +152,7 @@ export default class ParamNameAdd extends PureComponent {
       is_first_name: is_first_name ? 1 : 0,
       is_first_middle_name: is_first_middle_name ? 1 : 0,
       is_active: is_active ? 1 : 0,
+      name_type: name_type? name_type.trim(): "",
     });
     //
     const calculationId =
@@ -218,8 +219,13 @@ export default class ParamNameAdd extends PureComponent {
       return <Loading />;
     }
 
-    let { alerts, countries, provinces, districts, wards } = this.state;
-
+    let { alerts } = this.state;
+    let checkName = [
+      "is_last_name",
+      "is_first_name",
+      "is_full_name",
+      "is_first_middle_name",
+    ];
     /** @var {Object} */
     let initialValues = this.getInitialValues();
     const { noEdit, paramNameEnt } = this.props;
@@ -340,14 +346,28 @@ export default class ParamNameAdd extends PureComponent {
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
+                                          name="is_first_name"
                                           onBlur={null}
                                           checked={values.is_first_name}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            checkName.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                field.onChange({
+                                                  target: {
+                                                    name: item,
+                                                    value: false,
+                                                  },
+                                                });
+                                              }
+                                            });
                                             field.onChange({
                                               target: {
-                                                name: "is_first_name",
-                                                value: target.checked,
+                                                name: target.name,
+                                                value: true,
                                               },
                                             });
                                           }}
@@ -377,14 +397,28 @@ export default class ParamNameAdd extends PureComponent {
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
+                                          name="is_full_name"
                                           onBlur={null}
                                           checked={values.is_full_name}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            checkName.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                field.onChange({
+                                                  target: {
+                                                    name: item,
+                                                    value: false,
+                                                  },
+                                                });
+                                              }
+                                            });
                                             field.onChange({
                                               target: {
-                                                name: "is_full_name",
-                                                value: target.checked,
+                                                name: target.name,
+                                                value: true,
                                               },
                                             });
                                           }}
@@ -421,14 +455,28 @@ export default class ParamNameAdd extends PureComponent {
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
+                                          name="is_last_name"
                                           onBlur={null}
                                           checked={values.is_last_name}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            checkName.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                field.onChange({
+                                                  target: {
+                                                    name: item,
+                                                    value: false,
+                                                  },
+                                                });
+                                              }
+                                            });
                                             field.onChange({
                                               target: {
-                                                name: "is_last_name",
-                                                value: target.checked,
+                                                name: target.name,
+                                                value: true,
                                               },
                                             });
                                           }}
@@ -458,14 +506,28 @@ export default class ParamNameAdd extends PureComponent {
                                         <CustomInput
                                           {...field}
                                           className="pull-left"
+                                          name="is_first_middle_name"
                                           onBlur={null}
                                           checked={values.is_first_middle_name}
                                           onChange={(event) => {
                                             const { target } = event;
+                                            checkName.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                field.onChange({
+                                                  target: {
+                                                    name: item,
+                                                    value: false,
+                                                  },
+                                                });
+                                              }
+                                            });
                                             field.onChange({
                                               target: {
-                                                name: "is_first_middle_name",
-                                                value: target.checked,
+                                                name: target.name,
+                                                value: true,
                                               },
                                             });
                                           }}

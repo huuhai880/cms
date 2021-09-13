@@ -1,24 +1,10 @@
 
 import React from 'react'
-import { configTableOptions, configIDRowTable, numberFormat } from "../../utils/index";
+import { configIDRowTable } from "../../utils/index";
 import { CheckAccess } from "../../navigation/VerifyAccess";
-import {
-    Card,
-    CardBody,
-    CardHeader,
-    Button,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    Input,
-    Row,
-    Col,
-    Label,
-    FormGroup
-} from "reactstrap";
+import { Button } from "reactstrap";
 import * as yup from "yup";
-import { CircularProgress, Checkbox } from "@material-ui/core";
+import { Checkbox } from "@material-ui/core";
 
 import { Link } from "react-router-dom";
 
@@ -92,27 +78,27 @@ export const getColumnTable = (data, query, handleActionItemClick, handlePick = 
             },
         },
 
-        {
-            name: "price",
-            label: "Giá sản phẩm",
-            options: {
-                filter: false,
-                sort: true,
-                customHeadRender: (columnMeta, handleToggleColumn) => {
-                    return (
-                        <th
-                            key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head"
-                        >
-                            <div className="text-center">{columnMeta.label}</div>
-                        </th>
-                    );
-                },
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{numberFormat(value)}</div>;
-                },
-            },
-        },
+        // {
+        //     name: "price",
+        //     label: "Giá sản phẩm",
+        //     options: {
+        //         filter: false,
+        //         sort: true,
+        //         customHeadRender: (columnMeta, handleToggleColumn) => {
+        //             return (
+        //                 <th
+        //                     key={`head-th-${columnMeta.label}`}
+        //                     className="MuiTableCell-root MuiTableCell-head"
+        //                 >
+        //                     <div className="text-center">{columnMeta.label}</div>
+        //                 </th>
+        //             );
+        //         },
+        //         customBodyRender: (value, tableMeta, updateValue) => {
+        //             return <div className="text-center">{numberFormat(value)}</div>;
+        //         },
+        //     },
+        // },
         {
             name: "is_active",
             label: "Kích hoạt",

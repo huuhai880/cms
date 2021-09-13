@@ -69,6 +69,7 @@ const createCombo = async (bodyParams = {}) => {
             .input('comboname', apiHelper.getValueFromObject(bodyParams, 'combo_name', ''))
             .input('description', apiHelper.getValueFromObject(bodyParams, 'description', ''))
             .input('comboimageurl', combo_image_url)
+            .input('isactive', apiHelper.getValueFromObject(bodyParams, 'is_active', 0))
             .input('createduser', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
             .execute('PRO_COMBOS_Create_AdminWeb')
 
@@ -136,6 +137,7 @@ const updateCombo = async (bodyParams = {}) => {
             .input('comboname', apiHelper.getValueFromObject(bodyParams, 'combo_name', ''))
             .input('description', apiHelper.getValueFromObject(bodyParams, 'description', ''))
             .input('comboimageurl', combo_image_url)
+            .input('isactive', apiHelper.getValueFromObject(bodyParams, 'is_active', 0))
             .input('updateduser', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
             .execute('PRO_COMBOS_Update_AdminWeb')
 

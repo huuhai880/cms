@@ -1,24 +1,25 @@
 //
 import Model from "../Model";
-import FormulaEntity from "../FormulaEntity";
+import FormulaByDobEntity from "../FormulaByDobEntity";
 //
 
 /**
- * @class FormulaModel
+ * @class FormulaByDobModel
  */
-export default class FormulaModel extends Model {
+export default class FormulaByDobModel extends Model {
   /**
    * @var {String} redux store::state key
    */
-  _stateKeyName = "formula";
+  _stateKeyName = "formula-by-dob";
 
   /** @var {String} */
-  static API_FOR_FOMULA_GET_LIST = "formula";
-  static API_FOR_FOMULA_DETAIL = "formula/:id";
-  static API_FOR_FOMULA_OPTS_ATTRIBUTES = "formula/get-options-attributes";
-  static API_FOR_FOMULA_OPTS_FORMULA = "formula/get-options-formula";
-  static API_FOR_FOMULA_OPTS_CALCULATION = "formula/get-options-calculation";
-
+  static API_FOR_FOMULA_GET_LIST = "formula-by-dob";
+  static API_FOR_FOMULA_DETAIL = "formula-by-dob/:id";
+  static API_FOR_FOMULA_OPTS_PARAMDOB = "formula-by-dob/get-options-paramdob";
+  static API_FOR_FOMULA_OPTS_ATTRIBUTES = "formula-by-dob/get-options-attributes";
+  static API_FOR_FOMULA_OPTS_FORMULADOB = "formula-by-dob/get-options-formuladob";
+  static API_FOR_FOMULA_OPTS_CALCULATION = "formula-by-dob/get-options-calculation";
+  
   /**
    * @var {String} Primary Key
    */
@@ -38,11 +39,10 @@ export default class FormulaModel extends Model {
     formula_name: "",
     attribute_id: "",
     description: "",
-    is_day: "",
-    is_month: "",
-    is_year: "",
+    param_id: "",
     is_total_shortened: "",
     last_2_digits: "",
+    check_short: "", // kiểm tra dạng
     parent_formula_id: "",
     parent_calculation_id: "",
     calculation_id: "",
@@ -51,6 +51,7 @@ export default class FormulaModel extends Model {
     key_milestones: "",
     second_milestones: "",
     challenging_milestones: "",
+    check_milestones: "", // kiểm tra Mốc phát triển
     age_milestones: "",
     year_milestones: "",
     values: "",
@@ -78,12 +79,16 @@ export default class FormulaModel extends Model {
     );
   }
 
+  getOptionParamdob(opts) {
+    return this._api.get(_static.API_FOR_FOMULA_OPTS_PARAMDOB, opts);
+  }
+
   getOptionAttributes(opts) {
     return this._api.get(_static.API_FOR_FOMULA_OPTS_ATTRIBUTES, opts);
   }
 
-  getOptionFormula(opts) {
-    return this._api.get(_static.API_FOR_FOMULA_OPTS_FORMULA, opts);
+  getOptionFormulaDob(opts) {
+    return this._api.get(_static.API_FOR_FOMULA_OPTS_FORMULADOB, opts);
   }
 
   getOptionMainCalculaion(opts) {
@@ -111,8 +116,8 @@ export default class FormulaModel extends Model {
     let data = Object.assign({}, _data);
     return this._api
       .get(_static.API_FOR_FOMULA_DETAIL.replace(":id", id), data)
-      .then((data) => new FormulaEntity(data));
+      .then((data) => new FormulaByDobEntity(data));
   }
 }
 // Make alias
-const _static = FormulaModel;
+const _static = FormulaByDobModel;

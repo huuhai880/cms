@@ -46,7 +46,6 @@ class CustomerTypeFilter extends PureComponent {
     this.setState({ selectedDefault });
   };
 
-
   handleKeyDown = (event) => {
     if (1 * event.keyCode === 13) {
       event.preventDefault();
@@ -97,11 +96,12 @@ class CustomerTypeFilter extends PureComponent {
   };
 
   render() {
+    const { handlePick } = this.props;
     return (
       <div className="ml-3 mr-3 mb-3 mt-3">
         <Form autoComplete="nope" className="zoom-scale-9">
           <Row>
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={handlePick ? 4 : 3}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="inputValue" className="mr-sm-2">
                   Từ khóa
@@ -121,7 +121,7 @@ class CustomerTypeFilter extends PureComponent {
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={handlePick ? 4 : 3}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Mặc định
@@ -134,13 +134,14 @@ class CustomerTypeFilter extends PureComponent {
                   isSearchable={true}
                   placeholder={"-- Chọn --"}
                   value={this.state.isDefault.find(
-                    (item) => "" + item.value === "" + this.state.selectedDefault
+                    (item) =>
+                      "" + item.value === "" + this.state.selectedDefault
                   )}
                   options={this.state.isDefault}
                 />
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={handlePick ? 4 : 3}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="" className="mr-sm-2">
                   Kích hoạt
@@ -161,8 +162,10 @@ class CustomerTypeFilter extends PureComponent {
             </Col>
             <Col
               xs={12}
-              sm={3}
-              className="d-flex align-items-end justify-content-end mt-3 pl-0 pr-0"
+              sm={handlePick ? 12 : 3}
+              className={`d-flex align-items-end justify-content-end ${
+                handlePick ? "mt-3" : ""
+              }`}
             >
               <FormGroup className="mb-2 mb-sm-0">
                 <Button
@@ -175,9 +178,9 @@ class CustomerTypeFilter extends PureComponent {
                   <span className="ml-1">Tìm kiếm</span>
                 </Button>
               </FormGroup>
-              <FormGroup className="mb-2 ml-2 mb-sm-0 mr-3">
+              <FormGroup className="mb-2 ml-2 mb-sm-0">
                 <Button
-                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                  className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                   onClick={this.onClear}
                   size="sm"
                 >
@@ -185,6 +188,22 @@ class CustomerTypeFilter extends PureComponent {
                   <span className="ml-1">Làm mới</span>
                 </Button>
               </FormGroup>
+              {handlePick ? (
+                <FormGroup className="mb-2 ml-2 mb-sm-0">
+                  <Button
+                    className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePick();
+                    }}
+                    color="success"
+                    size="sm"
+                  >
+                    <i className="fa fa-plus" />
+                    <span className="ml-1"> Chọn </span>
+                  </Button>
+                </FormGroup>
+              ) : null}
             </Col>
           </Row>
         </Form>

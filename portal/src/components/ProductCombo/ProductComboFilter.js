@@ -4,10 +4,10 @@ import Select from "react-select";
 import DatePicker from "../Common/DatePicker";
 
 
-export default function ProductComboFilter({ query = {}, handleSubmitFilter }) {
+export default function ProductComboFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
     const [filter, setFilter] = useState({
         search: "",
-        isActiveSelected: { label: "Tất cả", value: 2 },
+        isActiveSelected: { label: "Có", value: 1 },
         startDate: null,
         endDate: null,
     });
@@ -50,8 +50,8 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter }) {
         } = filter;
 
         handleSubmitFilter({
-            search,
-            is_active: isActiveSelected ? isActiveSelected.value : 2,
+            search: search ? search.trim() : null,
+            is_active: isActiveSelected ? isActiveSelected.value : 1,
             start_date: startDate ? startDate.format("DD/MM/YYYY") : null,
             end_date: endDate ? endDate.format("DD/MM/YYYY") : null,
             page: 1,
@@ -61,14 +61,14 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter }) {
     const handleClear = () => {
         setFilter({
             search: "",
-            isActiveSelected: { label: "Tất cả", value: 2 },
+            isActiveSelected: { label: "Có", value: 1 },
             startDate: null,
             endDate: null,
         });
 
         handleSubmitFilter({
             search: "",
-            is_active: 2,
+            is_active: 1,
             start_date: null,
             end_date: null,
             page: 1,
@@ -91,7 +91,7 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter }) {
                 autoComplete="nope"
                 className="zoom-scale-9">
                 <Row>
-                    <Col xs={12} sm={3}>
+                    <Col xs={12} sm={handlePick ? 4 : 3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="inputValue" className="mr-sm-2">
                                 Từ khóa
@@ -112,7 +112,7 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter }) {
                         </FormGroup>
                     </Col>
 
-                    <Col xs={12} sm={3}>
+                    <Col xs={12} sm={handlePick ? 4 : 3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="" className="mr-sm-2">
                                 Ngày tạo từ
@@ -131,7 +131,7 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter }) {
                     </Col>
 
 
-                    <Col xs={12} sm={3}>
+                    <Col xs={12} sm={handlePick ? 4 : 3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="" className="mr-sm-2">
                                 Kích hoạt
@@ -152,9 +152,9 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter }) {
                     </Col>
 
                     <Col
-                       xs={12}
-                       sm={3}
-                       className="d-flex align-items-end justify-content-end"
+                        xs={12}
+                        sm={handlePick ? 12 : 3}
+                        className={`d-flex align-items-end justify-content-end ${handlePick ? 'mt-3' : ''}`}
                     >
                         <FormGroup className="mb-2 mb-sm-0">
                             <Button
@@ -177,6 +177,22 @@ export default function ProductComboFilter({ query = {}, handleSubmitFilter }) {
                                 <span className="ml-1">Làm mới</span>
                             </Button>
                         </FormGroup>
+                        {handlePick ? (
+                            <FormGroup className="mb-2 ml-2 mb-sm-0">
+                                <Button
+                                    className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handlePick();
+                                    }}
+                                    color="success"
+                                    size="sm"
+                                >
+                                    <i className="fa fa-plus" />
+                                    <span className="ml-1"> Chọn </span>
+                                </Button>
+                            </FormGroup>
+                        ) : null}
                     </Col>
                 </Row>
             </Form>

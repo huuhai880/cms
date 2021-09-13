@@ -43,7 +43,7 @@ export default class AttributesModel extends Model {
     list_attributes_image: [
       {
         images_id: "",
-        partner_id: null,
+        partner_id: {value: "-1", label: "My success JSC"},
         url_images: "",
         is_default: 1,
         is_active_image: 1,

@@ -32,27 +32,14 @@ export default class AttributesEdit extends PureComponent {
       let AttributesEnt = await this._attributesModel.read(ID).catch(() => {
         setTimeout(() => window._$g.rdr("/404"));
       });
-      let OptsPartner = await this._attributesModel.getOptionPartner({
-        is_active: 1,
+      AttributesEnt.list_attributes_image.forEach((item) => {
+        item.partner_id = {
+          value: item.partner_id,
+          label: item.partner_name,
+        };
+        delete item.partner_name
       });
-      AttributesEnt.list_attributes_image =
-        AttributesEnt &&
-        AttributesEnt.list_attributes_image.map((item) => {
-          item.partner_id = OptsPartner.filter((items) => {
-            return items.id === item.partner_id;
-          });
-          item.partner_id =
-            item.partner_id &&
-            Object.assign(
-              {},
-              {
-                ...item.partner_id[0],
-                value: item.partner_id[0].id,
-                label: item.partner_id[0].name,
-              }
-            );
-          return item;
-        });
+  
       AttributesEnt = Object.assign(
         {},
         {

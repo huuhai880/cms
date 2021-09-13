@@ -285,12 +285,12 @@ const PromotionDetail = React.lazy(() => import("./components/Promotions/Promoti
 const PromotionEdit = React.lazy(() => import("./components/Promotions/PromotionEdit"));
 //.end#Promotions
 
-// Prices
-const Prices = React.lazy(() => import("./components/Prices/Prices"));
-const PriceReview = React.lazy(() => import("./components/Prices/PriceReview"));
-const PriceEdit = React.lazy(() => import("./components/Prices/PriceEdit"));
-const PricesList = React.lazy(() => import("./components/Prices/PricesList"));
-//.end#Prices
+// Price
+const Price = React.lazy(() => import("./components/Price/Price"));
+const PriceAdd = React.lazy(() => import("./components/Price/PriceAdd"));
+const PriceEdit = React.lazy(() => import("./components/Price/PriceEdit"));
+const PriceDetail = React.lazy(() => import("./components/Price/PriceDetail"));
+//.end#Price
 
 // customertype
 const CustomerType = React.lazy(() => import("./components/CustomerType/CustomerType"));
@@ -634,21 +634,33 @@ const AttributesGroupEdit = React.lazy(() =>
 // end#AttributesGroup
 
 //Formula
-const Formula = React.lazy(() => import("./components/Formula/Formula"));
-const FormulaAdd = React.lazy(() => import("./components/Formula/FormulaAdd"));
-const FormulaDetail = React.lazy(() => import("./components/Formula/FormulaDetail"));
-const FormulaEdit = React.lazy(() => import("./components/Formula/FormulaEdit"));
+const FormulaByDob = React.lazy(() =>
+  import("./components/FormulaByDob/FormulaByDob")
+);
+const FormulaByDobAdd = React.lazy(() =>
+  import("./components/FormulaByDob/FormulaByDobAdd")
+);
+const FormulaByDobDetail = React.lazy(() =>
+  import("./components/FormulaByDob/FormulaByDobDetail")
+);
+const FormulaByDobEdit = React.lazy(() =>
+  import("./components/FormulaByDob/FormulaByDobEdit")
+);
 // end#Formula
 
 //FormulaByName
-const FormulaByName = React.lazy(() => import("./components/FormulaByName/FormulaByName"));
-const FormulaByNameAdd = React.lazy(() => import("./components/FormulaByName/FormulaByNameAdd"));
-// const FormulaByNameDetail = React.lazy(() =>
-//   import("./components/FormulaByName/FormulaByNameDetail")
-// );
-// const FormulaByNameEdit = React.lazy(() =>
-//   import("./components/FormulaByName/FormulaByNameEdit")
-// );
+const FormulaByName = React.lazy(() =>
+  import("./components/FormulaByName/FormulaByName")
+);
+const FormulaByNameAdd = React.lazy(() =>
+  import("./components/FormulaByName/FormulaByNameAdd")
+);
+const FormulaByNameDetail = React.lazy(() =>
+  import("./components/FormulaByName/FormulaByNameDetail")
+);
+const FormulaByNameEdit = React.lazy(() =>
+  import("./components/FormulaByName/FormulaByNameEdit")
+);
 // end#FormulaByName
 
 const ProductCombo = React.lazy(() => import("./components/ProductCombo/ProductCombo"));
@@ -1546,41 +1558,34 @@ const routes = [
   },
   //.end#Promotions
 
-  // Prices
+  // Price
   {
-    path: "/prices",
+    path: "/price",
     exact: true,
     name: "Danh sách giá sản phẩm",
-    function: "SL_PRICES_VIEW",
-    component: Prices,
+    function: "SL_PRICE_VIEW",
+    component: Price,
   },
   {
-    path: "/prices/add/:productId",
+    path: "/price/add",
     exact: true,
     name: "Làm giá",
-    function: "SL_PRICES_ADD",
+    function: "SL_PRICE_ADD",
+    component: PriceAdd,
+  },
+  {
+    path: "/price/detail/:id",
+    exact: true,
+    name: "Chi tiết giá",
+    function: "SL_PRICE_VIEW",
+    component: PriceDetail,
+  },
+  {
+    path: "/price/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa giá",
+    function: "SL_PRICE_EDIT",
     component: PriceEdit,
-  },
-  {
-    path: "/prices/review/:productId",
-    exact: true,
-    name: "Duyệt giá",
-    function: "SL_PRICES_VIEW",
-    component: PriceReview,
-  },
-  {
-    path: "/prices/edit/:productId",
-    exact: true,
-    name: "Làm giá",
-    function: "SL_PRICES_EDIT",
-    component: PriceEdit,
-  },
-  {
-    path: "/prices-list",
-    exact: true,
-    name: "Danh sách làm giá sản phẩm",
-    function: "SL_PRICES_VIEW",
-    component: PricesList,
   },
   //.end#Prices
 
@@ -2906,32 +2911,32 @@ const routes = [
 
   //formula
   {
-    path: "/formula",
+    path: "/formula-by-dob",
     exact: true,
     name: "Danh sách công thức theo ngày sinh",
-    function: "FOR_FORMULA_VIEW",
-    component: Formula,
+    function: "FOR_FORMULABYDOB_VIEW",
+    component: FormulaByDob,
   },
   {
-    path: "/formula/add",
+    path: "/formula-by-dob/add",
     exact: true,
     name: "Thêm mới",
-    function: "FOR_FORMULA_ADD",
-    component: FormulaAdd,
+    function: "FOR_FORMULABYDOB_ADD",
+    component: FormulaByDobAdd,
   },
   {
-    path: "/formula/detail/:id",
+    path: "/formula-by-dob/detail/:id",
     exact: true,
     name: "Chi tiết",
-    function: "FOR_FORMULA_VIEW",
-    component: FormulaDetail,
+    function: "FOR_FORMULABYDOB_VIEW",
+    component: FormulaByDobDetail,
   },
   {
-    path: "/formula/edit/:id",
+    path: "/formula-by-dob/edit/:id",
     exact: true,
     name: "Chỉnh sửa",
-    function: "FOR_FORMULA_EDIT",
-    component: FormulaEdit,
+    function: "FOR_FORMULABYDOB_EDIT",
+    component: FormulaByDobEdit,
   },
   // end#formula
 
@@ -2950,20 +2955,20 @@ const routes = [
     function: "FOR_FORMULABYNAME_ADD",
     component: FormulaByNameAdd,
   },
-  // {
-  //   path: "/formula-by-name/detail/:id",
-  //   exact: true,
-  //   name: "Chi tiết",
-  //   function: "FOR_FORMULABYNAME_VIEW",
-  //   component: FormulaByNameDetail,
-  // },
-  // {
-  //   path: "/formula-by-name/edit/:id",
-  //   exact: true,
-  //   name: "Chỉnh sửa",
-  //   function: "FOR_FORMULABYNAME_EDIT",
-  //   component: FormulaByNameEdit,
-  // },
+  {
+    path: "/formula-by-name/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "FOR_FORMULABYNAME_VIEW",
+    component: FormulaByNameDetail,
+  },
+  {
+    path: "/formula-by-name/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "FOR_FORMULABYNAME_EDIT",
+    component: FormulaByNameEdit,
+  },
   // end#formula-by-name
 
   //relationShips

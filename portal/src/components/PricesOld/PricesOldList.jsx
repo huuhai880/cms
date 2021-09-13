@@ -10,7 +10,7 @@ import Switch from '@material-ui/core/Switch'
 
 // Component(s)
 import { CheckAccess } from '../../navigation/VerifyAccess'
-import PricesListFilter from './PricesListFilter'
+import PricesListFilter from './PricesOldListFilter'
 // Util(s)
 import { layoutFullWidthHeight } from '../../utils/html'
 import { configTableOptions, configIDRowTable } from "../../utils/index";
