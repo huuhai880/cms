@@ -2,11 +2,13 @@
 import React from 'react'
 import { configIDRowTable } from "../../utils/index";
 import { CheckAccess } from "../../navigation/VerifyAccess";
-import { Button } from "reactstrap";
+import { Button, CustomInput } from "reactstrap";
 import * as yup from "yup";
-import { Checkbox } from "@material-ui/core";
+// import { Checkbox } from "@material-ui/core";
 
 import { Link } from "react-router-dom";
+import './style.scss'
+import { Checkbox } from 'antd';
 
 export const getColumnTable = (data, query, handleActionItemClick, handlePick = null, pickItems = {}, setPickItem) => {
     return [
@@ -152,21 +154,34 @@ export const getColumnTable = (data, query, handleActionItemClick, handlePick = 
                 customBodyRender: (value, tableMeta, updateValue) => {
                     if (handlePick) {
                         let item = data[tableMeta["rowIndex"]];
-                        return (
-                            <div className="text-center mb-1">
-                                <Checkbox
-                                    checked={!!pickItems[item.product_id]}
-                                    onChange={({ target }) => {
-                                        if (target.checked) {
-                                            pickItems[item.product_id] = item;
-                                        } else {
-                                            delete pickItems[item.product_id];
-                                        }
-                                        setPickItem(pickItems)
-                                    }}
-                                />
-                            </div>
-                        );
+                        // return (
+                        //     <div className="text-center mb-1">
+                        //         <Checkbox
+                        //             checked={!!pickItems[item.product_id]}
+                        //             onChange={({ target }) => {
+                        //                 if (target.checked) {
+                        //                     pickItems[item.product_id] = item;
+                        //                 } else {
+                        //                     delete pickItems[item.product_id];
+                        //                 }
+                        //                 setPickItem(pickItems)
+                        //             }}
+                        //         />
+                        //     </div>
+                        // );
+
+                        return <div className="text-center">
+                            <Checkbox
+                                checked={!!pickItems[item.product_id]}
+                                onChange={({ target }) => {
+                                    if (target.checked) {
+                                        pickItems[item.product_id] = item;
+                                    } else {
+                                        delete pickItems[item.product_id];
+                                    }
+                                    setPickItem(pickItems)
+                                }} />
+                        </div>
                     }
                     else
                         return (

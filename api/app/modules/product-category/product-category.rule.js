@@ -12,7 +12,7 @@ const ruleCreateOrUpdate = Joi.object().keys({
   parent_id: Joi.number().allow('', null),
   description: Joi.string().allow('', null),
   is_active: Joi.number().valid(0, 1).required(),
-  list_attribute: Joi.array().min(1).items(itemsArray),
+  // list_attribute: Joi.array().min(1).items(itemsArray),
 });
 
 const validateRules = {

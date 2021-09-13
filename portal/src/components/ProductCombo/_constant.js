@@ -3,8 +3,9 @@ import { configIDRowTable } from "../../utils/index";
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import { Button } from "reactstrap";
 import * as yup from "yup";
-import { Checkbox } from "@material-ui/core";
+// import { Checkbox } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import { Checkbox } from 'antd';
 
 export const getColumnTable = (data, query, handleActionItemClick, handlePick = null, pickItems = {}, setPickItem) => {
    return [
