@@ -31,14 +31,14 @@ const detail = async (req, res, next) => {
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    const serviceRes1 = await productCategoryService.getListAttributeByCategory(
-      req.params.productCategoryId
-    );
-    if (serviceRes1.isFailed()) {
-      return next(serviceRes1);
-    }
+    // const serviceRes1 = await productCategoryService.getListAttributeByCategory(
+    //   req.params.productCategoryId
+    // );
+    // if (serviceRes1.isFailed()) {
+    //   return next(serviceRes1);
+    // }
     let datatemp = serviceRes.getData();
-    datatemp.list_attribute = serviceRes1.getData();
+    // datatemp.list_attribute = serviceRes1.getData();
 
     return res.json(new SingleResponse(datatemp));
   } catch (error) {

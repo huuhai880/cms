@@ -99,11 +99,11 @@ const getListAttributeByCategory = async (Id) => {
   }
 };
 
-// Create TaskType
+
 const createProductCategoryOrUpdates = async (bodyParams) => {
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
-  await transaction.begin();
+
   try {
     const pathIcon = await saveImage(
       savedFolder,
@@ -116,6 +116,29 @@ const createProductCategoryOrUpdates = async (bodyParams) => {
         RESPONSE_MSG.PRODUCTCATEGORY.SAVEIMG_FAILED
       );
     }
+
+    //Upload List Image
+    let images_url = apiHelper.getValueFromObject(bodyParams, 'images_url', []);
+    if (images_url.length > 0) {
+      for (let index = 0; index < images_url.length; index++) {
+        let img = images_url[index];
+        let path_picture_url = await saveImage(savedFolder, img.picture_url);
+
+        if (path_picture_url === null || path_picture_url === undefined || path_picture_url === '') {
+          return new ServiceResponse(
+            false,
+            RESPONSE_MSG.PRODUCTCATEGORY.SAVEIMG_FAILED
+          );
+        }
+        else {
+          img.picture_url = path_picture_url;
+        }
+      }
+    }
+
+
+    await transaction.begin();
+
     const requestProductCategotyCreate = new sql.Request(transaction);
     const dataProductCategotyCreate = await requestProductCategotyCreate
       .input(
@@ -162,55 +185,39 @@ const createProductCategoryOrUpdates = async (bodyParams) => {
 
     const productCategoryId = dataProductCategotyCreate.recordset[0].RESULT;
     if (productCategoryId <= 0) {
+      await transaction.rollback();
       return new ServiceResponse(
         false,
         RESPONSE_MSG.PRODUCTCATEGORY.CREATE_FAILED
       );
     }
-    // check update
+
+    //Check update
     const id = apiHelper.getValueFromObject(bodyParams, 'product_category_id');
     if (id && id !== '') {
-      // if update -> delete table CRM_TASKTYPE_WFOLLOW
-      const requestProCateAttributeDelete = new sql.Request(transaction);
-      const dataProCateAttributeDelete = await requestProCateAttributeDelete
+      //Xoa hinh anh
+      const reqDelImage = new sql.Request(transaction);
+      await reqDelImage
         .input('PRODUCTCATEGORYID', id)
-        .execute(PROCEDURE_NAME.PRO_CATE_ATTRIBUTE_DELETE);
-      const resultDelete = dataProCateAttributeDelete.recordset[0].RESULT;
-      if (resultDelete <= 0) {
-        return new ServiceResponse(
-          false,
-          RESPONSE_MSG.PRODUCTCATEGORY.UPDATE_FAILED
-        );
-      }
+        .execute('PRO_CATEGORYPICTURE_Delete_AdminWeb');
     }
-    // create table CRM_TASKTYPE_WFOLLOW
-    const list_attribute = apiHelper.getValueFromObject(
-      bodyParams,
-      'list_attribute'
-    );
-    if (list_attribute && list_attribute.length > 0) {
-      for (let i = 0; i < list_attribute.length; i++) {
-        const item = list_attribute[i];
-        const requestProCateAttributeCreate = new sql.Request(transaction);
-        const dataProCateAttributeCreate = await requestProCateAttributeCreate // eslint-disable-line no-await-in-loop
+
+    if (images_url.length > 0) {
+      const reqInsImage = new sql.Request(transaction);
+      for (let index = 0; index < images_url.length; index++) {
+        const img = images_url[index];
+        await reqInsImage
           .input('PRODUCTCATEGORYID', productCategoryId)
-          .input(
-            'PRODUCTATTRIBUTEID',
-            apiHelper.getValueFromObject(item, 'product_attribute_id')
-          )
-          .execute(PROCEDURE_NAME.PRO_CATE_ATTRIBUTE_CREATE);
-        const taskProCateAttributeId =
-          dataProCateAttributeCreate.recordset[0].RESULT;
-        if (taskProCateAttributeId <= 0) {
-          return new ServiceResponse(
-            false,
-            RESPONSE_MSG.PRODUCTCATEGORY.CREATE_FAILED
-          );
-        }
+          .input('PICTUREURL', img.picture_url)
+          .input('PICTUREALIAS', null)
+          .input('ISDEFAULT', img.is_default)
+          .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name'))
+          .execute('PRO_CATEGORYPICTURE_Create_AdminWeb');
       }
     }
     await transaction.commit();
     return new ServiceResponse(true, '', productCategoryId);
+
   } catch (e) {
     logger.error(e, {
       function: 'productCategoryService.createProductCategoryOrUpdates',

@@ -159,7 +159,7 @@ export default function ProductImage(props) {
                            height: height,
                            overflowY: "auto",
                            gap: "0px",
-                           alignContent: "end",
+                           // alignContent: "end",
                            padding: `0px ${images.length ? "12px" : "0px"}`,
                         }}
                      >

@@ -92,7 +92,7 @@ export default class ProductCategoryAdd extends PureComponent {
     seo_name: Yup.string().required("Tên SEO là bắt buộc."),
     company_id: Yup.string().required("Công ty áp dụng là bắt buộc."),
     banner_url: Yup.string().required("Banner là bắt buộc."),
-    list_attribute: Yup.string().required("Thuộc tính là bắt buộc."),
+    // list_attribute: Yup.string().required("Thuộc tính là bắt buộc."),
     images_url: Yup.array().required("Hình ảnh là bắt buộc."),
   });
 
@@ -248,53 +248,20 @@ export default class ProductCategoryAdd extends PureComponent {
       return;
     }
 
+    let { images_url } = formData;
+    images_url = images_url.map((e, i) =>
+      i === 0 ? { ...e, is_default: 1 } : { ...e, is_default: 0 }
+    );
+    formData.images_url = images_url;
+
     try {
       if (!!productCategoryID) {
-        const { images_url } = formData;
-        const mapImages = images_url.map((e, i) =>
-          i === 0 ? { ...e, is_default: 1 } : { ...e, is_default: 0 }
-        );
-        const newImages = mapImages.filter((e) => e.category_id === "");
-        const updateImages = mapImages.filter((e) => e.category_id !== "");
-        const deleteImages = ProductCategoryEnt.images_url.filter(
-          (e) => !updateImages.find((img) => img.category_id === e.category_id)
-        );
-        await Promise.all([
-          fnUpdate({
-            url: `product-category/${productCategoryID}`,
-            body: formData,
-          }),
-          fnPost({
-            url: "category-image",
-            body: {
-              images: newImages,
-              product_category_id: productCategoryID,
-            },
-          }),
-          fnUpdate({
-            url: "category-image",
-            body: {
-              images: updateImages,
-            },
-          }),
-          ...deleteImages.map((e) =>
-            fnDelete({ url: `category-image/${e.category_id}` })
-          ),
-        ]);
-      } else {
-        const data = await fnPost({ url: "product-category", body: formData });
-        const id = JSON.parse(data);
-        const imageList = formData.images_url.map((e, i) => ({
-          picture_url: e,
-          is_default: 1 * (i === 0),
-        }));
-        await fnPost({
-          url: "category-image",
-          body: {
-            images: imageList,
-            product_category_id: id,
-          },
+        await fnUpdate({
+          url: `product-category/${productCategoryID}`,
+          body: formData,
         });
+      } else {
+        await fnPost({ url: "product-category", body: formData });
       }
 
       window._$g.toastr.show("Lưu thành công!", "success");
@@ -305,6 +272,7 @@ export default class ProductCategoryAdd extends PureComponent {
 
       if (this._btnType === "save") resetForm();
     } catch (e) {
+      console.log(e);
       alerts.push({ color: "danger", msg: "Lưu không thành công" });
     }
     setSubmitting(false);
@@ -390,10 +358,13 @@ export default class ProductCategoryAdd extends PureComponent {
                   onSubmit={this.handleFormikSubmit}
                 >
                   {(formikProps) => {
-                    let { values, handleSubmit, handleReset, isSubmitting } =
-                      (this.formikProps =
-                      window._formikProps =
-                        formikProps);
+                    let {
+                      values,
+                      handleSubmit,
+                      handleReset,
+                      isSubmitting,
+                      errors,
+                    } = (this.formikProps = window._formikProps = formikProps);
                     // Render
                     return (
                       <Form
@@ -478,7 +449,7 @@ export default class ProductCategoryAdd extends PureComponent {
                               <Col sm={12} xs={12}>
                                 <FormGroup row>
                                   <Col sm={4}></Col>
-                                  <Col sm={2} xs={12}>
+                                  <Col sm={3} xs={12}>
                                     <Field
                                       name="is_active"
                                       render={({ field /* _form */ }) => (
@@ -504,7 +475,7 @@ export default class ProductCategoryAdd extends PureComponent {
                                       )}
                                     />
                                   </Col>
-                                  <Col sm={2} xs={12}>
+                                  <Col sm={3} xs={12}>
                                     <Field
                                       name="is_show_web"
                                       render={({ field /* _form */ }) => (
