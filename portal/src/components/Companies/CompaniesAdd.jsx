@@ -184,7 +184,6 @@ export default class CompaniesAdd extends PureComponent {
       }
       bundle[key] = data;
     });
-    // console.log('bundle: ', bundle);
     //
     return bundle;
   }
@@ -502,7 +501,7 @@ export default class CompaniesAdd extends PureComponent {
                                       onBlur={null}
                                       type="text"
                                       id="phone_number"
-                                      placeholder="09345678910"
+                                      placeholder="Nhập số điện thoại"
                                       disabled={noEdit}
                                     />}
                                   />

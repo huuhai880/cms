@@ -35,6 +35,10 @@ const getListAttributes = async (queryParams = {}) => {
         apiHelper.getValueFromObject(queryParams, 'attributes_group_id')
       )
       .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'is_active'))
+      .input(
+        'PARTNERID',
+        apiHelper.getValueFromObject(queryParams, 'partner_id')
+      )
       .execute(PROCEDURE_NAME.FOR_ATTRIBUTES_GETLIST_ADMINWEB);
     const datas = data.recordset;
 
@@ -165,7 +169,10 @@ const createAttributesOrUpdate = async (bodyParams) => {
           .request()
           .input('ATTRIBUTEID', attributeId)
           .input('IMGESID', apiHelper.getValueFromObject(item, 'imges_id'))
-          .input('PARTNERID', apiHelper.getValueFromObject(item, 'partner_id').value || null)
+          .input(
+            'PARTNERID',
+            apiHelper.getValueFromObject(item, 'partner_id').value || null
+          )
           .input('URLIMAGES', url_images)
           .input('ISDEFAULT', apiHelper.getValueFromObject(item, 'is_default'))
           .input(
