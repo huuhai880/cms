@@ -120,7 +120,6 @@ export default class FormulaByDobAdd extends PureComponent {
       }
       bundle[key] = data;
     });
-    // console.log('bundle: ', bundle);
     //
     return bundle;
   }
@@ -779,6 +778,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                             const { target } = event;
                                             let rg = new RegExp(/[^0-9]/);
                                             let value = target.value.replace(rg, "");
+                                            value =  value && value.length > 1 ? value.split("")[1]: value
                                             field.onChange({
                                               target: {
                                                 name: "index_1",
@@ -786,6 +786,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                               },
                                             });
                                           }}
+                                          maxLength={2}
                                           value={values.index_1}
                                           type="text"
                                           id="index_1"
@@ -858,6 +859,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                             const { target } = event;
                                             let rg = new RegExp(/[^0-9]/);
                                             let value = target.value.replace(rg, "");
+                                            value =  value && value.length > 1 ? value.split("")[1]: value
                                             field.onChange({
                                               target: {
                                                 name: "index_2",

@@ -157,13 +157,14 @@ class Attributes extends Component {
     }
   }
 
-  handleSubmitFilter = (search, attributes_group_id, is_active) => {
+  handleSubmitFilter = (search, attributes_group_id, is_active, partner_id) => {
     let query = { ...this.state.query };
     query.page = 1;
     query = Object.assign(query, {
       search,
       attributes_group_id,
       is_active,
+      partner_id,
     });
     this.getData(query).catch(() => {
       window._$g.dialogs.alert(
