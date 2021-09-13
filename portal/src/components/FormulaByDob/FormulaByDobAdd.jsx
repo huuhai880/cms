@@ -285,6 +285,10 @@ export default class FormulaByDobAdd extends PureComponent {
       ready: false,
       alerts: [],
       clearImage: true,
+      OptAttributes: [],
+      OptCalculation: [],
+      OptFormuladob: [],
+      OptParamdob: [],
     }));
     // Get bundle data --> ready data
     (async () => {
