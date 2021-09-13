@@ -325,6 +325,10 @@ export default class FormulaByNameAdd extends PureComponent {
       ready: false,
       alerts: [],
       clearImage: true,
+      OptAttributes: [],
+      OptCalculation: [],
+      OptFormula: [],
+      OptParamName: [],
     }));
     // Get bundle data --> ready data
     (async () => {
