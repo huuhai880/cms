@@ -1,15 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Row,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-} from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Row, Form, FormGroup, Label, Input,Button } from "reactstrap";
 import { useParams } from "react-router";
 import { layoutFullWidthHeight } from "../../utils/html";
 import { useFormik } from "formik";
@@ -97,7 +87,7 @@ function LetterAdd({ noEdit }) {
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
-  
+
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
@@ -224,33 +214,47 @@ function LetterAdd({ noEdit }) {
                     </Col>
                   </Row>
                 </Col>
-                <div className="text-right mb-2 mt-2">
+                <div className="text-right mb-2">
                   <div>
-                    <CheckAccess permission={id ? `MD_LETTER_EDIT` : `MD_LETTER_ADD`}>
-                      <button
-                        className="mr-2 btn-block-sm btn btn-primary"
-                        onClick={() => {
-                          setbtnType("save");
-                        }}
-                        type="submit"
-                      >
-                        <i className="fa fa-save mr-1" />
-                        Lưu
-                      </button>
-                    </CheckAccess>
-                    <CheckAccess permission={id ? `MD_LETTER_EDIT` : `MD_LETTER_ADD`}>
-                      <button
-                        className="mr-2 btn-block-sm btn btn-success"
-                        onClick={() => {
-                          setbtnType("save&quit");
-                        }}
-                        type="submit"
-                      >
-                        <i className="fa fa-save mr-1" />
-                        Lưu và đóng
-                      </button>
-                    </CheckAccess>
-
+                    {noEdit ? (
+                      <CheckAccess permission="MD_LETTER_VIEW">
+                        <Button
+                          color="primary"
+                          className="mr-2 btn-block-sm"
+                          onClick={() => window._$g.rdr(`/letter/edit/${dataLetter.letter_id}`)}
+                        >
+                          <i className="fa fa-edit mr-1" />
+                          Chỉnh sửa
+                        </Button>
+                      </CheckAccess>
+                    ) : (
+                      <>
+                        <CheckAccess permission={id ? `MD_LETTER_EDIT` : `MD_LETTER_ADD`}>
+                          <button
+                            className="mr-2 btn-block-sm btn btn-primary"
+                            onClick={() => {
+                              setbtnType("save");
+                            }}
+                            type="submit"
+                          >
+                            <i className="fa fa-save mr-1" />
+                            Lưu
+                          </button>
+                        </CheckAccess>
+                        <CheckAccess permission={id ? `MD_LETTER_EDIT` : `MD_LETTER_ADD`}>
+                          <button
+                            className="mr-2 btn-block-sm btn btn-success"
+                            onClick={() => {
+                              setbtnType("save&quit");
+                            }}
+                            type="submit"
+                          >
+                            <i className="fa fa-save mr-1" />
+                            Lưu và đóng
+                          </button>
+                        </CheckAccess>
+                      </>
+                    )}
                     <button
                       className=" btn-block-sm btn btn-secondary"
                       type="button"
