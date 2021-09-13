@@ -144,7 +144,7 @@ export default class CustomerTypeAdd extends PureComponent {
     let formData = Object.assign({}, values, {
       is_active: is_active ? 1 : 0,
       is_default: is_default ? 1 : 0,
-      customer_type_name: customer_type_name? customer_type_name.trim(): "",
+      customer_type_name: customer_type_name ? customer_type_name.trim() : "",
     });
     //
     const calculationId =
@@ -426,7 +426,12 @@ export default class CustomerTypeAdd extends PureComponent {
                                             field.onChange({
                                               target: {
                                                 name: "is_default",
-                                                value: true,
+                                                value:
+                                                  this.props.CustomerTypeEnt &&
+                                                  this.props.CustomerTypeEnt
+                                                    .is_default
+                                                    ? true
+                                                    : target.checked,
                                               },
                                             });
                                           }}

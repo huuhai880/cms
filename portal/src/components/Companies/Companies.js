@@ -368,7 +368,7 @@ class Companies extends PureComponent {
             );
           },
           customBodyRender: (value) => {
-            return <span className="d-block text-cemter">{value || ""}</span>;
+            return <span className="d-block text-center">{value || ""}</span>;
           },
         },
       },
