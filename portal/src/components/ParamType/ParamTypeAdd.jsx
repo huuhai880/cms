@@ -81,7 +81,7 @@ function ParamTypeAdd({ noEdit }) {
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
-  console.log(formik.values)
+  // console.log(formik.values)
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
