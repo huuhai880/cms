@@ -34,3 +34,17 @@
     left: -1.4rem !important;
   }
 }
+
+.pick-product .custom-control-label {
+  &::before {
+    left: 1.5rem !important;
+  }
+  // &::after {
+  //   left: -1.4rem !important;
+  // }
+}
+.pick-product.custom-checkbox.custom-control{
+  &::before{
+    background: none !important;
+  }
+}

@@ -15,7 +15,7 @@ import {
 import MUIDataTable from "mui-datatables";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import { CircularProgress, Checkbox } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 import CustomPagination from "../../utils/CustomPagination";
 
 // Component(s)
@@ -29,6 +29,7 @@ import { configTableOptions, configIDRowTable } from "../../utils/index";
 import CustomerTypeModel from "../../models/CustomerTypeModel";
 import CompanyModel from "../../models/CompanyModel";
 import BusinessModel from "../../models/BusinessModel";
+import { Checkbox } from 'antd';
 
 /** @var {Object} */
 const userAuth = window._$g.userAuth;

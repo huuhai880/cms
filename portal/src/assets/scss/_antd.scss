@@ -16306,7 +16306,8 @@ textarea.ant-input {
   direction: ltr;
   background-color: #fff;
   border: 1px solid #d9d9d9;
-  border-radius: 2px;
+  // border-radius: 2px;
+  border-radius: 0.25rem;
   border-collapse: separate;
   transition: all 0.3s;
 }
@@ -16349,8 +16350,12 @@ textarea.ant-input {
   content: ' ';
 }
 .ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #1890ff;
-  border-color: #1890ff;
+  // background-color: #1890ff;
+  // border-color: #1890ff; //#20a8d8
+  background-color: #20a8d8;
+  border-color: #20a8d8;
+  border-radius: 0.25rem;
+  color: #fff;
 }
 .ant-checkbox-disabled {
   cursor: not-allowed;
