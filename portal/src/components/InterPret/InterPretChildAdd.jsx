@@ -24,7 +24,7 @@ import Select from "react-select";
 import { readImageAsBase64 } from "../../utils/html";
 layoutFullWidthHeight();
 
-function InterPretChildAdd({ noEdit }) {
+function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
   const _interpretModel = new InterpretModel();
   const [dataInterpretDetail, setDataInterpretDetail] = useState(initialValues);
   const [dataInterpretDetailParent, setDataInterpretDetailParent] = useState([]);
@@ -42,23 +42,16 @@ function InterPretChildAdd({ noEdit }) {
   });
   ///// get data partnert
   useEffect(() => {
-    // console.log(id)
+    if(!dataInterpretDetailEnt){
+      formik.setFieldValue("interpret_id", id);
+    }
     const _callAPI = async () => {
       try {
-        if (dataInterpretDetail.interpret_id) {
-          console.log(dataInterpretDetail.interpret_id.trim())
-          await _interpretModel
-            .getListInterpretParent(dataInterpretDetail.interpret_id)
-            .then((data) => {
-              setDataInterpretDetailParent(data.items);
-              //   console.log(setDataPartner);
-            });
-        } else {
-          await _interpretModel.getListInterpretParent(id).then((data) => {
-            setDataInterpretDetailParent(data.items);
-            //   console.log(setDataPartner);
-          });
-        }
+        await _interpretModel.getListInterpretParent(id).then((data) => {
+          setDataInterpretDetailParent(data.items);
+          //   console.log(setDataPartner);
+        });
+        // }
       } catch (error) {
         console.log(error);
         window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
@@ -73,7 +66,6 @@ function InterPretChildAdd({ noEdit }) {
       await _interpretModel
         .checkInterpretname({ interpret_detail_name: values.interpret_detail_name })
         .then((data) => {
-          // console.log(data)
           if (
             data.INTERPRETDETAILID &&
             formik.values.interpret_detail_name != dataInterpretDetail.interpret_detail_name
@@ -90,33 +82,44 @@ function InterPretChildAdd({ noEdit }) {
               } else if (btnType == "save&quit") {
                 window._$g.toastr.show("Lưu thành công!", "success");
                 setDataInterpretDetail(initialValues);
-                return window._$g.rdr(`/interpret/interpret-detail/${values.interpret_id}`);
+                return window._$g.rdr(`/interpret/interpret-detail/${id}`);
               }
             });
           }
         });
     } catch (error) {}
   };
-  //////get data detail
+  ////get data detail
   useEffect(() => {
-    if (id) {
-      _initDataDetail();
+    const _callAPI = async () => {
+      try {
+        if (dataInterpretDetailEnt.interpret_id) {
+          await _interpretModel
+            .getListInterpretParent(dataInterpretDetailEnt.interpret_id)
+            .then((data) => {
+              setDataInterpretDetailParent(data.items);
+              setDataInterpretDetail(dataInterpretDetailEnt);
+            });
+        }
+      } catch (error) {
+        console.log(error);
+        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+      }
+    };
+    if (dataInterpretDetailEnt) {
+      _callAPI();
     }
-  }, [id]);
+  }, [dataInterpretDetailEnt]);
 
-  //// data detail
-  const _initDataDetail = async () => {
-    try {
-      await _interpretModel.detailInterPretDetail(id).then((data) => {
-        // console.log(data);
-        setDataInterpretDetail(data);
-        // console.log()
-      });
-    } catch (error) {
-      console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
-    }
-  };
+  // //// data detail
+  // const _initDataDetail = async () => {
+  //   try {
+
+  //   } catch (error) {
+  //     console.log(error);
+  //     window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
+  //   }
+  // };
   ////config select
   const convertValue = (value, options) => {
     // console.log(value)

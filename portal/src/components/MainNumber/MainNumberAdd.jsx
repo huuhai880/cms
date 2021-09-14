@@ -78,7 +78,6 @@ function MainNumberAdd({ noEdit }) {
           });
         }
       });
-      
     } catch (error) {}
   };
   //////get data detail
@@ -114,8 +113,9 @@ function MainNumberAdd({ noEdit }) {
     const _callAPI = async () => {
       try {
         await _mainNumberModel.getListPartner().then((data) => {
-          setDataPartner(data.items);
-          //   console.log(setDataPartner);
+          let res = data.items;
+          res.push({ partner_id: -1, partner_name: "My success JSC" });
+          setDataPartner(res);
         });
       } catch (error) {
         console.log(error);
@@ -136,7 +136,7 @@ function MainNumberAdd({ noEdit }) {
     if (!formik.values.main_number_img.find((x) => x.partner_id == null)) {
       if (formik.values.main_number_img.length == 0) {
         let AddRowProFirst = {
-          partner_id: null,
+          partner_id: -1,
           main_number_images_url: null,
           partner_name: null,
           img_is_default: 1,
@@ -295,7 +295,7 @@ function MainNumberAdd({ noEdit }) {
                         >
                           {/* <i className="fa fa-save mr-1" /> */}
                           <i className="fa fa-plus mr-1" />
-                          Thêm hình ảnh
+                          Thêm
                         </button>
                       </Col>
                     </Row>

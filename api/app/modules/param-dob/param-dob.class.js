@@ -2,8 +2,8 @@ const Transform = require('../../common/helpers/transform.helper');
 const config = require('../../../config/config');
 
 const template = {
-  param_type_id: '{{#? PARAMTYPEID}}',
-  param_type: '{{#? PARAMTYPE}}',
+  param_type_id: '{{#? PARAMDOBID}}',
+  param_type: '{{#? DOBTYPE}}',
   is_active: '{{ISACTIVE ? 1 : 0}}',
   is_day: '{{ISDAY ? 1 : 0}}',
   is_month: '{{ISMONTH ? 1 : 0}}',

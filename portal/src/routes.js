@@ -176,12 +176,12 @@ const StoreDetail = React.lazy(() => import("./components/Store/StoreDetail"));
 const StoreEdit = React.lazy(() => import("./components/Store/StoreEdit"));
 //.end#Store
 
-// ParamType
-const ParamType = React.lazy(() => import("./components/ParamType/ParamType"));
-const ParamTypeAdd = React.lazy(() => import("./components/ParamType/ParamTypeAdd"));
-const ParamTypeDetail = React.lazy(() => import("./components/ParamType/ParamTypeDetail"));
-const ParamTypeEdit = React.lazy(() => import("./components/ParamType/ParamTypeEdit"));
-//.end#ParamType
+// ParamDob
+const ParamDob = React.lazy(() => import("./components/ParamDob/ParamDob"));
+const ParamDobAdd = React.lazy(() => import("./components/ParamDob/ParamDobAdd"));
+const ParamDobDetail = React.lazy(() => import("./components/ParamDob/ParamDobDetail"));
+const ParamDobEdit = React.lazy(() => import("./components/ParamDob/ParamDobEdit"));
+//.end#ParamDob
 // RelationShips
 const RelationShips = React.lazy(() => import("./components/RelationShips/RelationShips"));
 const RelationShipsAdd = React.lazy(() => import("./components/RelationShips/RelationShipsAdd"));
@@ -2880,32 +2880,32 @@ const routes = [
 
   //param-type
   {
-    path: "/param-type",
+    path: "/param-dob",
     exact: true,
     name: "Danh sách biến số ngày sinh",
-    function: "MD_PARAMTYPE_VIEW",
-    component: ParamType,
+    function: "MD_PARAMDOB_VIEW",
+    component: ParamDob,
   },
   {
-    path: "/param-type/add",
+    path: "/param-dob/add",
     exact: true,
     name: "Thêm mới",
-    function: "MD_PARAMTYPE_ADD",
-    component: ParamTypeAdd,
+    function: "MD_PARAMDOB_ADD",
+    component: ParamDobAdd,
   },
   {
-    path: "/param-type/detail/:id",
+    path: "/param-dob/detail/:id",
     exact: true,
     name: "Chi tiết",
-    function: "MD_PARAMTYPE_VIEW",
-    component: ParamTypeDetail,
+    function: "MD_PARAMDOB_VIEW",
+    component: ParamDobDetail,
   },
   {
-    path: "/param-type/edit/:id",
+    path: "/param-dob/edit/:id",
     exact: true,
     name: "Chỉnh sửa",
-    function: "MD_PARAMTYPE_EDIT",
-    component: ParamTypeEdit,
+    function: "MD_PARAMDOB_EDIT",
+    component: ParamDobEdit,
   },
   // end#param-type
 

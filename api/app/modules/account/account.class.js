@@ -65,6 +65,7 @@ const template = {
   is_can_sms_or_phone: '{{ISCANSMSORPHONE ? 1 : 0}}',
   is_system: '{{ISSYSTEM ? 1 : 0}}',
   is_active: '{{ISACTIVE ? 1 : 0}}',
+  is_default: '{{ISDEFAULT ? 1 : 0}}',
   created_user: '{{#? CREATEDUSER}}',
   created_date: '{{#? CREATEDDATE}}',
   updated_user: '{{#? UPDATEDUSER}}',
@@ -110,6 +111,7 @@ const detail = (user) => {
     'facebook',
     'twitter',
     'customer_type_id',
+    
   ]);
 };
 const genCode = (user) => {
@@ -129,7 +131,7 @@ const list = (users = []) => {
   ]);
 };
 const listCustomerType = (users = []) => {
-  return transform.transform(users, ['customer_type_id', 'customer_type_name']);
+  return transform.transform(users, ['customer_type_id', 'customer_type_name','is_default']);
 };
 // options
 const templateOptions = {
