@@ -1,11 +1,11 @@
 const express = require('express');
-const ParamTypeController = require('./param-type.controller');
+const ParamTypeController = require('./param-dob.controller');
 
 const routes = express.Router();
 
 const prefix = '/param-type';
 const validate = require('express-validation');
-const rules = require('./param-type.rule');
+const rules = require('./param-dob.rule');
 // // List options position
 // routes.route('/get-options').get(MainNumberController.getOptions);
 

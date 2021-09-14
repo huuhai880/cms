@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const ParamTypeService = require('./param-type.service');
+const ParamTypeService = require('./param-dob.service');
 const SingleResponse = require('../../common/responses/single.response');
 const ListResponse = require('../../common/responses/list.response');
 const ErrorResponse = require('../../common/responses/error.response');
@@ -29,7 +29,7 @@ const getParamsListByBirthday = async (req, res, next) => {
 const deleteParamByBirthday = async (req, res, next) => {
   try {
     const param_id = req.params.param_id;
-
+    // console.log(param_id)
     const serviceRes = await ParamTypeService.deleteParamByBirthday(
       param_id,
       req.body
@@ -51,7 +51,7 @@ const detailParamType = async (req, res, next) => {
     const param_id = req.params.param_id;
 
     // Check ACCOUNT exists
-    const serviceRes = await ParamTypeService.detailParamType(param_id);
+    const serviceRes = await ParamTypeService.detailParamDob(param_id);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -91,10 +91,10 @@ const addParamByBirthday = async (req, res, next) => {
   }
 };
 const CheckParamType = async (req, res, next) => {
-  // console.log(req)
+  // console.log(req.query.param_type)
   try {
     // Check ACCOUNT exists
-    const serviceRes = await ParamTypeService.CheckParamType(
+    const serviceRes = await ParamTypeService.CheckParamDob(
       req.query.param_type
     );
     if (serviceRes.isFailed()) {

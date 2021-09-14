@@ -263,6 +263,7 @@ const addIntergret = async (body = {}) => {
 };
 ///////detail Intergret
 const detaiIntergret = async (interpret_id) => {
+  // console.log(interpret_id)
   try {
     const pool = await mssql.pool;
 
@@ -271,7 +272,7 @@ const detaiIntergret = async (interpret_id) => {
       .input('INTERPRETID', interpret_id)
       .execute('FOR_INTERPRET_GetById_AdminWeb');
     const Intergret = data.recordset[0];
-    // console.log(Letter)
+    // console.log(Intergret)
     if (Intergret) {
       return new ServiceResponse(
         true,

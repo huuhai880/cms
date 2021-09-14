@@ -38,7 +38,7 @@ export default class ParamTypeModel extends Model {
   checkparam(_data = {}) {
     // Validate data?!
     let data = Object.assign({}, _data);
-    // console.log(id, data)
+    // console.log( data)
     return this._api.get(_static.API_PARAMTYPE_CHECK, data);
   }
 }

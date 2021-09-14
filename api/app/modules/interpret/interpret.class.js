@@ -2,6 +2,8 @@ const Transform = require('../../common/helpers/transform.helper');
 const config = require('../../../config/config');
 const template = {
   interpret_id: '{{#? INTERPRETID}}',
+  interpret_detail_parent_id: '{{#? INTERPRETID}}',
+
   interpret_detail_id: '{{#? INTERPRETDETAILID}}',
   interpret_detail_name: '{{#? INTERPRETDETAILNAME}}',
   interpret_detail_parent_id: '{{#? INTERPRETDETAILID}}',
@@ -34,6 +36,7 @@ const template = {
 let transform = new Transform(template);
 const detailInterpretDetail = (users = []) => {
   return transform.transform(users, [
+    'interpret_detail_parent_id',
     'interpret_id',
     'interpret_detail_id',
     'interpret_detail_name',
