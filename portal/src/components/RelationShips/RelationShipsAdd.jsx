@@ -29,19 +29,16 @@ function RelationShipsAdd({ noEdit }) {
       await _relationshipsModel
         .checkRelationship({ relationship: values.relationship })
         .then((data) => {
-          if (
-            data.RELATIONSHIPID &&
-            formik.values.relationship != dataRelationShips.relationship
-          ) {
+          if (data.RELATIONSHIPID && formik.values.relationship != dataRelationShips.relationship) {
             // setalert("Email đã tồn tại!");
             formik.setFieldError("relationship", "Mối quan hệ đã tồn tại!");
             // window.scrollTo(0, 0);
           } else {
             _relationshipsModel.create(values).then((data) => {
               if (btnType == "save") {
-                setDataRelationShips(initialValues);
-                // _initData();
-                // _initDataDetail();
+                // console.log(initialValues)
+                formik.resetForm();
+
                 window._$g.toastr.show("Lưu thành công!", "success");
               } else if (btnType == "save&quit") {
                 window._$g.toastr.show("Lưu thành công!", "success");

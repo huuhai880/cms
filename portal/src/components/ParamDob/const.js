@@ -32,7 +32,7 @@ export const validationSchema = yup.object().shape({
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   // console.log(data);
   return [
-    configIDRowTable("param_type_id", "/param-type/detail/", query),
+    configIDRowTable("param_type_id", "/param-dob/detail/", query),
     {
       name: "param_type",
       label: "loại",
@@ -47,7 +47,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-center">{value}</div>;
+          return <div className="text-left">{value}</div>;
         },
       },
     },
@@ -157,7 +157,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   title="Chỉnh sửa"
                   className="mr-1"
                   onClick={(evt) => {
-                    window._$g.rdr(`/param-type/edit/${data[tableMeta["rowIndex"]].param_type_id}`);
+                    window._$g.rdr(`/param-dob/edit/${data[tableMeta["rowIndex"]].param_type_id}`);
                   }}
                 >
                   <i className="fa fa-edit" />

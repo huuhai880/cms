@@ -134,7 +134,14 @@ function AccountAdd({ noEdit }) {
       try {
         await _accountModel.getListCustomerType().then((data) => {
           setDataType(data.items);
-          // console.log(data);
+         if(!id){
+          data.items.map((item, index) => {
+            if (item.is_default == 1) {
+              formik.setFieldValue("customer_type_id", item.customer_type_id);
+              // console.log(item)
+            }
+          });
+         }
         });
       } catch (error) {
         console.log(error);
@@ -516,7 +523,8 @@ function AccountAdd({ noEdit }) {
                             <Col xs={12} sm={6}>
                               <FormGroup row>
                                 <Label for="user_name" sm={4}>
-                                  Loại khách hàng <span className="font-weight-bold red-text">*</span>
+                                  Loại khách hàng{" "}
+                                  <span className="font-weight-bold red-text">*</span>
                                 </Label>
                                 <Col sm={8}>
                                   <Select

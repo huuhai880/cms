@@ -22,6 +22,9 @@ function Filter({ handleSubmitFillter }) {
     endDate: null,
   });
   useEffect(() => {
+    document.getElementById('your_unique_start_date_id').setAttribute('readonly', 'readonly');
+    document.getElementById('your_unique_end_date_id').setAttribute('readonly', 'readonly');
+
     let pickerLeft = document.querySelector("#your_unique_start_date_id");
     pickerLeft.addEventListener("keyup", (e) => {
       if (e.target.value) {
@@ -145,6 +148,9 @@ function Filter({ handleSubmitFillter }) {
                       endDate,
                     });
                   }}
+                  // onkeydown={(event) => {
+                  //   event.preventDefault();
+                  // }}
                   isMultiple
                 />
               </Col>

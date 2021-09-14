@@ -11,7 +11,7 @@ import ParamTypeModel from "../../models/ParamTypeModel";
 import { Checkbox } from "antd";
 layoutFullWidthHeight();
 
-function ParamTypeAdd({ noEdit }) {
+function ParamDobAdd({ noEdit }) {
   const _paramTypeModel = new ParamTypeModel();
   const [dataParamType, setDataParamType] = useState(initialValues);
   let { id } = useParams();
@@ -30,7 +30,7 @@ function ParamTypeAdd({ noEdit }) {
   const handleCreateOrUpdate = async (values) => {
     try {
       await _paramTypeModel.checkparam({ param_type: values.param_type }).then((data) => {
-        if (data.PARAMTYPEID && formik.values.param_type != dataParamType.param_type) {
+        if (data.PARAMDOBID && formik.values.param_type != dataParamType.param_type) {
           // setalert("Email đã tồn tại!");
           formik.setFieldError("param_type", "Biến số ngày sinh đã tồn tại!");
           // window.scrollTo(0, 0);
@@ -46,12 +46,12 @@ function ParamTypeAdd({ noEdit }) {
               if (btnType == "save") {
                 setDataParamType(initialValues);
                 // _initData();
-                _initDataDetail();
+                formik.resetForm();
                 window._$g.toastr.show("Lưu thành công!", "success");
               } else if (btnType == "save&quit") {
                 window._$g.toastr.show("Lưu thành công!", "success");
                 setDataParamType(initialValues);
-                return window._$g.rdr("/param-type");
+                return window._$g.rdr("/param-dob");
               }
               // console.log(data);
             });
@@ -78,7 +78,7 @@ function ParamTypeAdd({ noEdit }) {
       });
     } catch (error) {
       console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
+      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F3 thử lại"));
     }
   };
   // console.log(formik.values)
@@ -94,10 +94,10 @@ function ParamTypeAdd({ noEdit }) {
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
                 <Col xs={12} sm={12}>
                   <FormGroup row>
-                    <Label for="letter" sm={4}>
+                    <Label for="letter" sm={3}>
                       Loại <span className="font-weight-bold red-text">*</span>
                     </Label>
-                    <Col sm={8}>
+                    <Col sm={9}>
                       <Input
                         name="param_type"
                         id="param_type"
@@ -124,8 +124,8 @@ function ParamTypeAdd({ noEdit }) {
 
                 <Col xs={12} sm={12}>
                   <Row>
-                    <Col xs={4}></Col>
-                    <Col xs={8}>
+                    <Col xs={3}></Col>
+                    <Col xs={9}>
                       <Row>
                         <Col>
                           <FormGroup row>
@@ -202,8 +202,8 @@ function ParamTypeAdd({ noEdit }) {
                 </Col>
                 <Col xs={12} sm={12}>
                   <Row>
-                    <Col xs={4}></Col>
-                    <Col xs={8}>
+                    <Col xs={3}></Col>
+                    <Col xs={9}>
                       <Row>
                         <Col>
                           <FormGroup row>
@@ -255,7 +255,7 @@ function ParamTypeAdd({ noEdit }) {
                     <button
                       className=" btn-block-sm btn btn-secondary"
                       type="button"
-                      onClick={() => window._$g.rdr(`/param-type`)}
+                      onClick={() => window._$g.rdr(`/param-dob`)}
                     >
                       <i className="fa fa-times-circle mr-1" />
                       Đóng
@@ -271,4 +271,4 @@ function ParamTypeAdd({ noEdit }) {
   );
 }
 
-export default ParamTypeAdd;
+export default ParamDobAdd;

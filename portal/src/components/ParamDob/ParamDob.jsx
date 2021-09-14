@@ -18,7 +18,7 @@ function ParamType() {
   const [toggleSearch, settoggleSearch] = useState(true);
   const [isLoading, setisLoading] = useState(true);
   const [query, setQuery] = useState({
-    itemsPerPage: 10,
+    itemsPerPage: 25,
     page: 1,
     selectdActive: 1,
   });
@@ -88,7 +88,7 @@ function ParamType() {
             color="success"
             className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
             onClick={() => {
-              window._$g.rdr("/param-type/add");
+              window._$g.rdr("/param-dob/add");
             }}
             size="sm"
           >
