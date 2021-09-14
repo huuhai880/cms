@@ -35,7 +35,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
     configIDRowTable("param_type_id", "/param-dob/detail/", query),
     {
       name: "param_type",
-      label: "loại",
+      label: "Loại",
       options: {
         filter: false,
         sort: true,

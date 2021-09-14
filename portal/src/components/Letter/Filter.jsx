@@ -158,7 +158,7 @@ function Filter({ handleSubmitFillter }) {
               }}
             >
               <Label for="" className="mr-sm-2">
-                Trạng thái
+                Kích hoạt
               </Label>
               <Col className="pl-0 pr-0">
                 <Select
