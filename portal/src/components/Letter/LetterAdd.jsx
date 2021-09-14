@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardBody, CardHeader, Col, Row, Form, FormGroup, Label, Input,Button } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Row,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+} from "reactstrap";
 import { useParams } from "react-router";
 import { layoutFullWidthHeight } from "../../utils/html";
 import { useFormik } from "formik";
@@ -29,29 +40,45 @@ function LetterAdd({ noEdit }) {
   //// create letter
   const handleCreateOrUpdate = async (values) => {
     try {
-      await _letterModel.checkLetter({ letter: values.letter }).then((data) => {
-        // console.log(data)
-        if (data.LETTERID && formik.values.letter != dataLetter.letter) {
-          // setalert("Email đã tồn tại!");
-          formik.setFieldError("letter", "Chữ cái đã tồn tại!");
-          // window.scrollTo(0, 0);
-        } else {
-          _letterModel.create(values).then((data) => {
-            if (btnType == "save") {
-              setDataLetter(initialValues);
-              // _initData();
-              // _initDataDetail();
-              window._$g.toastr.show("Lưu thành công!", "success");
-            } else if (btnType == "save&quit") {
-              window._$g.toastr.show("Lưu thành công!", "success");
-              setDataLetter(initialValues);
-              return window._$g.rdr("/letter");
-            }
+      if (values.is_vowel == 0) {
+        await _letterModel.checkLetter({ letter: values.letter }).then((data) => {
+          // console.log(data)
+          if (data.LETTERID && formik.values.letter != dataLetter.letter) {
+            // setalert("Email đã tồn tại!");
+            formik.setFieldError("letter", "Chữ cái đã tồn tại!");
+            // window.scrollTo(0, 0);
+          } else {
+            _letterModel.create(values).then((data) => {
+              if (btnType == "save") {
+                setDataLetter(initialValues);
+                // _initData();
+                // _initDataDetail();
+                window._$g.toastr.show("Lưu thành công!", "success");
+              } else if (btnType == "save&quit") {
+                window._$g.toastr.show("Lưu thành công!", "success");
+                setDataLetter(initialValues);
+                return window._$g.rdr("/letter");
+              }
+              // console.log(data);
+            });
             // console.log(data);
-          });
+          }
+        });
+      } else {
+        await _letterModel.create(values).then((data) => {
+          if (btnType == "save") {
+            setDataLetter(initialValues);
+            // _initData();
+            // _initDataDetail();
+            window._$g.toastr.show("Lưu thành công!", "success");
+          } else if (btnType == "save&quit") {
+            window._$g.toastr.show("Lưu thành công!", "success");
+            setDataLetter(initialValues);
+            return window._$g.rdr("/letter");
+          }
           // console.log(data);
-        }
-      });
+        });
+      }
     } catch (error) {}
     // try {
     //   _letterModel.create(values).then((data) => {
@@ -138,7 +165,7 @@ function LetterAdd({ noEdit }) {
                         id="number"
                         disabled={noEdit}
                         onChange={(value) => {
-                          formik.setFieldValue("number", value.target.value);
+                          formik.setFieldValue("number", Math.abs(value.target.value));
                           // console.log(value)
                         }}
                         value={formik.values.number}

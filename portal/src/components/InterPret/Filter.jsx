@@ -133,12 +133,12 @@ function Filter({ handleSubmitFillter }) {
               }}
             >
               <Label for="" className="mr-sm-2">
-                {/* Thao tác */}
+              Kích hoạt
               </Label>
-              <Col className="pl-0 pr-0 mt-2">
+              <Col className="pl-0 pr-0">
                 <div className="d-flex align-items-center">
-                  <div className="d-flex flex-fill justify-content-end">
-                    <FormGroup className="mb-2 ml-2 mb-sm-0">
+                  <div className="d-flex flex-fill">
+                    <FormGroup className="mb-2 mb-sm-0">
                       <Button
                         className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                         onClick={_handleSubmitFillter}
