@@ -63,11 +63,7 @@ export default class FormulaByDobAdd extends PureComponent {
    */
   getInitialValues = () => {
     let { FormulaByDobEnt } = this.props;
-    let values = Object.assign(
-      {},
-      this._formulaByDobModel.fillable(),
-      FormulaByDobEnt
-    );
+    let values = Object.assign({}, this._formulaByDobModel.fillable(), FormulaByDobEnt);
 
     // Format
     Object.keys(values).forEach((key) => {
@@ -90,19 +86,13 @@ export default class FormulaByDobAdd extends PureComponent {
         .then((data) => (bundle["OptParamdob"] = mapDataOptions4Select(data))),
       this._formulaByDobModel
         .getOptionAttributes({ is_active: 1 })
-        .then(
-          (data) => (bundle["OptAttributes"] = mapDataOptions4Select(data))
-        ),
+        .then((data) => (bundle["OptAttributes"] = mapDataOptions4Select(data))),
       this._formulaByDobModel
         .getOptionFormulaDob({ is_active: 1 })
-        .then(
-          (data) => (bundle["OptFormuladob"] = mapDataOptions4Select(data))
-        ),
+        .then((data) => (bundle["OptFormuladob"] = mapDataOptions4Select(data))),
       this._formulaByDobModel
         .getOptionMainCalculaion({ is_active: 1 })
-        .then(
-          (data) => (bundle["OptCalculation"] = mapDataOptions4Select(data))
-        ),
+        .then((data) => (bundle["OptCalculation"] = mapDataOptions4Select(data))),
     ];
 
     await Promise.all(all).catch((err) =>
@@ -135,18 +125,19 @@ export default class FormulaByDobAdd extends PureComponent {
       year_milestones: Yup.string().required("Năm là bắt buộc."),
       values: Yup.string().required("Giá trị là bắt buộc."),
       calculation_id: Yup.object().required("Phép tính là bắt buộc."),
+      description: Yup.string().required("Mô tả là bắt buộc."),
     })
-    .test("", "", function (item) {
-      let { is_total_shortened, last_2_digits } = item;
-      if (is_total_shortened || last_2_digits) {
-        return true;
-      }
-      return new Yup.ValidationError(
-        "Chọn một dạng là bắt buộc.",
-        null,
-        "check_short"
-      );
-    })
+    // .test("", "", function (item) {
+    //   let { is_total_shortened, last_2_digits } = item;
+    //   if (is_total_shortened || last_2_digits) {
+    //     return true;
+    //   }
+    //   return new Yup.ValidationError(
+    //     "Chọn một dạng là bắt buộc.",
+    //     null,
+    //     "check_short"
+    //   );
+    // })
     .test("", "", function (item) {
       let { parent_formula_id, parent_calculation_id } = item;
       if (parent_formula_id && !parent_calculation_id) {
@@ -163,18 +154,18 @@ export default class FormulaByDobAdd extends PureComponent {
           "parent_formula_id"
         );
       }
-    })
-    .test("", "", function (item) {
-      let { key_milestones, second_milestones, challenging_milestones } = item;
-      if (key_milestones || second_milestones || challenging_milestones) {
-        return true;
-      }
-      return new Yup.ValidationError(
-        "Chọn một mốc phát triển là bắt buộc.",
-        null,
-        "check_milestones"
-      );
     });
+  // .test("", "", function (item) {
+  //   let { key_milestones, second_milestones, challenging_milestones } = item;
+  //   if (key_milestones || second_milestones || challenging_milestones) {
+  //     return true;
+  //   }
+  //   return new Yup.ValidationError(
+  //     "Chọn một mốc phát triển là bắt buộc.",
+  //     null,
+  //     "check_milestones"
+  //   );
+  // });
 
   handleFormikBeforeRender = ({ initialValues }) => {
     let { values } = this.formikProps;
@@ -231,16 +222,13 @@ export default class FormulaByDobAdd extends PureComponent {
       attribute_id: attribute_id ? attribute_id.value : "",
       param_id: param_id ? param_id.value : "",
       parent_formula_id: parent_formula_id ? parent_formula_id.value : "",
-      parent_calculation_id: parent_calculation_id
-        ? parent_calculation_id.value
-        : "",
+      parent_calculation_id: parent_calculation_id ? parent_calculation_id.value : "",
       calculation_id: calculation_id ? calculation_id.value : "",
-      formula_name: formula_name? formula_name.trim(): "",
+      formula_name: formula_name ? formula_name.trim() : "",
     });
     //
     const formuladobId =
-      (FormulaByDobEnt && FormulaByDobEnt.formula_id) ||
-      formData[this._formulaByDobModel];
+      (FormulaByDobEnt && FormulaByDobEnt.formula_id) || formData[this._formulaByDobModel];
     let apiCall = formuladobId
       ? this._formulaByDobModel.update(formuladobId, formData)
       : this._formulaByDobModel.create(formData);
@@ -258,9 +246,7 @@ export default class FormulaByDobAdd extends PureComponent {
       .catch((apiData) => {
         // NG
         let { errors, statusText, message } = apiData;
-        let msg = [`<b>${statusText || message}</b>`]
-          .concat(errors || [])
-          .join("<br/>");
+        let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
         alerts.push({ color: "danger", msg });
       })
       .finally(() => {
@@ -306,8 +292,7 @@ export default class FormulaByDobAdd extends PureComponent {
       return <Loading />;
     }
 
-    let { alerts, OptAttributes, OptCalculation, OptFormuladob, OptParamdob } =
-      this.state;
+    let { alerts, OptAttributes, OptCalculation, OptFormuladob, OptParamdob } = this.state;
 
     /** @var {Object} */
     let initialValues = this.getInitialValues();
@@ -324,8 +309,7 @@ export default class FormulaByDobAdd extends PureComponent {
                       ? "Chi tiết"
                       : "Chỉnh sửa"
                     : "Thêm mới"}{" "}
-                  công thức{" "}
-                  {FormulaByDobEnt ? FormulaByDobEnt.formula_name : ""}
+                  công thức {FormulaByDobEnt ? FormulaByDobEnt.formula_name : ""}
                 </b>
               </CardHeader>
               <CardBody>
@@ -365,25 +349,15 @@ export default class FormulaByDobAdd extends PureComponent {
                     this.handleFormikBeforeRender({ initialValues });
                     // Render
                     return (
-                      <Form
-                        id="form1st"
-                        onSubmit={handleSubmit}
-                        onReset={handleReset}
-                      >
+                      <Form id="form1st" onSubmit={handleSubmit} onReset={handleReset}>
                         <Row className="pt-3">
                           <Col xs={12}>
                             <Row>
                               <Col xs={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="formula_name"
-                                    className="text-left"
-                                    sm={2}
-                                  >
+                                  <Label for="formula_name" className="text-left" sm={2}>
                                     Tên Công thức
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={4}>
                                     <Field
@@ -402,10 +376,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="formula_name"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -418,9 +389,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     sm={2}
                                   >
                                     Tên thuộc tính
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={4}>
                                     <Field
@@ -448,10 +417,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="attribute_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -463,12 +429,8 @@ export default class FormulaByDobAdd extends PureComponent {
                             <Row>
                               <Col xs={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="description"
-                                    className="text-left"
-                                    sm={2}
-                                  >
-                                    Mô tả
+                                  <Label for="description" className="text-left" sm={2}>
+                                    Mô tả<span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={10}>
                                     <Field
@@ -489,10 +451,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="description"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -506,9 +465,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label className="text-left" sm={2}>
                                     Theo
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={6}>
                                     <Field
@@ -536,10 +493,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="param_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -551,19 +505,10 @@ export default class FormulaByDobAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
-                                  <Label
-                                    className="text-left d-flex align-items-center"
-                                    sm={2}
-                                  >
+                                  <Label className="text-left d-flex align-items-center" sm={2}>
                                     Dạng
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
                                   </Label>
-                                  <Col
-                                    sm={2}
-                                    className="d-flex align-items-center"
-                                  >
+                                  <Col sm={2} className="d-flex align-items-center">
                                     <Field
                                       name="is_total_shortened"
                                       render={({ field /* _form */ }) => (
@@ -598,19 +543,13 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="is_total_shortened"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
                                     />
                                   </Col>
-                                  <Col
-                                    sm={2}
-                                    className="d-flex align-items-center"
-                                  >
+                                  <Col sm={2} className="d-flex align-items-center">
                                     <Field
                                       name="last_2_digits"
                                       render={({ field /* _form */ }) => (
@@ -645,17 +584,14 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="last_2_digits"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
                                     />
                                   </Col>
                                 </FormGroup>
-                                <FormGroup row>
+                                {/* <FormGroup row>
                                   <Label sm={2}></Label>
                                   <Col sm={6}>
                                     <ErrorMessage
@@ -670,7 +606,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                       )}
                                     />
                                   </Col>
-                                </FormGroup>
+                                </FormGroup> */}
                               </Col>
                             </Row>
                             <Row>
@@ -678,9 +614,6 @@ export default class FormulaByDobAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="parent_formula_id" sm={2}>
                                     Công thức
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
                                   </Label>
                                   <Col sm={3}>
                                     <Field
@@ -709,10 +642,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="parent_formula_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -745,10 +675,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="parent_calculation_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -761,15 +688,9 @@ export default class FormulaByDobAdd extends PureComponent {
                               <Col sm={12}>
                                 <FormGroup row>
                                   <Label className="text-left" sm={2}></Label>
-                                  <Label
-                                    for="index_1"
-                                    className="text-left pr-0"
-                                    sm={1}
-                                  >
+                                  <Label for="index_1" className="text-left pr-0" sm={1}>
                                     Vị trí số
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={1} className="pl-0">
                                     <Field
@@ -782,7 +703,10 @@ export default class FormulaByDobAdd extends PureComponent {
                                             const { target } = event;
                                             let rg = new RegExp(/[^0-9]/);
                                             let value = target.value.replace(rg, "");
-                                            value =  value && value.length > 1 ? value.split("")[1]: value
+                                            value =
+                                              value && value.length > 1
+                                                ? value.split("")[1]
+                                                : value;
                                             field.onChange({
                                               target: {
                                                 name: "index_1",
@@ -801,10 +725,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="index_1"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -836,10 +757,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="calculation_id"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -847,9 +765,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                   </Col>
                                   <Label className="text-left" sm={1}>
                                     Vị trí số
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={1} className="pl-0">
                                     <Field
@@ -863,7 +779,10 @@ export default class FormulaByDobAdd extends PureComponent {
                                             const { target } = event;
                                             let rg = new RegExp(/[^0-9]/);
                                             let value = target.value.replace(rg, "");
-                                            value =  value && value.length > 1 ? value.split("")[1]: value
+                                            value =
+                                              value && value.length > 1
+                                                ? value.split("")[1]
+                                                : value;
                                             field.onChange({
                                               target: {
                                                 name: "index_2",
@@ -881,10 +800,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="index_2"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -896,20 +812,10 @@ export default class FormulaByDobAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="name_type"
-                                    className="text-left"
-                                    sm={2}
-                                  >
+                                  <Label for="name_type" className="text-left" sm={2}>
                                     Mốc phát triển
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
                                   </Label>
-                                  <Col
-                                    sm={2}
-                                    className="d-flex align-items-center"
-                                  >
+                                  <Col sm={2} className="d-flex align-items-center">
                                     <Field
                                       name="key_milestones"
                                       render={({ field /* _form */ }) => (
@@ -951,19 +857,13 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="key_milestones"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
                                     />
                                   </Col>
-                                  <Col
-                                    sm={2}
-                                    className="d-flex align-items-center"
-                                  >
+                                  <Col sm={2} className="d-flex align-items-center">
                                     <Field
                                       name="second_milestones"
                                       render={({ field /* _form */ }) => (
@@ -1005,19 +905,13 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="second_milestones"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
                                     />
                                   </Col>
-                                  <Col
-                                    sm={2}
-                                    className="d-flex align-items-center"
-                                  >
+                                  <Col sm={2} className="d-flex align-items-center">
                                     <Field
                                       name="challenging_milestones"
                                       render={({ field /* _form */ }) => (
@@ -1025,9 +919,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                           {...field}
                                           className="pull-left"
                                           onBlur={null}
-                                          checked={
-                                            values.challenging_milestones
-                                          }
+                                          checked={values.challenging_milestones}
                                           onChange={(event) => {
                                             const { target } = event;
                                             if (target.checked) {
@@ -1061,17 +953,14 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="challenging_milestones"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
                                     />
                                   </Col>
                                 </FormGroup>
-                                <FormGroup row>
+                                {/* <FormGroup row>
                                   <Label sm={2}></Label>
                                   <Col sm={6}>
                                     <ErrorMessage
@@ -1086,7 +975,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                       )}
                                     />
                                   </Col>
-                                </FormGroup>
+                                </FormGroup> */}
                               </Col>
                             </Row>
                             <Row>
@@ -1095,9 +984,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                   <Label className="text-left" sm={2}></Label>
                                   <Label className="text-left pr-0" sm={1}>
                                     Tuổi
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={2}>
                                     <Field
@@ -1117,24 +1004,15 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="age_milestones"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
                                     />
                                   </Col>
-                                  <Label
-                                    for="name_type"
-                                    className="text-left"
-                                    sm={1}
-                                  >
+                                  <Label for="name_type" className="text-left" sm={1}>
                                     Năm
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={2}>
                                     <Field
@@ -1154,10 +1032,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="year_milestones"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1169,20 +1044,10 @@ export default class FormulaByDobAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="name_type"
-                                    className="text-left"
-                                    sm={2}
-                                  ></Label>
-                                  <Label
-                                    for="name_type"
-                                    className="text-left pr-0"
-                                    sm={1}
-                                  >
+                                  <Label for="name_type" className="text-left" sm={2}></Label>
+                                  <Label for="name_type" className="text-left pr-0" sm={1}>
                                     Giá trị
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={2}>
                                     <Field
@@ -1202,10 +1067,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="values"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1217,10 +1079,7 @@ export default class FormulaByDobAdd extends PureComponent {
                             <Row>
                               <Col sm={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="is_first_middle_name"
-                                    sm={2}
-                                  ></Label>
+                                  <Label for="is_first_middle_name" sm={2}></Label>
                                   <Col sm={2}>
                                     <Field
                                       name="is_active"
@@ -1249,10 +1108,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                     <ErrorMessage
                                       name="is_active"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -1296,9 +1152,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                       type="submit"
                                       color="success"
                                       disabled={isSubmitting}
-                                      onClick={() =>
-                                        this.handleSubmit("save_n_close")
-                                      }
+                                      onClick={() => this.handleSubmit("save_n_close")}
                                       className="mr-2 btn-block-sm mt-md-0 mt-sm-2"
                                     >
                                       <i className="fa fa-save mr-2" />
@@ -1308,9 +1162,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                 )}
                                 <Button
                                   disabled={isSubmitting}
-                                  onClick={() =>
-                                    window._$g.rdr("/formula-by-dob")
-                                  }
+                                  onClick={() => window._$g.rdr("/formula-by-dob")}
                                   className="btn-block-sm mt-md-0 mt-sm-2"
                                 >
                                   <i className="fa fa-times-circle mr-1" />

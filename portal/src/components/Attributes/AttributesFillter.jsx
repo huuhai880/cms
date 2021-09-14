@@ -20,6 +20,7 @@ class AttributesFilter extends PureComponent {
         { name: "Có", id: 1 },
         { name: "Không", id: 0 },
       ],
+      OptsPartner: [{ id: -1, name: "My success JSC" }],
     };
   }
 
@@ -47,6 +48,7 @@ class AttributesFilter extends PureComponent {
       let OptsPartner = await this._attributesModel.getOptionPartner({
         is_active: 1,
       });
+      OptsPartner = this.state.OptsPartner.concat(OptsPartner);
       this.setState({ OptsGroup, OptsPartner });
     })();
     //.end
@@ -66,7 +68,7 @@ class AttributesFilter extends PureComponent {
       inputValue ? inputValue.trim() : "",
       attributes_group_id ? attributes_group_id.value : "",
       is_active ? is_active.value : undefined,
-      partner_id? partner_id.value: null,
+      partner_id ? partner_id.value : null
     );
   };
 
@@ -149,12 +151,10 @@ class AttributesFilter extends PureComponent {
                   value={this.state.partner_id}
                   options={
                     this.state.OptsPartner &&
-                    this.state.OptsPartner.map(
-                      ({ name: label, id: value }) => ({
-                        value,
-                        label,
-                      })
-                    )
+                    this.state.OptsPartner.map(({ name: label, id: value }) => ({
+                      value,
+                      label,
+                    }))
                   }
                 />
               </FormGroup>
@@ -172,9 +172,10 @@ class AttributesFilter extends PureComponent {
                   isSearchable={true}
                   placeholder={"-- Chọn --"}
                   value={this.state.is_active}
-                  options={this.state.isActives.map(
-                    ({ name: label, id: value }) => ({ value, label })
-                  )}
+                  options={this.state.isActives.map(({ name: label, id: value }) => ({
+                    value,
+                    label,
+                  }))}
                 />
               </FormGroup>
             </Col>
