@@ -329,9 +329,9 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
                                     <tr>
                                        <th className="text-center" style={{ width: 50 }}>STT</th>
                                        <th className="text-center">Tên sản phẩm</th>
-                                       <th className="text-center" style={{ width: '20%' }}>SL tra cứu</th>
-                                       <th className="text-center" style={{ width: '10%' }}>Giới hạn</th>
-                                       <th className="text-center" style={{ width: '20%' }}>SL giới hạn</th>
+                                       <th className="text-center" style={{ width: '15%' }}>Số lần tra cứu</th>
+                                       <th className="text-center" style={{ width: '15%' }}>Có giới hạn thời gian</th>
+                                       <th className="text-center" style={{ width: '15%' }}>Số ngày giới hạn</th>
                                        <th className="text-center" style={{ width: 100 }}>Thao tác</th>
                                     </tr>
                                  </thead>

@@ -5,8 +5,6 @@ const rulechangeStatus = {
 };
 
 const validateRules = {
-  //createManufacturer:ruleCreateOrUpdate,
-  //updateManufacturer: ruleCreateOrUpdate,
   changeStatusMembership:rulechangeStatus,
 };
 

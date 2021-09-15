@@ -439,12 +439,9 @@ const BookingDetail = React.lazy(() => import("./components/Booking/BookingDetai
 const BookingEdit = React.lazy(() => import("./components/Booking/BookingEdit"));
 //End: Booking
 
-//Memberships
-const Memberships = React.lazy(() => import("./components/Memberships/Memberships"));
-const MembershipDetail = React.lazy(() => import("./components/Memberships/MembershipDetail"));
-const MembershipEdit = React.lazy(() => import("./components/Memberships/MembershipEdit"));
-const MembershipAdd = React.lazy(() => import("./components/Memberships/MembershipAdd"));
-//.end#Memberships
+//Membership
+const Membership = React.lazy(() => import("./components/Membership/Membership"));
+//.end#Membership
 
 //Contract
 const Contracts = React.lazy(() => import("./components/Contracts/Contracts"));
@@ -2147,32 +2144,11 @@ const routes = [
 
   //Membership
   {
-    path: "/memberships",
+    path: "/membership",
     exact: true,
-    name: "Danh sách tài khoản hội viên",
+    name: "Danh sách thành viên",
     function: "CRM_MEMBERSHIP_VIEW",
-    component: Memberships,
-  },
-  {
-    path: "/memberships/details/:id",
-    exact: true,
-    name: "Chi tiết",
-    function: "CRM_MEMBERSHIP_VIEW",
-    component: MembershipDetail,
-  },
-  {
-    path: "/memberships/edit/:id",
-    exact: true,
-    name: "Chỉnh sửa",
-    function: "CRM_MEMBERSHIP_EDIT",
-    component: MembershipEdit,
-  },
-  {
-    path: "/memberships/add",
-    exact: true,
-    name: "Thêm mới",
-    function: "CRM_MEMBERSHIP_ADD",
-    component: MembershipAdd,
+    component: Membership,
   },
   //.end#Membership
 
