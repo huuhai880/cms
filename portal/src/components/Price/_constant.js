@@ -57,7 +57,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{numberFormat(value)}</div>;
+                    return <div className="text-right">{numberFormat(value)}</div>;
                 },
             },
         },
@@ -102,7 +102,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
                     let is_percent = data[tableMeta["rowIndex"]].is_percent;
-                    return <div className="text-center">{is_percent ? `${value} %` : numberFormat(value)}</div>;
+                    return <div className="text-right">{is_percent ? `${value} %` : numberFormat(value)}</div>;
                 },
             },
         },
