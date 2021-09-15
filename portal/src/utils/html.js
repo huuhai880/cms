@@ -402,7 +402,6 @@ export function formatPhoneNumber(phoneNumberString) {
       return match[1] + ' ' + match[2] + ' ' + match[3];
     }
     return phoneNumberString;
-
   } catch (error) {
     return phoneNumberString;
   }
