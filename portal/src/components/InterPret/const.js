@@ -17,7 +17,7 @@ export const initialValues = {
   mainnumber_id: "",
   compare_mainnumber_id: "",
   attribute_id: "",
-  is_active: "",
+  is_active: 1,
   is_master: "",
   decs: "",
   brief_decs: "",
@@ -59,20 +59,20 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-center">{value}</div>;
+          return <div className="text-left">{value}</div>;
         },
       },
     },
     {
       name: "brief_decs",
-      label: "Tóm tắt",
+      label: "Mô tả ngắn",
       options: {
         filter: false,
         sort: true,
         customHeadRender: (columnMeta, handleToggleColumn) => {
           return (
             <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
-              <div className="text-center">{columnMeta.label}</div>
+              <div className="text-left">{columnMeta.label}</div>
             </th>
           );
         },
@@ -149,7 +149,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
               </CheckAccess>
               <CheckAccess permission="FOR_INTERPRET_EDIT">
                 <Button
-                  color={"success"}
+                  color={"primary"}
                   title="Duyệt"
                   className="mr-1"
                   onClick={(evt) => {

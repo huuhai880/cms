@@ -193,7 +193,8 @@ function InterPretAdd({ noEdit }) {
         <Col xs={12}>
           <Card>
             <CardHeader>
-              <b>{id ? "Chỉnh sửa" : "Thêm mới"} luận giải </b>
+            <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận giải </b>
+              {/* <b>{id ? "Chỉnh sửa" : "Thêm mới"}  </b> */}
             </CardHeader>
             <CardBody>
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
@@ -285,7 +286,7 @@ function InterPretAdd({ noEdit }) {
                             options={getOptionMainNumBer(formik.values.mainnumber_id, true)}
                             onChange={(value) => {
                               formik.setFieldValue("mainnumber_id", value.value);
-                              console.log(formik.values.mainnumber_id)
+                              // console.log(formik.values.mainnumber_id)
 
                             }}
                           />

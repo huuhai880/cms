@@ -114,6 +114,7 @@ function MainNumberAdd({ noEdit }) {
       try {
         await _mainNumberModel.getListPartner().then((data) => {
           let res = data.items;
+          // console.log(res)
           res.push({ partner_id: -1, partner_name: "My success JSC" });
           setDataPartner(res);
         });
