@@ -20,7 +20,7 @@ export const initialValues = {
   interpret_detail_short_content: "",
   interpret_detail_full_content: "",
   interpret_detail_parent_id:0,
-  is_active:0
+  is_active:1
 };
 ///// validate
 export const validationSchema = yup.object().shape({
@@ -56,7 +56,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-center">{value}</div>;
+          return <div className="text-left">{value}</div>;
         },
       },
     },
@@ -74,7 +74,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-center">{value}</div>;
+          return <div className="text-left">{value}</div>;
         },
       },
     },
@@ -92,7 +92,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-center">{value}</div>;
+          return <div className="text-left">{value}</div>;
         },
       },
     },
@@ -136,8 +136,8 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
             <div className="text-center">
               <CheckAccess permission="FOR_INTERPRET_DETAIL_EDIT">
                 <Button
-                  color={"success"}
-                  title="Duyệt"
+                  color={"primary"}
+                  title="Chỉnh sửa"
                   className="mr-1"
                   onClick={(evt) => {
                     window._$g.rdr(
