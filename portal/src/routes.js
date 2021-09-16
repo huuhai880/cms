@@ -131,6 +131,11 @@ const AreaDetail = React.lazy(() => import("./components/Area/AreaDetail"));
 const AreaEdit = React.lazy(() => import("./components/Area/AreaEdit"));
 //.end#Area
 
+// Order
+const Order = React.lazy(() => import("./components/Order/Order"));
+const OrderDetail = React.lazy(() => import("./components/Order/OrderDetail"));
+//.end#Order
+
 // Manufacturer
 const Manufacturer = React.lazy(() => import("./components/Manufacturer/Manufacturer"));
 const ManufacturerAdd = React.lazy(() => import("./components/Manufacturer/ManufacturerAdd"));
@@ -3068,6 +3073,22 @@ const routes = [
       component: InterPretChildEdit,
     },
     // end#InterPretChild
+      //order
+  {
+    path: "/order",
+    exact: true,
+    name: "Danh sách đơn hàng",
+    function: "SL_ORDER_VIEW",
+    component: Order,
+  },
+  {
+    path: "/order/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "SL_ORDER_VIEW",
+    component: OrderDetail,
+  },
+  // end#order
 ];
 
 export default routes;
