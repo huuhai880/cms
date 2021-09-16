@@ -4,12 +4,16 @@ import { Input, Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
 import Select from "react-select";
 import DatePicker from "../Common/DatePicker";
 import moment from "moment";
+import MainNumberModel from "../../models/MainNumberModel";
 
 function Filter({ handleSubmitFillter }) {
   const [checkStartDate, setCheckStartDate] = useState(true);
   const [checkEndDate, setCheckEndDate] = useState(true);
   const [dateToDate, setDateToDate] = useState("");
   const [dateFromDate, setDateFromDate] = useState("");
+  const [dataPartner, setDataPartner] = useState([]);
+  const _mainNumberModel = new MainNumberModel();
+
   const [isActive, setIsActive] = useState([
     { name: "Không", id: "0" },
     { name: "Có", id: "1" },
@@ -17,11 +21,28 @@ function Filter({ handleSubmitFillter }) {
   ]);
   const [searchValue, setSearchValue] = useState({
     keyword: "",
+    partner_id: "",
     selectdActive: { value: "1", label: "Có" },
     startDate: null,
     endDate: null,
   });
   useEffect(() => {
+    /////////////call api parter
+    const _callAPI = async () => {
+      try {
+        await _mainNumberModel.getListPartner().then((data) => {
+          let res = data.items;
+          // console.log(res)
+          res.push({ partner_id: -1, partner_name: "My success JSC" });
+          setDataPartner(res);
+        });
+      } catch (error) {
+        console.log(error);
+        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+      }
+    };
+    _callAPI();
+    ///config datepicker
     let pickerLeft = document.querySelector("#your_unique_start_date_id");
     pickerLeft.addEventListener("keyup", (e) => {
       if (e.target.value) {
@@ -48,7 +69,7 @@ function Filter({ handleSubmitFillter }) {
     });
   }, []);
   const _handleSubmitFillter = () => {
-    let { keyword, selectdActive, startDate, endDate } = searchValue;
+    let { keyword,partner_id, selectdActive, startDate, endDate } = searchValue;
     var mydate = moment(dateToDate, "DD/MM/YYYY");
     var myStartDate = startDate ? startDate.format("DD/MM/YYYY") : "";
     if (myStartDate) {
@@ -65,6 +86,7 @@ function Filter({ handleSubmitFillter }) {
     }
     let value = {
       keyword: keyword ? keyword : null,
+      partner_id: partner_id ? partner_id.value : null,
       selectdActive: selectdActive ? selectdActive.value : null,
       startDate: startDate ? startDate.format("DD/MM/YYYY") : null,
       endDate: endDate ? endDate.format("DD/MM/YYYY") : null,
@@ -75,12 +97,14 @@ function Filter({ handleSubmitFillter }) {
   const handleClear = () => {
     setSearchValue({
       keyword: "",
+      partner_id:null,
       selectdActive: { value: "1", label: "Có" },
       startDate: null,
       endDate: null,
     });
     let value = {
       keyword: null,
+      partner_id:null,
       selectdActive: 1,
       startDate: null,
       endDate: null,
@@ -92,7 +116,7 @@ function Filter({ handleSubmitFillter }) {
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
         <Row>
-          <Col xs={6} style={{ padding: 0 }}>
+          <Col xs={3} style={{ padding: 0 }}>
             <Col
               xs={12}
               style={{
@@ -120,7 +144,35 @@ function Filter({ handleSubmitFillter }) {
               </Col>
             </Col>
           </Col>
-
+          <Col xs={3} style={{ padding: 0 }}>
+            <Col
+              xs={12}
+              style={{
+                alignItems: "center",
+              }}
+            >
+              <Label for="" className="mr-sm-2">
+                Đối tác
+              </Label>
+              <Col className="pl-0 pr-0">
+                <Select
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                  placeholder={"-- Chọn --"}
+                  onChange={(e) => {
+                    setSearchValue({
+                      ...searchValue,
+                      partner_id: e,
+                    });
+                  }}
+                  value={searchValue.partner_id}
+                  options={dataPartner.map(({ partner_name: label, partner_id: value }) => ({
+                    value,
+                    label,
+                  }))}
+                />
+              </Col>
+            </Col>
+          </Col>
           <Col xs={3} style={{ padding: 0 }}>
             <Col
               xs={12}
@@ -158,7 +210,7 @@ function Filter({ handleSubmitFillter }) {
               }}
             >
               <Label for="" className="mr-sm-2">
-              Kích hoạt
+                Kích hoạt
               </Label>
               <Col className="pl-0 pr-0">
                 <Select

@@ -104,7 +104,7 @@ function FilterChild({ handleSubmitFillter }) {
               }}
             >
               <Label for="" className="mr-sm-2">
-                Trạng thái
+                Kích hoạt
               </Label>
               <Col className="pl-0 pr-0">
                 <Select
@@ -133,9 +133,9 @@ function FilterChild({ handleSubmitFillter }) {
               }}
             >
               <Label for="" className="mr-sm-2">
-                Kích hoạt
+                {/* Kích hoạt */}
               </Label>
-              <Col className="pl-0 pr-0">
+              <Col className="pl-0 pr-0 mt-2">
                 <div className="d-flex align-items-center">
                   <div className="d-flex flex-fill">
                     <FormGroup className="mb-2 mb-sm-0">

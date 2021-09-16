@@ -55,6 +55,7 @@ const CheckMainNumber = async (main_number) => {
 };
 ///////get list main number
 const getMainNumberList = async (queryParams = {}) => {
+  console.log(queryParams)
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
@@ -64,6 +65,7 @@ const getMainNumberList = async (queryParams = {}) => {
       .request()
       .input('PageSize', itemsPerPage)
       .input('PageIndex', currentPage)
+      .input('PARTNERID', apiHelper.getValueFromObject(queryParams, 'partner_id'))
       .input('KEYWORD', apiHelper.getValueFromObject(queryParams, 'keyword'))
       .input(
         'CREATEDDATEFROM',

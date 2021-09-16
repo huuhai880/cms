@@ -176,7 +176,8 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
         <Col xs={12}>
           <Card>
             <CardHeader>
-              <b>{id ? "Chỉnh sửa" : "Thêm mới"} luận giải </b>
+              {/* <b>{dataInterpretDetailEnt ? "Chỉnh sửa" : "Thêm mới"} luận giải chi tiết</b> */}
+              <b>{dataInterpretDetailEnt ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận giải chi tiết</b>
             </CardHeader>
             <CardBody>
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
@@ -384,7 +385,7 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                       type="button"
                       onClick={() =>
                         window._$g.rdr(
-                          `/interpret/interpret-detail/${dataInterpretDetail.interpret_id}`
+                          `/interpret/interpret-detail/${id}`
                         )
                       }
                     >
