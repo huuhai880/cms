@@ -193,7 +193,7 @@ function InterPretAdd({ noEdit }) {
         <Col xs={12}>
           <Card>
             <CardHeader>
-            <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận giải </b>
+              <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận giải </b>
               {/* <b>{id ? "Chỉnh sửa" : "Thêm mới"}  </b> */}
             </CardHeader>
             <CardBody>
@@ -252,7 +252,6 @@ function InterPretAdd({ noEdit }) {
                             options={getOptionRelationship(formik.values.relationship_id, true)}
                             onChange={(value) => {
                               formik.setFieldValue("relationship_id", value.value);
-
                             }}
                           />{" "}
                           {formik.errors.relationship_id && formik.touched.relationship_id ? (
@@ -275,9 +274,9 @@ function InterPretAdd({ noEdit }) {
                         </Label>
                         <Col sm={8}>
                           <Select
-                           className="MuiPaper-filter__custom--select"
-                           id={`mainnumber_id`}
-                           name={`mainnumber_id`}
+                            className="MuiPaper-filter__custom--select"
+                            id={`mainnumber_id`}
+                            name={`mainnumber_id`}
                             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             menuPortalTarget={document.querySelector("body")}
                             isDisabled={noEdit}
@@ -287,7 +286,6 @@ function InterPretAdd({ noEdit }) {
                             onChange={(value) => {
                               formik.setFieldValue("mainnumber_id", value.value);
                               // console.log(formik.values.mainnumber_id)
-
                             }}
                           />
                           {formik.errors.mainnumber_id && formik.touched.mainnumber_id ? (

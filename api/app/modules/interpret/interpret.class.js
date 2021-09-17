@@ -12,7 +12,7 @@ const template = {
   interpret_detail_parentname: '{{#? PARENTNAME}}',
   interpret_detail_short_content: '{{#? SHORTCONTENT}}',
   interpret_detail_full_content: '{{#? FULLCONTENT}}',
-
+  order_index: '{{#? ORDERINDEX}}',
   relationship_id: '{{#? RELATIONSHIPID}}',
   relationship: '{{#? RELATIONSHIP}}',
   mainnumber_id: '{{#? MAINNUMBERID}}',
@@ -44,6 +44,7 @@ const detailInterpretDetail = (users = []) => {
     'interpret_detail_short_content',
     'interpret_detail_full_content',
     'is_active',
+    'order_index'
   ]);
 };
 const listInterpretDetail = (users = []) => {
@@ -90,6 +91,7 @@ const detailInterpret = (users = []) => {
     'note',
     'is_master',
     'is_active',
+    'order_index'
   ]);
 };
 module.exports = {

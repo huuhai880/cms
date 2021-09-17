@@ -84,7 +84,7 @@ function AccountAdd({ noEdit }) {
     phone_number: yup
       .string()
       .required("Số điện thoại không được để trống .")
-      .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ"),
+      .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ").nullable(),
   });
   const formik = useFormik({
     enableReinitialize: true,
