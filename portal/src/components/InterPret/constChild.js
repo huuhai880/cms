@@ -13,6 +13,7 @@ import Switch from "@material-ui/core/Switch";
 import * as yup from "yup";
 export const initialValues = {
   interpret_detail_id: "",
+  order_index:"",
 
   interpret_id: "",
   interpret_detail_name: "",

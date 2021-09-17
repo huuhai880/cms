@@ -82,7 +82,11 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
               } else if (btnType == "save&quit") {
                 window._$g.toastr.show("Lưu thành công!", "success");
                 setDataInterpretDetail(initialValues);
-                return window._$g.rdr(`/interpret/interpret-detail/${id}`);
+                if(dataInterpretDetailEnt){
+                  return window._$g.rdr(`/interpret/interpret-detail/${dataInterpretDetailEnt.interpret_id}`);
+                }else{
+                  return window._$g.rdr(`/interpret/interpret-detail/${id}`);
+                }
               }
             });
           }
@@ -254,6 +258,7 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                         </Col>
                       </FormGroup>
                     </Col>
+                    
                     <Col xs={6}>
                       <FormGroup row>
                         <Label for="interpret_detail_short_content" sm={4}>
@@ -276,6 +281,37 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                               role="alert"
                             >
                               {formik.errors.interpret_detail_short_content}
+                            </div>
+                          ) : null}
+                        </Col>
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Row>
+                    <Col xs={6}>
+                      <FormGroup row>
+                        <Label for="order_index" sm={4}>
+                          Vị trí hiển thị <span className="font-weight-bold red-text">*</span>
+                        </Label>
+                        <Col sm={8}>
+                          <NumberFormat
+                            name="order_index"
+                            id="order_index"
+                            disabled={noEdit}
+                            onChange={(value) => {
+                              formik.setFieldValue("order_index", value.target.value);
+                              // console.log(value)
+                            }}
+                            value={formik.values.order_index}
+                          />
+                          {formik.errors.order_index && formik.touched.order_index ? (
+                            <div
+                              className="field-validation-error alert alert-danger fade show"
+                              role="alert"
+                            >
+                              {formik.errors.order_index}
                             </div>
                           ) : null}
                         </Col>
@@ -384,9 +420,14 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                       className=" btn-block-sm btn btn-secondary"
                       type="button"
                       onClick={() =>
-                        window._$g.rdr(
-                          `/interpret/interpret-detail/${id}`
-                        )
+                        {
+                          if(dataInterpretDetailEnt){
+                             window._$g.rdr(`/interpret/interpret-detail/${dataInterpretDetailEnt.interpret_id}`);
+                          }else{
+                             window._$g.rdr(`/interpret/interpret-detail/${id}`);
+                          }
+                        }
+                       
                       }
                     >
                       <i className="fa fa-times-circle mr-1" />
