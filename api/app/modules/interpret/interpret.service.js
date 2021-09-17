@@ -99,6 +99,7 @@ const addIntergretDetail = async (body = {}) => {
         apiHelper.getValueFromObject(body, 'interpret_detail_parent_id')
       )
       .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
+      .input('ORDERINDEX', apiHelper.getValueFromObject(body, 'order_index'))
       .input(
         'FULLCONTENT',
         apiHelper.getValueFromObject(body, 'interpret_detail_full_content')
@@ -238,6 +239,7 @@ const addIntergret = async (body = {}) => {
       )
       .input('ISMASTER', apiHelper.getValueFromObject(body, 'is_master'))
       .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
+      .input('ORDERINDEX', apiHelper.getValueFromObject(body, 'order_index'))
       .input('DESCRIPTION', apiHelper.getValueFromObject(body, 'decs'))
       .input(
         'BRIEFDESCRIPTION',
@@ -272,7 +274,7 @@ const detaiIntergret = async (interpret_id) => {
       .input('INTERPRETID', interpret_id)
       .execute('FOR_INTERPRET_GetById_AdminWeb');
     const Intergret = data.recordset[0];
-    // console.log(Intergret)
+    console.log(InterpretClass.detailInterpret(Intergret))
     if (Intergret) {
       return new ServiceResponse(
         true,

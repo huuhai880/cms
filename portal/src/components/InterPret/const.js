@@ -22,6 +22,7 @@ export const initialValues = {
   decs: "",
   brief_decs: "",
   note: "",
+  order_index:""
 };
 ///// validate
 export const validationSchema = yup.object().shape({
@@ -29,6 +30,7 @@ export const validationSchema = yup.object().shape({
   mainnumber_id: yup.string().required("Chỉ số không được để trống .").nullable(),
   compare_mainnumber_id: yup.string().required("Chỉ số so sánh không được để trống .").nullable(),
   attribute_id: yup.string().required("Tên thuộc tính không được để trống .").nullable(),
+  order_index: yup.string().required("Vị trí hiển thị không được để trống .").nullable(),
   decs: yup
     .string()
     .required("Mô tả không được để trống .")
@@ -72,12 +74,12 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
         customHeadRender: (columnMeta, handleToggleColumn) => {
           return (
             <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
-              <div className="text-left">{columnMeta.label}</div>
+              <div className="text-center">{columnMeta.label}</div>
             </th>
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-center">{value}</div>;
+          return <div className="text-left">{value}</div>;
         },
       },
     },
