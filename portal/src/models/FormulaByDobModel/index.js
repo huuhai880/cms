@@ -83,7 +83,7 @@ export default class FormulaByDobModel extends Model {
     return this._api.get(_static.API_FOR_FOMULA_OPTS_PARAMDOB, opts);
   }
 
-  getOptionAttributes(opts) {
+  getOptionAttributesGroup(opts) {
     return this._api.get(_static.API_FOR_FOMULA_OPTS_ATTRIBUTES, opts);
   }
 

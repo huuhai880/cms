@@ -82,8 +82,8 @@ export default class FormulaByNameAdd extends PureComponent {
     let bundle = {};
     let all = [
       this._formulaByNameModel
-        .getOptionAttributes({ is_active: 1 })
-        .then((data) => (bundle["OptAttributes"] = mapDataOptions4Select(data))),
+        .getOptionAttributeGroup({ is_active: 1 })
+        .then((data) => (bundle["OptAttributesGroup"] = mapDataOptions4Select(data))),
       this._formulaByNameModel
         .getOptionParamName({ is_active: 1 })
         .then((data) => (bundle["OptParamName"] = mapDataOptions4Select(data))),
@@ -117,7 +117,7 @@ export default class FormulaByNameAdd extends PureComponent {
   formikValidationSchema = Yup.object()
     .shape({
       formula_name: Yup.string().trim().required("Tên công thức là bắt buộc."),
-      attribute_id: Yup.object().nullable().required("Tên thuộc tính là bắt buộc."),
+      attribute_id: Yup.object().nullable().required("Tên nhóm thuộc tính là bắt buộc."),
       param_name_id: Yup.object().required("Tên biến số là bắt buộc."),
       calculation_id: Yup.object().when("is_expression", {
         is: true,
@@ -305,7 +305,7 @@ export default class FormulaByNameAdd extends PureComponent {
       ready: false,
       alerts: [],
       clearImage: true,
-      OptAttributes: [],
+      OptAttributesGroup: [],
       OptCalculation: [],
       OptFormula: [],
       OptParamName: [],
@@ -326,7 +326,7 @@ export default class FormulaByNameAdd extends PureComponent {
       return <Loading />;
     }
 
-    let { alerts, OptAttributes, OptCalculation, OptFormula, OptParamName } = this.state;
+    let { alerts, OptAttributesGroup, OptCalculation, OptFormula, OptParamName } = this.state;
 
     let check_format = [
       "is_not_shortened",
@@ -437,7 +437,7 @@ export default class FormulaByNameAdd extends PureComponent {
                                     />
                                   </Col>
                                   <Label for="name_type" className="text-left" sm={2}>
-                                    Tên thuộc tính
+                                    Tên nhóm thuộc tính
                                     <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={4}>
@@ -461,7 +461,7 @@ export default class FormulaByNameAdd extends PureComponent {
                                           value={values.attribute_id}
                                           disabled={noEdit}
                                           placeholder="-- Chọn --"
-                                          options={OptAttributes}
+                                          options={OptAttributesGroup}
                                         />
                                       )}
                                     />

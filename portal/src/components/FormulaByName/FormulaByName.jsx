@@ -214,7 +214,7 @@ class FormulaByName extends Component {
       },
       {
         name: "attribute_name",
-        label: "Tên thuộc tính",
+        label: "Tên nhóm thuộc tính",
         options: {
           filter: false,
           sort: false,

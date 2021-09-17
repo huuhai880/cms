@@ -12,66 +12,69 @@ import {
     TabContent,
     CardBody,
     CardHeader,
-    Card
+    Card,
 } from "reactstrap";
 
 // Assets
 import "./styles.scss";
 
 // Component(s)
-import Home from './Page/Home';
-import Author from './Page/Author';
-import Publishing from './Page/Publishing';
-import Contact from './Page/Contact';
-import Introduce from './Page/Introduce';
-import SEO from './Page/SEO';
+import Home from "./Page/Home";
+import Author from "./Page/Author";
+import Publishing from "./Page/Publishing";
+import Contact from "./Page/Contact";
+import Introduce from "./Page/Introduce";
+import SEO from "./Page/SEO";
+import Login from "./Page/Login";
+import Footer from "./Page/Footer";
+import Decryption from "./Page/Decryption";
 
 // Model(s)
-import AppConfigModel from '../../models/AppConfigModel';
+import AppConfigModel from "../../models/AppConfigModel";
 
 /**
  * @class PageSetting
  */
 export default class PageSetting extends React.Component {
-
-
-
     constructor(props) {
         super(props);
 
         // Init model(s)
-        this._appConfigModel = new AppConfigModel()
+        this._appConfigModel = new AppConfigModel();
 
         this.state = {
             activeTab: "HOME",
         };
     }
 
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
     renderTab = () => {
         const { activeTab } = this.state;
         switch (activeTab) {
             case "HOME":
-                return <Home />
+                return <Home />;
             case "AUTHOR":
-                return <Author />
-            case 'PUBLISHING':
-                return <Publishing />
-            case 'INTRODUCE':
-                return <Introduce />
-            case 'CONTACT':
-                return <Contact />
-            case 'SEO':
-                    return <SEO />
+                return <Author />;
+            case "PUBLISHING":
+                return <Publishing />;
+            case "INTRODUCE":
+                return <Introduce />;
+            case "CONTACT":
+                return <Contact />;
+            case "LOGIN":
+                return <Login />;
+            case "FOOTER":
+                return <Footer />;
+            case "DECRYPTION":
+                return <Decryption />;
+            case "SEO":
+                return <SEO />;
         }
-    }
+    };
 
     render() {
-        let {
-            activeTab
-        } = this.state;
+        let { activeTab } = this.state;
 
         return (
             <div key={`view-page-setting`} className="animated fadeIn">
@@ -86,32 +89,73 @@ export default class PageSetting extends React.Component {
                                     <Nav tabs>
                                         <NavItem>
                                             <NavLink
-                                                className={`${activeTab === "HOME" ? "active" : ""}`}
-                                                onClick={() => this.setState({ activeTab: 'HOME' })}>
+                                                className={`${
+                                                    activeTab === "HOME" ? "active" : ""
+                                                }`}
+                                                onClick={() => this.setState({ activeTab: "HOME" })}
+                                            >
                                                 Trang chủ
                                             </NavLink>
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
-                                                className={`${activeTab === "CONTACT" ? "active" : ""}`}
-                                                onClick={() => this.setState({ activeTab: 'CONTACT' })}>
+                                                className={`${
+                                                    activeTab === "CONTACT" ? "active" : ""
+                                                }`}
+                                                onClick={() =>
+                                                    this.setState({ activeTab: "CONTACT" })
+                                                }
+                                            >
                                                 Liên hệ
                                             </NavLink>
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
+                                                className={`${
+                                                    activeTab === "LOGIN" ? "active" : ""
+                                                }`}
+                                                onClick={() =>
+                                                    this.setState({ activeTab: "LOGIN" })
+                                                }
+                                            >
+                                                Đăng nhập
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${
+                                                    activeTab === "DECRYPTION" ? "active" : ""
+                                                }`}
+                                                onClick={() =>
+                                                    this.setState({ activeTab: "DECRYPTION" })
+                                                }
+                                            >
+                                                Giải mã cá nhân
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${
+                                                    activeTab === "FOOTER" ? "active" : ""
+                                                }`}
+                                                onClick={() =>
+                                                    this.setState({ activeTab: "FOOTER" })
+                                                }
+                                            >
+                                                Footer
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
                                                 className={`${activeTab === "SEO" ? "active" : ""}`}
-                                                onClick={() => this.setState({ activeTab: 'SEO' })}>
+                                                onClick={() => this.setState({ activeTab: "SEO" })}
+                                            >
                                                 SEO website
                                             </NavLink>
                                         </NavItem>
                                     </Nav>
-                                    <TabContent
-                                        activeTab={activeTab}
-                                        style={{ width: "100%" }}>
-                                        <TabPane tabId={activeTab}>
-                                            {this.renderTab()}
-                                        </TabPane>
+                                    <TabContent activeTab={activeTab} style={{ width: "100%" }}>
+                                        <TabPane tabId={activeTab}>{this.renderTab()}</TabPane>
                                     </TabContent>
                                 </Row>
                             </CardBody>
