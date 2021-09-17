@@ -163,6 +163,8 @@ const createProduct = async (bodyParams = {}) => {
       .input('PRODUCTCONTENTDETAIL', apiHelper.getValueFromObject(bodyParams, 'product_content_detail', null))
       .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active', 1))
       .input('ISSHOWWEB', apiHelper.getValueFromObject(bodyParams, 'is_show_web', 0))
+      .input('ISWEBVIEW', apiHelper.getValueFromObject(bodyParams, 'is_web_view', 0))
+      .input('ISSHOWMENU', apiHelper.getValueFromObject(bodyParams, 'is_show_menu', 0))
       .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
       .execute('MD_PRODUCT_Create_AdminWeb')
 
@@ -204,6 +206,9 @@ const createProduct = async (bodyParams = {}) => {
             .input('ATTRIBUTESGROUPID', attribute.attributes_group_id)
             .input('INTERPRETID', interpret.interpret_id)
             .input('INTERPRETDETAILID', interpret.interpret_detail_id)
+            .input('ISSHOWSEARCHRESULT', interpret.is_show_search_result)
+            .input('TEXTURL', interpret.text_url)
+            .input('URL', interpret.url)
             .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
             .execute('MD_PRODUCT_ATTRIBUTES_Create_AdminWeb')
         }
@@ -216,7 +221,7 @@ const createProduct = async (bodyParams = {}) => {
 
   } catch (e) {
     await transaction.rollback()
-   
+
     logger.error(e, {
       function: 'product.service.createProduct',
     });
@@ -260,6 +265,8 @@ const updateProduct = async (bodyParams = {}) => {
       .input('PRODUCTCONTENTDETAIL', apiHelper.getValueFromObject(bodyParams, 'product_content_detail', null))
       .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active', 1))
       .input('ISSHOWWEB', apiHelper.getValueFromObject(bodyParams, 'is_show_web', 0))
+      .input('ISWEBVIEW', apiHelper.getValueFromObject(bodyParams, 'is_web_view', 0))
+      .input('ISSHOWMENU', apiHelper.getValueFromObject(bodyParams, 'is_show_menu', 0))
       .input('UPDATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
       .execute('MD_PRODUCT_Update_AdminWeb')
 
@@ -317,6 +324,9 @@ const updateProduct = async (bodyParams = {}) => {
             .input('ATTRIBUTESGROUPID', attribute.attributes_group_id)
             .input('INTERPRETID', interpret.interpret_id)
             .input('INTERPRETDETAILID', interpret.interpret_detail_id)
+            .input('ISSHOWSEARCHRESULT', interpret.is_show_search_result)
+            .input('TEXTURL', interpret.text_url)
+            .input('URL', interpret.url)
             .input('UPDATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
             .execute('MD_PRODUCT_ATTRIBUTES_Update_AdminWeb')
         }
@@ -356,7 +366,11 @@ const detailProduct = async (product_id) => {
           attribute_id,
           interpret_id,
           interpret_detail_id,
-          product_id
+          product_id,
+          is_show_search_result,
+          text_url,
+          url,
+          interpret_detail_name
         } = attr || {}
         let find = product_attributes.find(p => p.attributes_group_id == attributes_group_id);
         if (!find) {
@@ -366,7 +380,11 @@ const detailProduct = async (product_id) => {
             interprets: [{
               attribute_id,
               interpret_id,
-              interpret_detail_id
+              interpret_detail_id,
+              is_show_search_result,
+              text_url,
+              url,
+              interpret_detail_name
             }]
           })
         }
@@ -374,7 +392,11 @@ const detailProduct = async (product_id) => {
           find.interprets = [...find.interprets, {
             attribute_id,
             interpret_id,
-            interpret_detail_id
+            interpret_detail_id,
+            is_show_search_result,
+            text_url,
+            url,
+            interpret_detail_name
           }]
         }
       }

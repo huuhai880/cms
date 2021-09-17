@@ -20,7 +20,10 @@ const template = {
     customer_type_id: "{{#? CUSTOMERTYPEID}}",
     customer_type_name: "{{#? CUSTOMERTYPENAME}}",
     from_date: '{{#? FROMDATE}}',
-    to_date: '{{#? TODATE}}'
+    to_date: '{{#? TODATE}}',
+    is_apply_price: "{{ISAPPLYPRICE ? 1 : 0}}",
+    new_sale_price: "{{#? NEWSALEPRICE}}",
+    time_apply_price_new: "{{#? TIMEAPPLYPRICENEW}}",
 }
 
 let transform = new Transform(template);
@@ -41,7 +44,9 @@ const listPrice = (list = []) => {
         'is_apply_combo',
         'is_apply_promotion',
         'created_date',
-        'price_display_name'
+        'price_display_name',
+        'new_sale_price',
+        'time_apply_price_new'
     ]);
 };
 
@@ -69,7 +74,9 @@ const listApplyCustomerType = (list = []) => {
         'product_id',
         'combo_id',
         'customer_type_id',
-        'customer_type_name'
+        'customer_type_name',
+        'is_apply_promotion',
+        'is_apply_price'
     ]);
 };
 

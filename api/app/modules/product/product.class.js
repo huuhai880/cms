@@ -34,7 +34,12 @@ const template = {
     },
   ],
   product_content_detail: "{{#? PRODUCTCONTENTDETAIL}}",
-  short_description: "{{#? SHORTDESCRIPTION}}"
+  short_description: "{{#? SHORTDESCRIPTION}}",
+  is_web_view: "{{ISWEBVIEW ? 1 : 0}}",
+  is_show_menu: "{{ISSHOWMENU ? 1 : 0}}",
+  text_url: "{{#? TEXTURL}}",
+  url: '{{#? URL}}',
+  is_show_search_result: '{{ISSHOWSEARCHRESULT ? 1 : 0}}'
 };
 
 let transform = new Transform(template);
@@ -50,6 +55,8 @@ const detail = (product) => {
     'is_show_web',
     'is_active',
     'url_product',
+    'is_web_view',
+    'is_show_menu'
   ]) : null;
 };
 
@@ -63,6 +70,8 @@ const list = (products = []) => {
     'price',
     'is_show_web',
     'is_active',
+    'is_show_menu',
+    'is_web_view'
   ]);
 };
 
@@ -103,7 +112,11 @@ const listAttributes = (list = []) => {
     'interpret_id',
     'interpret_detail_id',
     'product_id',
-    'attribute_id'
+    'attribute_id',
+    'interpret_detail_name',
+    'text_url',
+    'url',
+    'is_show_search_result'
   ]);
 };
 

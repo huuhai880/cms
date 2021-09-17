@@ -239,7 +239,9 @@ export const initialValues = {
     product_images: [],
     is_active: true,
     is_show_web: true,
-    product_attributes: []
+    product_attributes: [],
+    is_web_view: false, //false: export pdf, true: show web
+    is_show_menu: false //co show tren menu hay khong?
 }
 
 export const validationSchema = yup.object().shape({
