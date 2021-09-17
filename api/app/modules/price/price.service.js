@@ -91,14 +91,17 @@ const createPrice = async (bodyParams = {}) => {
                     const reqCustomerType = new sql.Request(transaction);
                     for (let j = 0; j < customer_types.length; j++) {
                         const customerType = customer_types[j];
-                        await reqCustomerType
-                            .input('priceid', price_id)
-                            .input('productid', null)
-                            .input('comboid', combo.combo_id)
-                            .input('customertypeid', customerType.customer_type_id)
-                            .input('isapplypromotion', is_apply_promotion)
-                            .input('createduser', authName)
-                            .execute('SL_PRICE_APPLY_CUSTOMERTYPE_Create_AdminWeb')
+                        if (customerType.is_apply_promotion || customerType.is_apply_price) {
+                            await reqCustomerType
+                                .input('priceid', price_id)
+                                .input('productid', null)
+                                .input('comboid', combo.combo_id)
+                                .input('customertypeid', customerType.customer_type_id)
+                                .input('isapplypromotion', customerType.is_apply_promotion)
+                                .input('isapplyprice', customerType.is_apply_price)
+                                .input('createduser', authName)
+                                .execute('SL_PRICE_APPLY_CUSTOMERTYPE_Create_AdminWeb')
+                        }
                     }
                 }
             }
@@ -126,14 +129,17 @@ const createPrice = async (bodyParams = {}) => {
                     const reqCustomerType = new sql.Request(transaction);
                     for (let j = 0; j < customer_types.length; j++) {
                         const customerType = customer_types[j];
-                        await reqCustomerType
+                        if (customerType.is_apply_promotion || customerType.is_apply_price) {
+                            await reqCustomerType
                             .input('priceid', price_id)
                             .input('productid', product.product_id)
                             .input('comboid', null)
                             .input('customertypeid', customerType.customer_type_id)
-                            .input('isapplypromotion', is_apply_promotion)
+                            .input('isapplypromotion', customerType.is_apply_promotion)
+                            .input('isapplyprice', customerType.is_apply_price)
                             .input('createduser', authName)
                             .execute('SL_PRICE_APPLY_CUSTOMERTYPE_Create_AdminWeb')
+                        }
                     }
                 }
             }
@@ -214,7 +220,7 @@ const updatePrice = async (bodyParams = {}) => {
         await transaction.begin();
 
         const reqPrice = new sql.Request(transaction);
-        const resPrice = await reqPrice
+        await reqPrice
             .input('priceid', price_id)
             .input('price', price)
             .input('isapplypromotion', is_apply_promotion)
@@ -236,15 +242,17 @@ const updatePrice = async (bodyParams = {}) => {
             const reqCus = new sql.Request(transaction);
             for (let index = 0; index < customer_types.length; index++) {
                 const customer_type = customer_types[index];
-                await reqCus
+                if (customer_type.is_apply_promotion || customer_type.is_apply_price) {
+                    await reqCus
                     .input('priceid', price_id)
                     .input('productid', product_id)
                     .input('comboid', combo_id)
                     .input('customertypeid', customer_type.customer_type_id)
-                    .input('isapplypromotion', is_apply_promotion)
+                    .input('isapplypromotion', customer_type.is_apply_promotion)
+                    .input('isapplyprice', customer_type.is_apply_price)
                     .input('updateduser', authName)
                     .execute('SL_PRICE_APPLY_CUSTOMERTYPE_Update_AdminWeb')
-
+                }
             }
         }
 

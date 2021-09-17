@@ -137,9 +137,10 @@ function PriceEdit({ noEdit = false, priceId = null }) {
     }
 
     const handleDeleteCustomerType = (index) => {
-        let { customer_types = [] } = formik.values;
-        customer_types.splice(index, 1)
-        formik.setFieldValue('customer_types', customer_types)
+        //let { customer_types = [] } = formik.values;
+        let customer_types_Cl = [...formik.values.customer_types] || [];
+        customer_types_Cl.splice(index, 1)
+        formik.setFieldValue('customer_types', customer_types_Cl)
     }
 
     const renderCustomerType = () => {
@@ -149,6 +150,42 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                 <tr key={index}>
                     <td className="text-center">{index + 1}</td>
                     <td>{item.customer_type_name}</td>
+                    <td
+                        className="text-center wrap-chbx"
+                        style={{
+                            verticalAlign: "middle",
+                        }} >
+                        <CustomInput
+                            className="check-limit"
+                            onBlur={null}
+                            checked={item.is_apply_price}
+                            type="checkbox"
+                            id={`is_apply_price_${index}`}
+                            onChange={({ target }) => {
+                                handleChangeCustomerType(target.checked, 'is_apply_price', index)
+                            }}
+                            disabled={noEdit}
+                        />
+
+                    </td>
+                    <td
+                        className="text-center wrap-chbx"
+                        style={{
+                            verticalAlign: "middle",
+                        }} >
+                        <CustomInput
+                            className="check-limit"
+                            onBlur={null}
+                            checked={item.is_apply_promotion}
+                            type="checkbox"
+                            id={`is_apply_promotion_${index}`}
+                            onChange={({ target }) => {
+                                handleChangeCustomerType(target.checked, 'is_apply_promotion', index)
+                            }}
+                            disabled={!formik.values.is_apply_promotion || noEdit}
+                        />
+
+                    </td>
                     <td
                         className="text-center"
                         style={{
@@ -187,6 +224,12 @@ function PriceEdit({ noEdit = false, priceId = null }) {
         let { is_percent = false } = formik.values;
         const { floatValue = 0 } = values;
         return floatValue >= 0 && floatValue <= (!is_percent || isPrice ? 999999999 : 100);
+    }
+
+    const handleChangeCustomerType = (value, name, index) => {
+        let customer_types_cl = [...formik.values.customer_types] || [];
+        customer_types_cl[index][name] = value
+        formik.setFieldValue('customer_types', customer_types_cl)
     }
 
     return loading ? (
@@ -308,6 +351,39 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                             <Label
                                                 className="text-left"
                                                 sm={4}>
+                                                Giá bán mới
+                                                <span className="font-weight-bold red-text"> *</span>
+                                            </Label>
+                                            <Col sm={8}>
+                                                <InputGroup>
+                                                    <NumberFormat
+                                                        type="text"
+                                                        name="price"
+                                                        disabled={noEdit}
+                                                        allowNegative={false}
+                                                        thousandSeparator=","
+                                                        decimalSeparator="."
+                                                        value={formik.values.discount_value ? formik.values.discount_value : ''}
+                                                        onValueChange={({ value }) => {
+                                                            let discount_value = 1 * value.replace(/,/g, "");
+                                                            formik.setFieldValue('discount_value', discount_value)
+                                                        }}
+                                                        isAllowed={values => isAllowed(values)}
+                                                    />
+                                                    <InputGroupAddon addonType="append">
+                                                        <InputGroupText>{formik.values.is_percent ? '%' : 'VNĐ'}</InputGroupText>
+                                                    </InputGroupAddon>
+                                                </InputGroup>
+                                                <MessageError formik={formik} name="discount_value" />
+                                            </Col>
+
+                                        </FormGroup>
+                                    </Col>
+                                    <Col xs={12} sm={6}>
+                                        <FormGroup row>
+                                            <Label
+                                                className="text-left"
+                                                sm={4}>
                                                 Thời gian áp dụng
                                                 <span className="font-weight-bold red-text"> *</span>
                                             </Label>
@@ -332,9 +408,7 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                             </Col>
                                         </FormGroup>
                                     </Col>
-
-
-                                    <Col xs={12} sm={6}>
+                                    {/* <Col xs={12} sm={6}>
                                         <FormGroup row>
                                             <Col xs={12} sm={4}>
                                                 <CustomInput
@@ -379,8 +453,7 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                                 <MessageError formik={formik} name="discount_value" />
                                             </Col>
                                         </FormGroup>
-                                    </Col>
-
+                                    </Col> */}
                                 </Row>
                                 }
 
@@ -436,6 +509,8 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                                         <tr>
                                                             <th className="text-center" style={{ width: 50 }}>STT</th>
                                                             <th className="text-center">Tên Loại khách hàng</th>
+                                                            <th className="text-center" style={{ width: '20%' }}>Áp dụng giá</th>
+                                                            <th className="text-center" style={{ width: '20%' }}>Áp dụng khuyến mãi</th>
                                                             <th className="text-center" style={{ width: 100 }}>Thao tác</th>
                                                         </tr>
                                                     </thead>
