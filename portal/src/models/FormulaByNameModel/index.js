@@ -92,7 +92,7 @@ export default class FormulaByNameModel extends Model {
     return this._api.get(_static.API_FOR_FOMULABYNAME_OPTS_PARAMNAME, opts);
   }
 
-  getOptionAttributes(opts) {
+  getOptionAttributeGroup(opts) {
     return this._api.get(_static.API_FOR_FOMULABYNAME_OPTS_ATTRIBUTES, opts);
   }
 

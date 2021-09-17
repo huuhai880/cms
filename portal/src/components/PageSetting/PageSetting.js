@@ -142,7 +142,7 @@ export default class PageSetting extends React.Component {
                                                     this.setState({ activeTab: "FOOTER" })
                                                 }
                                             >
-                                                Chân trang
+                                                Footer
                                             </NavLink>
                                         </NavItem>
                                         <NavItem>

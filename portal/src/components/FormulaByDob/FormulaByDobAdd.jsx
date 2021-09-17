@@ -85,8 +85,8 @@ export default class FormulaByDobAdd extends PureComponent {
         .getOptionParamdob({ is_active: 1 })
         .then((data) => (bundle["OptParamdob"] = mapDataOptions4Select(data))),
       this._formulaByDobModel
-        .getOptionAttributes({ is_active: 1 })
-        .then((data) => (bundle["OptAttributes"] = mapDataOptions4Select(data))),
+        .getOptionAttributesGroup({ is_active: 1 })
+        .then((data) => (bundle["OptAttributesGroup"] = mapDataOptions4Select(data))),
       this._formulaByDobModel
         .getOptionFormulaDob({ is_active: 1 })
         .then((data) => (bundle["OptFormuladob"] = mapDataOptions4Select(data))),
@@ -117,13 +117,40 @@ export default class FormulaByDobAdd extends PureComponent {
   formikValidationSchema = Yup.object()
     .shape({
       formula_name: Yup.string().trim().required("Tên công thức là bắt buộc."),
-      attribute_id: Yup.object().required("Tên thuộc tính là bắt buộc."),
+      attribute_id: Yup.object().required("Tên nhóm thuộc tính là bắt buộc."),
       param_id: Yup.object().required("Biến số theo ngày sinh là bắt buộc."),
       index_1: Yup.string().required("Vị trí số là bắt buộc."),
       index_2: Yup.string().required("Vị trí số là bắt buộc."),
-      age_milestones: Yup.string().required("Tuổi là bắt buộc."),
-      year_milestones: Yup.string().required("Năm là bắt buộc."),
-      values: Yup.string().required("Giá trị là bắt buộc."),
+      age_milestones: Yup.string().when(
+        ["key_milestones", "second_milestones", "challenging_milestones"],
+        {
+          is: (key_milestones, second_milestones, challenging_milestones) => {
+            if (key_milestones || second_milestones || challenging_milestones) {
+              return true;
+            }
+          },
+          then: Yup.string().required("Tuổi là bắt buộc."),
+        }
+      ),
+      year_milestones: Yup.string().when(
+        ["key_milestones", "second_milestones", "challenging_milestones"],
+        {
+          is: (key_milestones, second_milestones, challenging_milestones) => {
+            if (key_milestones || second_milestones || challenging_milestones) {
+              return true;
+            }
+          },
+          then: Yup.string().required("Năm là bắt buộc."),
+        }
+      ),
+      values: Yup.string().when(["key_milestones", "second_milestones", "challenging_milestones"], {
+        is: (key_milestones, second_milestones, challenging_milestones) => {
+          if (key_milestones || second_milestones || challenging_milestones) {
+            return true;
+          }
+        },
+        then: Yup.string().required("Giá trị là bắt buộc."),
+      }),
       calculation_id: Yup.object().required("Phép tính là bắt buộc."),
       description: Yup.string().required("Mô tả là bắt buộc."),
     })
@@ -132,11 +159,7 @@ export default class FormulaByDobAdd extends PureComponent {
     //   if (is_total_shortened || last_2_digits) {
     //     return true;
     //   }
-    //   return new Yup.ValidationError(
-    //     "Chọn một dạng là bắt buộc.",
-    //     null,
-    //     "check_short"
-    //   );
+    //   return new Yup.ValidationError("Chọn một dạng là bắt buộc.", null, "check_short");
     // })
     .test("", "", function (item) {
       let { parent_formula_id, parent_calculation_id } = item;
@@ -156,9 +179,9 @@ export default class FormulaByDobAdd extends PureComponent {
       }
     });
   // .test("", "", function (item) {
-  //   let { key_milestones, second_milestones, challenging_milestones } = item;
+  //   let { key_milestones, second_milestones, challenging_milestones} = item;
   //   if (key_milestones || second_milestones || challenging_milestones) {
-  //     return true;
+  //     return true
   //   }
   //   return new Yup.ValidationError(
   //     "Chọn một mốc phát triển là bắt buộc.",
@@ -271,7 +294,7 @@ export default class FormulaByDobAdd extends PureComponent {
       ready: false,
       alerts: [],
       clearImage: true,
-      OptAttributes: [],
+      OptAttributesGroup: [],
       OptCalculation: [],
       OptFormuladob: [],
       OptParamdob: [],
@@ -292,7 +315,7 @@ export default class FormulaByDobAdd extends PureComponent {
       return <Loading />;
     }
 
-    let { alerts, OptAttributes, OptCalculation, OptFormuladob, OptParamdob } = this.state;
+    let { alerts, OptAttributesGroup, OptCalculation, OptFormuladob, OptParamdob } = this.state;
 
     /** @var {Object} */
     let initialValues = this.getInitialValues();
@@ -385,10 +408,9 @@ export default class FormulaByDobAdd extends PureComponent {
                                   <Label
                                     for="name_type"
                                     className="text-left"
-                                    style={{ maxWidth: "150px" }}
                                     sm={2}
                                   >
-                                    Tên thuộc tính
+                                    Tên nhóm thuộc tính
                                     <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={4}>
@@ -410,7 +432,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                           id="attribute_id"
                                           isDisabled={noEdit}
                                           placeholder="-- Chọn --"
-                                          options={OptAttributes}
+                                          options={OptAttributesGroup}
                                         />
                                       )}
                                     />
@@ -430,7 +452,8 @@ export default class FormulaByDobAdd extends PureComponent {
                               <Col xs={12}>
                                 <FormGroup row>
                                   <Label for="description" className="text-left" sm={2}>
-                                    Mô tả<span className="font-weight-bold red-text">*</span>
+                                    Mô tả
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={10}>
                                     <Field
@@ -438,7 +461,9 @@ export default class FormulaByDobAdd extends PureComponent {
                                       render={({ field /* _form */ }) => (
                                         <Input
                                           {...field}
-                                          style={{ height: "100px" }}
+                                          style={{
+                                            height: "100px",
+                                          }}
                                           className="text-left"
                                           onBlur={null}
                                           type="textarea"
@@ -529,7 +554,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                             field.onChange({
                                               target: {
                                                 name: "is_total_shortened",
-                                                value: true,
+                                                value: target.checked,
                                               },
                                             });
                                           }}
@@ -570,7 +595,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                             field.onChange({
                                               target: {
                                                 name: "last_2_digits",
-                                                value: true,
+                                                value: target.checked,
                                               },
                                             });
                                           }}
@@ -843,7 +868,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                             field.onChange({
                                               target: {
                                                 name: "key_milestones",
-                                                value: true,
+                                                value: target.checked,
                                               },
                                             });
                                           }}
@@ -891,7 +916,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                             field.onChange({
                                               target: {
                                                 name: "second_milestones",
-                                                value: true,
+                                                value: target.checked,
                                               },
                                             });
                                           }}
@@ -939,7 +964,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                             field.onChange({
                                               target: {
                                                 name: "challenging_milestones",
-                                                value: true,
+                                                value: target.checked,
                                               },
                                             });
                                           }}

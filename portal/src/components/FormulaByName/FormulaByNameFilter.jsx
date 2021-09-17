@@ -76,7 +76,7 @@ class FormulaByNameFilter extends PureComponent {
                   autoComplete="nope"
                   type="text"
                   name="inputValue"
-                  placeholder="Nhập tên công thức, tên thuộc tính"
+                  placeholder="Nhập tên công thức, tên nhóm thuộc tính"
                   value={this.state.inputValue || ""}
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}

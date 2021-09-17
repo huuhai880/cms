@@ -20,9 +20,9 @@ export default class IntroduceFounder extends React.Component {
     }
 
     formikValidationSchema = Yup.object().shape({
-        name: Yup.string().required("Họ tên là bắt buộc."),
-        image: Yup.string().required("Hình ảnh là bắt buộc."),
-        note: Yup.string().required("Trích dẫn là bắt buộc."),
+        title: Yup.string().required("Tiêu đề là bắt buộc."),
+        image: Yup.string().required("Hình ảnh/Icon là bắt buộc."),
+        description: Yup.string().required("Mô tả ngắn là bắt buộc."),
     });
 
     componentDidMount() {
@@ -37,9 +37,9 @@ export default class IntroduceFounder extends React.Component {
         let values = Object.assign(
             {},
             {
-                name: "",
+                title: "",
                 image: "",
-                note: "",
+                description: "",
             }
         );
         if (this.props.item) {
@@ -112,8 +112,8 @@ export default class IntroduceFounder extends React.Component {
                                                         <Col xs={12} className="mx-auto">
                                                             <Row>
                                                                 <FormInput
-                                                                    label="Họ tên nhà sáng lập"
-                                                                    name="name"
+                                                                    label="Tiêu đề"
+                                                                    name="title"
                                                                     labelSm={3}
                                                                     inputSm={9}
                                                                     isEdit={!noEdit}
@@ -123,7 +123,7 @@ export default class IntroduceFounder extends React.Component {
                                                                     clearImage={clearImage}
                                                                     isEdit={!noEdit}
                                                                     name="image"
-                                                                    title="Ảnh đại diện"
+                                                                    title="Hình ảnh/Icon"
                                                                     isHorizontal={true}
                                                                     textColor=""
                                                                     labelSm={3}
@@ -134,9 +134,9 @@ export default class IntroduceFounder extends React.Component {
                                                                     }
                                                                 />
                                                                 <FormInput
-                                                                    label="Trích dẫn"
+                                                                    label="Mô tả ngắn"
                                                                     type="textarea"
-                                                                    name="note"
+                                                                    name="description"
                                                                     isEdit={!noEdit}
                                                                     labelSm={3}
                                                                     inputSm={9}

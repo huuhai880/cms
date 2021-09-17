@@ -228,7 +228,7 @@ export default class Footer extends PureComponent {
                                                                 isEdit={!noEdit}
                                                             />
                                                             <FormInput
-                                                                label="link facebook"
+                                                                label="Link facebook"
                                                                 name="FOOTER_FACEBOOK.value"
                                                                 labelSm={3}
                                                                 inputSm={9}

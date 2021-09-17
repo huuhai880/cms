@@ -105,7 +105,7 @@ const updateFormulaByName = async (req, res, next) => {
 
 const getOptionAttributes = async (req, res, next) => {
   try {
-    const serviceRes = await optionService('FOR_ATTRIBUTES', req.query);
+    const serviceRes = await optionService('FOR_ATTRIBUTESGROUP', req.query);
     return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
     return next(error);
