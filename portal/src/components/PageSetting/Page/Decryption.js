@@ -92,19 +92,19 @@ export default class Decryption extends PureComponent {
                 DECRYPTION_CONTENT_LIST: {
                     value: [
                         {
-                            name: "test1",
                             image: "",
-                            note: "test1",
+                            title: "",
+                            description: "test1",
                         },
                         {
-                            name: "test2",
                             image: "",
-                            note: "test2",
+                            title: "",
+                            description: "test2",
                         },
                         {
-                            name: "test3",
                             image: "",
-                            note: "test3",
+                            title: "",
+                            description: "test3",
                         },
                     ],
                     data_type: "json",
@@ -421,7 +421,15 @@ export default class Decryption extends PureComponent {
                                                                                 }}
                                                                                 className="text-center"
                                                                             >
-                                                                                Họ tên
+                                                                                Hình ảnh/Icon
+                                                                            </th>
+                                                                            <th
+                                                                                style={{
+                                                                                    width: 80,
+                                                                                }}
+                                                                                className="text-center"
+                                                                            >
+                                                                                Tiêu đề
                                                                             </th>
                                                                             <th
                                                                                 style={{
@@ -429,10 +437,7 @@ export default class Decryption extends PureComponent {
                                                                                 }}
                                                                                 className="text-center"
                                                                             >
-                                                                                Hình ảnh đại diện
-                                                                            </th>
-                                                                            <th className="text-center">
-                                                                                Trích dẫn
+                                                                                Mô tả ngắn
                                                                             </th>
                                                                             <th
                                                                                 style={{
@@ -514,14 +519,9 @@ export default class Decryption extends PureComponent {
                                                                                               {index +
                                                                                                   1}
                                                                                           </td>
-                                                                                          <td className="text-left">
-                                                                                              {
-                                                                                                  item.name
-                                                                                              }
-                                                                                          </td>
                                                                                           <td
                                                                                               style={{
-                                                                                                  width: 100,
+                                                                                                  width: 60,
                                                                                               }}
                                                                                           >
                                                                                               {item.image ? (
@@ -539,7 +539,12 @@ export default class Decryption extends PureComponent {
                                                                                           </td>
                                                                                           <td className="text-left">
                                                                                               {
-                                                                                                  item.note
+                                                                                                  item.title
+                                                                                              }
+                                                                                          </td>
+                                                                                          <td className="text-left">
+                                                                                              {
+                                                                                                  item.description
                                                                                               }
                                                                                           </td>
                                                                                           <td className="text-center">
