@@ -13,9 +13,11 @@ import {
   Label,
   Input,
   Form,
+  Modal,
+  ModalBody,
 } from "reactstrap";
 import "react-image-lightbox/style.css";
-import {ActionButton} from "@widget";
+import { ActionButton } from "@widget";
 import { useState } from "react";
 import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
@@ -34,6 +36,7 @@ import { initialValues, validationSchema } from "./ProductConstant";
 import ProductModel from "models/ProductModel/index";
 import MessageError from "./MessageError";
 import Loading from "../Common/Loading";
+import InterpretConfig from "./InterpretConfig";
 
 const _authorModel = new AuthorModel();
 const _productCategoryModel = new ProductCategoryModel();
@@ -46,6 +49,8 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const [buttonType, setButtonType] = useState(null);
   const [attributesGroup, setAttributesGroup] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isShowConfig, setShowConfig] = useState(null);
+  const [attributeGroupSelected, setAttributeGroupSelected] = useState(null);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -191,6 +196,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const handleChangeAttributesGroup = (selected, index) => {
     let attrProduct = [...formik.values.product_attributes];
     attrProduct[index].attributes_group_id = selected ? selected.value : null;
+    attrProduct[index].interprets = [];
     formik.setFieldValue("product_attributes", attrProduct);
   };
 
@@ -230,11 +236,20 @@ function ProductAdd({ noEdit = false, productId = null }) {
 
     attrProduct[index].interprets = interpret_select
       ? interpret_select.map(
-          ({ interpret_detail_id, interpret_id, attribute_id }) => {
+          ({
+            interpret_detail_id,
+            interpret_id,
+            attribute_id,
+            interpret_detail_name,
+          }) => {
             return {
               interpret_detail_id,
               interpret_id,
               attribute_id,
+              is_show_search_result: true,
+              text_url: "",
+              url: "",
+              interpret_detail_name,
             };
           }
         )
@@ -249,7 +264,6 @@ function ProductAdd({ noEdit = false, productId = null }) {
   };
 
   const changeAlias = (val) => {
-
     var str = val;
     str = str.trim();
     str = str.toLowerCase();
@@ -271,8 +285,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
   };
 
   const renderProductAttributes = () => {
-    return formik.values.product_attributes &&
-      formik.values.product_attributes.length ? (
+    return (
       <Table
         size="sm"
         bordered
@@ -280,73 +293,151 @@ function ProductAdd({ noEdit = false, productId = null }) {
         hover
         className="tb-product-attributes mt-2"
       >
+        <thead>
+          <tr>
+            <th className="text-center" style={{ width: 50 }}>
+              STT
+            </th>
+            <th className="text-center" style={{ width: "30%" }}>
+              Thuộc tính
+            </th>
+            <th className="text-center">Luận giải</th>
+            <th className="text-center" style={{ width: 100 }}>
+              Cấu hình
+            </th>
+            <th className="text-center" style={{ width: 100 }}>
+              Thao tác
+            </th>
+          </tr>
+        </thead>
         <tbody>
-          {formik.values.product_attributes.map((item, index) => (
-            <tr key={index}>
-              <td style={{ width: "30%" }}>
-                <Select
-                  className="MuiPaper-filter__custom--select"
-                  id={`attribute_group_id_${item.attributes_group_id}`}
-                  name={`attribute_group_id_${item.attributes_group_id}`}
-                  onChange={(value) =>
-                    handleChangeAttributesGroup(value, index)
-                  }
-                  isSearchable={true}
-                  placeholder={"-- Chọn Thuộc tính --"}
-                  value={convertValue(
-                    item.attributes_group_id,
-                    optionAttributesGroup() || []
-                  )}
-                  options={optionAttributesGroup()}
-                  isDisabled={noEdit}
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                  menuPortalTarget={document.querySelector("body")}
-                />
-              </td>
-              <td>
-                <Select
-                  className="MuiPaper-filter__custom--select"
-                  name="attribute_group_id"
-                  onChange={(selected) =>
-                    handleChangeInterpretDetail(selected, index)
-                  }
-                  isSearchable={true}
-                  placeholder={"-- Chọn Luận giải --"}
-                  value={convertValue(
-                    (item.interprets || []).map((x) => x.interpret_detail_id),
-                    optionInterpretDetail(item.attributes_group_id) || []
-                  )}
-                  options={optionInterpretDetail(item.attributes_group_id)}
-                  isMulti={true}
-                  isDisabled={noEdit}
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                  menuPortalTarget={document.querySelector("body")}
-                />
-              </td>
-              <td
-                style={{
-                  width: "5%",
-                  verticalAlign: "middle",
-                }}
-                className="text-center"
-              >
-                {!noEdit && (
+          {formik.values.product_attributes &&
+          formik.values.product_attributes.length ? (
+            formik.values.product_attributes.map((item, index) => (
+              <tr key={index}>
+                <td
+                  className="text-center"
+                  style={{
+                    verticalAlign: "middle",
+                  }}
+                >
+                  {index + 1}
+                </td>
+                <td>
+                  <Select
+                    className="MuiPaper-filter__custom--select"
+                    id={`attribute_group_id_${item.attributes_group_id}`}
+                    name={`attribute_group_id_${item.attributes_group_id}`}
+                    onChange={(value) =>
+                      handleChangeAttributesGroup(value, index)
+                    }
+                    isSearchable={true}
+                    placeholder={"-- Chọn Thuộc tính --"}
+                    value={convertValue(
+                      item.attributes_group_id,
+                      optionAttributesGroup() || []
+                    )}
+                    options={optionAttributesGroup()}
+                    isDisabled={noEdit}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                    menuPortalTarget={document.querySelector("body")}
+                  />
+                </td>
+                <td>
+                  <Select
+                    className="MuiPaper-filter__custom--select"
+                    name="attribute_group_id"
+                    onChange={(selected) =>
+                      handleChangeInterpretDetail(selected, index)
+                    }
+                    isSearchable={true}
+                    placeholder={"-- Chọn Luận giải --"}
+                    value={convertValue(
+                      (item.interprets || []).map((x) => x.interpret_detail_id),
+                      optionInterpretDetail(item.attributes_group_id) || []
+                    )}
+                    options={optionInterpretDetail(item.attributes_group_id)}
+                    isMulti={true}
+                    isDisabled={noEdit}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                    menuPortalTarget={document.querySelector("body")}
+                  />
+                </td>
+                <td
+                  style={{
+                    verticalAlign: "middle",
+                  }}
+                  className="text-center"
+                >
+                  <Button
+                    color="primary"
+                    onClick={() => handleShowPopupConfig(item)}
+                    className="btn-sm"
+                    disabled={item.interprets.length == 0 || noEdit}
+                  >
+                    {" "}
+                    <i className="fa fa-cog"></i>
+                  </Button>
+                </td>
+
+                <td
+                  style={{
+                    verticalAlign: "middle",
+                  }}
+                  className="text-center"
+                >
                   <Button
                     color="danger"
                     onClick={() => handleRemoveAttributeProduct(index)}
                     className="btn-sm"
+                    disabled={noEdit}
                   >
                     {" "}
                     <i className="fa fa-trash" />
                   </Button>
-                )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td className="text-center" colSpan={50}>
+                Không có dữ liệu
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table>
-    ) : null;
+    );
   };
+
+  const handleShowPopupConfig = (item) => {
+    setShowConfig(true);
+    let itemCl = JSON.parse(JSON.stringify(item));
+    setAttributeGroupSelected(itemCl);
+  };
+
+  const handleClosePopupConfig = () => {
+    setShowConfig(false);
+    setAttributeGroupSelected(null);
+  };
+
+  const handleSubmitConfig = (attributeGroup) => {
+    let attrProducts = [...formik.values.product_attributes];
+    attrProducts = attrProducts.map((item) => {
+      return item.attributes_group_id == attributeGroup.attributes_group_id
+        ? { ...item, interprets: attributeGroup.interprets }
+        : item;
+    });
+    formik.setFieldValue("product_attributes", attrProducts);
+    setShowConfig(false);
+    setAttributeGroupSelected(null);
+  };
+
+  console.log(formik.values);
 
   return loading ? (
     <Loading />
@@ -667,6 +758,40 @@ function ProductAdd({ noEdit = false, productId = null }) {
                           disabled={noEdit}
                         />
                       </Col>
+                      <Col sm={2} xs={12} className="offset-xs-0">
+                        <CustomInput
+                          className="pull-left"
+                          onBlur={null}
+                          checked={formik.values.is_web_view}
+                          type="checkbox"
+                          id="is_web_view"
+                          onChange={(e) => {
+                            formik.setFieldValue(
+                              "is_web_view",
+                              e.target.checked
+                            );
+                          }}
+                          label="Hiển thị luận giải trên Web"
+                          disabled={noEdit}
+                        />
+                      </Col>
+                      <Col sm={2} xs={12} className="offset-xs-0">
+                        <CustomInput
+                          className="pull-left"
+                          onBlur={null}
+                          checked={formik.values.is_show_menu}
+                          type="checkbox"
+                          id="is_show_menu"
+                          onChange={(e) => {
+                            formik.setFieldValue(
+                              "is_show_menu",
+                              e.target.checked
+                            );
+                          }}
+                          label="Hiển thị trên Menu"
+                          disabled={noEdit}
+                        />
+                      </Col>
                     </FormGroup>
                   </Col>
                 </Row>
@@ -718,6 +843,17 @@ function ProductAdd({ noEdit = false, productId = null }) {
           </Card>
         </Col>
       </Row>
+      {isShowConfig ? (
+        <Modal isOpen={true} size={"lg"} style={{ maxWidth: "65rem" }}>
+          <ModalBody className="p-0">
+            <InterpretConfig
+              handleClose={handleClosePopupConfig}
+              attributeGroup={attributeGroupSelected}
+              handleSubmit={handleSubmitConfig}
+            />
+          </ModalBody>
+        </Modal>
+      ) : null}
     </div>
   );
 }

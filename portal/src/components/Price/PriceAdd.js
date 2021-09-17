@@ -112,9 +112,10 @@ function PriceAdd(props) {
     }
 
     const handleDeleteProduct = (index) => {
-        let { products = [] } = formik.values;
-        products.splice(index, 1)
-        formik.setFieldValue('products', products)
+        //let { products = [] } = formik.values;
+        let products_cl = [...formik.values.products] || []
+        products_cl.splice(index, 1)
+        formik.setFieldValue('products', products_cl)
     }
 
     const renderProduct = () => {
@@ -177,9 +178,10 @@ function PriceAdd(props) {
     }
 
     const handleDeleteCombo = (index) => {
-        let { combos = [] } = formik.values;
-        combos.splice(index, 1)
-        formik.setFieldValue('combos', combos)
+        //let { combos = [] } = formik.values;
+        let combos_cl = [...formik.values.combos]
+        combos_cl.splice(index, 1)
+        formik.setFieldValue('combos', combos_cl)
     }
 
     const renderCombo = () => {
@@ -229,9 +231,11 @@ function PriceAdd(props) {
 
         if (_customer_types.length > 0) {
             for (let index = 0; index < _customer_types.length; index++) {
-                const customer_type = _customer_types[index];
+                let customer_type = _customer_types[index];
                 let check = customer_typesCl.find(p => p.customer_type_id == customer_type.customer_type_id);
                 if (!check) {
+                    customer_type.is_apply_price = true;
+                    customer_type.is_apply_promotion = false;
                     customer_typesCl.push(customer_type)
                 }
             }
@@ -240,9 +244,10 @@ function PriceAdd(props) {
     }
 
     const handleDeleteCustomerType = (index) => {
-        let { customer_types = [] } = formik.values;
-        customer_types.splice(index, 1)
-        formik.setFieldValue('customer_types', customer_types)
+        //let { customer_types = [] } = formik.values;
+        let customer_types_cl = [...formik.values.customer_types] || [];
+        customer_types_cl.splice(index, 1)
+        formik.setFieldValue('customer_types', customer_types_cl)
     }
 
     const renderCustomerType = () => {
@@ -252,6 +257,41 @@ function PriceAdd(props) {
                 <tr key={index}>
                     <td className="text-center">{index + 1}</td>
                     <td>{item.customer_type_name}</td>
+                    <td
+                        className="text-center wrap-chbx"
+                        style={{
+                            verticalAlign: "middle",
+                        }} >
+                        <CustomInput
+                            className="check-limit"
+                            onBlur={null}
+                            checked={item.is_apply_price}
+                            type="checkbox"
+                            id={`is_apply_price_${index}`}
+                            onChange={({ target }) => {
+                                handleChangeCustomerType(target.checked, 'is_apply_price', index)
+                            }}
+                        />
+
+                    </td>
+                    <td
+                        className="text-center wrap-chbx"
+                        style={{
+                            verticalAlign: "middle",
+                        }} >
+                        <CustomInput
+                            className="check-limit"
+                            onBlur={null}
+                            checked={item.is_apply_promotion}
+                            type="checkbox"
+                            id={`is_apply_promotion_${index}`}
+                            onChange={({ target }) => {
+                                handleChangeCustomerType(target.checked, 'is_apply_promotion', index)
+                            }}
+                            disabled={!formik.values.is_apply_promotion}
+                        />
+
+                    </td>
                     <td
                         className="text-center"
                         style={{
@@ -281,11 +321,18 @@ function PriceAdd(props) {
         </tr>
     }
 
+    const handleChangeCustomerType = (value, name, index) => {
+        let customer_types_cl = [...formik.values.customer_types] || [];
+        customer_types_cl[index][name] = value
+        formik.setFieldValue('customer_types', customer_types_cl)
+    }
+
     const isAllowed = (values, isPrice = false) => {
         let { is_percent = false } = formik.values;
         const { floatValue = 0 } = values;
         return floatValue >= 0 && floatValue <= (!is_percent || isPrice ? 999999999 : 100);
     }
+
 
     return (
         <div className="animated fadeIn">
@@ -504,6 +551,37 @@ function PriceAdd(props) {
                                             <Label
                                                 className="text-left"
                                                 sm={4}>
+                                                Giá bán mới
+                                                <span className="font-weight-bold red-text"> *</span>
+                                            </Label>
+                                            <Col sm={8}>
+                                                <InputGroup>
+                                                    <NumberFormat
+                                                        type="text"
+                                                        name="price"
+                                                        disabled={false}
+                                                        allowNegative={false}
+                                                        thousandSeparator=","
+                                                        decimalSeparator="."
+                                                        value={formik.values.discount_value ? formik.values.discount_value : ''}
+                                                        onValueChange={({ value }) => {
+                                                            let discount_value = 1 * value.replace(/,/g, "");
+                                                            formik.setFieldValue('discount_value', discount_value)
+                                                        }}
+                                                        isAllowed={values => isAllowed(values)} />
+                                                    <InputGroupAddon addonType="append">
+                                                        <InputGroupText>{formik.values.is_percent ? '%' : 'VNĐ'}</InputGroupText>
+                                                    </InputGroupAddon>
+                                                </InputGroup>
+                                                <MessageError formik={formik} name="discount_value" />
+                                            </Col>
+                                        </FormGroup>
+                                    </Col>
+                                    <Col xs={12} sm={6}>
+                                        <FormGroup row>
+                                            <Label
+                                                className="text-left"
+                                                sm={4}>
                                                 Thời gian áp dụng
                                                 <span className="font-weight-bold red-text"> *</span>
                                             </Label>
@@ -529,7 +607,7 @@ function PriceAdd(props) {
                                     </Col>
 
 
-                                    <Col xs={12} sm={6}>
+                                    {/* <Col xs={12} sm={6}>
                                         <FormGroup row>
                                             <Col xs={12} sm={3}>
                                                 <CustomInput
@@ -574,8 +652,7 @@ function PriceAdd(props) {
                                                 <MessageError formik={formik} name="discount_value" />
                                             </Col>
                                         </FormGroup>
-                                    </Col>
-
+                                    </Col> */}
                                 </Row>
                                 }
 
@@ -637,6 +714,8 @@ function PriceAdd(props) {
                                                         <tr>
                                                             <th className="text-center" style={{ width: 50 }}>STT</th>
                                                             <th className="text-center">Tên Loại khách hàng</th>
+                                                            <th className="text-center" style={{ width: '20%' }}>Áp dụng giá</th>
+                                                            <th className="text-center" style={{ width: '20%' }}>Áp dụng khuyến mãi</th>
                                                             <th className="text-center" style={{ width: 100 }}>Thao tác</th>
                                                         </tr>
                                                     </thead>

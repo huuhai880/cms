@@ -1,5 +1,24 @@
 const Joi = require('joi');
 
+const checkCustomerType = (value, helpers) => {
+    let check = (value || []).filter(p => !p.is_apply_promotion && !p.is_apply_price)
+    if (check.length > 0) {
+        return helpers.error("any.invalid");
+    }
+    return value;
+};
+
+const contentsLength = (value, helpers) => {
+    const len = value.map((v) => v.length).reduce((acc, curr) => acc + curr, 0);
+
+    if (len > 200) {
+        return helpers.message(
+            "the contents of the array must not exceed 200 characters"
+        );
+    }
+
+    return value;
+};
 
 const ruleCreate = Joi.object().keys({
     price: Joi.number().required(),
@@ -25,6 +44,7 @@ const ruleCreate = Joi.object().keys({
         is: true,
         then: Joi.array()
             .required(),
+            // .custom(contentsLength),
         otherwise: Joi.optional(),
     }),
     from_date: Joi.any().when("is_apply_promotion", {
@@ -47,6 +67,7 @@ const ruleUpdate = Joi.object().keys({
         is: true,
         then: Joi.array()
             .required(),
+            // .custom(contentsLength)
         otherwise: Joi.optional(),
     }),
     from_date: Joi.any().when("is_apply_promotion", {

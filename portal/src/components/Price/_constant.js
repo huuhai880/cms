@@ -42,7 +42,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
         },
         {
             name: "price",
-            label: "Giá",
+            label: "Giá niêm yết",
             options: {
                 filter: false,
                 sort: true,
@@ -62,9 +62,31 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
             },
         },
 
+        // {
+        //     name: "is_apply_promotion",
+        //     label: "Áp dụng khuyến mãi",
+        //     options: {
+        //         filter: false,
+        //         sort: false,
+        //         customHeadRender: (columnMeta, handleToggleColumn) => {
+        //             return (
+        //                 <th
+        //                     key={`head-th-${columnMeta.label}`}
+        //                     className="MuiTableCell-root MuiTableCell-head"
+        //                 >
+        //                     <div className="text-center">{columnMeta.label}</div>
+        //                 </th>
+        //             );
+        //         },
+        //         customBodyRender: (value, tableMeta, updateValue) => {
+        //             return <div className="text-center">{value ? "Có" : "Không"}</div>;
+        //         },
+        //     },
+        // },
+
         {
-            name: "is_apply_promotion",
-            label: "Áp dụng khuyến mãi",
+            name: "new_sale_price",
+            label: "Giá bán",
             options: {
                 filter: false,
                 sort: false,
@@ -79,14 +101,14 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{value ? "Có" : "Không"}</div>;
+                    return <div className="text-right">{numberFormat(value)}</div>;
                 },
             },
         },
 
         {
-            name: "discount_value",
-            label: "Giá trị khuyến mãi",
+            name: "time_apply_price_new",
+            label: "Thời gian áp dụng",
             options: {
                 filter: false,
                 sort: false,
@@ -101,8 +123,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    let is_percent = data[tableMeta["rowIndex"]].is_percent;
-                    return <div className="text-right">{is_percent ? `${value} %` : numberFormat(value)}</div>;
+                    return <div className="text-center">{value}</div>;
                 },
             },
         },
@@ -231,7 +252,7 @@ export const initialValues = {
     products: [],
     combos: [],
     customer_types: [],
-    price: null,
+    price: 0,
     is_active: true,
     from_date: null,
     to_date: null
@@ -243,7 +264,7 @@ export const validationSchema = yup.object().shape({
             'price',
             'Giá sản phẩm/Combo là bắt buộc',
             function (value) {
-                if (value <= 0) {
+                if (value < 0) {
                     return false //Loi
                 }
                 return true;
@@ -256,7 +277,7 @@ export const validationSchema = yup.object().shape({
         .nullable()
         .when("is_apply_promotion", {
             is: true,
-            then: yup.number().required("Giá trị khuyến mãi là bắt buộc")
+            then: yup.number().required("Giá trị bán mới là bắt buộc")
         }),
     products: yup.array().nullable()
         .when("is_apply_combo", {
@@ -271,25 +292,37 @@ export const validationSchema = yup.object().shape({
     customer_types: yup.array().nullable()
         .when("is_apply_customer_type", {
             is: true,
-            then: yup.array().required("Loại khách hàng áp dụng là bắt buộc")
+            then: yup.array()
+                .test(
+                    'customer_types',
+                    'Vui lòng chọn loại áp dụng cho loại khách hàng',
+                    function (value) {
+                        let check =  (value || []).filter(p => !p.is_apply_promotion && !p.is_apply_price)
+                        if (check.length > 0) {
+                            return false //Loi
+                        }
+                        return true;
+                    }
+                )
+                .required("Loại khách hàng áp dụng là bắt buộc")
         }),
     from_date: yup.string().nullable()
         .when("is_apply_promotion", {
             is: true,
             then: yup.string()
-            .test(
-                'from_date',
-                'Thời gian áp dụng từ ngày không được lớn hơn đến ngày',
-                function(value){
-                    let __to_date = this.options.parent.to_date;
-                    if(value && __to_date){
-                        let _from_date = moment(value, 'DD/MM/YYYY');
-                        let _to_date =  moment(__to_date, 'DD/MM/YYYY');
-                        return !(_from_date > _to_date)
+                .test(
+                    'from_date',
+                    'Thời gian áp dụng từ ngày không được lớn hơn đến ngày',
+                    function (value) {
+                        let __to_date = this.options.parent.to_date;
+                        if (value && __to_date) {
+                            let _from_date = moment(value, 'DD/MM/YYYY');
+                            let _to_date = moment(__to_date, 'DD/MM/YYYY');
+                            return !(_from_date > _to_date)
+                        }
+                        return true;
                     }
-                    return true;
-                }
-            )
+                )
                 .required("Thời gian áp dụng là bắt buộc")
         }),
 })
@@ -301,7 +334,7 @@ export const initialValuesUpdate = {
     is_percent: false,
     discount_value: null,
     customer_types: [],
-    price: null,
+    price: 0,
     is_active: true,
     from_date: null,
     to_date: null,
