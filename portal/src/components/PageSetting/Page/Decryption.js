@@ -52,11 +52,8 @@ export default class Decryption extends PureComponent {
   }
 
   formikValidationSchema = Yup.object().shape({
-    DECRYPTION_TITLE1: Yup.object().shape({
+    DECRYPTION_TITLE: Yup.object().shape({
       value: Yup.string().required("Tiêu đề trên là bắt buộc."),
-    }),
-    DECRYPTION_TITLE2: Yup.object().shape({
-      value: Yup.string().required("Tiêu đề dưới là bắt buộc."),
     }),
     DECRYPTION_DESCRIPTION: Yup.object().shape({
       value: Yup.string().required("Mô tả là bắt buộc."),
@@ -73,11 +70,7 @@ export default class Decryption extends PureComponent {
     let values = Object.assign(
       {},
       {
-        DECRYPTION_TITLE1: {
-          value: "",
-          data_type: "string",
-        },
-        DECRYPTION_TITLE2: {
+        DECRYPTION_TITLE: {
           value: "",
           data_type: "string",
         },
@@ -339,14 +332,7 @@ export default class Decryption extends PureComponent {
                             <Row>
                               <FormInput
                                 label="Tiêu đề trên"
-                                name="DECRYPTION_TITLE1.value"
-                                labelSm={3}
-                                inputSm={9}
-                                isEdit={!noEdit}
-                              />
-                              <FormInput
-                                label="Tiêu đề dưới"
-                                name="DECRYPTION_TITLE2.value"
+                                name="DECRYPTION_TITLE.value"
                                 labelSm={3}
                                 inputSm={9}
                                 isEdit={!noEdit}
