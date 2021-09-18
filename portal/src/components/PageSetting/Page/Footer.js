@@ -100,7 +100,7 @@ export default class Footer extends PureComponent {
 
     async _getBundleData() {
         let bundle = {};
-        let all = [this._configModel.getPageConfig("LOGIN").then((data) => (bundle = data))];
+        let all = [this._configModel.getPageConfig("FOOTER").then((data) => (bundle = data))];
 
         await Promise.all(all).catch((err) =>
             window._$g.dialogs.alert(
@@ -133,7 +133,7 @@ export default class Footer extends PureComponent {
     handleFormikSubmit(values, formProps) {
         let { setSubmitting } = formProps;
         let alerts = [];
-        let apiCall = this._configModel.updatePageConfig("LOGIN", values);
+        let apiCall = this._configModel.updatePageConfig("FOOTER", values);
         apiCall
             .then((data) => {
                 // OK
