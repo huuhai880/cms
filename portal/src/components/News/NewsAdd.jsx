@@ -1125,6 +1125,9 @@ export default class NewsAdd extends Component {
                                                       toolbar2:
                                                         "bullist numlist outdent indent | removeformat | help | image | toc",
                                                       file_picker_types: "image",
+                                                      relative_urls : false,
+                                                      remove_script_host : false,
+                                                      convert_urls : true,
                                                       images_dataimg_filter: function (img) {
                                                         return img.hasAttribute("internal-blob");
                                                       },
@@ -1376,7 +1379,7 @@ export default class NewsAdd extends Component {
                                     {noEdit ? (
                                       <Button
                                         color="primary"
-                                        className="mr-2 btn-block-sm"
+                                        className="ml-2 btn-block-sm"
                                         onClick={() =>
                                           window._$g.rdr(`/news/edit/${NewsEnt && NewsEnt.id()}`)
                                         }
@@ -1393,7 +1396,7 @@ export default class NewsAdd extends Component {
                                             color="primary"
                                             disabled={isSubmitting}
                                             onClick={() => this.handleSubmit("savnpme")}
-                                            className="ml-3"
+                                            className="ml-2"
                                           >
                                             <i className="fa fa-save mr-2" />{" "}
                                             <span className="ml-1">Lưu</span>
@@ -1406,7 +1409,7 @@ export default class NewsAdd extends Component {
                                             color="success"
                                             disabled={isSubmitting}
                                             onClick={() => this.handleSubmit("save_n_close")}
-                                            className="ml-3"
+                                            className="ml-2"
                                           >
                                             <i className="fa fa-save mr-2" />{" "}
                                             <span className="ml-1"> Lưu &amp; Đóng </span>
@@ -1420,7 +1423,7 @@ export default class NewsAdd extends Component {
                                         this.props.handleActionClose ||
                                         (() => window._$g.rdr("/news"))
                                       }
-                                      className="ml-3"
+                                      className="ml-2"
                                     >
                                       <i className="fa fa-times-circle mr-1" />{" "}
                                       <span className="ml-1">Đóng</span>
