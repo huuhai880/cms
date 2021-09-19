@@ -37,6 +37,9 @@ import "./styles.scss";
 import "./style.css";
 import * as yup from "yup";
 import Select from "react-select";
+import SearchHistory from "./SearchHistory/SearchHistory";
+import AccountEdit from "./AccountEdit";
+import AccountEntity from "models/AccountEntity/index";
 
 layoutFullWidthHeight();
 function AccountAdd({ noEdit }) {
@@ -45,6 +48,7 @@ function AccountAdd({ noEdit }) {
   const [dataAccount, setDataAccount] = useState(initialValues);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [value, setValue] = useState(1);
+  const [state, setState] = useState();
   const _accountModel = new AccountModel();
   const [btnType, setbtnType] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -84,7 +88,8 @@ function AccountAdd({ noEdit }) {
     phone_number: yup
       .string()
       .required("Số điện thoại không được để trống .")
-      .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ").nullable(),
+      .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ")
+      .nullable(),
   });
   const formik = useFormik({
     enableReinitialize: true,
@@ -134,14 +139,14 @@ function AccountAdd({ noEdit }) {
       try {
         await _accountModel.getListCustomerType().then((data) => {
           setDataType(data.items);
-         if(!id){
-          data.items.map((item, index) => {
-            if (item.is_default == 1) {
-              formik.setFieldValue("customer_type_id", item.customer_type_id);
-              // console.log(item)
-            }
-          });
-         }
+          if (!id) {
+            data.items.map((item, index) => {
+              if (item.is_default == 1) {
+                formik.setFieldValue("customer_type_id", item.customer_type_id);
+                // console.log(item)
+              }
+            });
+          }
         });
       } catch (error) {
         console.log(error);
@@ -323,9 +328,19 @@ function AccountAdd({ noEdit }) {
                   <NavItem>
                     <NavLink
                       className={`${activeTab === "INFO" ? "active" : ""}`}
-                      //   onClick={() => this.setState({ activeTab: "INFO" })}
+                      onClick={() => setActiveTab("INFO")}
                     >
                       Thông tin tài khoản
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+                <Nav tabs>
+                  <NavItem>
+                    <NavLink
+                      className={`${activeTab === "SEARCHHISTORY" ? "active" : ""}`}
+                      onClick={() => setActiveTab("SEARCHHISTORY")}
+                    >
+                      Lịch sử tra cứu
                     </NavLink>
                   </NavItem>
                 </Nav>
@@ -1007,6 +1022,9 @@ function AccountAdd({ noEdit }) {
                         </div>
                       </div>
                     </Form>
+                  </TabPane>
+                  <TabPane tabId={"SEARCHHISTORY"}>
+                    <SearchHistory id={id} />
                   </TabPane>
                 </TabContent>
               </Row>

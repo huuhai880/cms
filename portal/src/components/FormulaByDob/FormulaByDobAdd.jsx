@@ -405,11 +405,7 @@ export default class FormulaByDobAdd extends PureComponent {
                                       )}
                                     />
                                   </Col>
-                                  <Label
-                                    for="name_type"
-                                    className="text-left"
-                                    sm={2}
-                                  >
+                                  <Label for="name_type" className="text-left" sm={2}>
                                     Tên nhóm thuộc tính
                                     <span className="font-weight-bold red-text">*</span>
                                   </Label>
@@ -1009,7 +1005,6 @@ export default class FormulaByDobAdd extends PureComponent {
                                   <Label className="text-left" sm={2}></Label>
                                   <Label className="text-left pr-0" sm={1}>
                                     Tuổi
-                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={2}>
                                     <Field
@@ -1037,7 +1032,6 @@ export default class FormulaByDobAdd extends PureComponent {
                                   </Col>
                                   <Label for="name_type" className="text-left" sm={1}>
                                     Năm
-                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={2}>
                                     <Field
@@ -1072,7 +1066,6 @@ export default class FormulaByDobAdd extends PureComponent {
                                   <Label for="name_type" className="text-left" sm={2}></Label>
                                   <Label for="name_type" className="text-left pr-0" sm={1}>
                                     Giá trị
-                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={2}>
                                     <Field
