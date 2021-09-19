@@ -3,6 +3,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Col, Row, Button, Modal, ModalHeader, ModalBody, FormGroup } from "reactstrap";
 import { FormInput, YoutubePreview, UploadImage } from "@widget";
+import '../styles.scss'
 
 export default class IntroduceFounder extends React.Component {
     formikProps = null;
@@ -20,7 +21,7 @@ export default class IntroduceFounder extends React.Component {
     }
 
     formikValidationSchema = Yup.object().shape({
-        title: Yup.string().required("Tiêu đề là bắt buộc."),
+        // title: Yup.string().required("Tiêu đề là bắt buộc."),
         image: Yup.string().required("Hình ảnh/Icon là bắt buộc."),
         description: Yup.string().required("Mô tả ngắn là bắt buộc."),
     });
@@ -37,7 +38,7 @@ export default class IntroduceFounder extends React.Component {
         let values = Object.assign(
             {},
             {
-                title: "",
+                // title: "",
                 image: "",
                 description: "",
             }
@@ -111,13 +112,13 @@ export default class IntroduceFounder extends React.Component {
                                                     <Row>
                                                         <Col xs={12} className="mx-auto">
                                                             <Row>
-                                                                <FormInput
+                                                                {/* <FormInput
                                                                     label="Tiêu đề"
                                                                     name="title"
                                                                     labelSm={3}
                                                                     inputSm={9}
                                                                     isEdit={!noEdit}
-                                                                />
+                                                                /> */}
                                                                 <UploadImage
                                                                     urlImageEdit={imageUrl}
                                                                     clearImage={clearImage}
@@ -127,11 +128,13 @@ export default class IntroduceFounder extends React.Component {
                                                                     isHorizontal={true}
                                                                     textColor=""
                                                                     labelSm={3}
-                                                                    inputSm={9}
+                                                                    inputSm={4}
                                                                     isBoldLabel={false}
                                                                     dropzoneText={
-                                                                        "Ưu tiên ảnh có kích thước 914x1280 px "
+                                                                        "Ưu tiên ảnh có kích thước 69x73 px "
                                                                     }
+                                                                    styleDropImg={{minHeight: 150, height: 150}}
+                                                                    dropzoneClass="dropzone-descryption"
                                                                 />
                                                                 <FormInput
                                                                     label="Mô tả ngắn"

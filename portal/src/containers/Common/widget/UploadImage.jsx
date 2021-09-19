@@ -18,7 +18,9 @@ const UploadImage = ({
   isBoldLabel = true,
   dropzoneText,
   isShowLabel = true,
-  style
+  style,
+  styleDropImg,
+  dropzoneClass
 }) => {
   const [image, setImage] = useState(urlImageEdit);
 
@@ -73,7 +75,7 @@ const UploadImage = ({
                 // render image edit
                 if (image) {
                   return (
-                    <div className="tl-render-image">
+                    <div className="tl-render-image" style={{...styleDropImg}}>
                       <img
                         src={image}
                         alt="images"
@@ -104,6 +106,7 @@ const UploadImage = ({
                           },
                         })
                       }
+                      dropzoneClass={dropzoneClass}
                     />
                   </div>
                 );
