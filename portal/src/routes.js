@@ -636,39 +636,30 @@ const AttributesGroupEdit = React.lazy(() =>
 // end#AttributesGroup
 
 //Formula
-const FormulaByDob = React.lazy(() =>
-  import("./components/FormulaByDob/FormulaByDob")
-);
-const FormulaByDobAdd = React.lazy(() =>
-  import("./components/FormulaByDob/FormulaByDobAdd")
-);
-const FormulaByDobDetail = React.lazy(() =>
-  import("./components/FormulaByDob/FormulaByDobDetail")
-);
-const FormulaByDobEdit = React.lazy(() =>
-  import("./components/FormulaByDob/FormulaByDobEdit")
-);
+const FormulaByDob = React.lazy(() => import("./components/FormulaByDob/FormulaByDob"));
+const FormulaByDobAdd = React.lazy(() => import("./components/FormulaByDob/FormulaByDobAdd"));
+const FormulaByDobDetail = React.lazy(() => import("./components/FormulaByDob/FormulaByDobDetail"));
+const FormulaByDobEdit = React.lazy(() => import("./components/FormulaByDob/FormulaByDobEdit"));
 // end#Formula
 
 //FormulaByName
-const FormulaByName = React.lazy(() =>
-  import("./components/FormulaByName/FormulaByName")
-);
-const FormulaByNameAdd = React.lazy(() =>
-  import("./components/FormulaByName/FormulaByNameAdd")
-);
+const FormulaByName = React.lazy(() => import("./components/FormulaByName/FormulaByName"));
+const FormulaByNameAdd = React.lazy(() => import("./components/FormulaByName/FormulaByNameAdd"));
 const FormulaByNameDetail = React.lazy(() =>
   import("./components/FormulaByName/FormulaByNameDetail")
 );
-const FormulaByNameEdit = React.lazy(() =>
-  import("./components/FormulaByName/FormulaByNameEdit")
-);
+const FormulaByNameEdit = React.lazy(() => import("./components/FormulaByName/FormulaByNameEdit"));
 // end#FormulaByName
 
 const ProductCombo = React.lazy(() => import("./components/ProductCombo/ProductCombo"));
 const ProductComboAdd = React.lazy(() => import("./components/ProductCombo/ProductComboAdd"));
 const ProductComboEdit = React.lazy(() => import("./components/ProductCombo/ProductComboEdit"));
 const ProductComboDetail = React.lazy(() => import("./components/ProductCombo/ProductComboDetail"));
+
+const SearchHistory = React.lazy(() => import("./components/SearchHistory/SearchHistory"));
+const SearchHistoryDetail = React.lazy(() =>
+  import("./components/SearchHistory/SearchHistoryDetail")
+);
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -3043,37 +3034,37 @@ const routes = [
     component: InterPretEdit,
   },
   // end#interpret
-    //InterPretChild
-    {
-      path: "/interpret/interpret-detail/:id",
-      exact: true,
-      name: "Danh sách luận giải chi tiết",
-      function: "FOR_INTERPRET_DETAIL_VIEW",
-      component: InterPretChild,
-    },
-    {
-      path: "/interpret/interpret-detail/add/:id",
-      exact: true,
-      name: "Thêm mới",
-      function: "FOR_INTERPRET_DETAIL_ADD",
-      component: InterPretChildAdd,
-    },
-    {
-      path: "/interpret/interpret-detail/detail/:id",
-      exact: true,
-      name: "Chi tiết",
-      function: "FOR_INTERPRET_DETAIL_VIEW",
-      component: InterPretChildDetail,
-    },
-    {
-      path: "/interpret/interpret-detail/edit/:id",
-      exact: true,
-      name: "Chỉnh sửa",
-      function: "FOR_INTERPRET_DETAIL_EDIT",
-      component: InterPretChildEdit,
-    },
-    // end#InterPretChild
-      //order
+  //InterPretChild
+  {
+    path: "/interpret/interpret-detail/:id",
+    exact: true,
+    name: "Danh sách luận giải chi tiết",
+    function: "FOR_INTERPRET_DETAIL_VIEW",
+    component: InterPretChild,
+  },
+  {
+    path: "/interpret/interpret-detail/add/:id",
+    exact: true,
+    name: "Thêm mới",
+    function: "FOR_INTERPRET_DETAIL_ADD",
+    component: InterPretChildAdd,
+  },
+  {
+    path: "/interpret/interpret-detail/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "FOR_INTERPRET_DETAIL_VIEW",
+    component: InterPretChildDetail,
+  },
+  {
+    path: "/interpret/interpret-detail/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "FOR_INTERPRET_DETAIL_EDIT",
+    component: InterPretChildEdit,
+  },
+  // end#InterPretChild
+  //order
   {
     path: "/order",
     exact: true,
@@ -3089,6 +3080,23 @@ const routes = [
     component: OrderDetail,
   },
   // end#order
+
+  // searchHistory
+  {
+    path: "/search-history",
+    exact: true,
+    name: "Danh sách tra cứu lịch sử khách hàng",
+    function: "CUS_SEARCH_HISTORY_VIEW",
+    component: SearchHistory,
+  },
+  {
+    path: "/search-history/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "CUS_SEARCH_HISTORY_VIEW",
+    component: SearchHistoryDetail,
+  },
+  //end searchHistory
 ];
 
 export default routes;
