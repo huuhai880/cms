@@ -53,6 +53,7 @@ const getListSearchHistory = async (queryParams = {}) => {
 };
 
 const deleteSearchHistory = async (member_id, bodyParams) => {
+console.log("🚀 ~ file: search-history.service.js ~ line 56 ~ deleteSearchHistory ~ bodyParams", bodyParams)
   try {
     const pool = await mssql.pool;
     await pool
@@ -61,6 +62,14 @@ const deleteSearchHistory = async (member_id, bodyParams) => {
       .input(
         'DELETEDUSER',
         apiHelper.getValueFromObject(bodyParams, 'auth_name')
+      )
+      .input(
+        'CREATEDDATEFROM',
+        apiHelper.getValueFromObject(bodyParams, 'search_date')
+      )
+      .input(
+        'CREATEDDATETO',
+        apiHelper.getValueFromObject(bodyParams, 'search_date')
       )
       .execute(PROCEDURE_NAME.CUS_SEARCH_HISTORY_DELETE_ADMINWEB);
     removeCacheOptions();
@@ -77,12 +86,20 @@ const removeCacheOptions = () => {
   return cacheHelper.removeByKey(CACHE_CONST.CUS_SEARCHHISTORY_OPTIONS);
 };
 
-const detailSearchHistory = async (member_id) => {
+const detailSearchHistory = async (member_id, queryParams) => {
   try {
     const pool = await mssql.pool;
     const data = await pool
       .request()
       .input('MEMBERID', member_id)
+      .input(
+        'CREATEDDATEFROM',
+        apiHelper.getValueFromObject(queryParams, 'start_date')
+      )
+      .input(
+        'CREATEDDATETO',
+        apiHelper.getValueFromObject(queryParams, 'end_date')
+      )
       .execute(PROCEDURE_NAME.CUS_SEARCH_HISTORY_GETBYID_ADMINWEB);
     let datas = data.recordset;
     if (datas && datas.length > 0) {
@@ -90,6 +107,14 @@ const detailSearchHistory = async (member_id) => {
       const dataSearchHistoryProduct = await pool
         .request()
         .input('MEMBERID', member_id)
+        .input(
+          'CREATEDDATEFROM',
+          apiHelper.getValueFromObject(queryParams, 'start_date')
+        )
+        .input(
+          'CREATEDDATETO',
+          apiHelper.getValueFromObject(queryParams, 'end_date')
+        )
         .execute(PROCEDURE_NAME.CUS_SEARCH_HISTORY_GETBYID_PRODUCT_ADMINWEB);
       let dataProduct = dataSearchHistoryProduct.recordset;
       dataProduct = searchHistoryClass.detailProduct(dataProduct);
