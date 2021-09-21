@@ -14,6 +14,7 @@ import { layoutFullWidthHeight } from "../../utils/html";
 import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
 import SearchHistoryModel from "../../models/SearchHistoryModel";
+import SearchHistoryDetail from "./SearchHistoryDetail";
 
 // Set layout full-wh
 layoutFullWidthHeight();
@@ -124,7 +125,7 @@ class SearchHistory extends Component {
     };
     const route = routes[type];
     if (type.match(/detail/i)) {
-      window._$g.rdr(`${route}${id}`);
+      this.props.history.push(`${route}${id}`, this.state.data[rowIndex].search_date);
     } else {
       window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "Xóa", (confirm) =>
         this.handleClose(confirm, id, rowIndex)
@@ -134,9 +135,10 @@ class SearchHistory extends Component {
 
   handleClose(confirm, id, rowIndex) {
     const { data } = this.state;
+    let search_date = this.state.data[rowIndex].search_date
     if (confirm) {
       this._searchHistoryModel
-        .delete(id)
+        .delete(id, {search_date})
         .then(() => {
           const cloneData = JSON.parse(JSON.stringify(data));
           cloneData.splice(rowIndex, 1);
@@ -177,9 +179,53 @@ class SearchHistory extends Component {
     this.getData(query);
   };
 
+  SearchHistoryDetailMember = (member_id, search_date) => {
+    this.props.history.push({
+      pathname: `${"/search-history/detail/"}${member_id}`,
+      state: search_date,
+    });
+  };
+
   render() {
     const columns = [
-      configIDRowTable("member_id", "/search-history/detail/", this.state.query),
+      // configIDRowTable("member_id", "/search-history/detail/", this.state.query),
+      {
+        name: "",
+        label: "STT",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            let indx = this.state.data.indexOf(this.state.data[tableMeta["rowIndex"]]);
+            return (
+              <div>
+                <div
+                  className="text-center"
+                  style={{ cursor: "pointer", color: "#20a8d8" }}
+                  onClick={() =>
+                    this.SearchHistoryDetailMember(
+                      this.state.data[tableMeta["rowIndex"]].member_id,
+                      this.state.data[tableMeta["rowIndex"]].search_date
+                    )
+                  }
+                >
+                  {indx + 1}
+                </div>
+              </div>
+            );
+          },
+        },
+      },
       {
         name: "full_name",
         label: "Tên khách hàng",
@@ -239,7 +285,7 @@ class SearchHistory extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-right">{value}</div>;
+            return <div className="text-center">{value}</div>;
           },
         },
       },
@@ -308,7 +354,6 @@ class SearchHistory extends Component {
                 >
                   <i className="fa fa-info" />
                 </Button>
-
                 <CheckAccess permission="CUS_SEARCHHISTORY_DEL">
                   <Button
                     color="danger"

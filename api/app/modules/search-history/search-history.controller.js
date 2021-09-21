@@ -20,6 +20,7 @@ const getListSearchHistory = async (req, res, next) => {
 
 const deleteSearchHistory = async (req, res, next) => {
   try {
+    req.body.search_date =  req.query.search_date
     const member_id = req.params.member_id;
     // Check exists
     const serviceResDetail = await searchHistoryService.detailSearchHistory(
@@ -30,6 +31,7 @@ const deleteSearchHistory = async (req, res, next) => {
     }
 
     // Delete
+
     const serviceRes = await searchHistoryService.deleteSearchHistory(
       member_id,
       req.body
@@ -46,9 +48,11 @@ const deleteSearchHistory = async (req, res, next) => {
 };
 
 const detailSearchHistory = async (req, res, next) => {
+  let queryParams = req.query;
   try {
     const serviceRes = await searchHistoryService.detailSearchHistory(
-      req.params.member_id
+      req.params.member_id,
+      queryParams
     );
     if (serviceRes.isFailed()) {
       return next(serviceRes);

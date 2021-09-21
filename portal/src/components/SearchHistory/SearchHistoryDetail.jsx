@@ -77,8 +77,12 @@ export default class SearchHistoryDetail extends PureComponent {
   async _getBundleData() {
     let bundle = {};
     let ID = this.props.match.params.id;
-    let all = [this._searchHistoryModel.read(ID).then((data) => (bundle["data"] = data))];
-
+    let search_date = this.props.history.location.state;
+    let all = [
+      this._searchHistoryModel
+        .read(ID, { start_date: search_date, end_date: search_date })
+        .then((data) => (bundle["data"] = data)),
+    ];
     await Promise.all(all).catch((err) =>
       window._$g.dialogs.alert(
         window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`)
@@ -222,7 +226,7 @@ export default class SearchHistoryDetail extends PureComponent {
                                         <Input
                                           {...field}
                                           className="text-left"
-                                          value={data.full_name}
+                                          value={data ? data.full_name : ""}
                                           onBlur={null}
                                           type="text"
                                           id="attribute_name"
@@ -246,7 +250,7 @@ export default class SearchHistoryDetail extends PureComponent {
                                         <Input
                                           {...field}
                                           className="text-left"
-                                          value={data.search_date}
+                                          value={data ? data.search_date : ""}
                                           onBlur={null}
                                           type="text"
                                           id="attribute_name"
@@ -297,7 +301,7 @@ export default class SearchHistoryDetail extends PureComponent {
                                       </th>
                                     </thead>
                                     <tbody>
-                                      {data.list_product &&
+                                      {data &&
                                         data.list_product.length &&
                                         data.list_product.map((item, index) => (
                                           <tr key={index}>
@@ -364,7 +368,7 @@ export default class SearchHistoryDetail extends PureComponent {
                                               {...field}
                                               className="pull-left"
                                               onBlur={null}
-                                              checked={data.is_active}
+                                              checked={data ? data.is_active : false}
                                               type="checkbox"
                                               id="is_active"
                                               label="Kích hoạt"
