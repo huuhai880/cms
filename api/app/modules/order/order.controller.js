@@ -64,8 +64,25 @@ const getListProduct = async (req, res, next) => {
     );
   }
 };
+const deleteOrder = async (req, res, next) => {
+  try {
+    const order_id = req.params.order_id;
+
+    const serviceRes = await OrderService.deleteOrder(order_id, req.body);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+
+    return res.json(
+      new SingleResponse(null, RESPONSE_MSG.COMMENT.DELETE_SUCCESS)
+    );
+  } catch (error) {
+    return next(error);
+  }
+};
 module.exports = {
   getOrderList,
   detailOrder,
   getListProduct,
+  deleteOrder,
 };

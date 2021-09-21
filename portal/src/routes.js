@@ -597,6 +597,7 @@ const InterPret = React.lazy(() => import("./components/InterPret/InterPret"));
 const InterPretAdd = React.lazy(() => import("./components/InterPret/InterPretAdd"));
 const InterPretDetail = React.lazy(() => import("./components/InterPret/InterPretDetail"));
 const InterPretEdit = React.lazy(() => import("./components/InterPret/InterPretEdit"));
+const InterPretView = React.lazy(() => import("./components/InterPret/ViewDetail"));
 // end#InterPret
 
 //InterPretDetail
@@ -1719,7 +1720,7 @@ const routes = [
   {
     path: "/account",
     exact: true,
-    name: "Danh sách sách khách hàng",
+    name: "Danh sách khách hàng",
     function: "CRM_ACCOUNT_VIEW",
     component: Account,
   },
@@ -3033,6 +3034,13 @@ const routes = [
     function: "FOR_INTERPRET_EDIT",
     component: InterPretEdit,
   },
+  {
+    path: "/interpret/detail-web/:id",
+    exact: true,
+    // name: "Chi tiết",
+    function: "SL_INTERPRET_VIEW",
+    component: InterPretView,
+  },
   // end#interpret
   //InterPretChild
   {
@@ -3079,6 +3087,7 @@ const routes = [
     function: "SL_ORDER_VIEW",
     component: OrderDetail,
   },
+  
   // end#order
 
   // searchHistory

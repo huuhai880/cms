@@ -55,7 +55,7 @@ const CheckMainNumber = async (main_number) => {
 };
 ///////get list main number
 const getMainNumberList = async (queryParams = {}) => {
-  console.log(queryParams)
+  // console.log(queryParams)
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);

@@ -109,7 +109,7 @@ function OrderDetail() {
                       <Col xs={6}>
                         <FormGroup row>
                           <Label for="relationship_id" sm={3}>
-                            Ngày mua hàng <span className="font-weight-bold red-text">*</span>
+                          Ngày tạo đơn hàng <span className="font-weight-bold red-text">*</span>
                           </Label>
                           <Col sm={9}>
                             <Input

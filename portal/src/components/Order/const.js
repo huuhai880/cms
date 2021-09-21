@@ -23,12 +23,12 @@ export const initialValues = {
   product_list: [],
   status:""
 };
-export const getColumTable = (data, total, query) => {
-  // console.log(data);
+export const getColumTable = (data, total, query, handleDelete) => {
+  console.log(data);
   return [
     configIDRowTable("order_id", "/order/detail/", query),
     {
-      name: "order_id",
+      name: "order_no",
       label: "Mã đơn hàng",
       options: {
         filter: false,
@@ -46,8 +46,26 @@ export const getColumTable = (data, total, query) => {
       },
     },
     {
+      name: "product_name",
+      label: "Tên sản phẩm",
+      options: {
+        filter: false,
+        sort: true,
+        customHeadRender: (columnMeta, handleToggleColumn) => {
+          return (
+            <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+              <div className="text-center">{columnMeta.label}</div>
+            </th>
+          );
+        },
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return <div className="text-left">{value}</div>;
+        },
+      },
+    },
+    {
       name: "order_date",
-      label: "Ngày tạo đơn",
+      label: "Ngày tạo đơn hàng",
       options: {
         filter: false,
         sort: true,
@@ -163,6 +181,18 @@ export const getColumTable = (data, total, query) => {
                   }}
                 >
                   <i className="fa fa-info" />
+                </Button>
+              </CheckAccess>
+              <CheckAccess permission="SL_ORDER_DEL">
+                <Button
+                  color="danger"
+                  title="Xóa"
+                  className=""
+                  onClick={(evt) =>
+                    handleDelete(data[tableMeta["rowIndex"]].order_id, tableMeta["rowIndex"])
+                  }
+                >
+                  <i className="fa fa-trash" />
                 </Button>
               </CheckAccess>
             </div>
