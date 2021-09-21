@@ -11,17 +11,25 @@ function Filter({ handleSubmitFillter }) {
   const [dateToDate, setDateToDate] = useState("");
   const [dateFromDate, setDateFromDate] = useState("");
   const [isActive, setIsActive] = useState([
-    { name: "chưa thanh toán", id: "0" },
-    { name: "Đã thanh toá", id: "1" },
     { name: "Tất cả", id: "2" },
+    { name: "Chưa thanh toán", id: "0" },
+    { name: "Đã thanh toán", id: "1" },
+  ]);
+  const [isDeleted, setIsDeleted] = useState([
+    { name: "Tất cả", id: "2" },
+    { name: "Không", id: "0" },
+    { name: "Có", id: "1" },
   ]);
   const [searchValue, setSearchValue] = useState({
     keyword: "",
-    selectdActive: { value: "1", label: "Đã thanh toán" },
+    selectDeleted: { value: "0", label: "Không" },
+    selectdActive: { value: "2", label: "Tất cả" },
     startDate: null,
     endDate: null,
   });
   useEffect(() => {
+    document.getElementById('your_unique_start_date_id').setAttribute('readonly', 'readonly');
+    document.getElementById('your_unique_end_date_id').setAttribute('readonly', 'readonly');
     let pickerLeft = document.querySelector("#your_unique_start_date_id");
     pickerLeft.addEventListener("keyup", (e) => {
       if (e.target.value) {
@@ -29,12 +37,13 @@ function Filter({ handleSubmitFillter }) {
           /^(?:0?[1-9]?|[12]\d|3[01])(?:\/(?:0?[1-9]|1[012])?)\/\d{0,4}$|^\d{4}?$/.test(
             e.target.value
           );
-      }
+  
 
+      }
+    
       setCheckStartDate(checkStartDate);
       setDateFromDate(e.target.value);
     });
-
     let pickerRight = document.querySelector("#your_unique_end_date_id");
     pickerRight.addEventListener("keyup", (e) => {
       if (e.target.value) {
@@ -46,9 +55,17 @@ function Filter({ handleSubmitFillter }) {
       setCheckEndDate(checkEndDate);
       setDateToDate(e.target.value);
     });
+    // console.log()
+    setSearchValue({
+      ...searchValue,
+      startDate: moment(),
+      endDate: moment(),
+
+    });
   }, []);
+
   const _handleSubmitFillter = () => {
-    let { keyword, selectdActive, startDate, endDate } = searchValue;
+    let { keyword, selectdActive, selectDeleted, startDate, endDate } = searchValue;
     var mydate = moment(dateToDate, "DD/MM/YYYY");
     var myStartDate = startDate ? startDate.format("DD/MM/YYYY") : "";
     if (myStartDate) {
@@ -66,6 +83,7 @@ function Filter({ handleSubmitFillter }) {
     let value = {
       keyword: keyword ? keyword : null,
       selectdActive: selectdActive ? selectdActive.value : null,
+      selectDeleted: selectDeleted ? selectDeleted.value : null,
       startDate: startDate ? startDate.format("DD/MM/YYYY") : null,
       endDate: endDate ? endDate.format("DD/MM/YYYY") : null,
     };
@@ -75,15 +93,17 @@ function Filter({ handleSubmitFillter }) {
   const handleClear = () => {
     setSearchValue({
       keyword: "",
-      selectdActive: { value: "1", label: "Đã thanh toán" },
-      startDate: null,
-      endDate: null,
+      selectdActive: { value: "2", label: "Tất cả" },
+      selectDeleted: { value: "0", label: "Không" },
+      startDate: moment(),
+      endDate: moment(),
     });
     let value = {
       keyword: null,
-      selectdActive: 1,
-      startDate: null,
-      endDate: null,
+      selectdActive: 2,
+      selectDeleted: 0,
+      startDate: moment().format("DD/MM/YYYY"),
+      endDate: moment().format("DD/MM/YYYY"),
     };
 
     handleSubmitFillter(value);
@@ -92,7 +112,7 @@ function Filter({ handleSubmitFillter }) {
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
         <Row>
-          <Col xs={4} style={{ padding: 0 }}>
+          <Col xs={3} style={{ padding: 0 }}>
             <Col
               xs={12}
               style={{
@@ -108,7 +128,7 @@ function Filter({ handleSubmitFillter }) {
                   autoComplete="nope"
                   type="text"
                   name="keyword"
-                  placeholder="Nhập mã đơn hàng, tên khách hàng , sản phẩm"
+                  placeholder="Nhập mã đơn hàng, tên khách hàng, sản phẩm"
                   value={searchValue.keyword}
                   onChange={(e) => {
                     setSearchValue({
@@ -179,7 +199,7 @@ function Filter({ handleSubmitFillter }) {
               </Col>
             </Col>
           </Col>
-          <Col xs={2} style={{ padding: 0 }}>
+          <Col xs={3} style={{ padding: 0 }}>
             <Col
               xs={12}
               style={{
@@ -187,10 +207,25 @@ function Filter({ handleSubmitFillter }) {
               }}
             >
               <Label for="" className="mr-sm-2">
-                
+                Đã xóa
               </Label>
-              <Col className="pl-0 pr-0 mt-2">
-                <div className="d-flex align-items-center ">
+              <Col className="pl-0 pr-0">
+                <Select
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                  placeholder={"-- Chọn --"}
+                  onChange={(e) => {
+                    setSearchValue({
+                      ...searchValue,
+                      selectDeleted: e,
+                    });
+                  }}
+                  value={searchValue.selectDeleted}
+                  options={isDeleted.map(({ name: label, id: value }) => ({
+                    value,
+                    label,
+                  }))}
+                />
+                <div className="d-flex align-items-center mt-3">
                   <div className="d-flex flex-fill justify-content-end">
                     <FormGroup className="mb-2">
                       <Button

@@ -64,6 +64,16 @@ function Account() {
       }
     });
   };
+  const handleChangeRowsPerPage = (event) => {
+    query.itemsPerPage = event.target.value;
+    query.page = 1;
+    _callAPI(query);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    query.page = newPage + 1;
+    _callAPI(query);
+  };
   return (
     <div>
       <Card className="animated fadeIn z-index-222 mb-3 ">
@@ -126,8 +136,8 @@ function Account() {
                     count={dataAccount.totalItems}
                     rowsPerPage={query.itemsPerPage}
                     page={query.page - 1 || 0}
-                    // onChangePage={handleChangePage}
-                    // onChangeRowsPerPage={handleChangeRowsPerPage}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
                   />
                 </div>
               )}

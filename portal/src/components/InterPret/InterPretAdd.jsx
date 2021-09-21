@@ -67,10 +67,12 @@ function InterPretAdd({ noEdit }) {
   }, []);
   //// create letter
   const handleCreateOrUpdate = async (values) => {
+    
     try {
       _interpretModel.create(values).then((data) => {
         if (btnType == "save") {
           setDataInterpret(initialValues);
+          formik.resetForm();
           window._$g.toastr.show("Lưu thành công!", "success");
         } else if (btnType == "save&quit") {
           window._$g.toastr.show("Lưu thành công!", "success");
@@ -91,7 +93,7 @@ function InterPretAdd({ noEdit }) {
   const _initDataDetail = async () => {
     try {
       await _interpretModel.detail(id).then((data) => {
-        console.log(data);
+        // console.log(data);
         setDataInterpret(data);
         // console.log()
       });
@@ -405,7 +407,44 @@ function InterPretAdd({ noEdit }) {
                       Tóm tắt<span className="font-weight-bold red-text">*</span>
                     </Label>
                     <Col sm={10}>
-                      <Input
+                    <Editor
+                        apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
+                        scriptLoading={{
+                          delay: 500,
+                        }}
+                        value={formik.values.brief_decs}
+                        disabled={noEdit}
+                        init={{
+                          height: "300px",
+                          width: "100%",
+                          menubar: false,
+                          branding: false,
+                          statusbar: false,
+                          plugins: [
+                            "advlist autolink fullscreen lists link image charmap print preview anchor",
+                            "searchreplace visualblocks code fullscreen ",
+                            "insertdatetime media table paste code help",
+                            "image imagetools ",
+                            "toc",
+                          ],
+                          menubar: "file edit view insert format tools table tc help",
+                          toolbar1:
+                            "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                            "alignleft aligncenter alignright alignjustify",
+                          toolbar2:
+                            "bullist numlist outdent indent | removeformat | help | image | toc",
+                          file_picker_types: "image",
+                          images_dataimg_filter: function (img) {
+                            return img.hasAttribute("internal-blob");
+                          },
+                          images_upload_handler: handleUploadImage,
+                        }}
+                        onEditorChange={(newValue) => {
+                          formik.setFieldValue("brief_decs", newValue);
+                        }}
+                        // onEditorChange={formik.handleChange}
+                      />
+                      {/* <Input
                         name="brief_decs"
                         id="brief_decs"
                         type="textarea"
@@ -413,7 +452,7 @@ function InterPretAdd({ noEdit }) {
                         disabled={noEdit}
                         value={formik.values.brief_decs}
                         onChange={formik.handleChange}
-                      />
+                      /> */}
                       {formik.errors.brief_decs && formik.touched.brief_decs ? (
                         <div
                           className="field-validation-error alert alert-danger fade show"
