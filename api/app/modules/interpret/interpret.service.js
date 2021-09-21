@@ -274,7 +274,7 @@ const detaiIntergret = async (interpret_id) => {
       .input('INTERPRETID', interpret_id)
       .execute('FOR_INTERPRET_GetById_AdminWeb');
     const Intergret = data.recordset[0];
-    console.log(InterpretClass.detailInterpret(Intergret))
+    // console.log(InterpretClass.detailInterpret(Intergret))
     if (Intergret) {
       return new ServiceResponse(
         true,

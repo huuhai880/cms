@@ -102,6 +102,9 @@ function AccountAdd({ noEdit }) {
   });
   //// update account
   const handleUpdateAcount = async (values) => {
+    let newbirth=formik.values.birth_day
+    let birth_day = moment(newbirth).format("DD/MM/YYYY")
+    values={...values,birth_day}
     try {
       await _accountModel.check({ email: values.email }).then((data) => {
         // console.log(data)

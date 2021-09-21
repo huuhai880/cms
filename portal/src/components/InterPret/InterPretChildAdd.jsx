@@ -42,7 +42,7 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
   });
   ///// get data partnert
   useEffect(() => {
-    if(!dataInterpretDetailEnt){
+    if (!dataInterpretDetailEnt) {
       formik.setFieldValue("interpret_id", id);
     }
     const _callAPI = async () => {
@@ -78,13 +78,17 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
             _interpretModel.createInterpretDetail(values).then((data) => {
               if (btnType == "save") {
                 setDataInterpretDetail(initialValues);
+                formik.resetForm();
+
                 window._$g.toastr.show("Lưu thành công!", "success");
               } else if (btnType == "save&quit") {
                 window._$g.toastr.show("Lưu thành công!", "success");
                 setDataInterpretDetail(initialValues);
-                if(dataInterpretDetailEnt){
-                  return window._$g.rdr(`/interpret/interpret-detail/${dataInterpretDetailEnt.interpret_id}`);
-                }else{
+                if (dataInterpretDetailEnt) {
+                  return window._$g.rdr(
+                    `/interpret/interpret-detail/${dataInterpretDetailEnt.interpret_id}`
+                  );
+                } else {
                   return window._$g.rdr(`/interpret/interpret-detail/${id}`);
                 }
               }
@@ -181,7 +185,10 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
           <Card>
             <CardHeader>
               {/* <b>{dataInterpretDetailEnt ? "Chỉnh sửa" : "Thêm mới"} luận giải chi tiết</b> */}
-              <b>{dataInterpretDetailEnt ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận giải chi tiết</b>
+              <b>
+                {dataInterpretDetailEnt ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận
+                giải chi tiết
+              </b>
             </CardHeader>
             <CardBody>
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
@@ -258,38 +265,6 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                         </Col>
                       </FormGroup>
                     </Col>
-                    
-                    <Col xs={6}>
-                      <FormGroup row>
-                        <Label for="interpret_detail_short_content" sm={4}>
-                          Mô tả ngắn <span className="font-weight-bold red-text">*</span>
-                        </Label>
-                        <Col sm={8}>
-                          <Input
-                            name="interpret_detail_short_content"
-                            id="interpret_detail_short_content"
-                            type="textarea"
-                            placeholder="Ghi chú"
-                            disabled={noEdit}
-                            value={formik.values.interpret_detail_short_content}
-                            onChange={formik.handleChange}
-                          />
-                          {formik.errors.interpret_detail_short_content &&
-                          formik.touched.interpret_detail_short_content ? (
-                            <div
-                              className="field-validation-error alert alert-danger fade show"
-                              role="alert"
-                            >
-                              {formik.errors.interpret_detail_short_content}
-                            </div>
-                          ) : null}
-                        </Col>
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col>
-                  <Row>
                     <Col xs={6}>
                       <FormGroup row>
                         <Label for="order_index" sm={4}>
@@ -318,6 +293,62 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                       </FormGroup>
                     </Col>
                   </Row>
+                </Col>
+                <Col>
+                  <FormGroup row>
+                    <Label for="interpret_detail_short_content" sm={2}>
+                      Mô tả ngắn <span className="font-weight-bold red-text">*</span>
+                    </Label>
+                    <Col sm={10}>
+                      <Editor
+                        apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
+                        scriptLoading={{
+                          delay: 500,
+                        }}
+                        value={formik.values.interpret_detail_short_content}
+                        disabled={noEdit}
+                        init={{
+                          height: "300px",
+                          width: "100%",
+                          menubar: false,
+                          branding: false,
+                          statusbar: false,
+                          plugins: [
+                            "advlist autolink fullscreen lists link image charmap print preview anchor",
+                            "searchreplace visualblocks code fullscreen ",
+                            "insertdatetime media table paste code help",
+                            "image imagetools ",
+                            "toc",
+                          ],
+                          menubar: "file edit view insert format tools table tc help",
+                          toolbar1:
+                            "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                            "alignleft aligncenter alignright alignjustify",
+                          toolbar2:
+                            "bullist numlist outdent indent | removeformat | help | image | toc",
+                          file_picker_types: "image",
+                          images_dataimg_filter: function (img) {
+                            return img.hasAttribute("internal-blob");
+                          },
+                          images_upload_handler: handleUploadImage,
+                        }}
+                        onEditorChange={(newValue) => {
+                          formik.setFieldValue("interpret_detail_short_content", newValue);
+                        }}
+                        // onEditorChange={formik.handleChange}
+                      />
+
+                      {formik.errors.interpret_detail_short_content &&
+                      formik.touched.interpret_detail_short_content ? (
+                        <div
+                          className="field-validation-error alert alert-danger fade show"
+                          role="alert"
+                        >
+                          {formik.errors.interpret_detail_short_content}
+                        </div>
+                      ) : null}
+                    </Col>
+                  </FormGroup>
                 </Col>
                 <Col xs={12} sm={12}>
                   <FormGroup row>
@@ -419,16 +450,15 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                     <button
                       className=" btn-block-sm btn btn-secondary"
                       type="button"
-                      onClick={() =>
-                        {
-                          if(dataInterpretDetailEnt){
-                             window._$g.rdr(`/interpret/interpret-detail/${dataInterpretDetailEnt.interpret_id}`);
-                          }else{
-                             window._$g.rdr(`/interpret/interpret-detail/${id}`);
-                          }
+                      onClick={() => {
+                        if (dataInterpretDetailEnt) {
+                          window._$g.rdr(
+                            `/interpret/interpret-detail/${dataInterpretDetailEnt.interpret_id}`
+                          );
+                        } else {
+                          window._$g.rdr(`/interpret/interpret-detail/${id}`);
                         }
-                       
-                      }
+                      }}
                     >
                       <i className="fa fa-times-circle mr-1" />
                       Đóng

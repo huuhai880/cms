@@ -3,6 +3,7 @@ const config = require('../../../config/config');
 
 const template = {
   order_id: '{{#? ORDERID}}',
+  order_no: '{{#? ORDERNO}}',
   order_date: '{{#? ORDERDATE}}',
   status: '{{STATUS ? 1 : 0}}',
   is_day: '{{ISDAY ? 1 : 0}}',
@@ -27,6 +28,8 @@ const template = {
 let transform = new Transform(template);
 const list = (users = []) => {
   return transform.transform(users, [
+    'product_name',
+    'order_no',
     'order_id',
     'order_date',
     'status',

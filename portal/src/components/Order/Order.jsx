@@ -8,6 +8,8 @@ import MUIDataTable from "mui-datatables";
 import { configTableOptions } from "../../utils/index";
 import CustomPagination from "../../utils/CustomPagination";
 import OrderModel from "../../models/OrderModel";
+import moment from "moment";
+
 layoutFullWidthHeight();
 function Order() {
   const _orderModel = new OrderModel();
@@ -18,7 +20,10 @@ function Order() {
   const [query, setQuery] = useState({
     itemsPerPage: 25,
     page: 1,
-    selectdActive: 1,
+    selectdActive: 2,
+    selectDeleted: 0,
+    startDate: moment().format("DD/MM/YYYY"),
+    endDate: moment().format("DD/MM/YYYY"),
   });
   //// init data
   useEffect(() => {
@@ -55,6 +60,24 @@ function Order() {
     query.page = newPage + 1;
     _callAPI(query);
   };
+  ///// delete number
+  const handleDelete = (id) => {
+    window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "xóa", (confirm) => {
+      if (confirm) {
+        try {
+          _orderModel.delete(id).then((data) => {
+            window._$g.toastr.show("Xóa thành công", "success");
+            _callAPI(query);
+          });
+        } catch (error) {
+          console.log(error);
+          window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+        } finally {
+          setisLoading(false);
+        }
+      }
+    });
+  };
   return (
     <div>
       <Card className="animated fadeIn z-index-222 mb-3 ">
@@ -87,7 +110,8 @@ function Order() {
                     columns={getColumTable(
                       dataOrder.items,
                       dataOrder.totalItems,
-                      query
+                      query,
+                      handleDelete
                     )}
                     options={configTableOptions(dataOrder.totalItems, query.page, {
                       itemsPerPage: query.itemsPerPage,

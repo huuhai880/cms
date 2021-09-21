@@ -22,7 +22,7 @@ export const initialValues = {
   decs: "",
   brief_decs: "",
   note: "",
-  order_index:""
+  order_index: "",
 };
 ///// validate
 export const validationSchema = yup.object().shape({
@@ -79,7 +79,11 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-left">{value}</div>;
+          return (
+            <div className="text-left align-self-center" dangerouslySetInnerHTML={{ __html: value }}>
+                {/* <div  /> */}
+            </div>
+          );
         },
       },
     },
@@ -149,15 +153,31 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   <i className="fa fa-list" />
                 </Button>
               </CheckAccess>
+              <CheckAccess permission="FOR_INTERPRET_DETAIL_VIEW">
+                <Button
+                  color="info"
+                  title="Chi tiết luận giải trên web"
+                  className="mr-1"
+                  onClick={(evt) => {
+                    window.open(
+                      `/interpret/detail-web/${data[tableMeta["rowIndex"]].interpret_id}`,
+                      "_blank"
+                    );
+                    // window._$g.rdr(
+                    //   `/interpret/detail-web/${data[tableMeta["rowIndex"]].interpret_id}`, '_blank'
+                    // );
+                  }}
+                >
+                  <i className="fa fa-eye" />
+                </Button>
+              </CheckAccess>
               <CheckAccess permission="FOR_INTERPRET_EDIT">
                 <Button
                   color={"primary"}
                   title="Duyệt"
                   className="mr-1"
                   onClick={(evt) => {
-                    window._$g.rdr(
-                      `/interpret/edit/${data[tableMeta["rowIndex"]].interpret_id}`
-                    );
+                    window._$g.rdr(`/interpret/edit/${data[tableMeta["rowIndex"]].interpret_id}`);
                   }}
                 >
                   <i className="fa fa-edit" />

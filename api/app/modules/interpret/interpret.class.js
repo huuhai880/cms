@@ -81,6 +81,8 @@ const listAttribute = (users = []) => {
 };
 const detailInterpret = (users = []) => {
   return transform.transform(users, [
+    'mainnumber',
+    'attribute_name',
     'interpret_id',
     'relationship_id',
     'compare_mainnumber_id',
