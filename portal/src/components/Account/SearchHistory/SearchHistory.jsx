@@ -208,7 +208,7 @@ class SearchHistory extends Component {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-right">{value}</div>;
+            return <div className="text-center">{value}</div>;
           },
         },
       },

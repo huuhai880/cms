@@ -271,7 +271,11 @@ const deleteProductCategory = async (productCategoryId, bodyParams) => {
     const requestProductAttrCategoryDelete = new sql.Request(transaction);
     const dataProductAttrCategoryDelete = await requestProductAttrCategoryDelete
       .input('PRODUCTCATEGORYID', productCategoryId)
-      .execute(PROCEDURE_NAME.PRO_CATE_ATTRIBUTE_DELETE);
+      .input(
+        'UPDATEDUSER',
+        apiHelper.getValueFromObject(bodyParams, 'auth_name')
+      )
+      .execute(PROCEDURE_NAME.MD_PRODUCTCATEGORY_DELETE);
     const resultProductAttrCategoryDelete =
       dataProductAttrCategoryDelete.recordset[0].RESULT;
     if (resultProductAttrCategoryDelete <= 0) {
