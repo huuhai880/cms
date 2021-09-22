@@ -18,10 +18,11 @@ const getListPrice = async (queryParams = {}) => {
         const currentPage = apiHelper.getCurrentPage(queryParams);
         const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
         const keyword = apiHelper.getSearch(queryParams);
-        const type = apiHelper.getValueFromObject(queryParams, 'is_active', 2);
+        const type = apiHelper.getValueFromObject(queryParams, 'type', 2);
         const is_active = apiHelper.getValueFromObject(queryParams, 'is_active', 1);
         const start_date = apiHelper.getValueFromObject(queryParams, 'start_date', null);
         const end_date = apiHelper.getValueFromObject(queryParams, 'end_date', null)
+
 
         const pool = await mssql.pool;
         const res = await pool.request()
@@ -170,7 +171,12 @@ const detailPrice = async (price_id) => {
         if (price) {
             price.customer_types = customer_types ? customer_types : [];
             price.is_apply_customer_type = customer_types && customer_types.length > 0;
+            price.is_apply_promotion = price.is_apply_promotion ?  true : false;
+            price.is_apply_combo = price.is_apply_combo ?  true : false;
+            price.is_percent = price.is_percent ?  true : false;
         }
+
+
         return new ServiceResponse(true, '', price)
     } catch (error) {
         logger.error(error, {
