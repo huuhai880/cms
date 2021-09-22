@@ -16,9 +16,9 @@ const ruleCreateOrUpdate = {
   key_milestones: Joi.number().valid(0, 1).allow('', null),
   second_milestones: Joi.number().valid(0, 1).allow('', null),
   challenging_milestones: Joi.number().valid(0, 1).allow('', null),
-  age_milestones: Joi.string().required(),
-  year_milestones: Joi.string().required(),
-  values: Joi.string().required(),
+  // age_milestones: Joi.string().required(),
+  // year_milestones: Joi.string().required(),
+  // values: Joi.string().required(),
   is_active: Joi.number().valid(0, 1).required(),
 };
 

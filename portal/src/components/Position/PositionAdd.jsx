@@ -58,7 +58,11 @@ function PositionAdd() {
         } else {
           _positionModel.create(values).then((data) => {
             if (btnType == "save") {
-              // _initData();
+              if(id){
+                _initDataDetail()
+              }else{
+                formik.resetForm();
+              }
               window._$g.toastr.show("Lưu thành công!", "success");
             } else if (btnType == "save&quit") {
               window._$g.toastr.show("Lưu thành công!", "success");

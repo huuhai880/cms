@@ -77,7 +77,7 @@ const listMainnumber = (users = []) => {
   return transform.transform(users, ['mainnumber_id', 'mainnumber']);
 };
 const listAttribute = (users = []) => {
-  return transform.transform(users, ['attribute_id', 'attribute_name']);
+  return transform.transform(users, ['attribute_id', 'attribute_name','mainnumber_id']);
 };
 const detailInterpret = (users = []) => {
   return transform.transform(users, [
