@@ -107,31 +107,40 @@ function AccountAdd({ noEdit }) {
   });
   //// update account
   const handleUpdateAcount = async (values) => {
-    let newbirth=formik.values.birth_day
-    let birth_day = moment(newbirth).format("DD/MM/YYYY")
-    values={...values,birth_day}
+    let newbirth = formik.values.birth_day;
+    let birth_day = moment(newbirth).format("DD/MM/YYYY");
+    values = { ...values, birth_day };
     try {
       await _accountModel.check({ email: values.email }).then((data) => {
-        // console.log(data)
         if (data.MEMBERID && formik.values.email != dataAccount.email) {
-          // setalert("Email đã tồn tại!");
           formik.setFieldError("email", "Email đã tồn tại!");
-          // window.scrollTo(0, 0);
         } else {
-          _accountModel.update(id, values).then((data) => {
-            if (btnType == "save") {
-              setDataAccount(initialValues);
-              // _initData();
-              _initDataDetail();
-              window._$g.toastr.show("Lưu thành công!", "success");
-            } else if (btnType == "save&quit") {
-              window._$g.toastr.show("Lưu thành công!", "success");
-              setDataAccount(initialValues);
-              return window._$g.rdr("/account");
+          _accountModel.checkIdCard({ id_card: values.id_card }).then((data) => {
+            if (data.MEMBERID && formik.values.id_card != dataAccount.id_card) {
+              formik.setFieldError("id_card", "Mã số chứng minh nhân dân đã tồn tại  đã tồn tại!");
+            } else {
+              _accountModel.checkPhone({ phone_number: values.phone_number }).then((data) => {
+                if (data.MEMBERID && formik.values.phone_number != dataAccount.phone_number) {
+                  formik.setFieldError("phone_number", "Số điện thoại đã tồn tại đã tồn tại!");
+                } else {
+                  _accountModel.update(id, values).then((data) => {
+                    if (btnType == "save") {
+                      if(id){
+                        _initDataDetail()
+                      }else{
+                        formik.resetForm();
+                      }
+                      window._$g.toastr.show("Lưu thành công!", "success");
+                    } else if (btnType == "save&quit") {
+                      window._$g.toastr.show("Lưu thành công!", "success");
+                      setDataAccount(initialValues);
+                      return window._$g.rdr("/account");
+                    }
+                  });
+                }
+              });
             }
-            // console.log(data);
           });
-          // console.log(data);
         }
       });
     } catch (error) {}
@@ -163,23 +172,31 @@ function AccountAdd({ noEdit }) {
   const handleCreateAcount = async (values) => {
     try {
       await _accountModel.check({ email: values.email }).then((data) => {
-        // console.log(data)
-        if (data.MEMBERID) {
-          // setalert("Email đã tồn tại!");
+        if (data.MEMBERID && formik.values.email != dataAccount.email) {
           formik.setFieldError("email", "Email đã tồn tại!");
-          // window.scrollTo(0, 0);
         } else {
-          _accountModel.create(values).then((data) => {
-            if (btnType == "save") {
-              formik.resetForm();
-              _initData();
-              window._$g.toastr.show("Lưu thành công!", "success");
-            } else if (btnType == "save&quit") {
-              window._$g.toastr.show("Lưu thành công!", "success");
-              setDataAccount(initialValues);
-              return window._$g.rdr("/account");
+          _accountModel.checkIdCard({ id_card: values.id_card }).then((data) => {
+            if (data.MEMBERID && formik.values.id_card != dataAccount.id_card) {
+              formik.setFieldError("id_card", "Mã số chứng minh nhân dân đã tồn tại  đã tồn tại!");
+            } else {
+              _accountModel.checkPhone({ phone_number: values.phone_number }).then((data) => {
+                if (data.MEMBERID && formik.values.phone_number != dataAccount.phone_number) {
+                  formik.setFieldError("phone_number", "Số điện thoại đã tồn tại đã tồn tại!");
+                } else {
+                  _accountModel.create(values).then((data) => {
+                    if (btnType == "save") {
+                      formik.resetForm();
+                      _initData();
+                      window._$g.toastr.show("Lưu thành công!", "success");
+                    } else if (btnType == "save&quit") {
+                      window._$g.toastr.show("Lưu thành công!", "success");
+                      setDataAccount(initialValues);
+                      return window._$g.rdr("/account");
+                    }
+                  });
+                }
+              });
             }
-            // console.log(data);
           });
         }
       });

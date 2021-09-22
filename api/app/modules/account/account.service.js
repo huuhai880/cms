@@ -108,6 +108,40 @@ const checkEmail = async (email) => {
     return new ServiceResponse(false, error.message);
   }
 };
+const checkPhone = async (phone_number) => {
+  // console.log(email)
+  try {
+    const pool = await mssql.pool;
+    const data = await pool
+      .request()
+      .input('PHONENUMBER', phone_number)
+      .execute('CRM_ACCOUNT_Phone_AdminWeb');
+    const res = data.recordset[0];
+    if (res) {
+      return new ServiceResponse(true, '', res);
+    }
+    return new ServiceResponse(true, '', '');
+  } catch (error) {
+    return new ServiceResponse(false, error.message);
+  }
+};
+const checkIdCard = async (id_card) => {
+  // console.log(email)
+  try {
+    const pool = await mssql.pool;
+    const data = await pool
+      .request()
+      .input('IDCARD', id_card)
+      .execute('CRM_ACCOUNT_CheckIdcard_AdminWeb');
+    const res = data.recordset[0];
+    if (res) {
+      return new ServiceResponse(true, '', res);
+    }
+    return new ServiceResponse(true, '', '');
+  } catch (error) {
+    return new ServiceResponse(false, error.message);
+  }
+};
 const createCRMAccountOrUpdate = async (body = {}) => {
   let image_avatar = apiHelper.getValueFromObject(body, 'image_avatar');
   let id_front = apiHelper.getValueFromObject(body, 'id_card_front_image');
@@ -152,7 +186,10 @@ const createCRMAccountOrUpdate = async (body = {}) => {
       .input('MEMBERID', apiHelper.getValueFromObject(body, 'member_id'))
       .input('USERNAME', apiHelper.getValueFromObject(body, 'user_name'))
       .input('PASSWORD', password)
-      .input('CUSTOMERTYPEID', apiHelper.getValueFromObject(body, 'customer_type_id'))
+      .input(
+        'CUSTOMERTYPEID',
+        apiHelper.getValueFromObject(body, 'customer_type_id')
+      )
       .input('BIRTHDAY', apiHelper.getValueFromObject(body, 'birth_day'))
       .input(
         'CUSTOMERCODE',
@@ -375,4 +412,6 @@ module.exports = {
   genCode,
   checkEmail,
   getCustomerList,
+  checkIdCard,
+  checkPhone,
 };

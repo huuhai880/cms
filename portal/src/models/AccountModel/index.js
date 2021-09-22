@@ -26,6 +26,8 @@ export default class AccountModel extends Model {
   /** @var {String} */
   static API_ACCOUNT_DETAIL = "account/:id";
   static API_ACCOUNT_CHECK = "account/check-email";
+  static API_ACCOUNT_CHECK_ID_CARD = "account/check-idcard";
+  static API_ACCOUNT_CHECK_PHONE_NUMBER = "account/check-phone";
 
   /** @var {String} */
   static API_ACCOUNT_OPTS = "account/get-options";
@@ -331,6 +333,18 @@ export default class AccountModel extends Model {
     let data = Object.assign({}, _data);
     // console.log(id, data)
     return this._api.get(_static.API_ACCOUNT_CHECK, data);
+  }
+  checkIdCard(_data = {}) {
+    // Validate data?!
+    let data = Object.assign({}, _data);
+    // console.log(id, data)
+    return this._api.get(_static.API_ACCOUNT_CHECK_ID_CARD, data);
+  }
+  checkPhone(_data = {}) {
+    // Validate data?!
+    let data = Object.assign({}, _data);
+    // console.log(id, data)
+    return this._api.get(_static.API_ACCOUNT_CHECK_PHONE_NUMBER, data);
   }
   /**
    *

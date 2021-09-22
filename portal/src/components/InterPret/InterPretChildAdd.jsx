@@ -311,6 +311,7 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                           height: "300px",
                           width: "100%",
                           menubar: false,
+                          entity_encoding : "raw",
                           branding: false,
                           statusbar: false,
                           plugins: [
@@ -368,6 +369,7 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                           width: "100%",
                           menubar: false,
                           branding: false,
+                          entity_encoding : "raw",
                           statusbar: false,
                           plugins: [
                             "advlist autolink fullscreen lists link image charmap print preview anchor",

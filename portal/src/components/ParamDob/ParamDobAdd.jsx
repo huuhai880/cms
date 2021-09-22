@@ -44,9 +44,11 @@ function ParamDobAdd({ noEdit }) {
           } else {
             _paramTypeModel.create(values).then((data) => {
               if (btnType == "save") {
-                setDataParamType(initialValues);
-                // _initData();
-                formik.resetForm();
+                if(id){
+                  _initDataDetail()
+                }else{
+                  formik.resetForm();
+                }
                 window._$g.toastr.show("Lưu thành công!", "success");
               } else if (btnType == "save&quit") {
                 window._$g.toastr.show("Lưu thành công!", "success");
