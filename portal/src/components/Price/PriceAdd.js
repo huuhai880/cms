@@ -42,11 +42,12 @@ function PriceAdd(props) {
     const [isShowAddProduct, setShowAddProduct] = useState(false)
     const [isShowAddCombo, setShowAddCombo] = useState(false)
     const [isShowCustomerType, setShowCustomerType] = useState(false)
+    const [isApplyCombo, setIsApplyCombo] = useState(false)
 
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: price,
-        validationSchema,
+        validationSchema: validationSchema(isApplyCombo),
         validateOnBlur: false,
         validateOnChange: true,
         onSubmit: (values) => {
@@ -333,6 +334,7 @@ function PriceAdd(props) {
         return floatValue >= 0 && floatValue <= (!is_percent || isPrice ? 999999999 : 100);
     }
 
+    console.log(formik.errors)
 
     return (
         <div className="animated fadeIn">
@@ -383,6 +385,7 @@ function PriceAdd(props) {
                                                 else {
                                                     formik.setFieldValue('combos', [])
                                                 }
+                                                setIsApplyCombo(target.checked)
                                             }}
                                             label="Áp dụng cho Combo"
                                         // disabled={false}
@@ -536,7 +539,13 @@ function PriceAdd(props) {
                                                     type="checkbox"
                                                     id="is_apply_promotion"
                                                     onChange={({ target }) => {
-                                                        formik.setFieldValue("is_apply_promotion", target.checked)
+                                                        let { checked } = target;
+                                                        if (!checked) {
+                                                            formik.setFieldValue("discount_value", null);
+                                                            formik.setFieldValue('from_date', null)
+                                                            formik.setFieldValue('to_date', null)
+                                                        }
+                                                        formik.setFieldValue("is_apply_promotion", checked)
                                                     }}
                                                     label="Áp dụng khuyến mãi"
                                                     disabled={false} />
@@ -602,6 +611,7 @@ function PriceAdd(props) {
                                                     isMultiple
                                                     minToday={true}
                                                 />
+                                                <MessageError formik={formik} name="from_date" />
                                             </Col>
                                         </FormGroup>
                                     </Col>

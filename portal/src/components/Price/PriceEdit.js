@@ -43,13 +43,14 @@ function PriceEdit({ noEdit = false, priceId = null }) {
     const [buttonType, setButtonType] = useState(null);
     const [isShowCustomerType, setShowCustomerType] = useState(false)
     const [loading, setLoading] = useState(false);
+    const [isApplyCombo, setIsApplyCombo] = useState(false)
 
     let { id } = useParams()
 
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: price,
-        validationSchema,
+        validationSchema: validationSchema(isApplyCombo),
         validateOnBlur: false,
         validateOnChange: true,
         onSubmit: (values) => {
@@ -66,10 +67,12 @@ function PriceEdit({ noEdit = false, priceId = null }) {
         setLoading(true);
         try {
             let data = await _priceModel.read(id);
+
             let value = {
                 ...initialValues,
-                ...data
+                ...data,
             }
+            setIsApplyCombo(value.is_apply_combo)
             setPrice(value)
         } catch (error) {
             window._$g.dialogs.alert(
@@ -336,7 +339,13 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                                     type="checkbox"
                                                     id="is_apply_promotion"
                                                     onChange={({ target }) => {
-                                                        formik.setFieldValue("is_apply_promotion", target.checked)
+                                                        let { checked } = target;
+                                                        if (!checked) {
+                                                            formik.setFieldValue("discount_value", null);
+                                                            formik.setFieldValue('from_date', null)
+                                                            formik.setFieldValue('to_date', null)
+                                                        }
+                                                        formik.setFieldValue("is_apply_promotion", checked)
                                                     }}
                                                     label="Áp dụng khuyến mãi"
                                                     disabled={noEdit} />
@@ -345,7 +354,7 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                     </Col>
                                 </Row>
 
-                                {formik.values.is_apply_promotion && <Row>
+                                {formik.values.is_apply_promotion ? <Row>
                                     <Col xs={12} sm={6}>
                                         <FormGroup row>
                                             <Label
@@ -405,6 +414,7 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                                     disabled={noEdit}
                                                     minToday={true}
                                                 />
+                                                <MessageError formik={formik} name="from_date" />
                                             </Col>
                                         </FormGroup>
                                     </Col>
@@ -454,7 +464,7 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                             </Col>
                                         </FormGroup>
                                     </Col> */}
-                                </Row>
+                                </Row> : null
                                 }
 
                                 <Row className="mb-4">

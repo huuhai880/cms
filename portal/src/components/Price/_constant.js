@@ -112,11 +112,13 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
             options: {
                 filter: false,
                 sort: false,
+
                 customHeadRender: (columnMeta, handleToggleColumn) => {
                     return (
                         <th
                             key={`head-th-${columnMeta.label}`}
                             className="MuiTableCell-root MuiTableCell-head"
+                            style={{ width: 150 }}
                         >
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
@@ -258,74 +260,88 @@ export const initialValues = {
     to_date: null
 }
 
-export const validationSchema = yup.object().shape({
-    price: yup.number().nullable()
-        .test(
-            'price',
-            'Giá sản phẩm/Combo là bắt buộc',
-            function (value) {
-                if (value < 0) {
-                    return false //Loi
+export const validationSchema = (is_combo = false) => {
+    return yup.object().shape({
+        price: yup.number().nullable()
+            .test(
+                'price',
+                `Giá ${is_combo ? 'combo' : 'sản phẩm'} là bắt buộc`,
+                function (value) {
+                    if (value < 0) {
+                        return false //Loi
+                    }
+                    return true;
                 }
-                return true;
-            }
-        )
-        .required('Giá sản phẩm/Combo là bắt buộc'),
+            )
+            .required(`Giá ${is_combo ? 'combo' : 'sản phẩm'} là bắt buộc`,),
 
-    discount_value: yup
-        .number()
-        .nullable()
-        .when("is_apply_promotion", {
-            is: true,
-            then: yup.number().required("Giá trị bán mới là bắt buộc")
-        }),
-    products: yup.array().nullable()
-        .when("is_apply_combo", {
-            is: false,
-            then: yup.array().required("Sản phẩm làm giá là bắt buộc")
-        }),
-    combos: yup.array().nullable()
-        .when("is_apply_combo", {
-            is: true,
-            then: yup.array().required("Combo làm giá là bắt buộc")
-        }),
-    customer_types: yup.array().nullable()
-        .when("is_apply_customer_type", {
-            is: true,
-            then: yup.array()
-                .test(
-                    'customer_types',
-                    'Vui lòng chọn loại áp dụng cho loại khách hàng',
-                    function (value) {
-                        let check =  (value || []).filter(p => !p.is_apply_promotion && !p.is_apply_price)
-                        if (check.length > 0) {
-                            return false //Loi
+        discount_value: yup
+            .number()
+            .nullable()
+            .when("is_apply_promotion", {
+                is: true,
+                then: yup.number()
+                    .test(
+                        'discount_value',
+                        `Giá bán mới không được lớn hơn giá ${is_combo ? 'combo' : 'sản phẩm'}`,
+                        function (value) {
+                            let _price = this.options.parent.price;
+                            if (value > _price) {
+                                return false;
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                )
-                .required("Loại khách hàng áp dụng là bắt buộc")
-        }),
-    from_date: yup.string().nullable()
-        .when("is_apply_promotion", {
-            is: true,
-            then: yup.string()
-                .test(
-                    'from_date',
-                    'Thời gian áp dụng từ ngày không được lớn hơn đến ngày',
-                    function (value) {
-                        let __to_date = this.options.parent.to_date;
-                        if (value && __to_date) {
-                            let _from_date = moment(value, 'DD/MM/YYYY');
-                            let _to_date = moment(__to_date, 'DD/MM/YYYY');
-                            return !(_from_date > _to_date)
+                    )
+                    .required("Giá bán mới là bắt buộc")
+            }),
+        products: yup.array().nullable()
+            .when("is_apply_combo", {
+                is: false,
+                then: yup.array().required("Sản phẩm làm giá là bắt buộc")
+            }),
+        combos: yup.array().nullable()
+            .when("is_apply_combo", {
+                is: true,
+                then: yup.array().required("Combo làm giá là bắt buộc")
+            }),
+        customer_types: yup.array().nullable()
+            .when("is_apply_customer_type", {
+                is: true,
+                then: yup.array()
+                    .test(
+                        'customer_types',
+                        'Vui lòng chọn loại áp dụng cho loại khách hàng',
+                        function (value) {
+                            let check = (value || []).filter(p => !p.is_apply_promotion && !p.is_apply_price)
+                            if (check.length > 0) {
+                                return false //Loi
+                            }
+                            return true;
                         }
-                        return true;
-                    }
-                )
-                .required("Thời gian áp dụng là bắt buộc")
-        }),
-})
+                    )
+                    .required("Loại khách hàng áp dụng là bắt buộc")
+            }),
+        from_date: yup.string().nullable()
+            .when("is_apply_promotion", {
+                is: true,
+                then: yup.string()
+                    .test(
+                        'from_date',
+                        'Thời gian áp dụng từ ngày không được lớn hơn đến ngày',
+                        function (value) {
+                            let __to_date = this.options.parent.to_date;
+                            if (value && __to_date) {
+                                let _from_date = moment(value, 'DD/MM/YYYY');
+                                let _to_date = moment(__to_date, 'DD/MM/YYYY');
+                                return !(_from_date > _to_date)
+                            }
+                            return true;
+                        }
+                    )
+                    .required("Thời gian áp dụng là bắt buộc")
+            }),
+    })
+}
 
 export const initialValuesUpdate = {
     is_apply_combo: false,

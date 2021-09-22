@@ -18,10 +18,11 @@ const getListPrice = async (queryParams = {}) => {
         const currentPage = apiHelper.getCurrentPage(queryParams);
         const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
         const keyword = apiHelper.getSearch(queryParams);
-        const type = apiHelper.getValueFromObject(queryParams, 'is_active', 2);
+        const type = apiHelper.getValueFromObject(queryParams, 'type', 2);
         const is_active = apiHelper.getValueFromObject(queryParams, 'is_active', 1);
         const start_date = apiHelper.getValueFromObject(queryParams, 'start_date', null);
         const end_date = apiHelper.getValueFromObject(queryParams, 'end_date', null)
+
 
         const pool = await mssql.pool;
         const res = await pool.request()
@@ -131,14 +132,14 @@ const createPrice = async (bodyParams = {}) => {
                         const customerType = customer_types[j];
                         if (customerType.is_apply_promotion || customerType.is_apply_price) {
                             await reqCustomerType
-                            .input('priceid', price_id)
-                            .input('productid', product.product_id)
-                            .input('comboid', null)
-                            .input('customertypeid', customerType.customer_type_id)
-                            .input('isapplypromotion', customerType.is_apply_promotion)
-                            .input('isapplyprice', customerType.is_apply_price)
-                            .input('createduser', authName)
-                            .execute('SL_PRICE_APPLY_CUSTOMERTYPE_Create_AdminWeb')
+                                .input('priceid', price_id)
+                                .input('productid', product.product_id)
+                                .input('comboid', null)
+                                .input('customertypeid', customerType.customer_type_id)
+                                .input('isapplypromotion', customerType.is_apply_promotion)
+                                .input('isapplyprice', customerType.is_apply_price)
+                                .input('createduser', authName)
+                                .execute('SL_PRICE_APPLY_CUSTOMERTYPE_Create_AdminWeb')
                         }
                     }
                 }
@@ -170,7 +171,12 @@ const detailPrice = async (price_id) => {
         if (price) {
             price.customer_types = customer_types ? customer_types : [];
             price.is_apply_customer_type = customer_types && customer_types.length > 0;
+            price.is_apply_promotion = price.is_apply_promotion ? true : false;
+            price.is_apply_combo = price.is_apply_combo ? true : false;
+            price.is_percent = price.is_percent ? true : false;
         }
+
+
         return new ServiceResponse(true, '', price)
     } catch (error) {
         logger.error(error, {
@@ -244,14 +250,14 @@ const updatePrice = async (bodyParams = {}) => {
                 const customer_type = customer_types[index];
                 if (customer_type.is_apply_promotion || customer_type.is_apply_price) {
                     await reqCus
-                    .input('priceid', price_id)
-                    .input('productid', product_id)
-                    .input('comboid', combo_id)
-                    .input('customertypeid', customer_type.customer_type_id)
-                    .input('isapplypromotion', customer_type.is_apply_promotion)
-                    .input('isapplyprice', customer_type.is_apply_price)
-                    .input('updateduser', authName)
-                    .execute('SL_PRICE_APPLY_CUSTOMERTYPE_Update_AdminWeb')
+                        .input('priceid', price_id)
+                        .input('productid', product_id)
+                        .input('comboid', combo_id)
+                        .input('customertypeid', customer_type.customer_type_id)
+                        .input('isapplypromotion', customer_type.is_apply_promotion)
+                        .input('isapplyprice', customer_type.is_apply_price)
+                        .input('updateduser', authName)
+                        .execute('SL_PRICE_APPLY_CUSTOMERTYPE_Update_AdminWeb')
                 }
             }
         }
@@ -267,10 +273,43 @@ const updatePrice = async (bodyParams = {}) => {
     }
 }
 
+const checkProductOrComboMakePrice = async (bodyParams = {}) => {
+    try {
+        let is_apply_combo = apiHelper.getValueFromObject(bodyParams, 'is_apply_combo', 0);
+        let products = apiHelper.getValueFromObject(bodyParams, 'products', []);
+        let combos = apiHelper.getValueFromObject(bodyParams, 'combos', []);
+
+        let ids = '';
+        if (is_apply_combo) {
+            ids = combos.map(item => item.combo_id).join();
+        }
+        else {
+            ids = products.map(item => item.product_id).join();
+        }
+
+        const pool = await mssql.pool;
+        const res = await pool.request()
+            .input('ids', ids)
+            .input('iscombo', is_apply_combo)
+            .execute('SL_PRICE_Check_AdminWeb')
+
+        let data = priceClass.listProductCheck(res.recordset);
+        let productCheck = data && data.length ? data[0] : null;
+        
+        return new ServiceResponse(true, "", productCheck)
+    } catch (error) {
+        logger.error(error, {
+            function: 'price.service.checkProductOrComboMakePrice',
+        });
+        return new ServiceResponse(false, error.message);
+    }
+}
+
 module.exports = {
     getListPrice,
     createPrice,
     detailPrice,
     deletePrice,
-    updatePrice
+    updatePrice,
+    checkProductOrComboMakePrice
 }
