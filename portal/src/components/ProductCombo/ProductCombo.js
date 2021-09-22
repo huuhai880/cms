@@ -115,7 +115,7 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
                 })
                 .catch((e) => {
                     window._$g.dialogs.alert(
-                        window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
+                        window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
                     );
                 });
         }

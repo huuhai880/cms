@@ -913,6 +913,7 @@ export default class NewsAdd extends Component {
                                                       }
                                                       alt="User image"
                                                       className="user-imgage"
+                                                      style={{margin: '0px !important'}}
                                                     />
                                                     <Input
                                                       type="file"
@@ -999,7 +1000,7 @@ export default class NewsAdd extends Component {
                                                 <Label for="news_date" sm={2}>
                                                   Ngày đăng tin
                                                 </Label>
-                                                <Col sm={9} className="pl-0">
+                                                <Col sm={6} className="pl-0">
                                                   <DateTimePicker
                                                     // label="Ngày đăng tin"
                                                     name="news_date"
@@ -1018,6 +1019,7 @@ export default class NewsAdd extends Component {
                                                       )
                                                     }
                                                     isDisabledDate={noEdit}
+                                                    placeholder='Ngày đăng tin'
                                                   />
                                                 </Col>
                                               </FormGroup>
@@ -1034,7 +1036,7 @@ export default class NewsAdd extends Component {
                                                     *{" "}
                                                   </span>
                                                 </Label>
-                                                <Col sm={10}>
+                                                <Col sm={3}>
                                                   <Field
                                                     name="order_index"
                                                     render={({ field }) => (
@@ -1191,7 +1193,7 @@ export default class NewsAdd extends Component {
                                                     value={values.content}
                                                     disabled={noEdit}
                                                     init={{
-                                                      height: "300px",
+                                                      height: "500px",
                                                       width: "100%",
                                                       menubar: false,
                                                       branding: false,
@@ -1206,7 +1208,7 @@ export default class NewsAdd extends Component {
                                                       menubar:
                                                         "file edit view insert format tools table tc help",
                                                       toolbar1:
-                                                        "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                                                        "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                                                         "alignleft aligncenter alignright alignjustify",
                                                       toolbar2:
                                                         "bullist numlist outdent indent | removeformat | help | image | toc",
