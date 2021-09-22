@@ -394,7 +394,7 @@ class ParamName extends Component {
 
     const { count, page, query } = this.state;
     const options = configTableOptions(count, page, query);
-
+    console.log(this.state.data)
     return (
       <div>
         <Card className="animated fadeIn z-index-222 mb-3">

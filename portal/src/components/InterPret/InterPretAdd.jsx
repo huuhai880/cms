@@ -67,12 +67,14 @@ function InterPretAdd({ noEdit }) {
   }, []);
   //// create letter
   const handleCreateOrUpdate = async (values) => {
-    
     try {
       _interpretModel.create(values).then((data) => {
         if (btnType == "save") {
-          setDataInterpret(initialValues);
-          formik.resetForm();
+          if (id) {
+            _initDataDetail();
+          } else {
+            formik.resetForm();
+          }
           window._$g.toastr.show("Lưu thành công!", "success");
         } else if (btnType == "save&quit") {
           window._$g.toastr.show("Lưu thành công!", "success");
@@ -145,11 +147,12 @@ function InterPretAdd({ noEdit }) {
           ? {
               value: item.attribute_id,
               label: item.attribute_name,
-              // isDisabled: true,
+              mainnumber_id: item.mainnumber_id,
             }
           : {
               value: item.attribute_id,
               label: item.attribute_name,
+              mainnumber_id: item.mainnumber_id,
             };
       });
     }
@@ -164,7 +167,7 @@ function InterPretAdd({ noEdit }) {
           ? {
               value: item.mainnumber_id,
               label: item.mainnumber,
-              // isDisabled: true,
+              isDisabled: true,
             }
           : {
               value: item.mainnumber_id,
@@ -195,7 +198,7 @@ function InterPretAdd({ noEdit }) {
         <Col xs={12}>
           <Card>
             <CardHeader>
-            <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận giải </b>
+              <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận giải </b>
               {/* <b>{id ? "Chỉnh sửa" : "Thêm mới"}  </b> */}
             </CardHeader>
             <CardBody>
@@ -220,6 +223,8 @@ function InterPretAdd({ noEdit }) {
                             options={getOptionAttribute(formik.values.attribute_id, true)}
                             onChange={(value) => {
                               formik.setFieldValue("attribute_id", value.value);
+                              formik.setFieldValue("mainnumber_id", value.mainnumber_id);
+                              console.log(formik.values.mainnumber_id);
                             }}
                           />
                           {formik.errors.attribute_id && formik.touched.attribute_id ? (
@@ -254,7 +259,6 @@ function InterPretAdd({ noEdit }) {
                             options={getOptionRelationship(formik.values.relationship_id, true)}
                             onChange={(value) => {
                               formik.setFieldValue("relationship_id", value.value);
-
                             }}
                           />{" "}
                           {formik.errors.relationship_id && formik.touched.relationship_id ? (
@@ -277,19 +281,18 @@ function InterPretAdd({ noEdit }) {
                         </Label>
                         <Col sm={8}>
                           <Select
-                           className="MuiPaper-filter__custom--select"
-                           id={`mainnumber_id`}
-                           name={`mainnumber_id`}
+                            className="MuiPaper-filter__custom--select"
+                            id={`mainnumber_id`}
+                            name={`mainnumber_id`}
                             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             menuPortalTarget={document.querySelector("body")}
-                            isDisabled={noEdit}
+                            isDisabled={true}
                             placeholder={"-- Chọn --"}
                             value={convertValue(formik.values.mainnumber_id, getOptionMainNumBer())}
                             options={getOptionMainNumBer(formik.values.mainnumber_id, true)}
                             onChange={(value) => {
                               formik.setFieldValue("mainnumber_id", value.value);
                               // console.log(formik.values.mainnumber_id)
-
                             }}
                           />
                           {formik.errors.mainnumber_id && formik.touched.mainnumber_id ? (
@@ -310,11 +313,11 @@ function InterPretAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_active`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(`is_master`, e.target.checked ? 1 : 0);
                             }}
-                            checked={formik.values.is_active}
+                            checked={formik.values.is_master}
                           >
-                            Kích hoạt
+                            Is master
                           </Checkbox>
                         </Col>
                       </FormGroup>
@@ -359,11 +362,11 @@ function InterPretAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_master`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(`is_active`, e.target.checked ? 1 : 0);
                             }}
-                            checked={formik.values.is_master}
+                            checked={formik.values.is_active}
                           >
-                            Is master
+                            Kích hoạt
                           </Checkbox>
                         </Col>
                       </FormGroup>
@@ -407,7 +410,7 @@ function InterPretAdd({ noEdit }) {
                       Tóm tắt<span className="font-weight-bold red-text">*</span>
                     </Label>
                     <Col sm={10}>
-                    <Editor
+                      <Editor
                         apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                         scriptLoading={{
                           delay: 500,
@@ -420,6 +423,7 @@ function InterPretAdd({ noEdit }) {
                           menubar: false,
                           branding: false,
                           statusbar: false,
+                          entity_encoding : "raw",
                           plugins: [
                             "advlist autolink fullscreen lists link image charmap print preview anchor",
                             "searchreplace visualblocks code fullscreen ",
@@ -482,6 +486,7 @@ function InterPretAdd({ noEdit }) {
                           width: "100%",
                           menubar: false,
                           branding: false,
+                          entity_encoding : "raw",
                           statusbar: false,
                           plugins: [
                             "advlist autolink fullscreen lists link image charmap print preview anchor",

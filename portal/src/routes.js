@@ -324,6 +324,21 @@ const OutputTypeDetail = React.lazy(() => import("./components/OutputType/Output
 const OutputTypeEdit = React.lazy(() => import("./components/OutputType/OutputTypeEdit"));
 //.end#OutputType
 
+// FormulaIngredients
+const FormulaIngredients = React.lazy(() =>
+  import("./components/FormulaIngredients/FormulaIngredients")
+);
+const FormulaIngredientsAdd = React.lazy(() =>
+  import("./components/FormulaIngredients/FormulaIngredientsAdd")
+);
+const FormulaIngredientsDetail = React.lazy(() =>
+  import("./components/FormulaIngredients/FormulaIngredientsDetail")
+);
+const FormulaIngredientsEdit = React.lazy(() =>
+  import("./components/FormulaIngredients/FormulaIngredientsEdit")
+);
+//.end#FormulaIngredients
+
 // Customer Time Keeping
 const CustomerTimeKeeping = React.lazy(() =>
   import("./components/CustomerTimeKeeping/CustomerTimeKeeping")
@@ -3087,7 +3102,7 @@ const routes = [
     function: "SL_ORDER_VIEW",
     component: OrderDetail,
   },
-  
+
   // end#order
 
   // searchHistory
@@ -3106,6 +3121,37 @@ const routes = [
     component: SearchHistoryDetail,
   },
   //end searchHistory
+
+  //FormulaIngredients
+  {
+    path: "/formula-ingredients",
+    exact: true,
+    name: "Danh sách thành phần",
+    function: "FOR_FORMULAINGREDIENTS_VIEW",
+    component: FormulaIngredients,
+  },
+  {
+    path: "/formula-ingredients/add/:id",
+    exact: true,
+    name: "Thêm mới",
+    function: "FOR_FORMULAINGREDIENTS_ADD",
+    component: FormulaIngredientsAdd,
+  },
+  {
+    path: "/formula-ingredients/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "FOR_FORMULAINGREDIENTS_VIEW",
+    component: FormulaIngredientsDetail,
+  },
+  {
+    path: "/formula-ingredients/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "FOR_FORMULAINGREDIENTS_EDIT",
+    component: FormulaIngredientsEdit,
+  },
+  // end#FormulaIngredients
 ];
 
 export default routes;

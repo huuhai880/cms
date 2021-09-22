@@ -34,14 +34,14 @@ export const validationSchema = yup.object().shape({
   decs: yup
     .string()
     .required("Mô tả không được để trống .")
-    .max(2000, "Mô tả tối đa 2000 kí tự .")
+    // .max(2000, "Mô tả tối đa 2000 kí tự .")
     .nullable(),
   brief_decs: yup
     .string()
     .required("Tóm tắt không được để trống .")
-    .max(300, "Tóm tắt tối đa 300 kí tự .")
+    // .max(300, "Tóm tắt tối đa 300 kí tự .")
     .nullable(),
-  note: yup.string().max(300, "Ghi chú tối đa 300 kí tự .").nullable(),
+  // note: yup.string().max(300, "Ghi chú tối đa 300 kí tự .").nullable(),
 });
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   // console.log(data);
@@ -79,10 +79,21 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
+          // var doc = new DOMParser().parseFromString(value, "text/xml");
+          // // console.log(doc.firstChild.innerHTML); // => <a href="#">Link...
+          // console.log(doc.firstChild.firstChild.innerHTML); // => Link
           return (
-            <div className="text-left align-self-center" dangerouslySetInnerHTML={{ __html: value }}>
-                {/* <div  /> */}
-            </div>
+            <div className="text-left">{value.replace(/<[^>]+>/g, '')}</div>
+
+            // <div
+            //   className="text-left align-self-center"
+            //   style={{ margin: "auto" }}
+            //   dangerouslySetInnerHTML={{ __html: value }}
+            // >
+            //   {/* <div  /> */}
+            // <div className="text-center">{value == 1 ? "Có" : value == 0 ? "Không" : "Không"}</div>
+
+            // </div>
           );
         },
       },

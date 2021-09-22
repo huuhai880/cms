@@ -4,74 +4,32 @@ import { Input, Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
 import Select from "react-select";
 import DatePicker from "../Common/DatePicker";
 import moment from "moment";
-import MainNumberModel from "../../models/MainNumberModel";
 
 function Filter({ handleSubmitFillter }) {
   const [checkStartDate, setCheckStartDate] = useState(true);
   const [checkEndDate, setCheckEndDate] = useState(true);
   const [dateToDate, setDateToDate] = useState("");
   const [dateFromDate, setDateFromDate] = useState("");
-  const [dataPartner, setDataPartner] = useState([]);
-  const _mainNumberModel = new MainNumberModel();
-
   const [isActive, setIsActive] = useState([
+    { name: "Tất cả", id: "2" },
     { name: "Không", id: "0" },
     { name: "Có", id: "1" },
+  ]);
+  const [type, setType] = useState([
     { name: "Tất cả", id: "2" },
+    { name: "Áp dung cho ngày sinh", id: "0" },
+    { name: "Áp dụng cho tên", id: "1" },
   ]);
   const [searchValue, setSearchValue] = useState({
     keyword: "",
-    partner_id: "",
+    type: { value: "2", label: "Tất cả" },
     selectdActive: { value: "1", label: "Có" },
     startDate: null,
     endDate: null,
   });
-  useEffect(() => {
-    /////////////call api parter
-    const _callAPI = async () => {
-      try {
-        await _mainNumberModel.getListPartner().then((data) => {
-          let res = data.items;
-          // console.log(res)
-          res.push({ partner_id: -1, partner_name: "My success JSC" });
-          setDataPartner(res);
-        });
-      } catch (error) {
-        console.log(error);
-        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
-      }
-    };
-    _callAPI();
-    ///config datepicker
-    document.getElementById('your_unique_start_date_id').setAttribute('readonly', 'readonly');
-    document.getElementById('your_unique_end_date_id').setAttribute('readonly', 'readonly');
-    let pickerLeft = document.querySelector("#your_unique_start_date_id");
-    pickerLeft.addEventListener("keyup", (e) => {
-      if (e.target.value) {
-        var checkStartDate =
-          /^(?:0?[1-9]?|[12]\d|3[01])(?:\/(?:0?[1-9]|1[012])?)\/\d{0,4}$|^\d{4}?$/.test(
-            e.target.value
-          );
-      }
 
-      setCheckStartDate(checkStartDate);
-      setDateFromDate(e.target.value);
-    });
-
-    let pickerRight = document.querySelector("#your_unique_end_date_id");
-    pickerRight.addEventListener("keyup", (e) => {
-      if (e.target.value) {
-        var checkEndDate =
-          /^(?:0?[1-9]?|[12]\d|3[01])(?:\/(?:0?[1-9]|1[012])?)\/\d{0,4}$|^\d{4}?$/.test(
-            e.target.value
-          );
-      }
-      setCheckEndDate(checkEndDate);
-      setDateToDate(e.target.value);
-    });
-  }, []);
   const _handleSubmitFillter = () => {
-    let { keyword,partner_id, selectdActive, startDate, endDate } = searchValue;
+    let { keyword, type, selectdActive, startDate, endDate } = searchValue;
     var mydate = moment(dateToDate, "DD/MM/YYYY");
     var myStartDate = startDate ? startDate.format("DD/MM/YYYY") : "";
     if (myStartDate) {
@@ -88,7 +46,7 @@ function Filter({ handleSubmitFillter }) {
     }
     let value = {
       keyword: keyword ? keyword : null,
-      partner_id: partner_id ? partner_id.value : null,
+      type: type ? type.value : null,
       selectdActive: selectdActive ? selectdActive.value : null,
       startDate: startDate ? startDate.format("DD/MM/YYYY") : null,
       endDate: endDate ? endDate.format("DD/MM/YYYY") : null,
@@ -99,14 +57,14 @@ function Filter({ handleSubmitFillter }) {
   const handleClear = () => {
     setSearchValue({
       keyword: "",
-      partner_id:null,
+      type: { value: "2", label: "Tất cả" },
       selectdActive: { value: "1", label: "Có" },
       startDate: null,
       endDate: null,
     });
     let value = {
       keyword: null,
-      partner_id:null,
+      type: 2,
       selectdActive: 1,
       startDate: null,
       endDate: null,
@@ -118,7 +76,7 @@ function Filter({ handleSubmitFillter }) {
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
         <Row>
-          <Col xs={3} style={{ padding: 0 }}>
+          <Col xs={6} style={{ padding: 0 }}>
             <Col
               xs={12}
               style={{
@@ -134,7 +92,7 @@ function Filter({ handleSubmitFillter }) {
                   autoComplete="nope"
                   type="text"
                   name="keyword"
-                  placeholder="Nhập chỉ số"
+                  placeholder="Nhập tên thành phần"
                   value={searchValue.keyword}
                   onChange={(e) => {
                     setSearchValue({
@@ -146,64 +104,7 @@ function Filter({ handleSubmitFillter }) {
               </Col>
             </Col>
           </Col>
-          <Col xs={3} style={{ padding: 0 }}>
-            <Col
-              xs={12}
-              style={{
-                alignItems: "center",
-              }}
-            >
-              <Label for="" className="mr-sm-2">
-                Đối tác
-              </Label>
-              <Col className="pl-0 pr-0">
-                <Select
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                  placeholder={"-- Chọn --"}
-                  onChange={(e) => {
-                    setSearchValue({
-                      ...searchValue,
-                      partner_id: e,
-                    });
-                  }}
-                  value={searchValue.partner_id}
-                  options={dataPartner.map(({ partner_name: label, partner_id: value }) => ({
-                    value,
-                    label,
-                  }))}
-                />
-              </Col>
-            </Col>
-          </Col>
-          <Col xs={3} style={{ padding: 0 }}>
-            <Col
-              xs={12}
-              style={{
-                alignItems: "center",
-              }}
-            >
-              <Label for="" className="mr-sm-2">
-                Ngày tạo
-              </Label>
-              <Col className="pl-0 pr-0">
-                <DatePicker
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                  startDate={searchValue.startDate}
-                  startDateId="your_unique_start_date_id"
-                  endDate={searchValue.endDate}
-                  endDateId="your_unique_end_date_id"
-                  onDatesChange={({ startDate, endDate }) => {
-                    setSearchValue({
-                      ...searchValue,
-                      startDate,
-                      endDate,
-                    });
-                  }}
-                  isMultiple
-                />
-              </Col>
-            </Col>
-          </Col>
+
           <Col xs={3} style={{ padding: 0 }}>
             <Col
               xs={12}
@@ -226,6 +127,35 @@ function Filter({ handleSubmitFillter }) {
                   }}
                   value={searchValue.selectdActive}
                   options={isActive.map(({ name: label, id: value }) => ({
+                    value,
+                    label,
+                  }))}
+                />
+              </Col>
+            </Col>
+          </Col>
+          <Col xs={3} style={{ padding: 0 }}>
+            <Col
+              xs={12}
+              style={{
+                alignItems: "center",
+              }}
+            >
+              <Label for="" className="mr-sm-2">
+                Loại áp dụng
+              </Label>
+              <Col className="pl-0 pr-0">
+                <Select
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                  placeholder={"-- Chọn --"}
+                  onChange={(e) => {
+                    setSearchValue({
+                      ...searchValue,
+                      type: e,
+                    });
+                  }}
+                  value={searchValue.type}
+                  options={type.map(({ name: label, id: value }) => ({
                     value,
                     label,
                   }))}

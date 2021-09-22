@@ -13,15 +13,15 @@ import Switch from "@material-ui/core/Switch";
 import * as yup from "yup";
 export const initialValues = {
   interpret_detail_id: "",
-  order_index:"",
+  order_index: "",
 
   interpret_id: "",
   interpret_detail_name: "",
   // interpret_detail_parentname: "",
   interpret_detail_short_content: "",
   interpret_detail_full_content: "",
-  interpret_detail_parent_id:0,
-  is_active:1
+  interpret_detail_parent_id: 0,
+  is_active: 1,
 };
 ///// validate
 export const validationSchema = yup.object().shape({
@@ -30,12 +30,12 @@ export const validationSchema = yup.object().shape({
   interpret_detail_full_content: yup
     .string()
     .required("Mô tả không được để trống .")
-    .max(2000, "Mô tả tối đa 2000 kí tự .")
+    // .max(2000, "Mô tả tối đa 2000 kí tự .")
     .nullable(),
-    interpret_detail_short_content: yup
+  interpret_detail_short_content: yup
     .string()
     .required("Mô tả ngắn không được để trống .")
-    .max(300, "Mô tả ngắn tối đa 300 kí tự .")
+    // .max(300, "Mô tả ngắn tối đa 300 kí tự .")
     .nullable(),
   // note: yup.string().max(300, "Ghi chú tối đa 300 kí tự .").nullable(),
 });
@@ -93,7 +93,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-left">{value}</div>;
+          return <div className="text-left">{value.replace(/<[^>]+>/g, "")}</div>;
         },
       },
     },

@@ -36,8 +36,11 @@ function RelationShipsAdd({ noEdit }) {
           } else {
             _relationshipsModel.create(values).then((data) => {
               if (btnType == "save") {
-                // console.log(initialValues)
-                formik.resetForm();
+                if(id){
+                  _initDataDetail()
+                }else{
+                  formik.resetForm();
+                }
 
                 window._$g.toastr.show("Lưu thành công!", "success");
               } else if (btnType == "save&quit") {

@@ -226,6 +226,44 @@ const checkEmail = async (req, res, next) => {
     );
   }
 };
+const checkIdCard = async (req, res, next) => {
+  // console.log()
+  try {
+    // Check ACCOUNT exists
+    const serviceRes = await crmAccountService.checkIdCard(req.query.id_card);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+};
+const checkPhone = async (req, res, next) => {
+  // console.log()
+  try {
+    // Check ACCOUNT exists
+    const serviceRes = await crmAccountService.checkPhone(req.query.phone_number);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+};
 const getCustomerList = async (req, res, next) => {
   try {
     const serviceRes = await crmAccountService.getCustomerList(req.query);
@@ -328,5 +366,7 @@ module.exports = {
   changePassCRMAccount,
   genCode,
   checkEmail,
+  checkIdCard,
+  checkPhone,
   getCustomerList,
 };
