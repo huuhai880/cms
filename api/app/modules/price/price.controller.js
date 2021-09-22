@@ -6,9 +6,9 @@ const RESPONSE_MSG = require('../../common/const/responseMsg.const');
 const ValidationResponse = require('../../common/responses/validation.response');
 const optionService = require('../../common/services/options.service');
 const apiHelper = require('../../common/helpers/api.helper');
-const priceService = require('./price.service')
+const priceService = require('./price.service');
 
-const getListPrice =  async (req, res, next) => {
+const getListPrice = async (req, res, next) => {
     try {
         const serviceRes = await priceService.getListPrice(req.query);
         if (serviceRes.isFailed()) {
@@ -22,6 +22,27 @@ const getListPrice =  async (req, res, next) => {
 
 const createPrice = async (req, res, next) => {
     try {
+
+        //Kiem tra san pham da lam gia hay chua ?
+        const serviceResCheck = await priceService.checkProductOrComboMakePrice(req.body);
+        if (serviceResCheck.isFailed()) {
+            return next(serviceRes);
+        }
+        let productCheck = serviceResCheck.getData();
+
+        if (productCheck) {
+            let { is_apply_combo } = req.body || {};
+            let { product_name } = productCheck || {}
+            let msgErro = `${is_apply_combo ? 'Combo' : 'Sản phẩm'} "${product_name}" đã được làm giá. Vui lòng kiểm tra lại.`
+            return next(
+                new ErrorResponse(
+                    httpStatus.BAD_REQUEST,
+                    null,
+                    msgErro
+                )
+            );
+        }
+
         const serviceRes = await priceService.createPrice(req.body);
         if (serviceRes.isFailed()) {
             return next(serviceRes);

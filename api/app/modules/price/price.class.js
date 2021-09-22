@@ -80,9 +80,17 @@ const listApplyCustomerType = (list = []) => {
     ]);
 };
 
+const listProductCheck = (list = []) => {
+    return transform.transform(list, [
+        'product_id',
+        'product_name'
+    ]);
+};
+
 
 module.exports = {
     listPrice,
     detailPrice,
-    listApplyCustomerType
+    listApplyCustomerType,
+    listProductCheck
 }
