@@ -20,7 +20,15 @@ const template = {
   add_function_id: '{{#? ADDFUNCTIONID}}',
   edit_function_id: '{{#? EDITFUNCTIONID}}',
   delete_function_id: '{{#? DELETEFUNCTIONID}}',
-  banner_url: `${config.domain_cdn}{{BANNERURL}}`,
+  banner_url: [
+    {
+      '{{#if BANNERURL}}': `${config.domain_cdn}{{BANNERURL}}`,
+    },
+    {
+      '{{#else}}': undefined,
+    },
+  ],
+  // banner_url: `${config.domain_cdn}{{BANNERURL}}`,
   result: '{{#? RESULT}}',
   table_used: '{{#? TABLEUSED}}',
   product_attribute_id: '{{#? PRODUCTATTRIBUTEID}}',

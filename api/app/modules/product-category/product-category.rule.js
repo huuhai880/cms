@@ -8,7 +8,7 @@ const ruleCreateOrUpdate = Joi.object().keys({
   category_name: Joi.string().required(),
   name_show_web: Joi.string().required(),
   seo_name: Joi.string().required(),
-  banner_url: Joi.string().required(),
+  // banner_url: Joi.string().required(),
   parent_id: Joi.number().allow('', null),
   description: Joi.string().allow('', null),
   is_active: Joi.number().valid(0, 1).required(),

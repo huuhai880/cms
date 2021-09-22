@@ -758,7 +758,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                           disabled={noEdit}
                         />
                       </Col>
-                      <Col sm={2} xs={12} className="offset-xs-0">
+                      <Col sm={3} xs={12} className="offset-xs-0">
                         <CustomInput
                           className="pull-left"
                           onBlur={null}

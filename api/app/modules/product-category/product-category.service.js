@@ -105,17 +105,24 @@ const createProductCategoryOrUpdates = async (bodyParams) => {
   const transaction = await new sql.Transaction(pool);
 
   try {
-    const pathIcon = await saveImage(
-      savedFolder,
-      apiHelper.getValueFromObject(bodyParams, 'banner_url')
-    );
-    // create table ProductCategotyCreate
-    if (pathIcon === null || pathIcon === undefined || pathIcon === '') {
-      return new ServiceResponse(
-        false,
-        RESPONSE_MSG.PRODUCTCATEGORY.SAVEIMG_FAILED
+    let banner_url = apiHelper.getValueFromObject(bodyParams, 'banner_url', null);
+    if (banner_url) {
+      const pathIcon = await saveImage(
+        savedFolder,
+        apiHelper.getValueFromObject(bodyParams, 'banner_url')
       );
+      // create table ProductCategotyCreate
+      if (pathIcon === null || pathIcon === undefined || pathIcon === '') {
+        return new ServiceResponse(
+          false,
+          RESPONSE_MSG.PRODUCTCATEGORY.SAVEIMG_FAILED
+        );
+      }
+      else{
+        banner_url = pathIcon;
+      }
     }
+
 
     //Upload List Image
     let images_url = apiHelper.getValueFromObject(bodyParams, 'images_url', []);
@@ -170,7 +177,7 @@ const createProductCategoryOrUpdates = async (bodyParams) => {
         'METAKEYWORDS',
         apiHelper.getValueFromObject(bodyParams, 'meta_keywords')
       )
-      .input('BANNERURL', pathIcon)
+      .input('BANNERURL', banner_url)
       .input('PARENTID', apiHelper.getValueFromObject(bodyParams, 'parent_id'))
       .input(
         'DESCRIPTIONS',

@@ -288,6 +288,7 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
                                                 accept="image/*"
                                                 disabled={noEdit}
                                                 id={comboId}
+                                                label="Thêm ảnh"
                                              />
                                           </div>
                                        </Col>

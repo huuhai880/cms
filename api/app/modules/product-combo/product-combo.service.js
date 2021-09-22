@@ -60,7 +60,6 @@ const createCombo = async (bodyParams = {}) => {
                 return new ServiceResponse(false, RESPONSE_MSG.NEWS.UPLOAD_FAILED);
             }
         }
-        console.log({bodyParams})
 
         await transaction.begin();
 

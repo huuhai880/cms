@@ -36,6 +36,8 @@ import { fnGet, fnUpdate, fnPost, fnDelete } from "@utils/api";
 
 // Util(s)
 import { mapDataOptions4Select } from "@utils/html";
+import Upload from "../Common/Antd/Upload";
+import "./style.scss";
 
 /**
  * @class ProductCategoryAdd
@@ -91,9 +93,9 @@ export default class ProductCategoryAdd extends PureComponent {
     name_show_web: Yup.string().required("Tên hiển thị web là bắt buộc."),
     seo_name: Yup.string().required("Tên SEO là bắt buộc."),
     company_id: Yup.string().required("Công ty áp dụng là bắt buộc."),
-    banner_url: Yup.string().required("Banner là bắt buộc."),
+    //  banner_url: Yup.string().required("Banner là bắt buộc."),
     // list_attribute: Yup.string().required("Thuộc tính là bắt buộc."),
-    images_url: Yup.array().required("Hình ảnh là bắt buộc."),
+    //  images_url: Yup.array().required("Hình ảnh là bắt buộc."),
   });
 
   handleFormikBeforeRender({ initialValues }) {
@@ -169,42 +171,15 @@ export default class ProductCategoryAdd extends PureComponent {
     return bundle;
   }
 
-  // handleAdd = (attributes) => {
-  //   this.setState({
-  //     toggleAttribute: false,
-  //     attributesRender: Object.entries(attributes),
-  //     attributes,
-  //   });
-
-  //   if (this.formikProps) {
-  //     let { values, setValues } = this.formikProps;
-  //     // attributes
-  //     setValues(Object.assign(values, { list_attribute: attributes }));
-  //   }
-  // };
-
-  // toggleAttribute = () =>
-  //   this.setState({ toggleAttribute: !this.state.toggleAttribute });
-
-  // handleRemoveAttribute = (item, event) => {
-  //   let attributes = Object.assign({}, this.state.attributes);
-  //   delete attributes[item[0]];
-  //   this.setState({
-  //     attributesRender: Object.entries(attributes),
-  //     attributes,
-  //   });
-
-  //   if (this.formikProps && Object.keys(attributes).length === 0) {
-  //     let { values, setValues } = this.formikProps;
-  //     setValues(Object.assign(values, { list_attribute: "" }));
-  //   }
-  // };
-
   handleSubmit(btnType) {
     let { submitForm } = this.formikProps;
     this._btnType = btnType;
 
     return submitForm();
+  }
+
+  capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   async handleFormikSubmit(values, formProps) {
@@ -214,23 +189,13 @@ export default class ProductCategoryAdd extends PureComponent {
     let willRedirect = false;
     let alerts = [];
 
-    // // get list_attribute
-    // let list_attribute = [];
-    // for (var key in this.state.attributes) {
-    //   list_attribute.push({ product_attribute_id: key });
-    // }
-
-    function capitalizeFirstLetter(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
     // Build form data
     let formData = {
       ...values,
       is_active: 1 * values.is_active,
       is_show_web: 1 * values.is_show_web,
       list_attribute: [],
-      category_name: capitalizeFirstLetter(values.category_name),
+      category_name: this.capitalizeFirstLetter(values.category_name),
     };
 
     let productCategoryID =
@@ -270,29 +235,34 @@ export default class ProductCategoryAdd extends PureComponent {
         return window._$g.rdr("/product-category");
       }
 
-      if (this._btnType === "save") resetForm();
+      // if (this._btnType === "save") {
+      //   resetForm();
+      // }
     } catch (e) {
-      console.log(e);
       alerts.push({ color: "danger", msg: "Lưu không thành công" });
-    }
-    setSubmitting(false);
-    if (!ProductCategoryEnt && !willRedirect && !alerts.length) {
-      this.handleFormikReset();
-    }
+    } finally {
+      setSubmitting(false);
 
-    this.setState(
-      () => ({ alerts }),
-      () => {
-        window.scrollTo(0, 0);
+      if (!ProductCategoryEnt && !willRedirect && !alerts.length) {
+        resetForm();
+        this.handleFormikReset();
       }
-    );
+
+      this.setState(
+        () => ({ alerts }),
+        () => {
+          window.scrollTo(0, 0);
+        }
+      );
+    }
   }
 
   handleFormikReset() {
     this.setState((state) => ({
       ready: true,
       alerts: [],
-      clearImage: true,
+      clearImage: false,
+      bannerUrl: "",
     }));
     // Get bundle data --> ready data
     (async () => {
@@ -366,21 +336,23 @@ export default class ProductCategoryAdd extends PureComponent {
                       errors,
                     } = (this.formikProps = window._formikProps = formikProps);
                     // Render
+                    console.log(values);
                     return (
                       <Form
                         id="form1st"
                         onSubmit={handleSubmit}
                         onReset={handleReset}
                       >
-                        <Row className="mb-4">
-                          <Col xs={12}>
-                            <b className="title_page_h1 text-primary">
-                              Thông tin danh mục
-                            </b>
-                          </Col>
-                        </Row>
                         <Row>
                           <Col xs={12} sm={8}>
+                            <Row className="mb-4">
+                              <Col xs={12}>
+                                <b className="underline title_page_h1 text-primary">
+                                  {" "}
+                                  Thông tin danh mục
+                                </b>
+                              </Col>
+                            </Row>
                             <Row>
                               <FormInput
                                 label={"Tên danh mục"}
@@ -426,25 +398,21 @@ export default class ProductCategoryAdd extends PureComponent {
                                 isEdit={!noEdit}
                                 type="textarea"
                               />
-                              <Col sm={12} xs={12} className="mb-4">
+                              {/* <Col sm={12} xs={12} className="mb-4">
                                 <FormGroup row>
                                   <Label sm={4}>
                                     Ảnh danh mục sản phẩm
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
                                   </Label>
                                   <Col xs={8} sm={8}>
                                     <ListImage
-                                      // title="Ảnh danh mục sản phẩm"
                                       canEdit={!noEdit}
                                       name="images_url"
-                                      values={initialValues.images_url}
+                                      values={values.images_url}
                                       isRequired={false}
                                     />
                                   </Col>
                                 </FormGroup>
-                              </Col>
+                              </Col> */}
 
                               <Col sm={12} xs={12}>
                                 <FormGroup row>
@@ -508,17 +476,67 @@ export default class ProductCategoryAdd extends PureComponent {
 
                           {/* Upload image */}
                           <Col xs={12} sm={4}>
-                            <Row>
+                            <Row className="mb-4">
                               <Col xs={12}>
-                                <UploadImage
+                                <b className="underline title_page_h1 text-primary">
+                                  Ảnh banner danh mục
+                                </b>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col xs={10}>
+                                <Field
+                                  name="banner_url"
+                                  render={({ field /* _form */ }) => (
+                                    <div className="combo-image-upload">
+                                      <Upload
+                                        onChange={(img) => {
+                                          field.onChange({
+                                            target: {
+                                              name: "banner_url",
+                                              value: img,
+                                            },
+                                          });
+                                        }}
+                                        imageUrl={values.banner_url}
+                                        accept="image/*"
+                                        disabled={noEdit}
+                                        id={1}
+                                        label="Thêm ảnh"
+                                      />
+                                    </div>
+
+                                    // <CustomInput
+                                    //   {...field}
+                                    //   className="pull-left"
+                                    //   onBlur={null}
+                                    //   checked={values.is_show_web}
+                                    //   onChange={(event) => {
+                                    //     const { target } = event;
+                                    //     field.onChange({
+                                    //       target: {
+                                    //         name: "is_show_web",
+                                    //         value: target.checked,
+                                    //       },
+                                    //     });
+                                    //   }}
+                                    //   type="checkbox"
+                                    //   id="is_show_web"
+                                    //   label="Hiển thị Web"
+                                    //   disabled={noEdit}
+                                    // />
+                                  )}
+                                />
+
+                                {/* <UploadImage
                                   urlImageEdit={this.state.bannerUrl}
                                   clearImage={this.state.clearImage}
                                   isEdit={!noEdit}
                                   name="banner_url"
                                   title="Ảnh banner danh mục"
-                                  // isShowLabel={false}
                                   style={{ paddingLeft: 0, paddingRight: 0 }}
-                                />
+                                  isRequired={false}
+                                /> */}
                               </Col>
                               {/* <Col xs={12}>
                                 <ListImage
@@ -557,7 +575,7 @@ export default class ProductCategoryAdd extends PureComponent {
                                 "MD_PRODUCTCATEGORY_EDIT",
                                 "MD_PRODUCTCATEGORY_ADD",
                               ],
-                              onClick: () => handleSubmit("save"),
+                              onClick: () => this.handleSubmit("save"),
                             },
                             {
                               title: "Lưu và đóng",
