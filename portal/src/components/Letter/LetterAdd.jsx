@@ -67,9 +67,11 @@ function LetterAdd({ noEdit }) {
       } else {
         await _letterModel.create(values).then((data) => {
           if (btnType == "save") {
-            setDataLetter(initialValues);
-            // _initData();
-            // _initDataDetail();
+            if(id){
+              setDataLetter(values)
+            }else{
+              formik.resetForm();
+            }
             window._$g.toastr.show("Lưu thành công!", "success");
           } else if (btnType == "save&quit") {
             window._$g.toastr.show("Lưu thành công!", "success");
