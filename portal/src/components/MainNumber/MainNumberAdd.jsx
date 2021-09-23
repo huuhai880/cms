@@ -64,13 +64,16 @@ function MainNumberAdd({ noEdit }) {
         if (data.MAINNUMBERID && formik.values.main_number != dataNumber.main_number) {
           // setalert("Email đã tồn tại!");
           formik.setFieldError("main_number", "Chỉ số đã tồn tại!");
-          // window.scrollTo(0, 0);
+          
         } else {
           _mainNumberModel.create(values).then((data) => {
             if (btnType == "save") {
-              if(id){
-                _initDataDetail()
-              }else{
+              if (id) {
+                // formik.resetForm();
+                window.scrollTo(0, 0);
+                setDataNumber(values)
+                // }, 3000);
+              } else {
                 formik.resetForm();
               }
               window._$g.toastr.show("Lưu thành công!", "success");
@@ -95,12 +98,12 @@ function MainNumberAdd({ noEdit }) {
   const _initDataDetail = async () => {
     try {
       await _mainNumberModel.detail(id).then((data) => {
-        // console.log(data)
         setDataNumber(data);
         // console.log()
       });
       await _mainNumberModel.listNumImg(id).then((data) => {
         formik.setFieldValue("main_number_img", [...formik.values.main_number_img, ...data.items]);
+        // console.log([...formik.values.main_number_img, ...data.items])
         data.items.map((item, index) => {
           if (item.img_is_default == 1) {
             setvalue(item.partner_id);
@@ -338,6 +341,7 @@ function MainNumberAdd({ noEdit }) {
 
                         {formik.values.main_number_img &&
                           formik.values.main_number_img.map((item, index) => {
+                            // console.log(formik.values)
                             return (
                               <tbody>
                                 <tr key={index}>

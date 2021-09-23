@@ -333,7 +333,7 @@ function InterPretAdd({ noEdit }) {
                           <Select
                             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             menuPortalTarget={document.querySelector("body")}
-                            isDisabled={noEdit}
+                            isDisabled={noEdit||!formik.values.relationship_id}
                             placeholder={"-- Chọn --"}
                             value={convertValue(
                               formik.values.compare_mainnumber_id,

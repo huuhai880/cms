@@ -6,7 +6,7 @@ const template = {
 
   interpret_detail_id: '{{#? INTERPRETDETAILID}}',
   interpret_detail_name: '{{#? INTERPRETDETAILNAME}}',
-  interpret_detail_parent_id: '{{#? INTERPRETDETAILID}}',
+  interpret_detail_parent_id: '{{#? PARENTID}}',
   interpret_detail_parent_name: '{{#? INTERPRETDETAILNAME}}',
 
   interpret_detail_parentname: '{{#? PARENTNAME}}',

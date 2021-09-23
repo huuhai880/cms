@@ -117,6 +117,7 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
     if (dataInterpretDetailEnt) {
       _callAPI();
     }
+    // console.log(dataInterpretDetailEnt)
   }, [dataInterpretDetailEnt]);
 
   // //// data detail
@@ -178,6 +179,7 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
       }
     });
   };
+  console.log(formik.values)
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
@@ -242,7 +244,7 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                     <Col xs={6}>
                       <FormGroup row>
                         <Label for="interpret_detail_parent_id" sm={4}>
-                          Luận giải chi tiết
+                        Luận giải phụ thuộc
                         </Label>
                         <Col sm={8}>
                           <Select
@@ -259,6 +261,7 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                               true
                             )}
                             onChange={(value) => {
+                              console.log(value)
                               formik.setFieldValue("interpret_detail_parent_id", value.value);
                             }}
                           />

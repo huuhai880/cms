@@ -40,6 +40,7 @@ import Select from "react-select";
 import SearchHistory from "./SearchHistory/SearchHistory";
 import AccountEdit from "./AccountEdit";
 import AccountEntity from "models/AccountEntity/index";
+import { Checkbox } from "antd";
 
 layoutFullWidthHeight();
 function AccountAdd({ noEdit }) {
@@ -977,7 +978,16 @@ function AccountAdd({ noEdit }) {
                               </FormGroup>
                             </Col>
                           </Row>
-                          <CustomInput
+                          <Checkbox
+                            disabled={noEdit}
+                            onChange={(e) => {
+                              formik.setFieldValue(`is_active`, e.target.checked ? 1 : 0);
+                            }}
+                            checked={formik.values.is_active}
+                          >
+                            Kích hoạt
+                          </Checkbox>
+                          {/* <CustomInput
                             className="pull-left"
                             onBlur={null}
                             checked={formik.values.is_active}
@@ -989,7 +999,7 @@ function AccountAdd({ noEdit }) {
                             onChange={(e) => {
                               formik.setFieldValue("is_active", e.target.checked ? 1 : 0);
                             }}
-                          />
+                          /> */}
                         </Col>
                       </Row>
                       <div className="text-right mb-2">
