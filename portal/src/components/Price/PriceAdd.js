@@ -615,58 +615,10 @@ function PriceAdd(props) {
                                             </Col>
                                         </FormGroup>
                                     </Col>
-
-
-                                    {/* <Col xs={12} sm={6}>
-                                        <FormGroup row>
-                                            <Col xs={12} sm={3}>
-                                                <CustomInput
-                                                    className="pull-left mt-2"
-                                                    onBlur={null}
-                                                    checked={formik.values.is_percent}
-                                                    type="checkbox"
-                                                    id="is_percent"
-                                                    onChange={(e) => {
-                                                        formik.setFieldValue('is_percent', e.target.checked)
-                                                    }}
-                                                    label="Giảm giá %"
-                                                    disabled={false}
-                                                />
-                                            </Col>
-                                            <Label
-                                                className="text-left"
-                                                sm={3}>
-                                                Giá trị khuyến mãi
-                                                <span className="font-weight-bold red-text"> *</span>
-                                            </Label>
-                                            <Col sm={6}>
-                                                <InputGroup>
-                                                    <NumberFormat
-                                                        type="text"
-                                                        name="price"
-                                                        disabled={false}
-                                                        allowNegative={false}
-                                                        thousandSeparator=","
-                                                        decimalSeparator="."
-                                                        value={formik.values.discount_value ? formik.values.discount_value : ''}
-                                                        onValueChange={({ value }) => {
-                                                            let discount_value = 1 * value.replace(/,/g, "");
-                                                            formik.setFieldValue('discount_value', discount_value)
-                                                        }}
-                                                        isAllowed={values => isAllowed(values)}
-                                                    />
-                                                    <InputGroupAddon addonType="append">
-                                                        <InputGroupText>{formik.values.is_percent ? '%' : 'VNĐ'}</InputGroupText>
-                                                    </InputGroupAddon>
-                                                </InputGroup>
-                                                <MessageError formik={formik} name="discount_value" />
-                                            </Col>
-                                        </FormGroup>
-                                    </Col> */}
                                 </Row>
                                 }
 
-                                <Row className="mb-4">
+                                {/* <Row className="mb-4">
                                     <Col xs={12}>
                                         <b className="underline title_page_h1 text-primary">Thông tin áp dụng</b>
                                     </Col>
@@ -691,12 +643,6 @@ function PriceAdd(props) {
                                 {
                                     formik.values.is_apply_customer_type &&
                                     <>
-                                        {/* <Row className="mb15">
-                                            <Col xs={12}>
-                                                <b className="underline title_page_h1 text-primary">Danh sách Loại khách hàng</b>
-                                            </Col>
-                                        </Row> */}
-
                                         <Row >
                                             <Col
                                                 sm={12}
@@ -737,7 +683,7 @@ function PriceAdd(props) {
                                             </Col>
                                         </Row>
                                     </>
-                                }
+                                } */}
 
 
                                 <Row className="mb-4 mt-4">

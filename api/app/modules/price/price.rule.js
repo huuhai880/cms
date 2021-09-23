@@ -40,13 +40,13 @@ const ruleCreate = Joi.object().keys({
             .required(),
         otherwise: Joi.optional(),
     }),
-    customer_types: Joi.any().when("is_apply_customer_type", {
-        is: true,
-        then: Joi.array()
-            .required(),
-            // .custom(contentsLength),
-        otherwise: Joi.optional(),
-    }),
+    // customer_types: Joi.any().when("is_apply_customer_type", {
+    //     is: true,
+    //     then: Joi.array()
+    //         .required(),
+    //         // .custom(contentsLength),
+    //     otherwise: Joi.optional(),
+    // }),
     from_date: Joi.any().when("is_apply_promotion", {
         is: true,
         then: Joi.string().allow('', null).required()
@@ -63,13 +63,13 @@ const ruleUpdate = Joi.object().keys({
             .required(),
         otherwise: Joi.optional(),
     }),
-    customer_types: Joi.any().when("is_apply_customer_type", {
-        is: true,
-        then: Joi.array()
-            .required(),
-            // .custom(contentsLength)
-        otherwise: Joi.optional(),
-    }),
+    // customer_types: Joi.any().when("is_apply_customer_type", {
+    //     is: true,
+    //     then: Joi.array()
+    //         .required(),
+    //         // .custom(contentsLength)
+    //     otherwise: Joi.optional(),
+    // }),
     from_date: Joi.any().when("is_apply_promotion", {
         is: true,
         then: Joi.string().allow('', null).required()
