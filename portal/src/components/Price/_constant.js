@@ -304,22 +304,78 @@ export const validationSchema = (is_combo = false) => {
                 is: true,
                 then: yup.array().required("Combo làm giá là bắt buộc")
             }),
-        customer_types: yup.array().nullable()
-            .when("is_apply_customer_type", {
+        // customer_types: yup.array().nullable()
+        //     .when("is_apply_customer_type", {
+        //         is: true,
+        //         then: yup.array()
+        //             .test(
+        //                 'customer_types',
+        //                 'Vui lòng chọn loại áp dụng cho loại khách hàng',
+        //                 function (value) {
+        //                     let check = (value || []).filter(p => !p.is_apply_promotion && !p.is_apply_price)
+        //                     if (check.length > 0) {
+        //                         return false //Loi
+        //                     }
+        //                     return true;
+        //                 }
+        //             )
+        //             .required("Loại khách hàng áp dụng là bắt buộc")
+        //     }),
+        from_date: yup.string().nullable()
+            .when("is_apply_promotion", {
                 is: true,
-                then: yup.array()
+                then: yup.string()
                     .test(
-                        'customer_types',
-                        'Vui lòng chọn loại áp dụng cho loại khách hàng',
+                        'from_date',
+                        'Thời gian áp dụng từ ngày không được lớn hơn đến ngày',
                         function (value) {
-                            let check = (value || []).filter(p => !p.is_apply_promotion && !p.is_apply_price)
-                            if (check.length > 0) {
-                                return false //Loi
+                            let __to_date = this.options.parent.to_date;
+                            if (value && __to_date) {
+                                let _from_date = moment(value, 'DD/MM/YYYY');
+                                let _to_date = moment(__to_date, 'DD/MM/YYYY');
+                                return !(_from_date > _to_date)
                             }
                             return true;
                         }
                     )
-                    .required("Loại khách hàng áp dụng là bắt buộc")
+                    .required("Thời gian áp dụng là bắt buộc")
+            }),
+    })
+}
+
+
+export const validationSchemaUpdate = (is_combo = false) => {
+    return yup.object().shape({
+        price: yup.number().nullable()
+            .test(
+                'price',
+                `Giá ${is_combo ? 'combo' : 'sản phẩm'} là bắt buộc`,
+                function (value) {
+                    if (value < 0) {
+                        return false //Loi
+                    }
+                    return true;
+                }
+            )
+            .required(`Giá ${is_combo ? 'combo' : 'sản phẩm'} là bắt buộc`,),
+        discount_value: yup
+            .number()
+            .nullable()
+            .when("is_apply_promotion", {
+                is: true,
+                then: yup.number()
+                    .test(
+                        'discount_value',
+                        `Giá bán mới không được lớn hơn giá ${is_combo ? 'combo' : 'sản phẩm'}`,
+                        function (value) {
+                            let _price = this.options.parent.price;
+                            if (value > _price) {
+                                return false;
+                            }
+                            return true;
+                        }
+                    )
+                    .required("Giá bán mới là bắt buộc")
             }),
         from_date: yup.string().nullable()
             .when("is_apply_promotion", {

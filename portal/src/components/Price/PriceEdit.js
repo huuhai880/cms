@@ -25,7 +25,7 @@ import { useState } from "react";
 import NumberFormat from "../Common/NumberFormat";
 import { useEffect } from "react";
 import { useFormik } from "formik";
-import { initialValuesUpdate as initialValues, validationSchema } from "./_constant";
+import { initialValuesUpdate as initialValues, validationSchemaUpdate as validationSchema } from "./_constant";
 import MessageError from "../Product/MessageError";
 import Loading from "../Common/Loading";
 import './style.scss'
@@ -414,60 +414,14 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                                     disabled={noEdit}
                                                     minToday={true}
                                                 />
-                                                <MessageError formik={formik} name="from_date" />
+                                               <MessageError formik={formik} name="from_date" />
                                             </Col>
                                         </FormGroup>
                                     </Col>
-                                    {/* <Col xs={12} sm={6}>
-                                        <FormGroup row>
-                                            <Col xs={12} sm={4}>
-                                                <CustomInput
-                                                    className="pull-left mt-2"
-                                                    onBlur={null}
-                                                    checked={formik.values.is_percent}
-                                                    type="checkbox"
-                                                    id="is_percent"
-                                                    onChange={(e) => {
-                                                        formik.setFieldValue('is_percent', e.target.checked)
-                                                    }}
-                                                    label="Giảm giá %"
-                                                    disabled={noEdit}
-                                                />
-                                            </Col>
-                                            <Label
-                                                className="text-left"
-                                                sm={3}>
-                                                Giá trị khuyến mãi
-                                                <span className="font-weight-bold red-text"> *</span>
-                                            </Label>
-                                            <Col sm={5}>
-                                                <InputGroup>
-                                                    <NumberFormat
-                                                        type="text"
-                                                        name="price"
-                                                        disabled={noEdit}
-                                                        allowNegative={false}
-                                                        thousandSeparator=","
-                                                        decimalSeparator="."
-                                                        value={formik.values.discount_value ? formik.values.discount_value : ''}
-                                                        onValueChange={({ value }) => {
-                                                            let discount_value = 1 * value.replace(/,/g, "");
-                                                            formik.setFieldValue('discount_value', discount_value)
-                                                        }}
-                                                        isAllowed={values => isAllowed(values)}
-                                                    />
-                                                    <InputGroupAddon addonType="append">
-                                                        <InputGroupText>{formik.values.is_percent ? '%' : 'VNĐ'}</InputGroupText>
-                                                    </InputGroupAddon>
-                                                </InputGroup>
-                                                <MessageError formik={formik} name="discount_value" />
-                                            </Col>
-                                        </FormGroup>
-                                    </Col> */}
                                 </Row> : null
                                 }
 
-                                <Row className="mb-4">
+                                {/* <Row className="mb-4">
                                     <Col xs={12}>
                                         <b className="underline title_page_h1 text-primary">Thông tin áp dụng</b>
                                     </Col>
@@ -532,8 +486,7 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                             </Col>
                                         </Row>
                                     </>
-                                }
-
+                                } */}
 
                                 <Row className="mb-4 mt-4">
                                     <Col xs={12} sm={12}>
