@@ -22,8 +22,8 @@ function Filter({ handleSubmitFillter }) {
     endDate: null,
   });
   useEffect(() => {
-    document.getElementById('your_unique_start_date_id').setAttribute('readonly', 'readonly');
-    document.getElementById('your_unique_end_date_id').setAttribute('readonly', 'readonly');
+    // document.getElementById('your_unique_start_date_id').setAttribute('readonly', 'readonly');
+    // document.getElementById('your_unique_end_date_id').setAttribute('readonly', 'readonly');
     let pickerLeft = document.querySelector("#your_unique_start_date_id");
     pickerLeft.addEventListener("keyup", (e) => {
       if (e.target.value) {
@@ -56,15 +56,15 @@ function Filter({ handleSubmitFillter }) {
     if (myStartDate) {
       myStartDate = moment(myStartDate, "DD/MM/YYYY");
     }
-    if (
-      checkStartDate == false ||
-      checkEndDate == false ||
-      (checkStartDate == false && checkEndDate == false)
-    ) {
-      window._$g.dialogs.alert(window._$g._(`Vui lòng nhập đúng định dạng ngày tạo.`), () => {
-        window.location.reload();
-      });
-    }
+    // if (
+    //   checkStartDate == false ||
+    //   checkEndDate == false ||
+    //   (checkStartDate == false && checkEndDate == false)
+    // ) {
+    //   window._$g.dialogs.alert(window._$g._(`Vui lòng nhập đúng định dạng ngày tạo.`), () => {
+    //     window.location.reload();
+    //   });
+    // }
     let value = {
       keyword: keyword ? keyword : null,
       selectdActive: selectdActive ? selectdActive.value : null,

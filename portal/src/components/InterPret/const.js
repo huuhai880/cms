@@ -83,7 +83,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           // // console.log(doc.firstChild.innerHTML); // => <a href="#">Link...
           // console.log(doc.firstChild.firstChild.innerHTML); // => Link
           return (
-            <div className="text-left">{value.replace(/<[^>]+>/g, '')}</div>
+            <div className="text-left">{value.replace(/<[^>]+>/g, "")}</div>
 
             // <div
             //   className="text-left align-self-center"
@@ -170,8 +170,9 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   title="Chi tiết luận giải trên web"
                   className="mr-1"
                   onClick={(evt) => {
+                    // window._$g.rdr(`/interpret/detail-web/${data[tableMeta["rowIndex"]].interpret_id}`);
                     window.open(
-                      `/interpret/detail-web/${data[tableMeta["rowIndex"]].interpret_id}`,
+                      `/portal/interpret/detail-web/${data[tableMeta["rowIndex"]].interpret_id}`,
                       "_blank"
                     );
                     // window._$g.rdr(

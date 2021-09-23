@@ -132,7 +132,6 @@ function Letter() {
                     count={dataLetter.totalItems}
                     rowsPerPage={query.itemsPerPage}
                     page={query.page - 1 || 0}
-                    // rowsPerPageOptions={[10, 25, 50]}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                   />
