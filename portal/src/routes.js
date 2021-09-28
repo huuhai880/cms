@@ -665,16 +665,26 @@ const FormulaByNameDetail = React.lazy(() =>
 const FormulaByNameEdit = React.lazy(() => import("./components/FormulaByName/FormulaByNameEdit"));
 // end#FormulaByName
 
+//ProductCombo
 const ProductCombo = React.lazy(() => import("./components/ProductCombo/ProductCombo"));
 const ProductComboAdd = React.lazy(() => import("./components/ProductCombo/ProductComboAdd"));
 const ProductComboEdit = React.lazy(() => import("./components/ProductCombo/ProductComboEdit"));
 const ProductComboDetail = React.lazy(() => import("./components/ProductCombo/ProductComboDetail"));
+//end#ProductCombo
 
 const SearchHistory = React.lazy(() => import("./components/SearchHistory/SearchHistory"));
 const SearchHistoryDetail = React.lazy(() =>
   import("./components/SearchHistory/SearchHistoryDetail")
 );
 
+
+//Formula
+const Formula = React.lazy(() => import("./components/Formula/Formula"));
+const FormulaAdd = React.lazy(() => import("./components/Formula/FormulaAdd"));
+const FormulaEdit = React.lazy(() => import("./components/Formula/FormulaEdit"));
+const FormulaDetail = React.lazy(() => import("./components/Formula/FormulaDetail"));
+
+//end#//Formula
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   // dashboard
