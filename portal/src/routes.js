@@ -339,6 +339,22 @@ const FormulaIngredientsEdit = React.lazy(() =>
 );
 //.end#FormulaIngredients
 
+// Formula
+const Formula = React.lazy(() =>
+  import("./components/Formula/Formula")
+);
+const FormulaAdd = React.lazy(() =>
+  import("./components/Formula/FormulaAdd")
+);
+const FormulaDetail = React.lazy(() =>
+  import("./components/Formula/FormulaDetail")
+);
+const FormulaEdit = React.lazy(() =>
+  import("./components/Formula/FormulaEdit")
+);
+//.end#Formula
+
+
 // Customer Time Keeping
 const CustomerTimeKeeping = React.lazy(() =>
   import("./components/CustomerTimeKeeping/CustomerTimeKeeping")
@@ -3131,7 +3147,7 @@ const routes = [
     component: FormulaIngredients,
   },
   {
-    path: "/formula-ingredients/add/:id",
+    path: "/formula-ingredients/add",
     exact: true,
     name: "Thêm mới",
     function: "FOR_FORMULAINGREDIENTS_ADD",
@@ -3152,6 +3168,36 @@ const routes = [
     component: FormulaIngredientsEdit,
   },
   // end#FormulaIngredients
+    //Formula
+    {
+      path: "/formula",
+      exact: true,
+      name: "Danh sách công thức",
+      function: "FOR_FORMULA_VIEW",
+      component: Formula,
+    },
+    {
+      path: "/formula/add",
+      exact: true,
+      name: "Thêm mới",
+      function: "FOR_FORMULA_ADD",
+      component: FormulaAdd,
+    },
+    {
+      path: "/formula/detail/:id",
+      exact: true,
+      name: "Chi tiết",
+      function: "FOR_FORMULA_VIEW",
+      component: FormulaDetail,
+    },
+    {
+      path: "/formula/edit/:id",
+      exact: true,
+      name: "Chỉnh sửa",
+      function: "FOR_FORMULA_EDIT",
+      component: FormulaEdit,
+    },
+    // end#Formula
 ];
 
 export default routes;
