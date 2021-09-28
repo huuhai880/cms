@@ -324,21 +324,6 @@ const OutputTypeDetail = React.lazy(() => import("./components/OutputType/Output
 const OutputTypeEdit = React.lazy(() => import("./components/OutputType/OutputTypeEdit"));
 //.end#OutputType
 
-// FormulaIngredients
-const FormulaIngredients = React.lazy(() =>
-  import("./components/FormulaIngredients/FormulaIngredients")
-);
-const FormulaIngredientsAdd = React.lazy(() =>
-  import("./components/FormulaIngredients/FormulaIngredientsAdd")
-);
-const FormulaIngredientsDetail = React.lazy(() =>
-  import("./components/FormulaIngredients/FormulaIngredientsDetail")
-);
-const FormulaIngredientsEdit = React.lazy(() =>
-  import("./components/FormulaIngredients/FormulaIngredientsEdit")
-);
-//.end#FormulaIngredients
-
 // Customer Time Keeping
 const CustomerTimeKeeping = React.lazy(() =>
   import("./components/CustomerTimeKeeping/CustomerTimeKeeping")
