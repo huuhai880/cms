@@ -299,9 +299,9 @@ function ProductAdd({ noEdit = false, productId = null }) {
               STT
             </th>
             <th className="text-center" style={{ width: "30%" }}>
-              Thuộc tính
+              Chỉ số
             </th>
-            <th className="text-center">Luận giải</th>
+            <th className="text-center">Luận giải chi tiết</th>
             <th className="text-center" style={{ width: 100 }}>
               Cấu hình
             </th>
@@ -536,14 +536,9 @@ function ProductAdd({ noEdit = false, productId = null }) {
                               name="product_name"
                               value={formik.values.product_name}
                               onChange={({ target }) => {
-                                formik.setFieldValue(
-                                  "product_name",
-                                  target.value
-                                );
-                                formik.setFieldValue(
-                                  "url_product",
-                                  changeAlias(target.value)
-                                );
+                                formik.setFieldValue("product_name", target.value);
+                                formik.setFieldValue("product_name_show_web",target.value);
+                                formik.setFieldValue("url_product",changeAlias(target.value));
                               }}
                               // {...formik.getFieldProps("product_name")}
                             />
@@ -564,7 +559,12 @@ function ProductAdd({ noEdit = false, productId = null }) {
                               placeholder="Tên hiển thị Web"
                               disabled={noEdit}
                               name="product_name_show_web"
-                              {...formik.getFieldProps("product_name_show_web")}
+                              value={formik.values.product_name_show_web}
+                              onChange={({ target }) => {
+                                formik.setFieldValue("product_name_show_web",target.value);
+                                formik.setFieldValue( "url_product",changeAlias(target.value));
+                              }}
+                              // {...formik.getFieldProps("product_name_show_web")}
                             />
                             <MessageError
                               formik={formik}
@@ -627,13 +627,14 @@ function ProductAdd({ noEdit = false, productId = null }) {
                       name="product_images"
                       formik={formik}
                     />
+                    <Label style={{paddingTop: 10}}>Ưu tiên up ảnh kích thước 1190x1680px</Label>
                   </Col>
                 </Row>
 
                 <Row className="mb-4">
                   <Col xs={12}>
                     <b className="title_page_h1 text-primary">
-                      Thuộc tính sản phẩm{" "}
+                      Nội dung{" "}
                     </b>
                     <span className="font-weight-bold red-text"> * </span>
                   </Col>
@@ -655,7 +656,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                         }
                       >
                         <i className="fa fa-plus mr-2" />
-                        Thêm thuộc tính
+                        Thêm dòng
                       </Button>
                     )}
                   </Col>
@@ -664,7 +665,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                 <Row className="mb-4">
                   <Col xs={12}>
                     <b className="title_page_h1 text-primary">
-                      Nội dung sản phẩm{" "}
+                      Mô tả chi tiết{" "}
                     </b>
                     <span className="font-weight-bold red-text"> * </span>
                   </Col>

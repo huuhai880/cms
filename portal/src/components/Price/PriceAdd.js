@@ -524,7 +524,7 @@ function PriceAdd(props) {
 
                                 <Row className="mb-4">
                                     <Col xs={12}>
-                                        <b className="underline title_page_h1 text-primary">Thông tin khuyến mãi</b>
+                                        <b className="underline title_page_h1 text-primary">Thông tin ưu đãi</b>
                                     </Col>
                                 </Row>
 
@@ -547,7 +547,7 @@ function PriceAdd(props) {
                                                         }
                                                         formik.setFieldValue("is_apply_promotion", checked)
                                                     }}
-                                                    label="Áp dụng khuyến mãi"
+                                                    label="Áp dụng ưu đãi"
                                                     disabled={false} />
                                             </Col>
                                         </FormGroup>
@@ -560,7 +560,7 @@ function PriceAdd(props) {
                                             <Label
                                                 className="text-left"
                                                 sm={4}>
-                                                Giá bán mới
+                                                Giá ưu đãi
                                                 <span className="font-weight-bold red-text"> *</span>
                                             </Label>
                                             <Col sm={8}>
@@ -671,7 +671,7 @@ function PriceAdd(props) {
                                                             <th className="text-center" style={{ width: 50 }}>STT</th>
                                                             <th className="text-center">Tên Loại khách hàng</th>
                                                             <th className="text-center" style={{ width: '20%' }}>Áp dụng giá</th>
-                                                            <th className="text-center" style={{ width: '20%' }}>Áp dụng khuyến mãi</th>
+                                                            <th className="text-center" style={{ width: '20%' }}>Áp dụng ưu đãi</th>
                                                             <th className="text-center" style={{ width: 100 }}>Thao tác</th>
                                                         </tr>
                                                     </thead>

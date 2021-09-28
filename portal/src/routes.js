@@ -452,7 +452,20 @@ const StaticContentDetail = React.lazy(() =>
 );
 const StaticContentEdit = React.lazy(() => import("./components/StaticContent/StaticContentEdit"));
 //.end#StaticContent
-
+// FormulaIngredients
+const FormulaIngredients = React.lazy(() =>
+  import("./components/FormulaIngredients/FormulaIngredients")
+);
+const FormulaIngredientsAdd = React.lazy(() =>
+  import("./components/FormulaIngredients/FormulaIngredientsAdd")
+);
+const FormulaIngredientsDetail = React.lazy(() =>
+  import("./components/FormulaIngredients/FormulaIngredientsDetail")
+);
+const FormulaIngredientsEdit = React.lazy(() =>
+  import("./components/FormulaIngredients/FormulaIngredientsEdit")
+);
+//.end#FormulaIngredients
 // SetupServiceRegister
 const SetupServiceRegister = React.lazy(() =>
   import("./components/SetupServiceRegister/SetupServiceRegister")
@@ -3137,8 +3150,7 @@ const routes = [
     component: SearchHistoryDetail,
   },
   //end searchHistory
-
-  //FormulaIngredients
+  //formula-ingredients
   {
     path: "/formula-ingredients",
     exact: true,
