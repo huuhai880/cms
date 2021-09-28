@@ -710,7 +710,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                                 }}
                                 checked={formik.values.is_show_3_time}
                               >
-                                Số xuất hiện >= 3 lần
+                                {`Số xuất hiện >= 3 lần`}
                               </Checkbox>
                             </Col>
                             <Col sm={2} className="align-self-center">

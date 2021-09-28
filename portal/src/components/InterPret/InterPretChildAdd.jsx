@@ -324,13 +324,18 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                             "image imagetools ",
                             "toc",
                           ],
-                          menubar: "file edit view insert format tools table tc help",
+                          menubar:
+                            "file edit view insert format tools table tc help",
                           toolbar1:
-                            "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                            "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                             "alignleft aligncenter alignright alignjustify",
                           toolbar2:
                             "bullist numlist outdent indent | removeformat | help | image | toc",
-                          file_picker_types: "image",
+                          file_picker_types:
+                            "image",
+                          relative_urls: false,
+                          remove_script_host: false,
+                          convert_urls: true,
                           images_dataimg_filter: function (img) {
                             return img.hasAttribute("internal-blob");
                           },
@@ -381,13 +386,18 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                             "image imagetools ",
                             "toc",
                           ],
-                          menubar: "file edit view insert format tools table tc help",
+                          menubar:
+                            "file edit view insert format tools table tc help",
                           toolbar1:
-                            "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                            "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                             "alignleft aligncenter alignright alignjustify",
                           toolbar2:
                             "bullist numlist outdent indent | removeformat | help | image | toc",
-                          file_picker_types: "image",
+                          file_picker_types:
+                            "image",
+                          relative_urls: false,
+                          remove_script_host: false,
+                          convert_urls: true,
                           images_dataimg_filter: function (img) {
                             return img.hasAttribute("internal-blob");
                           },

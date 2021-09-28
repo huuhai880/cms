@@ -259,7 +259,7 @@ export const validationSchema = yup.object().shape({
     ).nullable(),
     product_images: yup.array().nullable().required("Hình ảnh sản phẩm là bắt buộc"),
     product_content_detail: yup.string().required(
-        "Chi tiết sản phẩm là bắt buộc"
+        "Mô tả là bắt buộc"
     ),
     // url_product: yup.string().required(
     //     "Url sản phẩm là bắt buộc"
@@ -280,7 +280,7 @@ export const validationSchema = yup.object().shape({
     product_attributes: yup.array().nullable()
         .test(
             'product_attribute',
-            'Thuộc tính sản phẩm là bắt buộc',
+            'Nội dung là bắt buộc',
             value => {
                 let check = (value || []).find(p => !p.attributes_group_id || !p.interprets.length)
                 if (check) {
@@ -289,6 +289,6 @@ export const validationSchema = yup.object().shape({
                 return true;
             }
         )
-        .required("Thuộc tính sản phẩm là bắt buộc"),
+        .required("Nội dung là bắt buộc"),
 
 })

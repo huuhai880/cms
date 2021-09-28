@@ -324,7 +324,7 @@ function PriceEdit({ noEdit = false, priceId = null }) {
 
                                 <Row className="mb-4">
                                     <Col xs={12}>
-                                        <b className="underline title_page_h1 text-primary">Thông tin khuyến mãi</b>
+                                        <b className="underline title_page_h1 text-primary">Thông tin ưu đãi</b>
                                     </Col>
                                 </Row>
 
@@ -347,7 +347,7 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                                         }
                                                         formik.setFieldValue("is_apply_promotion", checked)
                                                     }}
-                                                    label="Áp dụng khuyến mãi"
+                                                    label="Áp dụng ưu đãi"
                                                     disabled={noEdit} />
                                             </Col>
                                         </FormGroup>
@@ -360,7 +360,7 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                             <Label
                                                 className="text-left"
                                                 sm={4}>
-                                                Giá bán mới
+                                                Giá ưu đãi
                                                 <span className="font-weight-bold red-text"> *</span>
                                             </Label>
                                             <Col sm={8}>

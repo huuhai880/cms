@@ -101,7 +101,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-right">{(value == 0 || !value) ? '--đ' : numberFormat(value)}</div>;
+                    return <div className="text-right">{(value == 0 || !value) ? '-- đ' : numberFormat(value)}</div>;
                 },
             },
         },
