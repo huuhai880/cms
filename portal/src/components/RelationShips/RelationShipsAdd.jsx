@@ -81,7 +81,9 @@ function RelationShipsAdd({ noEdit }) {
         <Col xs={12}>
           <Card>
             <CardHeader>
-              <b>{id ? "Chỉnh sửa" : "Thêm mới"} mối quan hệ </b>
+              {/* <b>{id ? "Chỉnh sửa" : "Thêm mới"} mối quan hệ </b> */}
+              <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} mối quan hệ </b>
+
             </CardHeader>
             <CardBody>
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
