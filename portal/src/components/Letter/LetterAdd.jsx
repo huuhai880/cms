@@ -123,7 +123,9 @@ function LetterAdd({ noEdit }) {
         <Col xs={12}>
           <Card>
             <CardHeader>
-              <b>{id ? "Chỉnh sửa" : "Thêm mới"} chữ cái </b>
+              {/* <b>{id ? "Chỉnh sửa" : "Thêm mới"}  </b> */}
+              <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} chữ cái </b>
+
             </CardHeader>
             <CardBody>
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
