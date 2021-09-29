@@ -117,22 +117,22 @@ const getIngredientsList = async (req, res, next) => {
     );
   }
 };
-// const deleteLetter = async (req, res, next) => {
-//   try {
-//     const letter_id = req.params.letter_id;
+const deleteIngredient = async (req, res, next) => {
+  try {
+    const ingredient_id = req.params.ingredient_id;
 
-//     const serviceRes = await IngredientService.deleteLetter(letter_id, req.body);
-//     if (serviceRes.isFailed()) {
-//       return next(serviceRes);
-//     }
+    const serviceRes = await IngredientService.deleteIngredient(ingredient_id, req.body);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
 
-//     return res.json(
-//       new SingleResponse(null, RESPONSE_MSG.COMMENT.DELETE_SUCCESS)
-//     );
-//   } catch (error) {
-//     return next(error);
-//   }
-// };
+    return res.json(
+      new SingleResponse(null, RESPONSE_MSG.COMMENT.DELETE_SUCCESS)
+    );
+  } catch (error) {
+    return next(error);
+  }
+};
 
 const detailIngredient = async (req, res, next) => {
   try {
@@ -178,7 +178,7 @@ module.exports = {
   GetListCalculation,
   getParamName,
   GetListParamDob,
-  // deleteLetter,
+  deleteIngredient,
   addIngredient,
   detailIngredient,
   getIngredientList,

@@ -14,6 +14,7 @@ import * as yup from "yup";
 export const initialValues = {
   letter_id: "",
   letter: "",
+  letter_name: "",
   number: "",
   is_vowel: 0,
   is_active: 1,
@@ -21,6 +22,10 @@ export const initialValues = {
 };
 ///// validate
 export const validationSchema = yup.object().shape({
+  letter_name: yup
+    .string()
+    .required("Tên chữ cái không được để trống .")
+    .nullable(),
   letter: yup
     .string()
     .required("Chữ cái không được để trống .")
@@ -38,6 +43,24 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
   // console.log(data);
   return [
     configIDRowTable("letter_id", "/letter/detail/", query),
+    {
+      name: "letter_name",
+      label: "Tên chữ cái",
+      options: {
+        filter: false,
+        sort: true,
+        customHeadRender: (columnMeta, handleToggleColumn) => {
+          return (
+            <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+              <div className="text-center">{columnMeta.label}</div>
+            </th>
+          );
+        },
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return <div className="text-left">{value}</div>;
+        },
+      },
+    },
     {
       name: "letter",
       label: "Chữ cái",

@@ -36,7 +36,7 @@ function Account() {
     try {
       await _accountModel.getList(props).then((data) => {
         setDataAccount(data);
-        // console.log(data);
+        console.log(data);
       });
     } catch (error) {
       console.log(error);

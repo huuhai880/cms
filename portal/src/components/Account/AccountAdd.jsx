@@ -86,11 +86,11 @@ function AccountAdd({ noEdit }) {
     // ward_id: yup.string().required("Phường/ Xã không được để trống !").nullable(),
     // province_id: yup.string().required("Tỉnh/ Thành phố không được để trống !").nullable(),
     // district_id: yup.string().required("Quận/ Huyện không được để trống !").nullable(),
-    phone_number: yup
-      .string()
-      .required("Số điện thoại không được để trống .")
-      .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ")
-      .nullable(),
+    // phone_number: yup
+    //   .string()
+    //   .required("Số điện thoại không được để trống .")
+    //   .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ")
+    //   .nullable(),
   });
   const formik = useFormik({
     enableReinitialize: true,
@@ -727,7 +727,7 @@ function AccountAdd({ noEdit }) {
                             <Col xs={12} sm={6}>
                               <FormGroup row>
                                 <Label for="user_name" sm={4}>
-                                  Số điện thoại<span className="font-weight-bold red-text">*</span>
+                                  Số điện thoại
                                 </Label>
                                 <Col sm={8}>
                                   <Input

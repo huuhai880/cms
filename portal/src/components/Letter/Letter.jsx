@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { layoutFullWidthHeight } from "../../utils/html";
+import { Card, CardBody, CardHeader, Col, FormGroup, Button } from "reactstrap";
 import Filter from "./Filter";
-import { Alert, Card, CardBody, CardHeader, Col, Input, FormGroup, Button } from "reactstrap";
-import { CircularProgress } from "@material-ui/core";
-import { getColumTable } from "./const";
+import { layoutFullWidthHeight } from "../../utils/html";
 import MUIDataTable from "mui-datatables";
 import { configTableOptions } from "../../utils/index";
 import CustomPagination from "../../utils/CustomPagination";
+import { CircularProgress } from "@material-ui/core";
+// import { CheckAccess } from '../../navigation/VerifyAccess'
 import LetterModel from "../../models/LetterModel";
+import { getColumTable } from "./const";
+import { CheckAccess } from "../../navigation/VerifyAccess";
+
 layoutFullWidthHeight();
 
 function Letter() {
@@ -84,12 +87,13 @@ function Letter() {
         {toggleSearch && (
           <CardBody className="px-0 py-0">
             <div className="MuiPaper-filter__custom">
-              <Filter handleSubmitFillter={handleSubmitFillter} />
+              <Filter handleSubmit={handleSubmitFillter} />
             </div>
           </CardBody>
         )}
       </Card>
       <Col xs={12} sm={4} className="d-flex align-items-end mb-3" style={{ padding: 0 }}>
+      <CheckAccess permission="MD_LETTER_ADD">
         <FormGroup className="mb-2 mb-sm-0">
           <Button
             color="success"
@@ -103,6 +107,7 @@ function Letter() {
             <span className="ml-1">Thêm mới</span>
           </Button>
         </FormGroup>
+        </CheckAccess>
       </Col>
       <Card className={`animated fadeIn mb-3 `}>
         <CardBody className="px-0 py-0">

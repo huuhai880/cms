@@ -20,7 +20,7 @@ export const initialValues = {
 };
 ///// validate
 export const validationSchema = yup.object().shape({
-  main_number: yup.string().required("Con số không được để trống .").nullable(),
+  main_number: yup.string().required("Giá trị không được để trống .").nullable(),
   main_number_img: yup.array().required("Danh sách hình ảnh không được để trống .").nullable(),
 });
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
@@ -29,7 +29,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
     configIDRowTable("main_number_id", "/main-number/detail/", query),
     {
       name: "main_number",
-      label: "Chỉ số",
+      label: "Giá trị",
       options: {
         filter: false,
         sort: true,

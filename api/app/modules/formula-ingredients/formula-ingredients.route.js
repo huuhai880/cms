@@ -30,8 +30,8 @@ routes
 routes
   .route('/:ingredient_id(\\d+)')
   .get(IngredientController.detailIngredient);
-// // ////////detelte letter
-// routes.route('/:letter_id/delete').put(IngredientController.deleteLetter);
+// ////////detelte letter
+routes.route('/:ingredient_id/delete').put(IngredientController.deleteIngredient);
 // // check email
 // routes
 //   .route('/check-letter')
