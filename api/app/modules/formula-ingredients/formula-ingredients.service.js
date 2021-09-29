@@ -49,25 +49,26 @@ const getIngredientsList = async (queryParams = {}) => {
     return new ServiceResponse(true, '', {});
   }
 };
-// ///////delete Letter
-// const deleteLetter = async (letter_id, body) => {
-//   const pool = await mssql.pool;
-//   try {
-//     await pool
-//       .request()
-//       .input('LETTERID', letter_id)
-//       .input('DELETEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-//       .execute('MD_LETTERS_Delete_AdminWeb');
-//     return new ServiceResponse(true, '');
-//   } catch (e) {
-//     logger.error(e, {
-//       function: 'IngredientService.deleteLetter',
-//     });
+///////delete Ingredient
+const deleteIngredient = async (ingredient_id, body) => {
+  // console.log(ingredient_id)
+  const pool = await mssql.pool;
+  try {
+    await pool
+      .request()
+      .input('INGREDIENTID', ingredient_id)
+      .input('DELETEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
+      .execute('FOR_FORMULAINGREDIENTS_delete_AdminWeb');
+    return new ServiceResponse(true, '');
+  } catch (e) {
+    logger.error(e, {
+      function: 'IngredientService.deleteIngredient',
+    });
 
-//     // Return failed
-//     return new ServiceResponse(false, e.message);
-//   }
-// };
+    // Return failed
+    return new ServiceResponse(false, e.message);
+  }
+};
 // /////check letter
 // const CheckLetter = async (letter) => {
 //   // console.log(email)
@@ -90,6 +91,7 @@ const getIngredientsList = async (queryParams = {}) => {
 const addIngredient = async (body = {}) => {
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
+  console.log(body)
   try {
     await transaction.begin();
     /////create or update number
@@ -116,6 +118,7 @@ const addIngredient = async (body = {}) => {
         .input('ISVOWELs', apiHelper.getValueFromObject(body, 'is_vowel'))
         .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
         .input('ISAPPLYDOB', apiHelper.getValueFromObject(body, 'is_apply_dob'))
+        .input('VALUEINGREDIENTS', apiHelper.getValueFromObject(body, 'ingredient_value'))
         .input(
           'ISAPPLYNAME',
           apiHelper.getValueFromObject(body, 'is_apply_name')
@@ -233,6 +236,7 @@ const addIngredient = async (body = {}) => {
         .input('ISVOWELs', apiHelper.getValueFromObject(body, 'is_vowel'))
         .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
         .input('ISAPPLYDOB', apiHelper.getValueFromObject(body, 'is_apply_dob'))
+        .input('VALUEINGREDIENTS', apiHelper.getValueFromObject(body, 'ingredient_value'))
         .input(
           'ISAPPLYNAME',
           apiHelper.getValueFromObject(body, 'is_apply_name')
@@ -449,7 +453,7 @@ module.exports = {
   GetListCalculation,
   getParamName,
   GetListParamDob,
-  // deleteLetter,
+  deleteIngredient,
   addIngredient,
   detailIngredient,
   getIngredientList,

@@ -93,15 +93,15 @@ function OrderDetail() {
                       <Col xs={6}>
                         <FormGroup row>
                           <Label for="attribute_id" sm={3}>
-                            Mã đơn hàng <span className="font-weight-bold red-text">*</span>
+                            Mã đơn hàng
                           </Label>
                           <Col sm={9}>
                             <Input
-                              name="order_id"
-                              id="order_id"
+                              name="order_no"
+                              id="order_no"
                               type="text"
                               disabled={noEdit}
-                              value={formik.values.order_id}
+                              value={formik.values.order_no}
                             />
                           </Col>
                         </FormGroup>
@@ -109,7 +109,7 @@ function OrderDetail() {
                       <Col xs={6}>
                         <FormGroup row>
                           <Label for="relationship_id" sm={3}>
-                          Ngày tạo đơn hàng <span className="font-weight-bold red-text">*</span>
+                          Ngày tạo đơn hàng 
                           </Label>
                           <Col sm={9}>
                             <Input
@@ -129,7 +129,7 @@ function OrderDetail() {
                       <Col xs={6}>
                         <FormGroup row>
                           <Label for="attribute_id" sm={3}>
-                            Tình trạng đơn hàng <span className="font-weight-bold red-text">*</span>
+                            Tình trạng đơn hàng
                           </Label>
                           <Col sm={9}>
                             <Input
@@ -158,7 +158,7 @@ function OrderDetail() {
                       <Col xs={6}>
                         <FormGroup row>
                           <Label for="attribute_id" sm={3}>
-                            Tên khách hàng <span className="font-weight-bold red-text">*</span>
+                            Tên khách hàng
                           </Label>
                           <Col sm={9}>
                             <Input
@@ -174,7 +174,7 @@ function OrderDetail() {
                       <Col xs={6}>
                         <FormGroup row>
                           <Label for="relationship_id" sm={3}>
-                            Số điện thoại <span className="font-weight-bold red-text">*</span>
+                            Số điện thoại 
                           </Label>
                           <Col sm={9}>
                             <Input
@@ -194,7 +194,7 @@ function OrderDetail() {
                       <Col xs={6}>
                         <FormGroup row>
                           <Label for="attribute_id" sm={3}>
-                            Email <span className="font-weight-bold red-text">*</span>
+                            Email 
                           </Label>
                           <Col sm={9}>
                             <Input
@@ -210,7 +210,7 @@ function OrderDetail() {
                       <Col xs={6}>
                         <FormGroup row>
                           <Label for="relationship_id" sm={3}>
-                            Địa chỉ <span className="font-weight-bold red-text">*</span>
+                            Địa chỉ 
                           </Label>
                           <Col sm={9}>
                             <Input

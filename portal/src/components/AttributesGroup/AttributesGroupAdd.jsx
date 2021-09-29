@@ -61,11 +61,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
    */
   getInitialValues = () => {
     let { attributesGroupEnt } = this.props;
-    let values = Object.assign(
-      {},
-      this._attributesGroupModel.fillable(),
-      attributesGroupEnt
-    );
+    let values = Object.assign({}, this._attributesGroupModel.fillable(), attributesGroupEnt);
 
     // Format
     Object.keys(values).forEach((key) => {
@@ -105,7 +101,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
   }
 
   formikValidationSchema = Yup.object().shape({
-    group_name: Yup.string().trim().required("Tên nhóm thuộc tính là bắt buộc."),
+    group_name: Yup.string().trim().required("Tên chỉ số là bắt buộc."),
   });
 
   handleFormikBeforeRender = ({ initialValues }) => {
@@ -143,7 +139,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
     // +++
     let formData = Object.assign({}, values, {
       is_active: is_active ? 1 : 0,
-      group_name: group_name? group_name.trim(): "",
+      group_name: group_name ? group_name.trim() : "",
     });
     //
     const group_nameId =
@@ -166,9 +162,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
       .catch((apiData) => {
         // NG
         let { errors, statusText, message } = apiData;
-        let msg = [`<b>${statusText || message}</b>`]
-          .concat(errors || [])
-          .join("<br/>");
+        let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
         alerts.push({ color: "danger", msg });
       })
       .finally(() => {
@@ -227,8 +221,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
                       ? "Chi tiết"
                       : "Chỉnh sửa"
                     : "Thêm mới"}{" "}
-                  Nhóm thuộc tính{" "}
-                  {attributesGroupEnt ? attributesGroupEnt.group_name : ""}
+                  chỉ số {attributesGroupEnt ? attributesGroupEnt.group_name : ""}
                 </b>
               </CardHeader>
               <CardBody>
@@ -268,16 +261,10 @@ export default class AttrubtesGroupAdd extends PureComponent {
                     this.handleFormikBeforeRender({ initialValues });
                     // Render
                     return (
-                      <Form
-                        id="form1st"
-                        onSubmit={handleSubmit}
-                        onReset={handleReset}
-                      >
+                      <Form id="form1st" onSubmit={handleSubmit} onReset={handleReset}>
                         <Row className="mb15">
                           <Col xs={12}>
-                            <b className="underline">
-                              Thông tin nhóm thuộc tính
-                            </b>
+                            <b className="underline">Thông tin chỉ số</b>
                           </Col>
                         </Row>
                         <Row className="pt-3">
@@ -285,15 +272,9 @@ export default class AttrubtesGroupAdd extends PureComponent {
                             <Row>
                               <Col xs={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="group_name"
-                                    className="text-left"
-                                    sm={3}
-                                  >
-                                    Tên nhóm thuộc tính
-                                    <span className="font-weight-bold red-text">
-                                      *
-                                    </span>
+                                  <Label for="group_name" className="text-left" sm={3}>
+                                    Tên chỉ số
+                                    <span className="font-weight-bold red-text">*</span>
                                   </Label>
                                   <Col sm={9}>
                                     <Field
@@ -312,10 +293,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                     <ErrorMessage
                                       name="group_name"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -327,11 +305,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
                             <Row>
                               <Col xs={12}>
                                 <FormGroup row>
-                                  <Label
-                                    for="description"
-                                    className="text-left"
-                                    sm={3}
-                                  >
+                                  <Label for="description" className="text-left" sm={3}>
                                     Ghi chú
                                   </Label>
                                   <Col sm={9}>
@@ -352,10 +326,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                     <ErrorMessage
                                       name="description"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -396,10 +367,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                     <ErrorMessage
                                       name="is_active"
                                       component={({ children }) => (
-                                        <Alert
-                                          color="danger"
-                                          className="field-validation-error"
-                                        >
+                                        <Alert color="danger" className="field-validation-error">
                                           {children}
                                         </Alert>
                                       )}
@@ -444,9 +412,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                       type="submit"
                                       color="success"
                                       disabled={isSubmitting}
-                                      onClick={() =>
-                                        this.handleSubmit("save_n_close")
-                                      }
+                                      onClick={() => this.handleSubmit("save_n_close")}
                                       className="mr-2 btn-block-sm mt-md-0 mt-sm-2"
                                     >
                                       <i className="fa fa-save mr-2" />
@@ -456,9 +422,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                 )}
                                 <Button
                                   disabled={isSubmitting}
-                                  onClick={() =>
-                                    window._$g.rdr("/attributes-group")
-                                  }
+                                  onClick={() => window._$g.rdr("/attributes-group")}
                                   className="btn-block-sm mt-md-0 mt-sm-2"
                                 >
                                   <i className="fa fa-times-circle mr-1" />

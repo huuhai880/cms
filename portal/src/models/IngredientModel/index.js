@@ -34,7 +34,7 @@ export default class IngredientModel extends Model {
   create(_data = {}) {
     // Validate data?!
     let data = Object.assign({}, _data);
-    console.log(data)
+    // console.log(data)
     return this._api.post(_static.API_INGREDIENT_LIST, data);
   }
 //   checkLetter(_data = {}) {
@@ -43,11 +43,11 @@ export default class IngredientModel extends Model {
 //     // console.log(id, data)
 //     return this._api.get(_static.API_INGREDIENT_CHECK, data);
 //   }
-//   delete(id, _data = {}) {
-//     let data = Object.assign({}, _data);
-//     //   return this._api.post(_static.API_MAINNUMBER_DELETE, data);
-//     return this._api.put(_static.API_INGREDIENT_DELETE.replace(":ingredient_id", id), data);
-//   }
+  delete(id, _data = {}) {
+    let data = Object.assign({}, _data);
+    //   return this._api.post(_static.API_MAINNUMBER_DELETE, data);
+    return this._api.put(_static.API_INGREDIENT_DELETE.replace(":ingredient_id", id), data);
+  }
   detail(id, _data = {}) {
     // Validate data?!
     let data = Object.assign({}, _data);

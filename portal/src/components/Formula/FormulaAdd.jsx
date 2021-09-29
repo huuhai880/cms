@@ -27,12 +27,12 @@ function FormulaAdd({ noEdit }) {
   let { id } = useParams();
   const [btnType, setbtnType] = useState("");
   const [isType1, setType1] = useState([
-    { name: "Công thức 1", id: "1" },
-    { name: "Thành phần 1", id: "0" },
+    { name: "Công thức", id: "1" },
+    { name: "Thành phần", id: "0" },
   ]);
   const [isType2, setType2] = useState([
-    { name: "Công thức 2", id: "1" },
-    { name: "Thành phần 2", id: "0" },
+    { name: "Công thức", id: "1" },
+    { name: "Thành phần", id: "0" },
   ]);
   const formik = useFormik({
     enableReinitialize: true,
@@ -393,14 +393,14 @@ function FormulaAdd({ noEdit }) {
                             options={getOptionType1(formik.values.type1, true)}
                             onChange={(value) => {
                               formik.setFieldValue("type1", value.value);
-                              formik.setFieldValue("orderid_1", "");
+                              // formik.setFieldValue("orderid_1", "");
                             }}
                           />
                         </Col>
                         <Col sm={2}>
                           {/* {id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} */}
                           {formik.values.type1 !== "" ? (
-                            formik.values.type1 === 0 ? (
+                            formik.values.type1 == 0 ? (
                               <Select
                                 className="MuiPaper-filter__custom--select"
                                 id={`orderid_1`}
@@ -475,13 +475,13 @@ function FormulaAdd({ noEdit }) {
                             options={getOptionType2(formik.values.type2, true)}
                             onChange={(value) => {
                               formik.setFieldValue("type2", value.value);
-                              formik.setFieldValue("orderid_2", "");
+                              // formik.setFieldValue("orderid_2", "");
                             }}
                           />
                         </Col>
                         <Col sm={2}>
                           {formik.values.type2 !== "" ? (
-                            formik.values.type2 === 0 ? (
+                            formik.values.type2 == 0 ? (
                               <Select
                                 className="MuiPaper-filter__custom--select"
                                 id={`orderid_2`}

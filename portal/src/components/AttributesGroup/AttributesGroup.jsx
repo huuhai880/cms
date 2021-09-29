@@ -193,7 +193,7 @@ class AttributesGroup extends Component {
       ),
       {
         name: "group_name",
-        label: "Tên nhóm thuộc tính",
+        label: "Tên chỉ số",
         options: {
           filter: false,
           sort: false,

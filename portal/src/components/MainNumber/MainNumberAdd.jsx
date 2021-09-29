@@ -63,15 +63,14 @@ function MainNumberAdd({ noEdit }) {
         // console.log(data)
         if (data.MAINNUMBERID && formik.values.main_number != dataNumber.main_number) {
           // setalert("Email đã tồn tại!");
-          formik.setFieldError("main_number", "Chỉ số đã tồn tại!");
-          
+          formik.setFieldError("main_number", "Giá trị đã tồn tại!");
         } else {
           _mainNumberModel.create(values).then((data) => {
             if (btnType == "save") {
               if (id) {
                 // formik.resetForm();
                 window.scrollTo(0, 0);
-                setDataNumber(values)
+                setDataNumber(values);
                 // }, 3000);
               } else {
                 formik.resetForm();
@@ -208,7 +207,8 @@ function MainNumberAdd({ noEdit }) {
         <Col xs={12}>
           <Card>
             <CardHeader>
-              <b>{id ? "Chỉnh sửa" : "Thêm mới"} con số </b>
+              {/* <b>{id ? "Chỉnh sửa" : "Thêm mới"} giá trị </b> */}
+              <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} giá trị </b>
             </CardHeader>
             <CardBody>
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
@@ -216,10 +216,10 @@ function MainNumberAdd({ noEdit }) {
                   <Col xs={12} sm={12}>
                     <FormGroup row>
                       <Label for="main_number" sm={4}>
-                        Số chủ đạo <span className="font-weight-bold red-text">*</span>
+                        Giá trị <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={8}>
-                        <NumberFormat
+                        {/* <NumberFormat
                           name="main_number"
                           id="main_number"
                           disabled={noEdit}
@@ -228,8 +228,16 @@ function MainNumberAdd({ noEdit }) {
                             // console.log(value)
                           }}
                           value={formik.values.main_number}
+                        /> */}
+                        <Input
+                          name="main_number"
+                          id="main_number"
+                          type="text"
+                          placeholder="Giá trị"
+                          disabled={noEdit}
+                          value={formik.values.main_number}
+                          onChange={formik.handleChange}
                         />
-
                         {formik.errors.main_number && formik.touched.main_number ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"

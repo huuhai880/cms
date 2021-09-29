@@ -2,6 +2,7 @@ const Transform = require('../../common/helpers/transform.helper');
 const config = require('../../../config/config');
 const template = {
   letter_id: '{{#? LETTERID}}',
+  letter_name: '{{#? LETTERNAME}}',
   letter: '{{#? LETTER}}',
   number: '{{#? NUMBER}}',
   is_active: '{{ISACTIVE ? 1 : 0}}',
@@ -20,6 +21,7 @@ const list = (users = []) => {
   return transform.transform(users, [
     'letter_id',
     'letter',
+    'letter_name',
     'is_active',
     'number',
     'is_vowel',

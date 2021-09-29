@@ -324,6 +324,37 @@ const OutputTypeDetail = React.lazy(() => import("./components/OutputType/Output
 const OutputTypeEdit = React.lazy(() => import("./components/OutputType/OutputTypeEdit"));
 //.end#OutputType
 
+// // FormulaIngredients
+// const FormulaIngredients = React.lazy(() =>
+//   import("./components/FormulaIngredients/FormulaIngredients")
+// );
+// const FormulaIngredientsAdd = React.lazy(() =>
+//   import("./components/FormulaIngredients/FormulaIngredientsAdd")
+// );
+// const FormulaIngredientsDetail = React.lazy(() =>
+//   import("./components/FormulaIngredients/FormulaIngredientsDetail")
+// );
+// const FormulaIngredientsEdit = React.lazy(() =>
+//   import("./components/FormulaIngredients/FormulaIngredientsEdit")
+// );
+// //.end#FormulaIngredients
+
+// // Formula
+// const Formula = React.lazy(() =>
+//   import("./components/Formula/Formula")
+// );
+// const FormulaAdd = React.lazy(() =>
+//   import("./components/Formula/FormulaAdd")
+// );
+// const FormulaDetail = React.lazy(() =>
+//   import("./components/Formula/FormulaDetail")
+// );
+// const FormulaEdit = React.lazy(() =>
+//   import("./components/Formula/FormulaEdit")
+// );
+// //.end#Formula
+
+
 // Customer Time Keeping
 const CustomerTimeKeeping = React.lazy(() =>
   import("./components/CustomerTimeKeeping/CustomerTimeKeeping")
@@ -2692,7 +2723,7 @@ const routes = [
   {
     path: "/main-number",
     exact: true,
-    name: "Các con số",
+    name: "Danh sách giá trị",
     function: "FOR_MAINNUMBER_VIEW",
     component: MainNumber,
   },
@@ -2847,7 +2878,7 @@ const routes = [
   {
     path: "/attributes-group",
     exact: true,
-    name: "Danh sách nhóm thuộc tính",
+    name: "Danh sách chỉ số",
     function: "FOR_ATTRIBUTESGROUP_VIEW",
     component: AttributesGroup,
   },
