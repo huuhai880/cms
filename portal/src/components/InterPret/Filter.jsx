@@ -83,7 +83,7 @@ function Filter({ handleSubmitFillter }) {
                   autoComplete="nope"
                   type="text"
                   name="keyword"
-                  placeholder="Nhập tên luận giải"
+                  placeholder="Nhập tên thuộc tính, tên luận giải chi tiết"
                   value={searchValue.keyword}
                   onChange={(e) => {
                     setSearchValue({

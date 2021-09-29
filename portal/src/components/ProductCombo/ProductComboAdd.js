@@ -291,6 +291,7 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
                                                 label="Thêm ảnh"
                                              />
                                           </div>
+                                          <Label style={{paddingLeft: 10}}>Ưu tiên up ảnh kích thước 1190x1680px</Label>
                                        </Col>
                                     </FormGroup>
                                  </Col>

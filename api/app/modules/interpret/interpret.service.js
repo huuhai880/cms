@@ -22,10 +22,25 @@ const getInterpretsList = async (queryParams = {}) => {
       )
       .execute('FOR_INTERPRET_GetList_AdminWeb');
     const result = data.recordset;
-    // console.log(apiHelper.getTotalData(result));
+
+    let interprets = InterpretClass.listInterpret(result)
+    if (interprets && interprets.length > 0) {
+      let interPretIds = interprets.map(item => item.interpret_id).join(',');
+      const resDetail = await pool.request()
+        .input('INTERPRETIDS', interPretIds)
+        .execute('FOR_INTERPRETDETAIL_GetListByIds_AdminWeb')
+
+      let listInterPretDetail = InterpretClass.listInterpretDetail(resDetail.recordset) || [];
+
+      for (let index = 0; index < interprets.length; index++) {
+        let interpret = interprets[index];
+        let interpret_details = listInterPretDetail.filter(x =>  x.interpret_id == interpret.interpret_id);
+        interpret.interpret_details = interpret_details || []
+      }
+    }
 
     return new ServiceResponse(true, '', {
-      data: InterpretClass.listInterpret(result),
+      data: interprets,
       page: currentPage,
       limit: itemsPerPage,
       total: result.length,

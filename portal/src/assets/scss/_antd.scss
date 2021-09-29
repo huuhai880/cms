@@ -22810,7 +22810,7 @@ textarea.ant-mentions {
   border-bottom: 0;
 }
 .ant-table.ant-table-bordered > .ant-table-container {
-  border: 1px solid #f0f0f0;
+  border: 1px solid #e0e0e0;
   border-right: 0;
   border-bottom: 0;
 }
@@ -22826,12 +22826,14 @@ textarea.ant-mentions {
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tfoot > tr > td,
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tfoot > tr > td,
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tfoot > tr > td {
-  border-right: 1px solid #f0f0f0;
+  border-right: 1px solid #e0e0e0;
+  // border-right: 1px solid #e0e0e0;
 }
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr:not(:last-child) > th,
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > thead > tr:not(:last-child) > th,
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > thead > tr:not(:last-child) > th {
-  border-bottom: 1px solid #f0f0f0;
+  // border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #e0e0e0;
 }
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > thead > tr > .ant-table-cell-fix-right-first::after,
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > thead > tr > .ant-table-cell-fix-right-first::after,
@@ -22842,7 +22844,7 @@ textarea.ant-mentions {
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tfoot > tr > .ant-table-cell-fix-right-first::after,
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tfoot > tr > .ant-table-cell-fix-right-first::after,
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-body > table > tfoot > tr > .ant-table-cell-fix-right-first::after {
-  border-right: 1px solid #f0f0f0;
+  border-right: 1px solid #e0e0e0;
 }
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-content > table > tbody > tr > td > .ant-table-expanded-row-fixed,
 .ant-table.ant-table-bordered > .ant-table-container > .ant-table-header > table > tbody > tr > td > .ant-table-expanded-row-fixed,
@@ -22920,7 +22922,14 @@ textarea.ant-mentions {
 .ant-table tfoot > tr > th,
 .ant-table tfoot > tr > td {
   position: relative;
-  padding: 16px 16px;
+  // padding: 16px 16px;
+  // padding-top: 7px !important;
+  // padding-bottom: 7px !important;
+  // padding-left: 10px;
+  // padding-right: 10px;
+  // color: #555;
+  // border-right: 1px solid #e0e0e0;
+  padding: 7px 10px;
   overflow-wrap: break-word;
 }
 .ant-table-cell-ellipsis {
@@ -22948,12 +22957,19 @@ textarea.ant-mentions {
   background: #fafafa;
 }
 .ant-table-thead > tr > th {
-  color: rgba(0, 0, 0, 0.85);
-  font-weight: 500;
-  text-align: left;
-  background: #fafafa;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background 0.3s ease;
+  // color: rgba(0, 0, 0, 0.85);
+  // font-weight: 500;
+  // text-align: left;
+  // background: #fafafa;
+  // border-bottom: 1px solid #f0f0f0;
+  // transition: background 0.3s ease;
+  background-color: #17a2b8 ;
+  color:white ;
+  text-align: center ;
+  font-size: 0.75rem ;
+  font-weight: 500 ;
+  line-height: 1.3125rem ;
+  height: 40px;
 }
 .ant-table-thead > tr > th[colspan]:not([colspan='1']) {
   text-align: center;
@@ -22962,14 +22978,16 @@ textarea.ant-mentions {
   border-bottom: 0;
 }
 .ant-table-tbody > tr > td {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #e0e0e0;
   transition: background 0.3s;
 }
 .ant-table-tbody > tr > td > .ant-table-wrapper:only-child .ant-table {
-  margin: -16px -16px -16px 33px;
+  // margin: -16px -16px -16px 33px;
+  margin: -7px -10px -7px 30px;
 }
 .ant-table-tbody > tr > td > .ant-table-wrapper:only-child .ant-table-tbody > tr:last-child > td {
   border-bottom: 0;
+  // border-bottom: 0.5px solid #e0e0e0;
 }
 .ant-table-tbody > tr > td > .ant-table-wrapper:only-child .ant-table-tbody > tr:last-child > td:first-child,
 .ant-table-tbody > tr > td > .ant-table-wrapper:only-child .ant-table-tbody > tr:last-child > td:last-child {
@@ -23224,6 +23242,7 @@ table tr td.ant-table-selection-column .ant-radio-wrapper {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
+  margin-left: 2px;
 }
 .ant-table-row-expand-icon:focus,
 .ant-table-row-expand-icon:hover {
@@ -26016,5 +26035,9 @@ div.ant-typography-edit-content.ant-typography-rtl {
 
 button.ant-upload-list-item-card-actions-btn{
   background: none !important;
+}
+
+.ant-table-tbody tr:nth-of-type(2n) {
+  background-color: #f5f6f7
 }
 /*# sourceMappingURL=antd.css.map*/

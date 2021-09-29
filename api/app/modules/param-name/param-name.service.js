@@ -143,6 +143,10 @@ const createParamNameOrUpdate = async (bodyParams) => {
         'CREATEDUSER',
         apiHelper.getValueFromObject(bodyParams, 'auth_name')
       )
+      .input(
+        'ISMIDDLENAME',
+        apiHelper.getValueFromObject(bodyParams, 'is_middle_name', 0)
+      )
       .execute(PROCEDURE_NAME.MD_PARAMNAME_CREATEDORUPDATE_ADMINWEB);
 
     const attributeId = dataParamName.recordset[0].RESULT;

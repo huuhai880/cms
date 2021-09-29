@@ -32,6 +32,8 @@ const template = {
   is_deleted: '{{#? ISDELETED}}',
   deleted_user: '{{#? DELETEDUSER}}',
   deleted_date: '{{#? DELETEDDATE}}',
+  parent_id: "{{#? PARENTID}}",
+  parent_interpret_detail_name: '{{#? PARENTINTERPRETDETAILNAME}}',
 };
 let transform = new Transform(template);
 const detailInterpretDetail = (users = []) => {
@@ -54,6 +56,10 @@ const listInterpretDetail = (users = []) => {
     'interpret_detail_parentname',
     'interpret_detail_short_content',
     'is_active',
+    'interpret_id',
+    'parent_id',
+    'order_index',
+    'parent_interpret_detail_name'
   ]);
 };
 const listInterpret = (users = []) => {
@@ -62,6 +68,7 @@ const listInterpret = (users = []) => {
     'attribute_name',
     'brief_decs',
     'is_active',
+    'order_index'
   ]);
 };
 const listInterpretParent = (users = []) => {
