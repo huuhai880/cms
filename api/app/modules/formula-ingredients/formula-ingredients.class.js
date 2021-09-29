@@ -46,6 +46,7 @@ const template = {
   is_total_letter_first_1digit: '{{ISTOTALFIRSTLETTER1DIGIT	 ? 1 : 0}}',
   is_total_letter_2digit: '{{ISTOTALLETTERS2DIGIT	 ? 1 : 0}}',
   is_total_letter_1digit: '{{ISTOTALLETTERS1DIGIT	 ? 1 : 0}}',
+  ingredient_value: '{{#? VALUEINGREDIENTS}}',
 };
 let transform = new Transform(template);
 const list = (users = []) => {
@@ -106,6 +107,7 @@ const detail = (users = []) => {
     'is_total_letter_first_1digit',
     'is_total_letter_2digit',
     'is_total_letter_1digit',
+    'ingredient_value',
   ]);
 };
 module.exports = {

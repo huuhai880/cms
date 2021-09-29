@@ -129,6 +129,37 @@ function LetterAdd({ noEdit }) {
             </CardHeader>
             <CardBody>
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
+              <Col xs={12} sm={12}>
+                  <FormGroup row>
+                    <Label for="letter" sm={4}>
+                    Tên chữ cái <span className="font-weight-bold red-text">*</span>
+                    </Label>
+                    <Col sm={8}>
+                      <Input
+                        name="letter_name"
+                        id="letter_name"
+                        type="text"
+                        placeholder="Tên chữ cái"
+                        disabled={noEdit}
+                        value={formik.values.letter_name}
+                        onChange={formik.handleChange}
+
+                        // onChange={(value) => {
+                        //   formik.setFieldValue("letter_name", value.target.value.toUpperCase());
+                        //   // console.log(value)
+                        // }}
+                      />
+                      {formik.errors.letter_name && formik.touched.letter_name ? (
+                        <div
+                          className="field-validation-error alert alert-danger fade show"
+                          role="alert"
+                        >
+                          {formik.errors.letter_name}
+                        </div>
+                      ) : null}
+                    </Col>
+                  </FormGroup>
+                </Col>
                 <Col xs={12} sm={12}>
                   <FormGroup row>
                     <Label for="letter" sm={4}>

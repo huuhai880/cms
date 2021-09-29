@@ -41,6 +41,7 @@ const list = (users = []) => {
 const detailOrder = (users = []) => {
   return transform.transform(users, [
     'order_id',
+    'order_no',
     'status',
     'order_total_money',
     'order_date',

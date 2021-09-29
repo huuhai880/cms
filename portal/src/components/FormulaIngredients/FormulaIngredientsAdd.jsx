@@ -279,17 +279,17 @@ function FormulaIngredientsAdd({ noEdit }) {
                   <Row>
                     <Col xs={12}>
                       <FormGroup row>
-                        <Label for="decs" sm={2}>
+                        <Label for="desc" sm={2}>
                           Mô tả
                         </Label>
                         <Col sm={10}>
                           <Input
-                            name="decs"
-                            id="decs"
+                            name="desc"
+                            id="desc"
                             type="textarea"
                             placeholder="Mô tả"
                             disabled={noEdit}
-                            value={formik.values.decs}
+                            value={formik.values.desc}
                             onChange={formik.handleChange}
                           />
                         </Col>
@@ -492,12 +492,12 @@ function FormulaIngredientsAdd({ noEdit }) {
                         </Col>
                         <Col sm={2}>
                           <Input
-                            name="ingredient_name"
-                            id="ingredient_name"
+                            name="ingredient_value"
+                            id="ingredient_value"
                             type="text"
                             placeholder="Nhập giá trị"
                             disabled={noEdit}
-                            value={formik.values.ingredient_name}
+                            value={formik.values.ingredient_value}
                             onChange={formik.handleChange}
                           />
                         </Col>

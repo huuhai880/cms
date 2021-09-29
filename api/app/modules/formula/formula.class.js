@@ -50,7 +50,7 @@ const detail = (FormulaByDob = []) => {
     'orderid_1',
     'orderid_2',
     'calculation_id',
-    'order_index'
+    'order_index',
   ]);
 };
 const listCalculation = (users = []) => {

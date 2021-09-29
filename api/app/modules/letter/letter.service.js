@@ -39,7 +39,7 @@ const getLettersList = async (queryParams = {}) => {
       data: LetterClass.list(result),
       page: currentPage,
       limit: itemsPerPage,
-      total: result.length,
+      total: apiHelper.getTotalData(result),
     });
   } catch (e) {
     logger.error(e, {
@@ -100,6 +100,7 @@ const addLetter = async (body = {}) => {
     const requestLetter = new sql.Request(transaction);
     const resultLetter = await requestLetter
       .input('LETTERID', apiHelper.getValueFromObject(body, 'letter_id'))
+      .input('LETTERNAME', apiHelper.getValueFromObject(body, 'letter_name'))
       .input('LETTER', apiHelper.getValueFromObject(body, 'letter'))
       .input('NUMBER', apiHelper.getValueFromObject(body, 'number'))
       .input('ISVOWEL', apiHelper.getValueFromObject(body, 'is_vowel'))
