@@ -3,12 +3,10 @@ const config = require('../../../config/config');
 const template = {
   interpret_id: '{{#? INTERPRETID}}',
   interpret_detail_parent_id: '{{#? INTERPRETID}}',
-
   interpret_detail_id: '{{#? INTERPRETDETAILID}}',
   interpret_detail_name: '{{#? INTERPRETDETAILNAME}}',
   interpret_detail_parent_id: '{{#? PARENTID}}',
   interpret_detail_parent_name: '{{#? INTERPRETDETAILNAME}}',
-
   interpret_detail_parentname: '{{#? PARENTNAME}}',
   interpret_detail_short_content: '{{#? SHORTCONTENT}}',
   interpret_detail_full_content: '{{#? FULLCONTENT}}',
@@ -34,6 +32,7 @@ const template = {
   deleted_date: '{{#? DELETEDDATE}}',
   parent_id: "{{#? PARENTID}}",
   parent_interpret_detail_name: '{{#? PARENTINTERPRETDETAILNAME}}',
+  group_name: '{{#? GROUPNAME}}'
 };
 let transform = new Transform(template);
 const detailInterpretDetail = (users = []) => {
@@ -100,9 +99,11 @@ const detailInterpret = (users = []) => {
     'note',
     'is_master',
     'is_active',
-    'order_index'
+    'order_index',
+    'group_name'
   ]);
 };
+
 module.exports = {
   listRelationship,
   listMainnumber,

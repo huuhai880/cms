@@ -3073,30 +3073,31 @@ const routes = [
     component: InterPretView,
   },
   // end#interpret
+
   //InterPretChild
+  // {
+  //   path: "/interpret/interpret-detail/:id",
+  //   exact: true,
+  //   name: "Danh sách luận giải chi tiết",
+  //   function: "FOR_INTERPRET_DETAIL_VIEW",
+  //   component: InterPretChild,
+  // },
   {
-    path: "/interpret/interpret-detail/:id",
-    exact: true,
-    name: "Danh sách luận giải chi tiết",
-    function: "FOR_INTERPRET_DETAIL_VIEW",
-    component: InterPretChild,
-  },
-  {
-    path: "/interpret/interpret-detail/add/:id",
+    path: "/interpret/d-add/:id",
     exact: true,
     name: "Thêm mới",
     function: "FOR_INTERPRET_DETAIL_ADD",
     component: InterPretChildAdd,
   },
   {
-    path: "/interpret/interpret-detail/detail/:id",
+    path: "/interpret/d-detail/:id",
     exact: true,
     name: "Chi tiết",
     function: "FOR_INTERPRET_DETAIL_VIEW",
     component: InterPretChildDetail,
   },
   {
-    path: "/interpret/interpret-detail/edit/:id",
+    path: "/interpret/d-edit/:id",
     exact: true,
     name: "Chỉnh sửa",
     function: "FOR_INTERPRET_DETAIL_EDIT",

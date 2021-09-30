@@ -10,12 +10,14 @@ import {
     FormGroup,
     Button,
 } from "reactstrap";
-
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import { configTableOptions, splitString } from "../../utils/index";
+import { Link } from "react-router-dom";
+import { Label } from "reactstrap";
+
 const regex = /(<([^>]+)>)/gi;
 
-function TableInterPretChild({ data = [], indexParent }) {
+function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail }) {
 
     const columns = [
         {
@@ -23,7 +25,9 @@ function TableInterPretChild({ data = [], indexParent }) {
             dataIndex: "STT",
             key: "STT",
             render: (text, record, index) => {
-                return <div className="text-center">{indexParent}.{index + 1}</div>;
+                return <Link to={`/interpret/d-detail/${record['interpret_detail_id']}`} target={"_self"}>
+                    <div className="text-center">{indexParent}.{index + 1}</div>
+                </Link>
             },
             width: "5%",
         },
@@ -59,8 +63,8 @@ function TableInterPretChild({ data = [], indexParent }) {
                 let value = text.replace(regex, "");
                 value = splitString(value, 50);
                 return value;
-              },
-            
+            },
+
         },
 
         {
@@ -82,26 +86,25 @@ function TableInterPretChild({ data = [], indexParent }) {
             render: (text, record, index) => {
                 return (
                     <div className="text-center">
-                        <CheckAccess permission="FOR_INTERPRET_EDIT">
+                        <CheckAccess permission="FOR_INTERPRET_DETAIL_EDIT">
                             <Button
                                 color={"primary"}
-                                title="Duyệt"
+                                title="Chỉnh sửa"
                                 className="mr-1"
                                 onClick={(evt) => {
-                                    window._$g.rdr(`/interpret/edit/${record["interpret_id"]}`);
+                                    window._$g.rdr(`/interpret/d-edit/${record["interpret_detail_id"]}`);
                                 }}
                             >
                                 <i className="fa fa-edit" />
                             </Button>
                         </CheckAccess>
 
-                        <CheckAccess permission="FOR_INTERPRET_DEL">
+                        <CheckAccess permission="FOR_INTERPRET_DETAIL_DEL">
                             <Button
                                 color="danger"
                                 title="Xóa"
                                 className=""
-                                onClick={() => { }}
-                            >
+                                onClick={() => handleDelInterpretDetail(record["interpret_detail_id"])}>
                                 <i className="fa fa-trash" />
                             </Button>
                         </CheckAccess>

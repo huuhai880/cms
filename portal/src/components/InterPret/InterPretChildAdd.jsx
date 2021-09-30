@@ -84,13 +84,14 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
               } else if (btnType == "save&quit") {
                 window._$g.toastr.show("Lưu thành công!", "success");
                 setDataInterpretDetail(initialValues);
-                if (dataInterpretDetailEnt) {
-                  return window._$g.rdr(
-                    `/interpret/interpret-detail/${dataInterpretDetailEnt.interpret_id}`
-                  );
-                } else {
-                  return window._$g.rdr(`/interpret/interpret-detail/${id}`);
-                }
+                // if (dataInterpretDetailEnt) {
+                //   return window._$g.rdr(
+                //     `/interpret/interpret-detail/${dataInterpretDetailEnt.interpret_id}`
+                //   );
+                // } else {
+                //   return window._$g.rdr(`/interpret/interpret-detail/${id}`);
+                // }
+                return window._$g.rdr(`/interpret`);
               }
             });
           }
@@ -468,10 +469,10 @@ function InterPretChildAdd({ noEdit, dataInterpretDetailEnt }) {
                       onClick={() => {
                         if (dataInterpretDetailEnt) {
                           window._$g.rdr(
-                            `/interpret/interpret-detail/${dataInterpretDetailEnt.interpret_id}`
+                            `/interpret`
                           );
                         } else {
-                          window._$g.rdr(`/interpret/interpret-detail/${id}`);
+                          window._$g.rdr(`/interpret`);
                         }
                       }}
                     >

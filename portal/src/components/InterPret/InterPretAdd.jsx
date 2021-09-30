@@ -32,40 +32,40 @@ function InterPretAdd({ noEdit }) {
   const [dataRelationship, setDataRelationship] = useState([]);
   let { id } = useParams();
   const [btnType, setbtnType] = useState("");
+  const [isForPowerDiagram, setIsForPowerDiagram] = useState(false);
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: dataInterpret,
-    validationSchema,
+    validationSchema: validationSchema(isForPowerDiagram),
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: (values) => {
       handleCreateOrUpdate(values);
     },
   });
-  ///// get data partnert
+
   useEffect(() => {
     const _callAPI = async () => {
       try {
         await _interpretModel.getListAttribute().then((data) => {
           setDataAttribute(data.items);
-          //   console.log(setDataPartner);
         });
         await _interpretModel.getListMainnumber().then((data) => {
           setDataMainnumber(data.items);
-          //   console.log(setDataPartner);
         });
         await _interpretModel.getListRelationship().then((data) => {
           setDataRelationship(data.items);
-          //   console.log(setDataPartner);
         });
       } catch (error) {
-        console.log(error);
-        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+        window._$g.dialogs.alert(
+          window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+        );
       }
     };
     _callAPI();
   }, []);
-  //// create letter
+
   const handleCreateOrUpdate = async (values) => {
     try {
       _interpretModel.create(values).then((data) => {
@@ -84,29 +84,29 @@ function InterPretAdd({ noEdit }) {
       });
     } catch (error) {}
   };
-  //////get data detail
+
   useEffect(() => {
     if (id) {
       _initDataDetail();
     }
   }, [id]);
 
-  //// data detail
   const _initDataDetail = async () => {
     try {
       await _interpretModel.detail(id).then((data) => {
-        // console.log(data);
         setDataInterpret(data);
-        // console.log()
+        let { is_for_power_diagram = false } = data || {};
+        setIsForPowerDiagram(is_for_power_diagram);
       });
     } catch (error) {
       console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
+      window._$g.dialogs.alert(
+        window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
+      );
     }
   };
-  ////config select
+
   const convertValue = (value, options) => {
-    // console.log(value)
     if (!(typeof value === "object") && options && options.length) {
       value = ((_val) => {
         return options.find((item) => "" + item.value === "" + _val);
@@ -116,19 +116,16 @@ function InterPretAdd({ noEdit }) {
         return value.find((e) => e == item.value);
       });
     }
-    // console.log(value)
     return value;
   };
-  ///////// option Relationship
+
   const getOptionRelationship = () => {
     if (dataRelationship && dataRelationship.length) {
       return dataRelationship.map((item) => {
-        // console.log(dataPartner);
         return formik.values.relationship_id == item.relationship_id
           ? {
               value: item.relationship_id,
               label: item.relationship,
-              // isDisabled: true,
             }
           : {
               value: item.relationship_id,
@@ -138,11 +135,10 @@ function InterPretAdd({ noEdit }) {
     }
     return [];
   };
-  ///////// option Relationship
+
   const getOptionAttribute = () => {
     if (dataAttribute && dataAttribute.length) {
       return dataAttribute.map((item) => {
-        // console.log(dataPartner);
         return formik.values.attribute_id == item.attribute_id
           ? {
               value: item.attribute_id,
@@ -158,11 +154,10 @@ function InterPretAdd({ noEdit }) {
     }
     return [];
   };
-  ///////// option Mainnumber
+
   const getOptionMainNumBer = () => {
     if (dataMainnumber && dataMainnumber.length) {
       return dataMainnumber.map((item) => {
-        // console.log(dataPartner);
         return formik.values.mainnumber_id == item.mainnumber_id
           ? {
               value: item.mainnumber_id,
@@ -177,7 +172,7 @@ function InterPretAdd({ noEdit }) {
     }
     return [];
   };
-  //// upload images
+
   const handleUploadImage = async (blobInfo, success, failure) => {
     readImageAsBase64(blobInfo.blob(), async (imageUrl) => {
       try {
@@ -192,14 +187,34 @@ function InterPretAdd({ noEdit }) {
       }
     });
   };
+
+  const handleCheckForPowerDiagram = (e) => {
+    formik.setFieldValue(`is_for_power_diagram`, e.target.checked);
+    setIsForPowerDiagram(e.target.checked);
+    if (e.target.checked) {
+      formik.setFieldValue("attribute_id", null);
+      formik.setFieldValue("relationship_id", null);
+      formik.setFieldValue("is_master", false);
+      formik.setFieldValue("mainnumber_id", null);
+      formik.setFieldValue("compare_mainnumber_id", null);
+
+      formik.setErrors({
+        attribute_id: "",
+        mainnumber_id: "",
+      });
+    }
+  };
+
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
         <Col xs={12}>
           <Card>
             <CardHeader>
-              <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận giải </b>
-              {/* <b>{id ? "Chỉnh sửa" : "Thêm mới"}  </b> */}
+              <b>
+                {id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận
+                giải{" "}
+              </b>
             </CardHeader>
             <CardBody>
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
@@ -207,27 +222,59 @@ function InterPretAdd({ noEdit }) {
                   <Row>
                     <Col xs={6}>
                       <FormGroup row>
+                        <Label for="is_for_power_diagram" sm={4}></Label>
+                        <Col sm={8}>
+                          <Checkbox
+                            disabled={noEdit}
+                            onChange={handleCheckForPowerDiagram}
+                            checked={formik.values.is_for_power_diagram}
+                          >
+                            Dành cho sơ đồ sức mạnh
+                          </Checkbox>
+                        </Col>
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col xs={6}>
+                      <FormGroup row>
                         <Label for="attribute_id" sm={4}>
-                          Tên thuộc tính <span className="font-weight-bold red-text">*</span>
+                          Tên thuộc tính{" "}
+                          {!formik.values.is_for_power_diagram ? (
+                            <span className="font-weight-bold red-text">*</span>
+                          ) : null}
                         </Label>
                         <Col sm={8}>
                           <Select
                             className="MuiPaper-filter__custom--select"
                             id={`attribute_id`}
                             name={`attribute_id`}
-                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
                             menuPortalTarget={document.querySelector("body")}
-                            isDisabled={noEdit}
+                            isDisabled={
+                              noEdit || formik.values.is_for_power_diagram
+                            }
                             placeholder={"-- Chọn --"}
-                            value={convertValue(formik.values.attribute_id, getOptionAttribute())}
-                            options={getOptionAttribute(formik.values.attribute_id, true)}
+                            value={convertValue(
+                              formik.values.attribute_id,
+                              getOptionAttribute()
+                            )}
+                            options={getOptionAttribute(
+                              formik.values.attribute_id,
+                              true
+                            )}
                             onChange={(value) => {
                               formik.setFieldValue("attribute_id", value.value);
-                              formik.setFieldValue("mainnumber_id", value.mainnumber_id);
-                              console.log(formik.values.mainnumber_id);
+                              formik.setFieldValue(
+                                "mainnumber_id",
+                                value.mainnumber_id
+                              );
                             }}
                           />
-                          {formik.errors.attribute_id && formik.touched.attribute_id ? (
+                          {formik.errors.attribute_id &&
+                          formik.touched.attribute_id ? (
                             <div
                               className="field-validation-error alert alert-danger fade show"
                               role="alert"
@@ -241,34 +288,36 @@ function InterPretAdd({ noEdit }) {
                     <Col xs={6}>
                       <FormGroup row>
                         <Label for="relationship_id" sm={4}>
-                          Mối quan hệ <span className="font-weight-bold red-text">*</span>
+                          Mối quan hệ{" "}
                         </Label>
                         <Col sm={8}>
                           <Select
                             className="MuiPaper-filter__custom--select"
                             id={`relationship_id`}
                             name={`relationship_id`}
-                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
                             menuPortalTarget={document.querySelector("body")}
-                            isDisabled={noEdit}
+                            isDisabled={
+                              noEdit || formik.values.is_for_power_diagram
+                            }
                             placeholder={"-- Chọn --"}
                             value={convertValue(
                               formik.values.relationship_id,
                               getOptionRelationship()
                             )}
-                            options={getOptionRelationship(formik.values.relationship_id, true)}
+                            options={getOptionRelationship(
+                              formik.values.relationship_id,
+                              true
+                            )}
                             onChange={(value) => {
-                              formik.setFieldValue("relationship_id", value.value);
+                              formik.setFieldValue(
+                                "relationship_id",
+                                value.value
+                              );
                             }}
                           />{" "}
-                          {formik.errors.relationship_id && formik.touched.relationship_id ? (
-                            <div
-                              className="field-validation-error alert alert-danger fade show"
-                              role="alert"
-                            >
-                              {formik.errors.relationship_id}
-                            </div>
-                          ) : null}
                         </Col>
                       </FormGroup>
                     </Col>
@@ -277,25 +326,39 @@ function InterPretAdd({ noEdit }) {
                     <Col xs={6}>
                       <FormGroup row>
                         <Label for="mainnumber_id" sm={4}>
-                          Chỉ số <span className="font-weight-bold red-text">*</span>
+                          Chỉ số{" "}
+                          {!formik.values.is_for_power_diagram ? (
+                            <span className="font-weight-bold red-text">*</span>
+                          ) : null}
                         </Label>
                         <Col sm={8}>
                           <Select
                             className="MuiPaper-filter__custom--select"
                             id={`mainnumber_id`}
                             name={`mainnumber_id`}
-                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
                             menuPortalTarget={document.querySelector("body")}
                             isDisabled={true}
                             placeholder={"-- Chọn --"}
-                            value={convertValue(formik.values.mainnumber_id, getOptionMainNumBer())}
-                            options={getOptionMainNumBer(formik.values.mainnumber_id, true)}
+                            value={convertValue(
+                              formik.values.mainnumber_id,
+                              getOptionMainNumBer()
+                            )}
+                            options={getOptionMainNumBer(
+                              formik.values.mainnumber_id,
+                              true
+                            )}
                             onChange={(value) => {
-                              formik.setFieldValue("mainnumber_id", value.value);
-                              // console.log(formik.values.mainnumber_id)
+                              formik.setFieldValue(
+                                "mainnumber_id",
+                                value.value
+                              );
                             }}
                           />
-                          {formik.errors.mainnumber_id && formik.touched.mainnumber_id ? (
+                          {formik.errors.mainnumber_id &&
+                          formik.touched.mainnumber_id ? (
                             <div
                               className="field-validation-error alert alert-danger fade show"
                               role="alert"
@@ -311,9 +374,14 @@ function InterPretAdd({ noEdit }) {
                         <Label for="relationship_id" sm={4}></Label>
                         <Col sm={8}>
                           <Checkbox
-                            disabled={noEdit}
+                            disabled={
+                              noEdit || formik.values.is_for_power_diagram
+                            }
                             onChange={(e) => {
-                              formik.setFieldValue(`is_master`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_master`,
+                                e.target.checked
+                              );
                             }}
                             checked={formik.values.is_master}
                           >
@@ -327,31 +395,35 @@ function InterPretAdd({ noEdit }) {
                     <Col xs={6}>
                       <FormGroup row>
                         <Label for="attribute_id" sm={4}>
-                          Chỉ số so sánh <span className="font-weight-bold red-text">*</span>
+                          Thuộc tính so sánh{" "}
                         </Label>
                         <Col sm={8}>
                           <Select
-                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
                             menuPortalTarget={document.querySelector("body")}
-                            isDisabled={noEdit||!formik.values.relationship_id}
+                            isDisabled={
+                              noEdit ||
+                              !formik.values.relationship_id ||
+                              formik.values.is_for_power_diagram
+                            }
                             placeholder={"-- Chọn --"}
                             value={convertValue(
                               formik.values.compare_mainnumber_id,
                               getOptionMainNumBer()
                             )}
-                            options={getOptionMainNumBer(formik.values.compare_mainnumber_id, true)}
+                            options={getOptionMainNumBer(
+                              formik.values.compare_mainnumber_id,
+                              true
+                            )}
                             onChange={(value) => {
-                              formik.setFieldValue("compare_mainnumber_id", value.value);
+                              formik.setFieldValue(
+                                "compare_mainnumber_id",
+                                value.value
+                              );
                             }}
                           />
-                          {formik.errors.attribute_id && formik.touched.attribute_id ? (
-                            <div
-                              className="field-validation-error alert alert-danger fade show"
-                              role="alert"
-                            >
-                              {formik.errors.attribute_id}
-                            </div>
-                          ) : null}
                         </Col>
                       </FormGroup>
                     </Col>
@@ -362,7 +434,10 @@ function InterPretAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_active`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_active`,
+                                e.target.checked
+                              );
                             }}
                             checked={formik.values.is_active}
                           >
@@ -378,7 +453,8 @@ function InterPretAdd({ noEdit }) {
                     <Col xs={6}>
                       <FormGroup row>
                         <Label for="order_index" sm={4}>
-                          Vị trí hiển thị <span className="font-weight-bold red-text">*</span>
+                          Vị trí hiển thị{" "}
+                          <span className="font-weight-bold red-text">*</span>
                         </Label>
                         <Col sm={8}>
                           <NumberFormat
@@ -386,12 +462,15 @@ function InterPretAdd({ noEdit }) {
                             id="order_index"
                             disabled={noEdit}
                             onChange={(value) => {
-                              formik.setFieldValue("order_index", value.target.value);
-                              // console.log(value)
+                              formik.setFieldValue(
+                                "order_index",
+                                value.target.value
+                              );
                             }}
                             value={formik.values.order_index}
                           />
-                          {formik.errors.order_index && formik.touched.order_index ? (
+                          {formik.errors.order_index &&
+                          formik.touched.order_index ? (
                             <div
                               className="field-validation-error alert alert-danger fade show"
                               role="alert"
@@ -407,11 +486,14 @@ function InterPretAdd({ noEdit }) {
                 <Col xs={12} sm={12}>
                   <FormGroup row>
                     <Label for="brief_decs" sm={2}>
-                      Tóm tắt<span className="font-weight-bold red-text">*</span>
+                      Tóm tắt
+                      <span className="font-weight-bold red-text">*</span>
                     </Label>
                     <Col sm={10}>
                       <Editor
-                        apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
+                        apiKey={
+                          "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
+                        }
                         scriptLoading={{
                           delay: 500,
                         }}
@@ -423,7 +505,7 @@ function InterPretAdd({ noEdit }) {
                           menubar: false,
                           branding: false,
                           statusbar: false,
-                          entity_encoding : "raw",
+                          entity_encoding: "raw",
                           plugins: [
                             "advlist autolink fullscreen lists link image charmap print preview anchor",
                             "searchreplace visualblocks code fullscreen ",
@@ -438,8 +520,7 @@ function InterPretAdd({ noEdit }) {
                             "alignleft aligncenter alignright alignjustify",
                           toolbar2:
                             "bullist numlist outdent indent | removeformat | help | image | toc",
-                          file_picker_types:
-                            "image",
+                          file_picker_types: "image",
                           relative_urls: false,
                           remove_script_host: false,
                           convert_urls: true,
@@ -480,7 +561,9 @@ function InterPretAdd({ noEdit }) {
                     </Label>
                     <Col sm={10}>
                       <Editor
-                        apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
+                        apiKey={
+                          "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
+                        }
                         scriptLoading={{
                           delay: 500,
                         }}
@@ -491,7 +574,7 @@ function InterPretAdd({ noEdit }) {
                           width: "100%",
                           menubar: false,
                           branding: false,
-                          entity_encoding : "raw",
+                          entity_encoding: "raw",
                           statusbar: false,
                           plugins: [
                             "advlist autolink fullscreen lists link image charmap print preview anchor",
@@ -507,8 +590,7 @@ function InterPretAdd({ noEdit }) {
                             "alignleft aligncenter alignright alignjustify",
                           toolbar2:
                             "bullist numlist outdent indent | removeformat | help | image | toc",
-                          file_picker_types:
-                            "image",
+                          file_picker_types: "image",
                           relative_urls: false,
                           remove_script_host: false,
                           convert_urls: true,
@@ -559,7 +641,9 @@ function InterPretAdd({ noEdit }) {
                           color="primary"
                           className="mr-2 btn-block-sm"
                           onClick={() =>
-                            window._$g.rdr(`/interpret/edit/${dataInterpret.interpret_id}`)
+                            window._$g.rdr(
+                              `/interpret/edit/${dataInterpret.interpret_id}`
+                            )
                           }
                         >
                           <i className="fa fa-edit mr-1" />
@@ -568,7 +652,11 @@ function InterPretAdd({ noEdit }) {
                       </CheckAccess>
                     ) : (
                       <>
-                        <CheckAccess permission={id ? `FOR_INTERPRET_EDIT` : `FOR_INTERPRET_ADD`}>
+                        <CheckAccess
+                          permission={
+                            id ? `FOR_INTERPRET_EDIT` : `FOR_INTERPRET_ADD`
+                          }
+                        >
                           <button
                             className="mr-2 btn-block-sm btn btn-primary"
                             onClick={() => {
@@ -580,7 +668,11 @@ function InterPretAdd({ noEdit }) {
                             Lưu
                           </button>
                         </CheckAccess>
-                        <CheckAccess permission={id ? `FOR_INTERPRET_EDIT` : `FOR_INTERPRET_ADD`}>
+                        <CheckAccess
+                          permission={
+                            id ? `FOR_INTERPRET_EDIT` : `FOR_INTERPRET_ADD`
+                          }
+                        >
                           <button
                             className="mr-2 btn-block-sm btn btn-success"
                             onClick={() => {

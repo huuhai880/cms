@@ -12,7 +12,7 @@ import {
   Button,
 } from "reactstrap";
 import { CircularProgress } from "@material-ui/core";
-import { getColumTable } from "./const";
+import { column, getColumTable } from "./const";
 import MUIDataTable from "mui-datatables";
 import { configTableOptions, splitString } from "../../utils/index";
 import CustomPagination from "../../utils/CustomPagination";
@@ -26,9 +26,9 @@ import TableInterPretChild from "./TableInterPretChild";
 layoutFullWidthHeight();
 
 const regex = /(<([^>]+)>)/gi;
+const _interpretModel = new InterpretModel();
 
 function InterPret() {
-  const _interpretModel = new InterpretModel();
   const [dataInterpret, setDataInterpret] = useState([]);
   const [toggleSearch, settoggleSearch] = useState(true);
   const [isLoading, setisLoading] = useState(true);
@@ -37,6 +37,9 @@ function InterPret() {
     page: 1,
     selectdActive: 1,
   });
+
+  const [expandedRowKey, setExpandedRowKey] = useState([]);
+
   //// init data
   useEffect(() => {
     _callAPI(query);
@@ -52,7 +55,7 @@ function InterPret() {
     try {
       await _interpretModel.getListInterpret(props).then((data) => {
         setDataInterpret(data);
-        console.log(data);
+        // console.log(data);
       });
     } catch (error) {
       console.log(error);
@@ -98,155 +101,31 @@ function InterPret() {
     _callAPI(query);
   };
 
-  const columns = [
-    {
-      title: "STT",
-      dataIndex: "STT",
-      key: "name",
-      responsive: ["md"],
-      render: (text, record, index) => {
-        return <div className="text-center">{index + 1}</div>;
-      },
-      width: "4%",
-    },
-    {
-      title: "Tên thuộc tính",
-      dataIndex: "attribute_name",
-      key: "attribute_name",
-      responsive: ["md"],
-      width: "20%",
-    },
-    {
-      title: "Vị trí hiển thị",
-      dataIndex: "order_index",
-      key: "order_index",
-      responsive: ["md"],
-      width: "8%",
-      render: (text, record, index) => {
-        return <div className="text-center">{text}</div>;
-      },
-    },
-    {
-      title: "Tóm tắt",
-      dataIndex: "brief_decs",
-      key: "brief_decs",
-      responsive: ["md"],
-      render: (text, record, index) => {
-        let value = text.replace(regex, "");
-        value = splitString(value, 80);
-        return value;
-      },
-    },
-    {
-      title: "Kich hoạt",
-      dataIndex: "is_active",
-      width: "8%",
-      key: "is_active",
-      responsive: ["md"],
-      render: (text, record, index) => (
-        <div className="text-center">{record.is_active ? "Có" : "Không"}</div>
-      ),
-    },
+  
 
-    {
-      title: "Thao tác",
-      key: "x",
-      dataIndex: "",
-      width: "15%",
-      render: (text, record, index) => {
-        return (
-          <div className="text-center">
-            <CheckAccess permission="FOR_INTERPRET_DETAIL_VIEW">
-              <Button
-                // color="warning"
-                title="Danh sách luận giải chi tiết"
-                className="mr-1"
-                onClick={(evt) => {
-                  window._$g.rdr(
-                    `/interpret/interpret-detail/${record["interpret_id"]}`
-                  );
-                }}
-              >
-                <i className="fa fa-copy" />
-              </Button>
-            </CheckAccess>
-
-            <CheckAccess permission="FOR_INTERPRET_DETAIL_ADD">
-              <Button
-                color="warning"
-                title="Thêm mới luận giải chi tiết"
-                className="mr-1"
-                onClick={(evt) => {
-                  window._$g.rdr(
-                    `/interpret/interpret-detail/add/${record["interpret_id"]}`
-                  );
-                }}
-              >
-                <i className="fa fa-plus" />
-              </Button>
-            </CheckAccess>
-
-            <CheckAccess permission="FOR_INTERPRET_DETAIL_VIEW">
-              <Button
-                color="info"
-                title="Chi tiết luận giải trên web"
-                className="mr-1"
-                onClick={(evt) => {
-                  // window._$g.rdr(`/interpret/detail-web/${data[tableMeta["rowIndex"]].interpret_id}`);
-                  window.open(
-                    `/portal/interpret/detail-web/${record["interpret_id"]}`,
-                    "_blank"
-                  );
-                  // window._$g.rdr(
-                  //   `/interpret/detail-web/${data[tableMeta["rowIndex"]].interpret_id}`, '_blank'
-                  // );
-                }}
-              >
-                <i className="fa fa-eye" />
-              </Button>
-            </CheckAccess>
-            <CheckAccess permission="FOR_INTERPRET_EDIT">
-              <Button
-                color={"primary"}
-                title="Duyệt"
-                className="mr-1"
-                onClick={(evt) => {
-                  window._$g.rdr(`/interpret/edit/${record["interpret_id"]}`);
-                }}
-              >
-                <i className="fa fa-edit" />
-              </Button>
-            </CheckAccess>
-
-            <CheckAccess permission="FOR_INTERPRET_DEL">
-              <Button
-                color="danger"
-                title="Xóa"
-                className=""
-                onClick={(evt) => handleDelete(record["interpret_id"])}
-              >
-                <i className="fa fa-trash" />
-              </Button>
-            </CheckAccess>
-          </div>
-        );
-      },
-      responsive: ["md"],
-    },
-  ];
-
-  const data = [];
-  for (let i = 0; i < 3; ++i) {
-    data.push({
-      key: i,
-      name: "Screem",
-      platform: "iOS",
-      version: "10.3.4.5654",
-      upgradeNum: 500,
-      creator: "Jack",
-      createdAt: "2014-12-24 23:12:00",
-    });
-  }
+  const handleDelInterpretDetail = (id) => {
+    window._$g.dialogs.prompt(
+      "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
+      "xóa",
+      (confirm) => {
+        if (confirm) {
+          try {
+            _interpretModel.deleteInterpretDetail(id).then((data) => {
+              window._$g.toastr.show("Xóa thành công", "success");
+              _callAPI(query);
+            });
+          } catch (error) {
+            console.log(error);
+            window._$g.dialogs.alert(
+              window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+            );
+          } finally {
+            setisLoading(false);
+          }
+        }
+      }
+    );
+  };
 
   return (
     <div>
@@ -319,18 +198,28 @@ function InterPret() {
 
                   <Table
                     className="components-table-demo-nested"
-                    columns={columns}
-                    // expandable={{ expandedRowRender }}
+                    columns={column(handleDelete)}
                     dataSource={dataInterpret.items}
                     bordered={true}
                     pagination={false}
                     rowKey={"interpret_id"}
                     expandable={{
                       expandedRowRender: (record, index) => (
-                        <TableInterPretChild data={record.interpret_details}  indexParent={index + 1}/>
+                        <TableInterPretChild
+                          data={record.interpret_details}
+                          indexParent={index + 1}
+                          handleDelInterpretDetail={handleDelInterpretDetail}
+                        />
                       ),
                       rowExpandable: (record) =>
                         record.interpret_details.length > 0,
+                      onExpand: (expanded, record) => {
+                        !expanded
+                          ? setExpandedRowKey([])
+                          : setExpandedRowKey([record.interpret_id]);
+                      },
+                      expandedRowKeys: expandedRowKey,
+                      expandRowByClick: true,
                     }}
                   />
 

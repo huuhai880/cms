@@ -4,6 +4,7 @@ const SingleResponse = require('../../common/responses/single.response');
 const ListResponse = require('../../common/responses/list.response');
 const ErrorResponse = require('../../common/responses/error.response');
 const RESPONSE_MSG = require('../../common/const/responseMsg.const');
+
 const getInterpretsList = async (req, res, next) => {
   try {
     const serviceRes = await InterpretService.getInterpretsList(req.query);
@@ -22,6 +23,7 @@ const getInterpretsList = async (req, res, next) => {
     );
   }
 };
+
 const getDetailListByInterpret = async (req, res, next) => {
   try {
     const serviceRes = await InterpretService.getDetailListByInterpret(
@@ -42,6 +44,7 @@ const getDetailListByInterpret = async (req, res, next) => {
     );
   }
 };
+
 const getMainNumberList = async (req, res, next) => {
   try {
     const serviceRes = await InterpretService.getMainNumberList(req.query);
@@ -60,6 +63,7 @@ const getMainNumberList = async (req, res, next) => {
     );
   }
 };
+
 const getAttributesList = async (req, res, next) => {
   try {
     const serviceRes = await InterpretService.getAttributesList(req.query);
@@ -78,6 +82,7 @@ const getAttributesList = async (req, res, next) => {
     );
   }
 };
+
 const getDetailInterpretParent = async (req, res, next) => {
   try {
     const interpret_id = req.params.interpret_id;
@@ -99,6 +104,7 @@ const getDetailInterpretParent = async (req, res, next) => {
     );
   }
 };
+
 const getRelationshipsList = async (req, res, next) => {
   try {
     const serviceRes = await InterpretService.getRelationshipsList(req.query);
@@ -117,9 +123,9 @@ const getRelationshipsList = async (req, res, next) => {
     );
   }
 };
+
 const addIntergretDetail = async (req, res, next) => {
   try {
-    // console.log("zzzzzzzzz")
     const serviceRes = await InterpretService.addIntergretDetail(req.body);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
@@ -140,6 +146,7 @@ const addIntergretDetail = async (req, res, next) => {
     );
   }
 };
+
 const addIntergret = async (req, res, next) => {
   try {
     const serviceRes = await InterpretService.addIntergret(req.body);
@@ -162,11 +169,10 @@ const addIntergret = async (req, res, next) => {
     );
   }
 };
+
 const detaiIntergret = async (req, res, next) => {
   try {
     const interpret_id = req.params.interpret_id;
-
-    // Check ACCOUNT exists
     const serviceRes = await InterpretService.detaiIntergret(interpret_id);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
@@ -182,11 +188,10 @@ const detaiIntergret = async (req, res, next) => {
     );
   }
 };
+
 const detaiDetailInterpret = async (req, res, next) => {
   try {
     const interpret_detail_id = req.params.interpret_detail_id;
-
-    // Check ACCOUNT exists
     const serviceRes = await InterpretService.detaiDetailInterpret(
       interpret_detail_id
     );
@@ -204,10 +209,11 @@ const detaiDetailInterpret = async (req, res, next) => {
     );
   }
 };
+
+
 const deleteInterpret = async (req, res, next) => {
   try {
     const interpret_id = req.params.interpret_id;
-    // console.log(interpret_id)
     const serviceRes = await InterpretService.deleteInterpret(
       interpret_id,
       req.body
@@ -223,10 +229,10 @@ const deleteInterpret = async (req, res, next) => {
     return next(error);
   }
 };
+
 const deleteDetailInterpret = async (req, res, next) => {
   try {
     const interpret_detail_id = req.params.interpret_detail_id;
-    // console.log(interpret_id)
     const serviceRes = await InterpretService.deleteDetailInterpret(
       interpret_detail_id,
       req.body
@@ -242,10 +248,9 @@ const deleteDetailInterpret = async (req, res, next) => {
     return next(error);
   }
 };
+
 const CheckDetailInterpret = async (req, res, next) => {
-  // console.log()
   try {
-    // Check ACCOUNT exists
     const serviceRes = await InterpretService.CheckDetailInterpret(
       req.query.interpret_detail_name
     );
@@ -263,6 +268,8 @@ const CheckDetailInterpret = async (req, res, next) => {
     );
   }
 };
+
+
 module.exports = {
   getMainNumberList,
   getAttributesList,
