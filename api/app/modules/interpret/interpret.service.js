@@ -242,6 +242,7 @@ const addIntergret = async (body = {}) => {
          .input('NOTE', apiHelper.getValueFromObject(body, 'note'))
          .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
          .input('ISFORPOWERDIAGRAM', apiHelper.getValueFromObject(body, 'is_for_power_diagram'))
+         .input('COMPAREATTRIBUTEID', apiHelper.getValueFromObject(body, 'compare_attribute_id', null))
          .execute('FOR_INTERPRET_CreateOrUpdate_AdminWeb');
 
       const interpret_id = resultIntergret.recordset[0].RESULT;
@@ -359,6 +360,22 @@ const CheckDetailInterpret = async (interpret_detail_name) => {
    }
 };
 
+const getListAttributeExcludeById = async(attribute_id, interpret_id) => {
+   try {
+      const pool = await mssql.pool;
+      const res = await pool.request()
+         .input('ATTRIBUTEID', attribute_id)
+         .input('INTERPRETID', interpret_id)
+         .execute('FOR_ATTRIBUTES_GetListExcludeById_AdminWeb')
+
+      return new ServiceResponse(true, "", InterpretClass.listAttribute(res.recordset))
+   } catch (e) {
+      logger.error(e, {
+         function: 'interpret.service.getListAttributeExcludeById',
+      });
+      return new ServiceResponse(false, e.message);
+   }
+}
 
 module.exports = {
    getRelationshipsList,
@@ -374,4 +391,5 @@ module.exports = {
    addIntergretDetail,
    CheckDetailInterpret,
    detaiDetailInterpret,
+   getListAttributeExcludeById
 };

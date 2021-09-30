@@ -32,8 +32,10 @@ const template = {
   deleted_date: '{{#? DELETEDDATE}}',
   parent_id: "{{#? PARENTID}}",
   parent_interpret_detail_name: '{{#? PARENTINTERPRETDETAILNAME}}',
-  group_name: '{{#? GROUPNAME}}'
+  group_name: '{{#? GROUPNAME}}',
+  compare_attribute_id: "{{#? COMPAREATTRIBUTEID}}"
 };
+
 let transform = new Transform(template);
 const detailInterpretDetail = (users = []) => {
   return transform.transform(users, [
@@ -48,6 +50,7 @@ const detailInterpretDetail = (users = []) => {
     'order_index'
   ]);
 };
+
 const listInterpretDetail = (users = []) => {
   return transform.transform(users, [
     'interpret_detail_id',
@@ -61,6 +64,7 @@ const listInterpretDetail = (users = []) => {
     'parent_interpret_detail_name'
   ]);
 };
+
 const listInterpret = (users = []) => {
   return transform.transform(users, [
     'interpret_id',
@@ -70,21 +74,26 @@ const listInterpret = (users = []) => {
     'order_index'
   ]);
 };
+
 const listInterpretParent = (users = []) => {
   return transform.transform(users, [
     'interpret_detail_parent_id',
     'interpret_detail_parent_name',
   ]);
 };
+
 const listRelationship = (users = []) => {
   return transform.transform(users, ['relationship_id', 'relationship']);
 };
+
 const listMainnumber = (users = []) => {
   return transform.transform(users, ['mainnumber_id', 'mainnumber']);
 };
+
 const listAttribute = (users = []) => {
   return transform.transform(users, ['attribute_id', 'attribute_name','mainnumber_id']);
 };
+
 const detailInterpret = (users = []) => {
   return transform.transform(users, [
     'mainnumber',
@@ -100,7 +109,8 @@ const detailInterpret = (users = []) => {
     'is_master',
     'is_active',
     'order_index',
-    'group_name'
+    'group_name',
+    'compare_attribute_id'
   ]);
 };
 

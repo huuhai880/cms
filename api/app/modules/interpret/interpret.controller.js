@@ -270,6 +270,20 @@ const CheckDetailInterpret = async (req, res, next) => {
 };
 
 
+const getListAttributeExcludeById = async (req, res, next) => {
+  try {
+    const { attribute_id, interpret_id } = req.params;
+    const serviceRes = await InterpretService.getListAttributeExcludeById(attribute_id, interpret_id);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(error);
+  }
+};
+
+
 module.exports = {
   getMainNumberList,
   getAttributesList,
@@ -284,4 +298,5 @@ module.exports = {
   addIntergretDetail,
   CheckDetailInterpret,
   detaiDetailInterpret,
+  getListAttributeExcludeById
 };

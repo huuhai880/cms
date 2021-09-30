@@ -28,7 +28,8 @@ export const initialValues = {
   brief_decs: "",
   note: "",
   order_index: "",
-  is_for_power_diagram: false
+  is_for_power_diagram: false,
+  compare_attribute_id :null
 };
 
 export const validationSchema = (is_for_power_diagram = false) => {
