@@ -81,7 +81,7 @@ function Filter({ handleSubmitFillter }) {
     });
     let value = {
       keyword: null,
-      selectdActive: 1,
+      selectdActive:2,
       startDate: null,
       endDate: null,
     };

@@ -48,19 +48,19 @@ function FormulaAdd({ noEdit }) {
   useEffect(() => {
     const _callAPI = async () => {
       try {
-        await _formulaModel.getAttributeGruop().then((data) => {
+         _formulaModel.getAttributeGruop().then((data) => {
           setDataAttribute(data.items);
           //   console.log(setDataPartner);
         });
-        await _formulaModel.getListCalculation().then((data) => {
+         _formulaModel.getListCalculation().then((data) => {
           setDataCalculation(data.items);
           //   console.log(setDataPartner);
         });
-        await _formulaModel.getListFormulaParent().then((data) => {
+         _formulaModel.getListFormulaParent().then((data) => {
           setDataFormulaParent(data.items);
           //   console.log(setDataPartner);
         });
-        await _formulaModel.getListIngredient().then((data) => {
+         _formulaModel.getListIngredient().then((data) => {
           setDataIngredient(data.items);
           //   console.log(setDataPartner);
         });
@@ -101,7 +101,7 @@ function FormulaAdd({ noEdit }) {
   //// data detail
   const _initDataDetail = async () => {
     try {
-      await _formulaModel.detail(id).then((data) => {
+       _formulaModel.detail(id).then((data) => {
         // console.log(data);
         setDataFormula(data);
         // console.log()

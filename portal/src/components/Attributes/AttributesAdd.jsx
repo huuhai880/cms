@@ -128,8 +128,8 @@ export default class AttributesAdd extends PureComponent {
 
   formikValidationSchema = Yup.object().shape({
     attribute_name: Yup.string().required("Tên thuộc tính là bắt buộc."),
-    main_number_id: Yup.object().required("Chỉ số là bắt buộc."),
-    attributes_group_id: Yup.object().required("Nhóm thuộc tính là bắt buộc."),
+    main_number_id: Yup.object().required("Giá trị là bắt buộc."),
+    attributes_group_id: Yup.object().required("Chỉ số là bắt buộc."),
     list_attributes_image: Yup.array()
       .of(
         Yup.object().shape({
@@ -436,7 +436,7 @@ export default class AttributesAdd extends PureComponent {
                                     className="text-left"
                                     sm={3}
                                   >
-                                    Nhóm thuộc tính
+                                    Chỉ số
                                     <span className="font-weight-bold red-text">
                                       *
                                     </span>
@@ -488,7 +488,7 @@ export default class AttributesAdd extends PureComponent {
                                     className="text-left"
                                     sm={3}
                                   >
-                                    Chỉ số
+                                    Giá trị
                                     <span className="font-weight-bold red-text">
                                       *
                                     </span>

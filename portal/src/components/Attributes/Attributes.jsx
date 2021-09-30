@@ -82,9 +82,7 @@ class Attributes extends Component {
     let bundle = {};
     let all = [
       // @TODO:
-      this._attributesModel
-        .getList(this.state.query)
-        .then((data) => (bundle["data"] = data)),
+      this._attributesModel.getList(this.state.query).then((data) => (bundle["data"] = data)),
     ];
     await Promise.all(all).catch((err) => {
       window._$g.dialogs.alert(
@@ -129,10 +127,8 @@ class Attributes extends Component {
     if (type.match(/detail|edit/i)) {
       window._$g.rdr(`${route}${id}`);
     } else {
-      window._$g.dialogs.prompt(
-        "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
-        "Xóa",
-        (confirm) => this.handleClose(confirm, id, rowIndex)
+      window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "Xóa", (confirm) =>
+        this.handleClose(confirm, id, rowIndex)
       );
     }
   }
@@ -150,9 +146,7 @@ class Attributes extends Component {
           });
         })
         .catch(() => {
-          window._$g.dialogs.alert(
-            window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
-          );
+          window._$g.dialogs.alert(window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!"));
         });
     }
   }
@@ -167,9 +161,7 @@ class Attributes extends Component {
       partner_id,
     });
     this.getData(query).catch(() => {
-      window._$g.dialogs.alert(
-        window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
-      );
+      window._$g.dialogs.alert(window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!"));
     });
   };
 
@@ -211,29 +203,8 @@ class Attributes extends Component {
         },
       },
       {
-        name: "main_number",
-        label: "Chỉ số",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">{value}</div>;
-          },
-        },
-      },
-      {
         name: "group_name",
-        label: "Nhóm thuộc tính",
+        label: "Chỉ số",
         options: {
           filter: false,
           sort: false,
@@ -252,6 +223,28 @@ class Attributes extends Component {
           },
         },
       },
+      {
+        name: "main_number",
+        label: "Giá trị",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-center">{value}</div>;
+          },
+        },
+      },
+
       {
         name: "description",
         label: "Mô tả",
@@ -371,11 +364,7 @@ class Attributes extends Component {
                 }))
               }
             >
-              <i
-                className={`fa ${
-                  this.state.toggleSearch ? "fa-minus" : "fa-plus"
-                }`}
-              />
+              <i className={`fa ${this.state.toggleSearch ? "fa-minus" : "fa-plus"}`} />
             </div>
           </CardHeader>
           {this.state.toggleSearch && (
@@ -386,12 +375,7 @@ class Attributes extends Component {
             </CardBody>
           )}
         </Card>
-        <Col
-          xs={12}
-          sm={4}
-          className="d-flex align-items-end mb-3"
-          style={{ padding: 0 }}
-        >
+        <Col xs={12} sm={4} className="d-flex align-items-end mb-3" style={{ padding: 0 }}>
           <CheckAccess permission="FOR_ATTRIBUTES_ADD">
             <FormGroup className="mb-2 mb-sm-0">
               <Button
@@ -415,11 +399,7 @@ class Attributes extends Component {
                 </div>
               ) : (
                 <div>
-                  <MUIDataTable
-                    data={this.state.data}
-                    columns={columns}
-                    options={options}
-                  />
+                  <MUIDataTable data={this.state.data} columns={columns} options={options} />
                   <CustomPagination
                     count={count}
                     rowsPerPage={query.itemsPerPage}

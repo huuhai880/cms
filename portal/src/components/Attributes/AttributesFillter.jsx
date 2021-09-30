@@ -103,7 +103,7 @@ class AttributesFilter extends PureComponent {
                   autoComplete="nope"
                   type="text"
                   name="inputValue"
-                  placeholder="Nhập tên thuộc tính, chỉ số"
+                  placeholder="Nhập tên thuộc tính, giá trị"
                   value={this.state.inputValue || ""}
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}
@@ -116,7 +116,7 @@ class AttributesFilter extends PureComponent {
             <Col xs={12} sm={3}>
               <FormGroup className="mb-2 mb-sm-0 ">
                 <Label for="" className="mr-sm-2">
-                  Nhóm thuộc tính
+                Chỉ số
                 </Label>
                 <Select
                   className="MuiPaper-filter__custom--select"

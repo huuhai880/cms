@@ -69,34 +69,35 @@ const deleteIngredient = async (ingredient_id, body) => {
     return new ServiceResponse(false, e.message);
   }
 };
-// /////check letter
-// const CheckLetter = async (letter) => {
-//   // console.log(email)
-//   try {
-//     const pool = await mssql.pool;
-//     const data = await pool
-//       .request()
-//       .input('LETTER', letter)
-//       .execute('MD_LETTER_CheckLetter_AdminWeb');
-//     const res = data.recordset[0];
-//     if (res) {
-//       return new ServiceResponse(true, '', res);
-//     }
-//     return new ServiceResponse(true, '', '');
-//   } catch (error) {
-//     return new ServiceResponse(false, error.message);
-//   }
-// };
+/////check ingredient
+const CheckIngredient = async (ingredient_name) => {
+  // console.log(ingredient_name)
+  try {
+    const pool = await mssql.pool;
+    const data = await pool
+      .request()
+      .input('INGREDIENTNAME', ingredient_name)
+      .execute('FOR_FORMULAINGREDIENT_CheckIngredient_AdminWeb');
+    const res = data.recordset[0];
+    if (res) {
+      return new ServiceResponse(true, '', res);
+    }
+    return new ServiceResponse(true, '', '');
+  } catch (error) {
+    return new ServiceResponse(false, error.message);
+  }
+};
 /// add or update letter
 const addIngredient = async (body = {}) => {
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
-  console.log(body)
+  // console.log(body)
   try {
     await transaction.begin();
     /////create or update number
     const requestIngredient = new sql.Request(transaction);
-    if (apiHelper.getValueFromObject(body, 'is_total_shortened') == 1) {
+    // console.log(apiHelper.getValueFromObject(body, 'is_total_shortened') == 1)
+    if (apiHelper.getValueFromObject(body, 'is_total_shortened') == 1||apiHelper.getValueFromObject(body, 'is_no_total_shortened') == 1) {
       const resultIngredient = await requestIngredient
         .input(
           'INGREDIENTID',
@@ -457,5 +458,5 @@ module.exports = {
   addIngredient,
   detailIngredient,
   getIngredientList,
-  // CheckLetter,
+  CheckIngredient,
 };

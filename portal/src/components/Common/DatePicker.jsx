@@ -66,7 +66,7 @@ class DatePicker extends PureComponent {
 
   render() {
     const { isMultiple, minToday, maxToday, ...other } = this.props;
-    const now = moment().startOf("day")
+    const now = moment().startOf("day");
     if (other.renderMonthElement) {
       other.renderMonthElement = this.renderMonthElement;
     }
@@ -90,7 +90,7 @@ class DatePicker extends PureComponent {
           minimumNights={0}
           block
           minimumNights={0}
-          hideKeyboardShortcutsPanel 
+          hideKeyboardShortcutsPanel
           minDate={moment().toDate()}
         />
       );
@@ -112,7 +112,7 @@ class DatePicker extends PureComponent {
         }}
         showDefaultInputIcon
         block
-        hideKeyboardShortcutsPanel 
+        hideKeyboardShortcutsPanel
       />
     );
   }

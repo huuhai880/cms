@@ -46,15 +46,15 @@ function InterPretAdd({ noEdit }) {
   useEffect(() => {
     const _callAPI = async () => {
       try {
-        await _interpretModel.getListAttribute().then((data) => {
+         _interpretModel.getListAttribute().then((data) => {
           setDataAttribute(data.items);
           //   console.log(setDataPartner);
         });
-        await _interpretModel.getListMainnumber().then((data) => {
+         _interpretModel.getListMainnumber().then((data) => {
           setDataMainnumber(data.items);
           //   console.log(setDataPartner);
         });
-        await _interpretModel.getListRelationship().then((data) => {
+         _interpretModel.getListRelationship().then((data) => {
           setDataRelationship(data.items);
           //   console.log(setDataPartner);
         });
@@ -94,7 +94,7 @@ function InterPretAdd({ noEdit }) {
   //// data detail
   const _initDataDetail = async () => {
     try {
-      await _interpretModel.detail(id).then((data) => {
+       _interpretModel.detail(id).then((data) => {
         // console.log(data);
         setDataInterpret(data);
         // console.log()
@@ -181,7 +181,7 @@ function InterPretAdd({ noEdit }) {
   const handleUploadImage = async (blobInfo, success, failure) => {
     readImageAsBase64(blobInfo.blob(), async (imageUrl) => {
       try {
-        const imageUpload = await _interpretModel.upload({
+        const imageUpload =  _interpretModel.upload({
           base64: imageUrl,
           folder: "files",
           includeCdn: true,
