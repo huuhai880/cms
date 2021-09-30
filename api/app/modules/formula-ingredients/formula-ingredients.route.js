@@ -16,7 +16,7 @@ routes.route('/calculation').get(IngredientController.GetListCalculation);
 routes.route('/param-name').get(IngredientController.getParamName);
 ////////////get list relationship
 routes.route('/ingredients').get(IngredientController.getIngredientList);
-///////list letter
+///////list Ingredient
 routes.route('').get(IngredientController.getIngredientsList);
 // /////////list Image by numer id
 // routes.route('/:mainNumber_id/image-by-numerid').get(MainNumberController.getImageListByNum);
@@ -26,16 +26,16 @@ routes.route('').get(IngredientController.getIngredientsList);
 routes
   .route('')
   .post(validate(rules.createOrUpdateIngredient), IngredientController.addIngredient);
-///detail letter
+///detail Ingredient
 routes
   .route('/:ingredient_id(\\d+)')
   .get(IngredientController.detailIngredient);
-// ////////detelte letter
+// ////////detelte Ingredient
 routes.route('/:ingredient_id/delete').put(IngredientController.deleteIngredient);
-// // check email
-// routes
-//   .route('/check-letter')
-//   .get(IngredientController.CheckLetter);
+// check Ingredient
+routes
+  .route('/check-ingredient')
+  .get(IngredientController.CheckIngredient);
 module.exports = {
   prefix,
   routes,

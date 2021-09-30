@@ -25,7 +25,7 @@ import * as yup from "yup";
 layoutFullWidthHeight();
 function FormulaIngredientsAdd({ noEdit }) {
   const _ingredientModel = new IngredientModel();
-  const [dataLetterIngredient, setDataLetterIngredient] = useState(initialValues);
+  const [dataIngredient, setDataIngredient] = useState(initialValues);
 
   let { id } = useParams();
   const [btnType, setbtnType] = useState("");
@@ -36,10 +36,12 @@ function FormulaIngredientsAdd({ noEdit }) {
 
   const validationSchema = yup.object().shape({
     ingredient_name: yup.string().required("Tên thành phần không được để trống .").nullable(),
+    is_total: yup.string().required("Vui lòng chọn một hình thức."),
+    type: yup.string().required("Vui lòng chọn một biến số ."),
   });
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: dataLetterIngredient,
+    initialValues: dataIngredient,
     validationSchema,
     validateOnBlur: false,
     validateOnChange: false,
@@ -49,28 +51,30 @@ function FormulaIngredientsAdd({ noEdit }) {
   });
 
   //// create letter
-  const handleCreateOrUpdate = async (values) => {
+  const handleCreateOrUpdate = (values) => {
     try {
-      if (
-        formik.values.is_total_shortened == 0 &&
-        formik.values.is_no_total_shortened == 0 &&
-        formik.values.is_total_2_digit == 0
-      ) {
-        formik.setFieldError("is_total", "Vui lòng chọn một hình thức.");
-      } else if (formik.values.is_apply_name == 0 && formik.values.is_apply_dob == 0) {
-        formik.setFieldError("type", "Vui lòng chọn một biến số .");
-      } else {
-        _ingredientModel.create(values).then((data) => {
-          if (btnType == "save") {
-            formik.resetForm();
-            window._$g.toastr.show("Lưu thành công!", "success");
-          } else if (btnType == "save&quit") {
-            window._$g.toastr.show("Lưu thành công!", "success");
-            //   setDataInterpret(initialValues);
-            return window._$g.rdr("/formula-ingredients");
-          }
-        });
-      }
+      _ingredientModel.checkIngredient({ ingredient_name: values.ingredient_name }).then((data) => {
+        if (data.INGREDIENTID && formik.values.ingredient_name != dataIngredient.ingredient_name) {
+          // setalert("Email đã tồn tại!");
+          formik.setFieldError("ingredient_name", "Tên thành phần đã tồn tại!");
+          // window.scrollTo(0, 0);
+        } else {
+          _ingredientModel.create(values).then((data) => {
+            if (btnType == "save") {
+              if (id) {
+                _initDataDetail();
+              } else {
+                formik.resetForm();
+              }
+              window._$g.toastr.show("Lưu thành công!", "success");
+            } else if (btnType == "save&quit") {
+              window._$g.toastr.show("Lưu thành công!", "success");
+              // setDataInterpret(initialValues);
+              return window._$g.rdr("/formula-ingredients");
+            }
+          });
+        }
+      });
     } catch (error) {}
   };
   //////get data detail
@@ -83,33 +87,37 @@ function FormulaIngredientsAdd({ noEdit }) {
   //// data detail
   const _initDataDetail = async () => {
     try {
-      await _ingredientModel.detail(id).then((data) => {
+      _ingredientModel.detail(id).then((data) => {
         // console.log(data);
-        setDataLetterIngredient(data);
-        // console.log()
+
+        data = { ...data, type: true, is_total: true };
+        setDataIngredient(data);
+        // formik.setFieldValue(`type`, true);
+        // formik.setFieldValue(`is_total`, true);
       });
     } catch (error) {
       console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
+  
   useEffect(() => {
-    const _callAPI = async () => {
+    const _callAPI = () => {
       try {
-        await _ingredientModel.getListCalculation().then((data) => {
+        _ingredientModel.getListCalculation().then((data) => {
           setDataCalculation(data.items);
           //   console.log(setDataPartner);
         });
-        await _ingredientModel.getListParamDob().then((data) => {
+        _ingredientModel.getListParamDob().then((data) => {
           setDataParamDob(data.items);
 
           //   console.log(setDataPartner);
         });
-        await _ingredientModel.getListParamName().then((data) => {
+        _ingredientModel.getListParamName().then((data) => {
           setDataParamName(data.items);
           //   console.log(setDataPartner);
         });
-        await _ingredientModel.getListIngredientChild().then((data) => {
+        _ingredientModel.getListIngredientChild().then((data) => {
           setDataIngredientChild(data.items);
           //   console.log(setDataPartner);
         });
@@ -232,6 +240,7 @@ function FormulaIngredientsAdd({ noEdit }) {
     }
     return [];
   };
+  console.log(formik.values)
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
@@ -331,6 +340,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_total_shortened`, 0);
                                 formik.setFieldValue(`is_total_2_digit`, 0);
+                                formik.setFieldValue(`is_total`, true);
                               }
                             }}
                             checked={formik.values.is_no_total_shortened}
@@ -346,6 +356,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_no_total_shortened`, 0);
                                 formik.setFieldValue(`is_total_2_digit`, 0);
+                                formik.setFieldValue(`is_total`, true);
                               }
                             }}
                             checked={formik.values.is_total_shortened}
@@ -361,6 +372,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_no_total_shortened`, 0);
                                 formik.setFieldValue(`is_total_shortened`, 0);
+                                formik.setFieldValue(`is_total`, true);
                               }
                             }}
                             checked={formik.values.is_total_2_digit}
@@ -522,7 +534,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                     </Col>
                   </Row>
 
-                  <Row >
+                  <Row>
                     <Col xs={12}>
                       <FormGroup row>
                         <Col sm={3} className="align-self-center">
@@ -532,6 +544,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                               formik.setFieldValue(`is_apply_dob`, e.target.checked ? 1 : 0);
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_apply_name`, 0);
+                                formik.setFieldValue(`type`, true);
                               }
                             }}
                             checked={formik.values.is_apply_dob}
@@ -600,6 +613,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                               formik.setFieldValue(`is_apply_name`, e.target.checked ? 1 : 0);
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_apply_dob`, 0);
+                                formik.setFieldValue(`type`, true);
                               }
                             }}
                             checked={formik.values.is_apply_name}
@@ -739,7 +753,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_numletter_digit`, e.target.checked ? 1 : 0);
+                                  formik.setFieldValue(
+                                    `is_numletter_digit`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_numletter_digit}
                               >
@@ -759,7 +776,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_total_value_digit`, e.target.checked ? 1 : 0);
+                                  formik.setFieldValue(
+                                    `is_total_value_digit`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_total_value_digit}
                               >
@@ -770,7 +790,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_total_letter_first_digit`, e.target.checked ? 1 : 0);
+                                  formik.setFieldValue(
+                                    `is_total_letter_first_digit`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_total_letter_first_digit}
                               >
@@ -781,8 +804,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_total_letter_digit`, e.target.checked ? 1 : 0);
-                                  
+                                  formik.setFieldValue(
+                                    `is_total_letter_digit`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_total_letter_digit}
                               >

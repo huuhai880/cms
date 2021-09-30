@@ -44,6 +44,8 @@ export const initialValues = {
   is_total_value_digit: 0,
   is_total_letter_first_digit: 0,
   is_total_letter_digit: 0,
+  is_total: "",
+  type: "",
 };
 
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
