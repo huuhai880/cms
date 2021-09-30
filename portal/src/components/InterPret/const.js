@@ -273,9 +273,9 @@ export const column = (handleDelete) => {
                 title="Copy"
                 className="mr-1"
                 onClick={(evt) => {
-                  // window._$g.rdr(
-                  //   `/interpret/interpret-detail/${record["interpret_id"]}`
-                  // );
+                  window._$g.rdr(
+                    `/interpret/copy/${record["interpret_id"]}`
+                  );
                 }}
               >
                 <i className="fa fa-copy" />

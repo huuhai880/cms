@@ -211,3 +211,17 @@ export function splitString(str, n, useWordBoundary = true) {
   );
 }
 
+export const convertValueSelect = (value, options) => {
+  if (!(typeof value === "object") && options && options.length) {
+    value = ((_val) => {
+      return options.find((item) => "" + item.value === "" + _val);
+    })(value);
+  } else if (Array.isArray(value) && options && options.length) {
+    return options.filter((item) => {
+      return value.find((e) => e == item.value);
+    });
+  }
+  return value;
+};
+
+

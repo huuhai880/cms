@@ -40,25 +40,21 @@ function InterPret() {
 
   const [expandedRowKey, setExpandedRowKey] = useState([]);
 
-  //// init data
   useEffect(() => {
     _callAPI(query);
   }, []);
-  ////search
+
   const handleSubmitFillter = async (value) => {
     let searchQuery = Object.assign(query, value);
-    // console.log(searchQuery);
     _callAPI(searchQuery);
   };
-  ////call API
+
+
   const _callAPI = async (props) => {
     try {
-      await _interpretModel.getListInterpret(props).then((data) => {
-        setDataInterpret(data);
-        // console.log(data);
-      });
+      let data = await _interpretModel.getListInterpret(props);
+      setDataInterpret(data);
     } catch (error) {
-      console.log(error);
       window._$g.dialogs.alert(
         window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
       );
@@ -66,7 +62,7 @@ function InterPret() {
       setisLoading(false);
     }
   };
-  ///// delete Interpret
+
   const handleDelete = (id) => {
     window._$g.dialogs.prompt(
       "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
@@ -90,6 +86,7 @@ function InterPret() {
       }
     );
   };
+
   const handleChangeRowsPerPage = (event) => {
     query.itemsPerPage = event.target.value;
     query.page = 1;
@@ -101,7 +98,6 @@ function InterPret() {
     _callAPI(query);
   };
 
-  
 
   const handleDelInterpretDetail = (id) => {
     window._$g.dialogs.prompt(
@@ -114,8 +110,8 @@ function InterPret() {
               window._$g.toastr.show("Xóa thành công", "success");
               _callAPI(query);
             });
+
           } catch (error) {
-            console.log(error);
             window._$g.dialogs.alert(
               window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
             );
@@ -172,30 +168,13 @@ function InterPret() {
       <Card className={`animated fadeIn mb-3 `}>
         <CardBody className="px-0 py-0">
           <Col xs={12} style={{ padding: 0 }}>
-            <div
-            // className="MuiPaper-root__custom"
-            >
+            <div>
               {isLoading ? (
                 <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
                   <CircularProgress />
                 </div>
               ) : (
                 <div>
-                  {/* <MUIDataTable
-                    data={dataInterpret.items}
-                    columns={getColumTable(
-                      dataInterpret.items,
-                      dataInterpret.totalItems,
-                      query,
-                      handleDelete
-                      // handleReply,
-                      // handleReview
-                    )}
-                    options={configTableOptions(dataInterpret.totalItems, query.page, {
-                      itemsPerPage: query.itemsPerPage,
-                    })}
-                  /> */}
-
                   <Table
                     className="components-table-demo-nested"
                     columns={column(handleDelete)}
@@ -227,7 +206,6 @@ function InterPret() {
                     count={dataInterpret.totalItems}
                     rowsPerPage={query.itemsPerPage}
                     page={query.page - 1 || 0}
-                    // rowsPerPageOptions={[10, 25, 50]}
                     onChangePage={handleChangePage}
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                   />

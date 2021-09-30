@@ -24,9 +24,10 @@ import { Editor } from "@tinymce/tinymce-react";
 import Select from "react-select";
 import { readImageAsBase64 } from "../../utils/html";
 layoutFullWidthHeight();
+const _interpretModel = new InterpretModel();
+
 
 function InterPretAdd({ noEdit }) {
-  const _interpretModel = new InterpretModel();
   const [dataInterpret, setDataInterpret] = useState(initialValues);
   const [dataAttribute, setDataAttribute] = useState([]);
   const [dataMainnumber, setDataMainnumber] = useState([]);
@@ -232,8 +233,7 @@ function InterPretAdd({ noEdit }) {
       formik.setFieldValue("relationship_id", null);
       formik.setFieldValue("is_master", false);
       formik.setFieldValue("mainnumber_id", null);
-      formik.setFieldValue("compare_mainnumber_id", null);
-
+      formik.setFieldValue("compare_attribute_id", null);
       formik.setErrors({
         attribute_id: "",
         mainnumber_id: "",
@@ -559,17 +559,8 @@ function InterPretAdd({ noEdit }) {
                           onEditorChange={(newValue) => {
                             formik.setFieldValue("brief_decs", newValue);
                           }}
-                          // onEditorChange={formik.handleChange}
                         />
-                        {/* <Input
-                        name="brief_decs"
-                        id="brief_decs"
-                        type="textarea"
-                        placeholder="Tóm tắt"
-                        disabled={noEdit}
-                        value={formik.values.brief_decs}
-                        onChange={formik.handleChange}
-                      /> */}
+                        
                         {formik.errors.brief_decs &&
                         formik.touched.brief_decs ? (
                           <div
@@ -697,6 +688,7 @@ function InterPretAdd({ noEdit }) {
                               setbtnType("save");
                             }}
                             type="submit"
+                            disabled={formik.isSubmitting}
                           >
                             <i className="fa fa-save mr-1" />
                             Lưu
@@ -713,6 +705,7 @@ function InterPretAdd({ noEdit }) {
                               setbtnType("save_n_close");
                             }}
                             type="submit"
+                            disabled={formik.isSubmitting}
                           >
                             <i className="fa fa-save mr-1" />
                             Lưu và đóng

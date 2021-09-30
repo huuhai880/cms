@@ -629,6 +629,7 @@ const InterPretAdd = React.lazy(() => import("./components/InterPret/InterPretAd
 const InterPretDetail = React.lazy(() => import("./components/InterPret/InterPretDetail"));
 const InterPretEdit = React.lazy(() => import("./components/InterPret/InterPretEdit"));
 const InterPretView = React.lazy(() => import("./components/InterPret/ViewDetail"));
+const InterPretCopy = React.lazy(() => import("./components/InterPret/InterPretCopy"));
 // end#InterPret
 
 //InterPretDetail
@@ -3071,6 +3072,13 @@ const routes = [
     // name: "Chi tiết",
     function: "SL_INTERPRET_VIEW",
     component: InterPretView,
+  },
+  {
+    path: "/interpret/copy/:id",
+    exact: true,
+    name: "Sao chép",
+    function: "FOR_INTERPRET_EDIT",
+    component: InterPretCopy,
   },
   // end#interpret
 

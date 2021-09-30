@@ -29,7 +29,7 @@ function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail 
                     <div className="text-center">{indexParent}.{index + 1}</div>
                 </Link>
             },
-            width: "5%",
+            width: "4%",
         },
         {
             title: "Tên luận giải chi tiết",

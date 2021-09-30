@@ -39,12 +39,8 @@ export default class InterpretModel extends Model {
     return this._api.get(_static.API_INTERPRET_LIST, data);
   }
 
-  getListInterpretParent(id, _data = {}) {
-    let data = Object.assign({}, _data);
-    return this._api.get(
-      _static.API_INTERPRET_INTERPRETPARENT_LIST.replace(":interpret_id", id),
-      data
-    );
+  getListInterpretParent(interpretId, interpretDetailId) {
+    return this._api.get(`/interpret/parent/${interpretId}/${interpretDetailId}`);
   }
 
   getListAttribute(_data = {}) {
@@ -94,6 +90,10 @@ export default class InterpretModel extends Model {
 
   getAttributeExclude(attribute_id, interpret_id) {
     return this._api.get(`/interpret/attribute/${interpret_id}/exclude/${attribute_id}`)
+  }
+
+  copyInterpret(values) {
+    return this._api.post('/interpret/copy', values)
   }
 
 }

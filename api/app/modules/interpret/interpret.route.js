@@ -12,13 +12,18 @@ routes.route('/').get(InterpretController.getInterpretsList)
     InterpretController.addIntergret
   );
 
+routes.route('/copy').post(
+  validate(rules.createOrUpdateIntergret),
+  InterpretController.copyIntergret
+);
+
 routes.route('/interpret-detail').get(InterpretController.getDetailListByInterpret);
 
 routes.route('/attribute').get(InterpretController.getAttributesList);
 routes.route('/attribute/:interpret_id(\\d+)/exclude/:attribute_id(\\d+)').get(InterpretController.getListAttributeExcludeById);
 
 routes.route('/mainnumber').get(InterpretController.getMainNumberList);
-routes.route('/interpretParent/:interpret_id(\\d+)').get(InterpretController.getDetailInterpretParent);
+routes.route('/parent/:interpret_id(\\d+)/:interpret_detail_id(\\d+)').get(InterpretController.getListInterpretParent);
 routes.route('/relationship').get(InterpretController.getRelationshipsList);
 
 routes
