@@ -76,7 +76,7 @@ class AttributesGroupFilter extends PureComponent {
                   autoComplete="nope"
                   type="text"
                   name="inputValue"
-                  placeholder="Nhập tên nhóm thuộc tính"
+                  placeholder="Nhập tên chỉ số"
                   value={this.state.inputValue || ""}
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}

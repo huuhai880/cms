@@ -5,7 +5,7 @@ import Select from "react-select";
 import DatePicker from "../Common/DatePicker";
 import moment from "moment";
 
-function Filter({ handleSubmitFillter }) {
+function Filter({ handleSubmit }) {
   const [checkStartDate, setCheckStartDate] = useState(true);
   const [checkEndDate, setCheckEndDate] = useState(true);
   const [dateToDate, setDateToDate] = useState("");
@@ -22,8 +22,9 @@ function Filter({ handleSubmitFillter }) {
     endDate: null,
   });
   useEffect(() => {
-    document.getElementById('your_unique_start_date_id').setAttribute('readonly', 'readonly');
-    document.getElementById('your_unique_end_date_id').setAttribute('readonly', 'readonly');
+    // document.getElementById('your_unique_start_date_id').setAttribute('readonly', 'readonly');
+    // document.getElementById('your_unique_end_date_id').setAttribute('readonly', 'readonly');
+    // document.getElementsByClassName("DateRangePickerInput ").style.height = "35px";
     let pickerLeft = document.querySelector("#your_unique_start_date_id");
     pickerLeft.addEventListener("keyup", (e) => {
       if (e.target.value) {
@@ -72,7 +73,7 @@ function Filter({ handleSubmitFillter }) {
       endDate: endDate ? endDate.format("DD/MM/YYYY") : null,
     };
 
-    handleSubmitFillter(value);
+    handleSubmit(value);
   };
   const handleClear = () => {
     setSearchValue({
@@ -88,7 +89,7 @@ function Filter({ handleSubmitFillter }) {
       endDate: null,
     };
 
-    handleSubmitFillter(value);
+    handleSubmit(value);
   };
   return (
     <div className="ml-3 mr-3 mb-3 mt-3">
@@ -110,7 +111,7 @@ function Filter({ handleSubmitFillter }) {
                   autoComplete="nope"
                   type="text"
                   name="keyword"
-                  placeholder="Nhập chữ cái"
+                  placeholder="Nhập tên chữ cái, chữ cái"
                   value={searchValue.keyword}
                   onChange={(e) => {
                     setSearchValue({
@@ -135,6 +136,7 @@ function Filter({ handleSubmitFillter }) {
               </Label>
               <Col className="pl-0 pr-0">
                 <DatePicker
+
                   styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                   startDate={searchValue.startDate}
                   startDateId="your_unique_start_date_id"

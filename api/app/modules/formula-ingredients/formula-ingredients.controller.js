@@ -154,25 +154,25 @@ const detailIngredient = async (req, res, next) => {
     );
   }
 };
-// const CheckLetter = async (req, res, next) => {
-//   // console.log()
-//   try {
-//     // Check ACCOUNT exists
-//     const serviceRes = await IngredientService.CheckLetter(req.query.letter);
-//     if (serviceRes.isFailed()) {
-//       return next(serviceRes);
-//     }
-//     return res.json(new SingleResponse(serviceRes.getData()));
-//   } catch (error) {
-//     return next(
-//       new ErrorResponse(
-//         httpStatus.NOT_IMPLEMENTED,
-//         error,
-//         RESPONSE_MSG.REQUEST_FAILED
-//       )
-//     );
-//   }
-// };
+const CheckIngredient = async (req, res, next) => {
+  // console.log()
+  try {
+    // Check ACCOUNT exists
+    const serviceRes = await IngredientService.CheckIngredient(req.query.ingredient_name);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+};
 module.exports = {
   getIngredientsList,
   GetListCalculation,
@@ -182,5 +182,5 @@ module.exports = {
   addIngredient,
   detailIngredient,
   getIngredientList,
-  // CheckLetter,
+  CheckIngredient,
 };
