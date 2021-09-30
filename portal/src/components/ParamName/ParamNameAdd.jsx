@@ -77,9 +77,7 @@ export default class ParamNameAdd extends PureComponent {
     return values;
   };
 
-  /**
-   * Goi API, lay toan bo data lien quan, vd: chuc vu, phong ban, dia chi,...
-   */
+
   async _getBundleData() {
     let bundle = {};
     let all = [];
@@ -87,10 +85,9 @@ export default class ParamNameAdd extends PureComponent {
     await Promise.all(all).catch((err) =>
       window._$g.dialogs.alert(
         window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`)
-        //,() => window.location.reload()
       )
     );
-    //
+    
     Object.keys(bundle).forEach((key) => {
       let data = bundle[key];
       let stateValue = this.state[key];
@@ -99,7 +96,7 @@ export default class ParamNameAdd extends PureComponent {
       }
       bundle[key] = data;
     });
-    //
+
     return bundle;
   }
 
@@ -112,11 +109,8 @@ export default class ParamNameAdd extends PureComponent {
     if (values === initialValues) {
       return;
     }
-    // Reformat data
-    // +++
-    Object.assign(values, {
-      // +++
-    });
+
+    Object.assign(values, {});
   };
 
   /** @var {String} */
@@ -143,6 +137,7 @@ export default class ParamNameAdd extends PureComponent {
       is_first_middle_name,
       is_first_name,
       name_type,
+      is_middle_name
     } = values;
 
     // +++
@@ -153,6 +148,7 @@ export default class ParamNameAdd extends PureComponent {
       is_first_middle_name: is_first_middle_name ? 1 : 0,
       is_active: is_active ? 1 : 0,
       name_type: name_type? name_type.trim(): "",
+      is_middle_name:  is_middle_name ? 1 : 0
     });
     //
     const calculationId =
@@ -225,6 +221,7 @@ export default class ParamNameAdd extends PureComponent {
       "is_first_name",
       "is_full_name",
       "is_first_middle_name",
+      "is_middle_name"
     ];
     /** @var {Object} */
     let initialValues = this.getInitialValues();
@@ -374,6 +371,57 @@ export default class ParamNameAdd extends PureComponent {
                                           type="checkbox"
                                           id="is_first_name"
                                           label="Tên"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                    <ErrorMessage
+                                      name="is_first_name"
+                                      component={({ children }) => (
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
+                                          {children}
+                                        </Alert>
+                                      )}
+                                    />
+                                  </Col>
+                                  <Col sm={3}>
+                                    <Field
+                                      name="is_middle_name"
+                                      render={({ field /* _form */ }) => (
+                                        <CustomInput
+                                          {...field}
+                                          className="pull-left"
+                                          name="is_middle_name"
+                                          onBlur={null}
+                                          checked={values.is_middle_name}
+                                          onChange={(event) => {
+                                            const { target } = event;
+                                            checkName.forEach((item) => {
+                                              if (
+                                                values[item] &&
+                                                item !== target.name
+                                              ) {
+                                                field.onChange({
+                                                  target: {
+                                                    name: item,
+                                                    value: false,
+                                                  },
+                                                });
+                                              }
+                                            });
+                                            field.onChange({
+                                              target: {
+                                                name: target.name,
+                                                value: true,
+                                              },
+                                            });
+                                          }}
+                                          type="checkbox"
+                                          id="is_middle_name"
+                                          label="Tên đệm"
                                           disabled={noEdit}
                                         />
                                       )}

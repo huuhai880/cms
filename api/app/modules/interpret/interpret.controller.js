@@ -1,12 +1,13 @@
 const httpStatus = require('http-status');
-const InterpretService = require('./interpret.service');
+const interpretService = require('./interpret.service');
 const SingleResponse = require('../../common/responses/single.response');
 const ListResponse = require('../../common/responses/list.response');
 const ErrorResponse = require('../../common/responses/error.response');
 const RESPONSE_MSG = require('../../common/const/responseMsg.const');
+
 const getInterpretsList = async (req, res, next) => {
   try {
-    const serviceRes = await InterpretService.getInterpretsList(req.query);
+    const serviceRes = await interpretService.getInterpretsList(req.query);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -22,9 +23,10 @@ const getInterpretsList = async (req, res, next) => {
     );
   }
 };
+
 const getDetailListByInterpret = async (req, res, next) => {
   try {
-    const serviceRes = await InterpretService.getDetailListByInterpret(
+    const serviceRes = await interpretService.getDetailListByInterpret(
       req.query
     );
     if (serviceRes.isFailed()) {
@@ -42,9 +44,10 @@ const getDetailListByInterpret = async (req, res, next) => {
     );
   }
 };
+
 const getMainNumberList = async (req, res, next) => {
   try {
-    const serviceRes = await InterpretService.getMainNumberList(req.query);
+    const serviceRes = await interpretService.getMainNumberList(req.query);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -60,9 +63,10 @@ const getMainNumberList = async (req, res, next) => {
     );
   }
 };
+
 const getAttributesList = async (req, res, next) => {
   try {
-    const serviceRes = await InterpretService.getAttributesList(req.query);
+    const serviceRes = await interpretService.getAttributesList(req.query);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -78,11 +82,13 @@ const getAttributesList = async (req, res, next) => {
     );
   }
 };
-const getDetailInterpretParent = async (req, res, next) => {
+
+const getListInterpretParent = async (req, res, next) => {
   try {
-    const interpret_id = req.params.interpret_id;
-    const serviceRes = await InterpretService.getDetailInterpretParent(
-      interpret_id
+    const { interpret_id, interpret_detail_id } = req.params;
+    const serviceRes = await interpretService.getListInterpretParent(
+      interpret_id,
+      interpret_detail_id
     );
     if (serviceRes.isFailed()) {
       return next(serviceRes);
@@ -99,9 +105,10 @@ const getDetailInterpretParent = async (req, res, next) => {
     );
   }
 };
+
 const getRelationshipsList = async (req, res, next) => {
   try {
-    const serviceRes = await InterpretService.getRelationshipsList(req.query);
+    const serviceRes = await interpretService.getRelationshipsList(req.query);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -117,10 +124,10 @@ const getRelationshipsList = async (req, res, next) => {
     );
   }
 };
+
 const addIntergretDetail = async (req, res, next) => {
   try {
-    // console.log("zzzzzzzzz")
-    const serviceRes = await InterpretService.addIntergretDetail(req.body);
+    const serviceRes = await interpretService.addIntergretDetail(req.body);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -140,9 +147,10 @@ const addIntergretDetail = async (req, res, next) => {
     );
   }
 };
+
 const addIntergret = async (req, res, next) => {
   try {
-    const serviceRes = await InterpretService.addIntergret(req.body);
+    const serviceRes = await interpretService.addIntergret(req.body);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -162,12 +170,11 @@ const addIntergret = async (req, res, next) => {
     );
   }
 };
+
 const detaiIntergret = async (req, res, next) => {
   try {
     const interpret_id = req.params.interpret_id;
-
-    // Check ACCOUNT exists
-    const serviceRes = await InterpretService.detaiIntergret(interpret_id);
+    const serviceRes = await interpretService.detaiIntergret(interpret_id);
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
@@ -182,12 +189,11 @@ const detaiIntergret = async (req, res, next) => {
     );
   }
 };
+
 const detaiDetailInterpret = async (req, res, next) => {
   try {
     const interpret_detail_id = req.params.interpret_detail_id;
-
-    // Check ACCOUNT exists
-    const serviceRes = await InterpretService.detaiDetailInterpret(
+    const serviceRes = await interpretService.detaiDetailInterpret(
       interpret_detail_id
     );
     if (serviceRes.isFailed()) {
@@ -204,11 +210,12 @@ const detaiDetailInterpret = async (req, res, next) => {
     );
   }
 };
+
+
 const deleteInterpret = async (req, res, next) => {
   try {
     const interpret_id = req.params.interpret_id;
-    // console.log(interpret_id)
-    const serviceRes = await InterpretService.deleteInterpret(
+    const serviceRes = await interpretService.deleteInterpret(
       interpret_id,
       req.body
     );
@@ -223,11 +230,11 @@ const deleteInterpret = async (req, res, next) => {
     return next(error);
   }
 };
+
 const deleteDetailInterpret = async (req, res, next) => {
   try {
     const interpret_detail_id = req.params.interpret_detail_id;
-    // console.log(interpret_id)
-    const serviceRes = await InterpretService.deleteDetailInterpret(
+    const serviceRes = await interpretService.deleteDetailInterpret(
       interpret_detail_id,
       req.body
     );
@@ -242,11 +249,10 @@ const deleteDetailInterpret = async (req, res, next) => {
     return next(error);
   }
 };
+
 const CheckDetailInterpret = async (req, res, next) => {
-  // console.log()
   try {
-    // Check ACCOUNT exists
-    const serviceRes = await InterpretService.CheckDetailInterpret(
+    const serviceRes = await interpretService.CheckDetailInterpret(
       req.query.interpret_detail_name
     );
     if (serviceRes.isFailed()) {
@@ -263,6 +269,45 @@ const CheckDetailInterpret = async (req, res, next) => {
     );
   }
 };
+
+
+const getListAttributeExcludeById = async (req, res, next) => {
+  try {
+    const { attribute_id, interpret_id } = req.params;
+    const serviceRes = await interpretService.getListAttributeExcludeById(attribute_id, interpret_id);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const copyIntergret = async (req, res, next) => {
+  try {
+    const serviceRes = await interpretService.copyIntergret(req.body);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(
+      new SingleResponse(
+        serviceRes.getData(),
+        RESPONSE_MSG.ACCOUNT.CREATE_SUCCESS
+      )
+    );
+  } catch (error) {
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+};
+
+
 module.exports = {
   getMainNumberList,
   getAttributesList,
@@ -273,8 +318,10 @@ module.exports = {
   deleteInterpret,
   getDetailListByInterpret,
   deleteDetailInterpret,
-  getDetailInterpretParent,
+  getListInterpretParent,
   addIntergretDetail,
   CheckDetailInterpret,
   detaiDetailInterpret,
+  getListAttributeExcludeById,
+  copyIntergret
 };

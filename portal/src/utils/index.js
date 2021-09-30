@@ -198,3 +198,30 @@ export function getBase64(file) {
     reader.onerror = (error) => reject(error);
   });
 }
+
+export function splitString(str, n, useWordBoundary = true) {
+  if (str.length <= n) {
+    return str;
+  }
+  const subString = str.substr(0, n - 1);
+  return (
+    (useWordBoundary
+      ? subString.substr(0, subString.lastIndexOf(" "))
+      : subString) + "..."
+  );
+}
+
+export const convertValueSelect = (value, options) => {
+  if (!(typeof value === "object") && options && options.length) {
+    value = ((_val) => {
+      return options.find((item) => "" + item.value === "" + _val);
+    })(value);
+  } else if (Array.isArray(value) && options && options.length) {
+    return options.filter((item) => {
+      return value.find((e) => e == item.value);
+    });
+  }
+  return value;
+};
+
+

@@ -7,6 +7,7 @@ const template = {
   is_first_name: '{{#? ISFIRSTNAME}}',
   is_first_middle_name: '{{#? ISFIRSTMIDDLENAME}}',
   is_active: '{{ ISACTIVE? 1: 0}}',
+  is_middle_name: '{{ ISMIDDLENAME? 1: 0}}',
 };
 
 let transform = new Transform(template);
@@ -20,6 +21,7 @@ const list = (ParamName = []) => {
     'is_first_name',
     'is_first_middle_name',,
     'is_active',
+    'is_middle_name'
   ]);
 };
 
@@ -32,6 +34,7 @@ const detail = (ParamName = []) => {
     'is_first_name',
     'is_first_middle_name',,
     'is_active',
+    'is_middle_name'
   ]);
 };
 

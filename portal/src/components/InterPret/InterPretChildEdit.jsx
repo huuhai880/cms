@@ -2,30 +2,32 @@ import React, { useState, useEffect } from "react";
 import InterPretChildAdd from "./InterPretChildAdd";
 import { useParams } from "react-router";
 import InterpretModel from "../../models/InterpretModel";
+import Loading from "../Common/Loading";
+
+const _interpretModel = new InterpretModel();
 
 function InterPretChildEdit() {
-  const _interpretModel = new InterpretModel();
-
   let { id } = useParams();
-  const [dataInterpretDetail, setDataInterpretDetail] = useState([]);
+  const [interpretDetail, setInterpretDetail] = useState(null);
 
   useEffect(() => {
-    // console.log(id)
-    const _callAPI = async () => {
-      // console.log(dataInterpretDetail)
-      try {
-        await _interpretModel.detailInterPretDetail(id).then((data) => {
-          setDataInterpretDetail(data);
-            // console.log(data);
-        });
-      } catch (error) {
-        console.log(error);
-        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
-      }
-    };
     _callAPI();
   }, []);
-  return <InterPretChildAdd dataInterpretDetailEnt={dataInterpretDetail}/>;
+
+  const _callAPI = async () => {
+    try {
+      let data = await _interpretModel.detailInterPretDetail(id);
+      setInterpretDetail(data);
+    } catch (error) {
+      window._$g.dialogs.alert(
+        window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+      );
+    }
+  };
+
+  if (!interpretDetail) return <Loading />;
+
+  return <InterPretChildAdd interpretDetailEnt={interpretDetail} />;
 }
 
 export default InterPretChildEdit;

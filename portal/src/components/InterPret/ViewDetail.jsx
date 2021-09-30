@@ -54,7 +54,7 @@ function ViewDetail() {
             <img src={logo} alt="1"></img>
           </div>
           <div class="bw_text_center bw_sdfs">
-            <h1>{dataInterpret.attribute_name}</h1>
+            <h1>{dataInterpret.group_name}</h1>
           </div>
           <div class="bw_content bw_mt_20">
             <div class="bw_index_items">

@@ -275,6 +275,30 @@ class ParamName extends Component {
         },
       },
       {
+        name: "is_middle_name",
+        label: "Tên đệm",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+                style={{width: "15%"}}
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return <div className="text-center">
+              <CustomInput type="checkbox" checked={value}/>
+            </div>;
+          },
+        },
+      },
+      {
         name: "is_full_name",
         label: "Họ tên đầy đủ",
         options: {

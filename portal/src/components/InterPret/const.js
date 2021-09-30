@@ -3,6 +3,7 @@ import {
   configIDRowTable,
   numberFormat,
   getPropsConfigTable,
+  splitString
 } from "../../utils/index";
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import React from "react";
@@ -11,6 +12,10 @@ import { Checkbox } from "antd";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import * as yup from "yup";
+import { Link } from "react-router-dom";
+
+const regex = /(<([^>]+)>)/gi;
+
 export const initialValues = {
   interpret_id: "",
   relationship_id: "",
@@ -23,28 +28,28 @@ export const initialValues = {
   brief_decs: "",
   note: "",
   order_index: "",
+  is_for_power_diagram: false,
+  compare_attribute_id :null
 };
-///// validate
-export const validationSchema = yup.object().shape({
-  relationship_id: yup.string().required("Mối quan hệ không được để trống .").nullable(),
-  mainnumber_id: yup.string().required("Chỉ số không được để trống .").nullable(),
-  compare_mainnumber_id: yup.string().required("Chỉ số so sánh không được để trống .").nullable(),
-  attribute_id: yup.string().required("Tên thuộc tính không được để trống .").nullable(),
-  order_index: yup.string().required("Vị trí hiển thị không được để trống .").nullable(),
-  decs: yup
-    .string()
-    .required("Mô tả không được để trống .")
-    // .max(2000, "Mô tả tối đa 2000 kí tự .")
-    .nullable(),
-  brief_decs: yup
-    .string()
-    .required("Tóm tắt không được để trống .")
-    // .max(300, "Tóm tắt tối đa 300 kí tự .")
-    .nullable(),
-  // note: yup.string().max(300, "Ghi chú tối đa 300 kí tự .").nullable(),
-});
+
+export const validationSchema = (is_for_power_diagram = false) => {
+  return yup.object().shape({
+    mainnumber_id: is_for_power_diagram ? yup.string().optional().nullable() : yup.string().required("Chỉ số không được để trống .").nullable(),
+    attribute_id: is_for_power_diagram ? yup.string().optional().nullable() : yup.string().required("Tên thuộc tính không được để trống .").nullable(),
+    order_index: yup.string().required("Vị trí hiển thị không được để trống .").nullable(),
+    decs: yup
+      .string()
+      .required("Mô tả không được để trống .")
+      .nullable(),
+    brief_decs: yup
+      .string()
+      .required("Tóm tắt không được để trống .")
+      .nullable(),
+  });
+
+}
+
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
-  // console.log(data);
   return [
     configIDRowTable("interpret_id", "/interpret/detail/", query),
     {
@@ -79,21 +84,8 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          // var doc = new DOMParser().parseFromString(value, "text/xml");
-          // // console.log(doc.firstChild.innerHTML); // => <a href="#">Link...
-          // console.log(doc.firstChild.firstChild.innerHTML); // => Link
           return (
             <div className="text-left">{value.replace(/<[^>]+>/g, "")}</div>
-
-            // <div
-            //   className="text-left align-self-center"
-            //   style={{ margin: "auto" }}
-            //   dangerouslySetInnerHTML={{ __html: value }}
-            // >
-            //   {/* <div  /> */}
-            // <div className="text-center">{value == 1 ? "Có" : value == 0 ? "Không" : "Không"}</div>
-
-            // </div>
           );
         },
       },
@@ -133,7 +125,6 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          // console.log(data[tableMeta["rowIndex"]].news_comment_user_fullname);
           return (
             <div className="text-center">
               <CheckAccess permission="FOR_INTERPRET_DETAIL_ADD">
@@ -152,7 +143,6 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
               </CheckAccess>
               <CheckAccess permission="FOR_INTERPRET_DETAIL_VIEW">
                 <Button
-                  // color="warning"
                   title="Danh sách luận giải chi tiết"
                   className="mr-1"
                   onClick={(evt) => {
@@ -215,3 +205,141 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
     },
   ];
 };
+
+
+export const column = (handleDelete) => {
+  return [
+    {
+      title: "STT",
+      dataIndex: "STT",
+      key: "name",
+      responsive: ["md"],
+      render: (text, record, index) => {
+        return <Link to={`/interpret/detail/${record['interpret_id']}`} target={"_self"}>
+          <div className="text-center">{index + 1}</div>
+        </Link>
+      },
+      width: "4%",
+    },
+    {
+      title: "Tên thuộc tính",
+      dataIndex: "attribute_name",
+      key: "attribute_name",
+      responsive: ["md"],
+      width: "20%",
+    },
+    {
+      title: "Vị trí hiển thị",
+      dataIndex: "order_index",
+      key: "order_index",
+      responsive: ["md"],
+      width: "8%",
+      render: (text, record, index) => {
+        return <div className="text-center">{text}</div>;
+      },
+    },
+    {
+      title: "Tóm tắt",
+      dataIndex: "brief_decs",
+      key: "brief_decs",
+      responsive: ["md"],
+      render: (text, record, index) => {
+        let value = text.replace(regex, "");
+        value = splitString(value, 80);
+        return value;
+      },
+    },
+    {
+      title: "Kich hoạt",
+      dataIndex: "is_active",
+      width: "8%",
+      key: "is_active",
+      responsive: ["md"],
+      render: (text, record, index) => (
+        <div className="text-center">{record.is_active ? "Có" : "Không"}</div>
+      ),
+    },
+
+    {
+      title: "Thao tác",
+      key: "x",
+      dataIndex: "",
+      width: "15%",
+      render: (text, record, index) => {
+        return (
+          <div className="text-center">
+            <CheckAccess permission="FOR_INTERPRET_VIEW">
+              <Button
+                title="Copy"
+                className="mr-1"
+                onClick={(evt) => {
+                  window._$g.rdr(
+                    `/interpret/copy/${record["interpret_id"]}`
+                  );
+                }}
+              >
+                <i className="fa fa-copy" />
+              </Button>
+            </CheckAccess>
+
+            <CheckAccess permission="FOR_INTERPRET_DETAIL_ADD">
+              <Button
+                color="warning"
+                title="Thêm mới luận giải chi tiết"
+                className="mr-1"
+                onClick={(evt) => {
+                  window._$g.rdr(
+                    `/interpret/d-add/${record["interpret_id"]}`
+                  );
+                }}
+              >
+                <i className="fa fa-plus" />
+              </Button>
+            </CheckAccess>
+
+            <CheckAccess permission="FOR_INTERPRET_DETAIL_VIEW">
+              <Button
+                color="info"
+                title="Chi tiết luận giải trên web"
+                className="mr-1"
+                onClick={(evt) => {
+                  window.open(
+                    `/portal/interpret/detail-web/${record["interpret_id"]}`,
+                    "_blank"
+                  );
+                }}
+              >
+                <i className="fa fa-eye" />
+              </Button>
+            </CheckAccess>
+            <CheckAccess permission="FOR_INTERPRET_EDIT">
+              <Button
+                color={"primary"}
+                title="Chinh sửa"
+                className="mr-1"
+                onClick={(evt) => {
+                  window._$g.rdr(`/interpret/edit/${record["interpret_id"]}`);
+                }}
+              >
+                <i className="fa fa-edit" />
+              </Button>
+            </CheckAccess>
+
+            <CheckAccess permission="FOR_INTERPRET_DEL">
+              <Button
+                color="danger"
+                title="Xóa"
+                className=""
+                onClick={(evt) => handleDelete(record["interpret_id"])}
+              >
+                <i className="fa fa-trash" />
+              </Button>
+            </CheckAccess>
+          </div>
+        );
+      },
+      responsive: ["md"],
+    },
+  ];
+}
+

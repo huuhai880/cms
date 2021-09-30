@@ -452,20 +452,7 @@ const StaticContentDetail = React.lazy(() =>
 );
 const StaticContentEdit = React.lazy(() => import("./components/StaticContent/StaticContentEdit"));
 //.end#StaticContent
-// FormulaIngredients
-const FormulaIngredients = React.lazy(() =>
-  import("./components/FormulaIngredients/FormulaIngredients")
-);
-const FormulaIngredientsAdd = React.lazy(() =>
-  import("./components/FormulaIngredients/FormulaIngredientsAdd")
-);
-const FormulaIngredientsDetail = React.lazy(() =>
-  import("./components/FormulaIngredients/FormulaIngredientsDetail")
-);
-const FormulaIngredientsEdit = React.lazy(() =>
-  import("./components/FormulaIngredients/FormulaIngredientsEdit")
-);
-//.end#FormulaIngredients
+
 // SetupServiceRegister
 const SetupServiceRegister = React.lazy(() =>
   import("./components/SetupServiceRegister/SetupServiceRegister")
@@ -642,6 +629,7 @@ const InterPretAdd = React.lazy(() => import("./components/InterPret/InterPretAd
 const InterPretDetail = React.lazy(() => import("./components/InterPret/InterPretDetail"));
 const InterPretEdit = React.lazy(() => import("./components/InterPret/InterPretEdit"));
 const InterPretView = React.lazy(() => import("./components/InterPret/ViewDetail"));
+const InterPretCopy = React.lazy(() => import("./components/InterPret/InterPretCopy"));
 // end#InterPret
 
 //InterPretDetail
@@ -3095,31 +3083,39 @@ const routes = [
     function: "SL_INTERPRET_VIEW",
     component: InterPretView,
   },
-  // end#interpret
-  //InterPretChild
   {
-    path: "/interpret/interpret-detail/:id",
+    path: "/interpret/copy/:id",
     exact: true,
-    name: "Danh sách luận giải chi tiết",
-    function: "FOR_INTERPRET_DETAIL_VIEW",
-    component: InterPretChild,
+    name: "Sao chép",
+    function: "FOR_INTERPRET_EDIT",
+    component: InterPretCopy,
   },
+  // end#interpret
+
+  //InterPretChild
+  // {
+  //   path: "/interpret/interpret-detail/:id",
+  //   exact: true,
+  //   name: "Danh sách luận giải chi tiết",
+  //   function: "FOR_INTERPRET_DETAIL_VIEW",
+  //   component: InterPretChild,
+  // },
   {
-    path: "/interpret/interpret-detail/add/:id",
+    path: "/interpret/d-add/:id",
     exact: true,
     name: "Thêm mới",
     function: "FOR_INTERPRET_DETAIL_ADD",
     component: InterPretChildAdd,
   },
   {
-    path: "/interpret/interpret-detail/detail/:id",
+    path: "/interpret/d-detail/:id",
     exact: true,
     name: "Chi tiết",
     function: "FOR_INTERPRET_DETAIL_VIEW",
     component: InterPretChildDetail,
   },
   {
-    path: "/interpret/interpret-detail/edit/:id",
+    path: "/interpret/d-edit/:id",
     exact: true,
     name: "Chỉnh sửa",
     function: "FOR_INTERPRET_DETAIL_EDIT",
