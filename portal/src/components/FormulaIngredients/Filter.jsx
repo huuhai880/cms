@@ -10,14 +10,20 @@ function Filter({ handleSubmitFillter }) {
   const [checkEndDate, setCheckEndDate] = useState(true);
   const [dateToDate, setDateToDate] = useState("");
   const [dateFromDate, setDateFromDate] = useState("");
-  const [isActive, setIsActive] = useState([
+  const [isType, setisType] = useState([
     { name: "Tất cả", id: "2" },
     { name: "Áp dụng cho tên", id: "0" },
     { name: "Áp dung cho ngày sinh", id: "1" },
   ]);
+  const [isActive, setisActive] = useState([
+    { name: "Tất cả", id: "2" },
+    { name: "Không", id: "0" },
+    { name: "Có", id: "1" },
+  ]);
   const [searchValue, setSearchValue] = useState({
     keyword: "",
-    selectdActive: { value: "2", label: "Tất cả" },
+    selectdType: { value: "2", label: "Tất cả" },
+    selectdActive: { value: "1", label: "Có" },
     startDate: null,
     endDate: null,
   });
@@ -48,7 +54,7 @@ function Filter({ handleSubmitFillter }) {
     });
   }, []);
   const _handleSubmitFillter = () => {
-    let { keyword, selectdActive, startDate, endDate } = searchValue;
+    let { keyword, selectdType,selectdActive, startDate, endDate } = searchValue;
     var mydate = moment(dateToDate, "DD/MM/YYYY");
     var myStartDate = startDate ? startDate.format("DD/MM/YYYY") : "";
     if (myStartDate) {
@@ -65,7 +71,9 @@ function Filter({ handleSubmitFillter }) {
     }
     let value = {
       keyword: keyword ? keyword : null,
+      selectdType: selectdType ? selectdType.value : null,
       selectdActive: selectdActive ? selectdActive.value : null,
+      
       startDate: startDate ? startDate.format("DD/MM/YYYY") : null,
       endDate: endDate ? endDate.format("DD/MM/YYYY") : null,
     };
@@ -75,13 +83,15 @@ function Filter({ handleSubmitFillter }) {
   const handleClear = () => {
     setSearchValue({
       keyword: "",
-      selectdActive: { value: "2", label: "Tất cả" },
+      selectdType: { value: "2", label: "Tất cả" },
+      selectdActive: { value: "1", label: "Có" },
       startDate: null,
       endDate: null,
     });
     let value = {
       keyword: null,
-      selectdActive:2,
+      selectdType:2,
+      selectdActive:1,
       startDate: null,
       endDate: null,
     };
@@ -92,7 +102,7 @@ function Filter({ handleSubmitFillter }) {
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
         <Row>
-          <Col xs={6} style={{ padding: 0 }}>
+          <Col xs={3} style={{ padding: 0 }}>
             <Col
               xs={12}
               style={{
@@ -158,7 +168,7 @@ function Filter({ handleSubmitFillter }) {
               }}
             >
               <Label for="" className="mr-sm-2">
-                Loại áp dung
+               Kích hoạt
               </Label>
               <Col className="pl-0 pr-0">
                 <Select
@@ -172,6 +182,35 @@ function Filter({ handleSubmitFillter }) {
                   }}
                   value={searchValue.selectdActive}
                   options={isActive.map(({ name: label, id: value }) => ({
+                    value,
+                    label,
+                  }))}
+                />
+              </Col>
+            </Col>
+          </Col>
+          <Col xs={3} style={{ padding: 0 }}>
+            <Col
+              xs={12}
+              style={{
+                alignItems: "center",
+              }}
+            >
+              <Label for="" className="mr-sm-2">
+                Loại áp dung
+              </Label>
+              <Col className="pl-0 pr-0">
+                <Select
+                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                  placeholder={"-- Chọn --"}
+                  onChange={(e) => {
+                    setSearchValue({
+                      ...searchValue,
+                      selectdType: e,
+                    });
+                  }}
+                  value={searchValue.selectdType}
+                  options={isType.map(({ name: label, id: value }) => ({
                     value,
                     label,
                   }))}
