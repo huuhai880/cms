@@ -1,10 +1,24 @@
 const Joi = require('joi');
 
 const ruleCreateOrUpdate = {
-  relationship_id: Joi.string().required(),
-  mainnumber_id: Joi.string().required(),
-  compare_mainnumber_id: Joi.string().required(),
-  attribute_id: Joi.string().required(),
+  // relationship_id: Joi.string().required(),
+  // mainnumber_id: Joi.string().required(),
+  mainnumber_id: Joi.any().when("is_for_power_diagram", {
+    is: false,
+    then: Joi.string()
+      .required(),
+    otherwise: Joi.optional(),
+  }),
+  // compare_mainnumber_id: Joi.string().required(),
+  // attribute_id: Joi.string().required(),
+
+  attribute_id: Joi.any().when("is_for_power_diagram", {
+    is: false,
+    then: Joi.string()
+      .required(),
+    otherwise: Joi.optional(),
+  }),
+
   is_active: Joi.string().required(),
   is_master: Joi.string().required(),
   decs: Joi.string().required(),

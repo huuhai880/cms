@@ -33,11 +33,12 @@ export default class ParamNumberModel extends Model {
   fillable = () => ({
     param_name_id: "",
     name_type: "",
-    is_last_name: null,
-    is_first_name: "",
-    is_full_name: "",
-    is_first_middle_name: "",
+    is_last_name: false,
+    is_first_name: false,
+    is_full_name: false,
+    is_first_middle_name: false,
     is_active: 1,
+    is_middle_name: false
   });
 
   /**

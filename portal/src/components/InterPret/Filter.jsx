@@ -15,6 +15,7 @@ function Filter({ handleSubmitFillter }) {
     { name: "Có", id: "1" },
     { name: "Tất cả", id: "2" },
   ]);
+
   const [searchValue, setSearchValue] = useState({
     keyword: "",
     selectdActive: { value: "1", label: "Có" },
@@ -34,9 +35,12 @@ function Filter({ handleSubmitFillter }) {
       checkEndDate == false ||
       (checkStartDate == false && checkEndDate == false)
     ) {
-      window._$g.dialogs.alert(window._$g._(`Vui lòng nhập đúng định dạng ngày tạo.`), () => {
-        window.location.reload();
-      });
+      window._$g.dialogs.alert(
+        window._$g._(`Vui lòng nhập đúng định dạng ngày tạo.`),
+        () => {
+          window.location.reload();
+        }
+      );
     }
     let value = {
       keyword: keyword ? keyword : null,
@@ -47,6 +51,7 @@ function Filter({ handleSubmitFillter }) {
 
     handleSubmitFillter(value);
   };
+
   const handleClear = () => {
     setSearchValue({
       keyword: "",
@@ -63,17 +68,20 @@ function Filter({ handleSubmitFillter }) {
 
     handleSubmitFillter(value);
   };
+
+  const handleKeyDown = (e) => {
+    if (1 * e.keyCode === 13) {
+      e.preventDefault();
+      _handleSubmitFillter();
+    }
+  };
+
   return (
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
         <Row>
-          <Col xs={6} style={{ padding: 0 }}>
-            <Col
-              xs={12}
-              style={{
-                alignItems: "center",
-              }}
-            >
+          <Col sm={6} xs={12}>
+            <FormGroup className="mb-2 mb-sm-0">
               <Label for="inputValue" className="mr-sm-2">
                 Từ khóa
               </Label>
@@ -83,7 +91,7 @@ function Filter({ handleSubmitFillter }) {
                   autoComplete="nope"
                   type="text"
                   name="keyword"
-                  placeholder="Nhập tên luận giải"
+                  placeholder="Nhập tên thuộc tính, tên luận giải chi tiết"
                   value={searchValue.keyword}
                   onChange={(e) => {
                     setSearchValue({
@@ -91,20 +99,16 @@ function Filter({ handleSubmitFillter }) {
                       keyword: e.target.value,
                     });
                   }}
+                  onKeyDown={handleKeyDown}
                 />
               </Col>
-            </Col>
+            </FormGroup>
           </Col>
 
-          <Col xs={4} style={{ padding: 0 }}>
-            <Col
-              xs={12}
-              style={{
-                alignItems: "center",
-              }}
-            >
+          <Col sm={4} xs={12}>
+            <FormGroup className="mb-2 mb-sm-0">
               <Label for="" className="mr-sm-2">
-               Kích hoạt
+                Kích hoạt
               </Label>
               <Col className="pl-0 pr-0">
                 <Select
@@ -123,46 +127,35 @@ function Filter({ handleSubmitFillter }) {
                   }))}
                 />
               </Col>
-            </Col>
+            </FormGroup>
           </Col>
-          <Col xs={2} style={{ padding: 0 }}>
-            <Col
-              xs={12}
-              style={{
-                alignItems: "center",
-              }}
-            >
-              <Label for="" className="mr-sm-2">
-              {/* Kích hoạt */}
-              </Label>
-              <Col className="pl-0 pr-0 mt-2">
-                <div className="d-flex align-items-center">
-                  <div className="d-flex flex-fill">
-                    <FormGroup className="mb-2 mb-sm-0">
-                      <Button
-                        className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                        onClick={_handleSubmitFillter}
-                        color="primary"
-                        size="sm"
-                      >
-                        <i className="fa fa-search mr-1" />
-                        Tìm kiếm
-                      </Button>
-                    </FormGroup>
-                    <FormGroup className="mb-2 ml-2 mb-sm-0">
-                      <Button
-                        className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                        onClick={handleClear}
-                        size="sm"
-                      >
-                        <i className="fa fa-refresh mr-1" />
-                        Làm mới
-                      </Button>
-                    </FormGroup>
-                  </div>
-                </div>
-              </Col>
-            </Col>
+
+          <Col
+            sm={2}
+            xs={12}
+            className={`d-flex align-items-end justify-content-end`}
+          >
+            <FormGroup className="mb-2 mb-sm-0">
+              <Button
+                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                onClick={_handleSubmitFillter}
+                color="primary"
+                size="sm"
+              >
+                <i className="fa fa-search mr-1" />
+                Tìm kiếm
+              </Button>
+            </FormGroup>
+            <FormGroup className="mb-2 ml-2 mb-sm-0">
+              <Button
+                className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                onClick={handleClear}
+                size="sm"
+              >
+                <i className="fa fa-refresh mr-1" />
+                Làm mới
+              </Button>
+            </FormGroup>
           </Col>
         </Row>
       </Form>
