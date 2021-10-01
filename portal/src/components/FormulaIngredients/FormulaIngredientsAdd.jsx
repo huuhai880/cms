@@ -36,8 +36,6 @@ function FormulaIngredientsAdd({ noEdit }) {
 
   const validationSchema = yup.object().shape({
     ingredient_name: yup.string().required("Tên thành phần không được để trống .").nullable(),
-    is_total: yup.string().required("Vui lòng chọn một hình thức."),
-    type: yup.string().required("Vui lòng chọn một biến số ."),
   });
   const formik = useFormik({
     enableReinitialize: true,
@@ -90,7 +88,7 @@ function FormulaIngredientsAdd({ noEdit }) {
       _ingredientModel.detail(id).then((data) => {
         // console.log(data);
 
-        data = { ...data, type: true, is_total: true };
+        // data = { ...data, type: true, is_total: true };
         setDataIngredient(data);
         // formik.setFieldValue(`type`, true);
         // formik.setFieldValue(`is_total`, true);
@@ -240,7 +238,7 @@ function FormulaIngredientsAdd({ noEdit }) {
     }
     return [];
   };
-  console.log(formik.values)
+  // console.log(formik.values)
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
@@ -340,7 +338,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_total_shortened`, 0);
                                 formik.setFieldValue(`is_total_2_digit`, 0);
-                                formik.setFieldValue(`is_total`, true);
+                                // formik.setFieldValue(`is_total`, true);
                               }
                             }}
                             checked={formik.values.is_no_total_shortened}
@@ -356,7 +354,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_no_total_shortened`, 0);
                                 formik.setFieldValue(`is_total_2_digit`, 0);
-                                formik.setFieldValue(`is_total`, true);
+                                // formik.setFieldValue(`is_total`, true);
                               }
                             }}
                             checked={formik.values.is_total_shortened}
@@ -372,7 +370,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_no_total_shortened`, 0);
                                 formik.setFieldValue(`is_total_shortened`, 0);
-                                formik.setFieldValue(`is_total`, true);
+                                // formik.setFieldValue(`is_total`, true);
                               }
                             }}
                             checked={formik.values.is_total_2_digit}
@@ -384,18 +382,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                     </Col>
                   </Row>
 
-                  {formik.errors.is_total && formik.touched.is_total ? (
-                    <Row className="mb15">
-                      <Col xs={12}>
-                        <div
-                          className="field-validation-error alert alert-danger fade show"
-                          role="alert"
-                        >
-                          {formik.errors.is_total}
-                        </div>
-                      </Col>
-                    </Row>
-                  ) : null}
+                 
 
                   <Row>
                     <Col xs={12}>
@@ -521,7 +508,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                       <b className="underline">Thông tin biến số</b>
                     </Col>
                   </Row>
-                  <Row className="mb15">
+                  {/* <Row className="mb15">
                     <Col xs={12}>
                       {formik.errors.type && formik.touched.type ? (
                         <div
@@ -532,7 +519,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                         </div>
                       ) : null}
                     </Col>
-                  </Row>
+                  </Row> */}
 
                   <Row>
                     <Col xs={12}>
@@ -544,7 +531,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                               formik.setFieldValue(`is_apply_dob`, e.target.checked ? 1 : 0);
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_apply_name`, 0);
-                                formik.setFieldValue(`type`, true);
+                                // formik.setFieldValue(`type`, true);
                               }
                             }}
                             checked={formik.values.is_apply_dob}
@@ -613,7 +600,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                               formik.setFieldValue(`is_apply_name`, e.target.checked ? 1 : 0);
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_apply_dob`, 0);
-                                formik.setFieldValue(`type`, true);
+                                // formik.setFieldValue(`type`, true);
                               }
                             }}
                             checked={formik.values.is_apply_name}

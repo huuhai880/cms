@@ -98,6 +98,12 @@ function Filter({ handleSubmitFillter }) {
 
     handleSubmitFillter(value);
   };
+  const handleKeyDown = (event) => {
+    if (1 * event.keyCode === 13) {
+      event.preventDefault();
+      _handleSubmitFillter();
+    }
+  };
   return (
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
@@ -120,6 +126,7 @@ function Filter({ handleSubmitFillter }) {
                   name="keyword"
                   placeholder="Nhập tên thành phần"
                   value={searchValue.keyword}
+                  onKeyDown={handleKeyDown}
                   onChange={(e) => {
                     setSearchValue({
                       ...searchValue,
@@ -197,7 +204,7 @@ function Filter({ handleSubmitFillter }) {
               }}
             >
               <Label for="" className="mr-sm-2">
-                Loại áp dung
+                Loại áp dụng
               </Label>
               <Col className="pl-0 pr-0">
                 <Select
