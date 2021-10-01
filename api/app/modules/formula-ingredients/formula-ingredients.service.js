@@ -28,6 +28,10 @@ const getIngredientsList = async (queryParams = {}) => {
         apiHelper.getValueFromObject(queryParams, 'endDate')
       )
       .input(
+        'ISTYPE',
+        apiHelper.getFilterBoolean(queryParams, 'selectdType')
+      )
+      .input(
         'ISACTIVE',
         apiHelper.getFilterBoolean(queryParams, 'selectdActive')
       )

@@ -37,12 +37,15 @@ const getListPageConfig = async () => {
 }
 
 const getPageConfig = async (page = '') => {
+  // console.log(page)
   try {
     const pool = await mssql.pool;
     const data = await pool.request()
       .input('PAGECONFIG', page)
       .execute(PROCEDURE_NAME.SYS_APPCONFIG_GETBYPAGESETTING_ADMINWEB);
     const configs = data && data.recordset && data.recordset.length ? configClass.list(data.recordset) : []
+    // console.log(configs)
+
     let configObject =  (configs||[]).reduce((obj, config) => {
       obj[config.config_key] = {
         value: config.data_type == 'json' ? JSON.parse(config.config_value) : config.config_value,
@@ -75,6 +78,8 @@ const getPageConfig = async (page = '') => {
 const updatePageConfig = async (bodyParams = {}) => {
   try {
     let { page, configs = {} } = bodyParams;
+  // console.log(page,configs)
+
     delete configs.auth_id;
     delete configs.auth_name;
     delete configs.data;

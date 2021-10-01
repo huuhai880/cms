@@ -19,6 +19,8 @@ function FormulaIngredients() {
     itemsPerPage: 25,
     page: 1,
     selectdActive: 1,
+    selectdType: 2,
+
   });
   //// init data
   useEffect(() => {
