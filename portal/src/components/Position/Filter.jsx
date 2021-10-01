@@ -88,6 +88,12 @@ function Filter({ handleSubmitFillter }) {
 
     handleSubmitFillter(value);
   };
+  const handleKeyDown = (event) => {
+    if (1 * event.keyCode === 13) {
+      event.preventDefault();
+      _handleSubmitFillter();
+    }
+  };
   return (
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
@@ -109,6 +115,8 @@ function Filter({ handleSubmitFillter }) {
                   type="text"
                   name="keyword"
                   placeholder="Nhập tên chức vụ"
+                  onKeyDown={handleKeyDown}
+
                   value={searchValue.keyword}
                   onChange={(e) => {
                     setSearchValue({

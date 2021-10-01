@@ -28,8 +28,8 @@ function Filter({ handleSubmitFillter }) {
     endDate: null,
   });
   useEffect(() => {
-    document.getElementById('your_unique_start_date_id').setAttribute('readonly', 'readonly');
-    document.getElementById('your_unique_end_date_id').setAttribute('readonly', 'readonly');
+    // document.getElementById('your_unique_start_date_id').setAttribute('readonly', 'readonly');
+    // document.getElementById('your_unique_end_date_id').setAttribute('readonly', 'readonly');
     let pickerLeft = document.querySelector("#your_unique_start_date_id");
     pickerLeft.addEventListener("keyup", (e) => {
       if (e.target.value) {
@@ -108,6 +108,12 @@ function Filter({ handleSubmitFillter }) {
 
     handleSubmitFillter(value);
   };
+  const handleKeyDown = (event) => {
+    if (1 * event.keyCode === 13) {
+      event.preventDefault();
+      _handleSubmitFillter();
+    }
+  };
   return (
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
@@ -129,6 +135,8 @@ function Filter({ handleSubmitFillter }) {
                   type="text"
                   name="keyword"
                   placeholder="Nhập mã đơn hàng, tên khách hàng, sản phẩm"
+                  onKeyDown={handleKeyDown}
+
                   value={searchValue.keyword}
                   onChange={(e) => {
                     setSearchValue({
