@@ -26,7 +26,6 @@ import { readImageAsBase64 } from "../../utils/html";
 layoutFullWidthHeight();
 const _interpretModel = new InterpretModel();
 
-
 function InterPretAdd({ noEdit }) {
   const [dataInterpret, setDataInterpret] = useState(initialValues);
   const [dataAttribute, setDataAttribute] = useState([]);
@@ -61,9 +60,7 @@ function InterPretAdd({ noEdit }) {
         let relationship = await _interpretModel.getListRelationship();
         setDataRelationship(relationship.items);
       } catch (error) {
-        window._$g.dialogs.alert(
-          window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
-        );
+        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
       }
     };
     _callAPI();
@@ -81,9 +78,7 @@ function InterPretAdd({ noEdit }) {
       }
     } catch (error) {
       let { errors, statusText, message } = error;
-      let msg = [`<b>${statusText || message}</b>`]
-        .concat(errors || [])
-        .join("<br/>");
+      let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
 
       setAlerts([{ color: "danger", msg }]);
       window.scrollTo(0, 0);
@@ -106,10 +101,7 @@ function InterPretAdd({ noEdit }) {
 
   const getAttributeExclude = async (attribute_id) => {
     try {
-      let attributeExclude = await _interpretModel.getAttributeExclude(
-        attribute_id,
-        id ? id : 0
-      );
+      let attributeExclude = await _interpretModel.getAttributeExclude(attribute_id, id ? id : 0);
       setAttribuExclude(attributeExclude);
 
       //Nếu thuộc tính so sánh đã có và nằm trong thuộc tính đang chọn bị exclude thi reset
@@ -120,9 +112,7 @@ function InterPretAdd({ noEdit }) {
         formik.setFieldValue("compare_attribute_id", null);
       }
     } catch (error) {
-      window._$g.dialogs.alert(
-        window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
-      );
+      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
 
@@ -133,9 +123,7 @@ function InterPretAdd({ noEdit }) {
       let { is_for_power_diagram = false } = interpretDetail || {};
       setIsForPowerDiagram(is_for_power_diagram);
     } catch (error) {
-      window._$g.dialogs.alert(
-        window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
-      );
+      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
 
@@ -174,9 +162,7 @@ function InterPretAdd({ noEdit }) {
       return dataAttribute.map((item) => {
         let isDisabled = false;
         if (is_exclude) {
-          let find = attributeExclude.find(
-            (p) => p.attribute_id == item.attribute_id
-          );
+          let find = attributeExclude.find((p) => p.attribute_id == item.attribute_id);
           if (find) {
             isDisabled = true;
           }
@@ -213,7 +199,7 @@ function InterPretAdd({ noEdit }) {
   const handleUploadImage = async (blobInfo, success, failure) => {
     readImageAsBase64(blobInfo.blob(), async (imageUrl) => {
       try {
-        const imageUpload =  _interpretModel.upload({
+        const imageUpload = _interpretModel.upload({
           base64: imageUrl,
           folder: "files",
           includeCdn: true,
@@ -247,10 +233,7 @@ function InterPretAdd({ noEdit }) {
         <Col xs={12}>
           <Card>
             <CardHeader>
-              <b>
-                {id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận
-                giải{" "}
-              </b>
+              <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận giải </b>
             </CardHeader>
             <CardBody>
               {alerts.map(({ color, msg }, idx) => {
@@ -296,29 +279,26 @@ function InterPretAdd({ noEdit }) {
                           className="MuiPaper-filter__custom--select"
                           id={`attribute_id`}
                           name={`attribute_id`}
+                          isClearable={true}
                           styles={{
                             menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                           }}
                           menuPortalTarget={document.querySelector("body")}
-                          isDisabled={
-                            noEdit || formik.values.is_for_power_diagram
-                          }
+                          isDisabled={noEdit || formik.values.is_for_power_diagram}
                           placeholder={"-- Chọn --"}
-                          value={convertValue(
-                            formik.values.attribute_id,
-                            getOptionAttribute()
-                          )}
+                          value={convertValue(formik.values.attribute_id, getOptionAttribute())}
                           options={getOptionAttribute()}
                           onChange={(value) => {
-                            formik.setFieldValue("attribute_id", value.value);
-                            formik.setFieldValue(
-                              "mainnumber_id",
-                              value.mainnumber_id
-                            );
+                            if (!value) {
+                              formik.setFieldValue("attribute_id", "");
+                              formik.setFieldValue("mainnumber_id", "");
+                            } else {
+                              formik.setFieldValue("attribute_id", value.value);
+                              formik.setFieldValue("mainnumber_id", value.mainnumber_id);
+                            }
                           }}
                         />
-                        {formik.errors.attribute_id &&
-                        formik.touched.attribute_id ? (
+                        {formik.errors.attribute_id && formik.touched.attribute_id ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
@@ -339,27 +319,25 @@ function InterPretAdd({ noEdit }) {
                           className="MuiPaper-filter__custom--select"
                           id={`relationship_id`}
                           name={`relationship_id`}
+                          isClearable={true}
                           styles={{
                             menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                           }}
                           menuPortalTarget={document.querySelector("body")}
-                          isDisabled={
-                            noEdit || formik.values.is_for_power_diagram
-                          }
+                          isDisabled={noEdit || formik.values.is_for_power_diagram}
                           placeholder={"-- Chọn --"}
                           value={convertValue(
                             formik.values.relationship_id,
                             getOptionRelationship()
                           )}
-                          options={getOptionRelationship(
-                            formik.values.relationship_id,
-                            true
-                          )}
+                          options={getOptionRelationship(formik.values.relationship_id, true)}
                           onChange={(value) => {
-                            formik.setFieldValue(
-                              "relationship_id",
-                              value.value
-                            );
+                            
+                            if (!value) {
+                              formik.setFieldValue("relationship_id", "");
+                            } else {
+                              formik.setFieldValue("relationship_id", value.value);
+                            }
                           }}
                         />{" "}
                       </Col>
@@ -375,7 +353,7 @@ function InterPretAdd({ noEdit }) {
                           <span className="font-weight-bold red-text">*</span>
                         ) : null}
                       </Label>
-                      <Col sm={8}>
+                      <Col sm={7}>
                         <Select
                           className="MuiPaper-filter__custom--select"
                           id={`mainnumber_id`}
@@ -386,20 +364,13 @@ function InterPretAdd({ noEdit }) {
                           menuPortalTarget={document.querySelector("body")}
                           isDisabled={true}
                           placeholder={"-- Chọn --"}
-                          value={convertValue(
-                            formik.values.mainnumber_id,
-                            getOptionMainNumBer()
-                          )}
-                          options={getOptionMainNumBer(
-                            formik.values.mainnumber_id,
-                            true
-                          )}
+                          value={convertValue(formik.values.mainnumber_id, getOptionMainNumBer())}
+                          options={getOptionMainNumBer(formik.values.mainnumber_id, true)}
                           onChange={(value) => {
                             formik.setFieldValue("mainnumber_id", value.value);
                           }}
                         />
-                        {formik.errors.mainnumber_id &&
-                        formik.touched.mainnumber_id ? (
+                        {formik.errors.mainnumber_id && formik.touched.mainnumber_id ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
@@ -450,8 +421,7 @@ function InterPretAdd({ noEdit }) {
                   <Col sm={6} xs={12}>
                     <FormGroup row>
                       <Label for="order_index" sm={4}>
-                        Vị trí hiển thị{" "}
-                        <span className="font-weight-bold red-text">*</span>
+                        Vị trí hiển thị <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={8}>
                         <NumberFormat
@@ -459,15 +429,11 @@ function InterPretAdd({ noEdit }) {
                           id="order_index"
                           disabled={noEdit}
                           onChange={(value) => {
-                            formik.setFieldValue(
-                              "order_index",
-                              value.target.value
-                            );
+                            formik.setFieldValue("order_index", value.target.value);
                           }}
                           value={formik.values.order_index}
                         />
-                        {formik.errors.order_index &&
-                        formik.touched.order_index ? (
+                        {formik.errors.order_index && formik.touched.order_index ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
@@ -483,9 +449,7 @@ function InterPretAdd({ noEdit }) {
                       <Label for="relationship_id" sm={4}></Label>
                       <Col sm={4}>
                         <Checkbox
-                          disabled={
-                            noEdit || formik.values.is_for_power_diagram
-                          }
+                          disabled={noEdit || formik.values.is_for_power_diagram}
                           onChange={(e) => {
                             formik.setFieldValue(`is_master`, e.target.checked);
                           }}
@@ -518,9 +482,7 @@ function InterPretAdd({ noEdit }) {
                       </Label>
                       <Col sm={10}>
                         <Editor
-                          apiKey={
-                            "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
-                          }
+                          apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                           scriptLoading={{
                             delay: 500,
                           }}
@@ -540,8 +502,7 @@ function InterPretAdd({ noEdit }) {
                               "image imagetools ",
                               "toc",
                             ],
-                            menubar:
-                              "file edit view insert format tools table tc help",
+                            menubar: "file edit view insert format tools table tc help",
                             toolbar1:
                               "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                               "alignleft aligncenter alignright alignjustify",
@@ -560,9 +521,8 @@ function InterPretAdd({ noEdit }) {
                             formik.setFieldValue("brief_decs", newValue);
                           }}
                         />
-                        
-                        {formik.errors.brief_decs &&
-                        formik.touched.brief_decs ? (
+
+                        {formik.errors.brief_decs && formik.touched.brief_decs ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
@@ -583,9 +543,7 @@ function InterPretAdd({ noEdit }) {
                       </Label>
                       <Col sm={10}>
                         <Editor
-                          apiKey={
-                            "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
-                          }
+                          apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                           scriptLoading={{
                             delay: 500,
                           }}
@@ -605,8 +563,7 @@ function InterPretAdd({ noEdit }) {
                               "image imagetools ",
                               "toc",
                             ],
-                            menubar:
-                              "file edit view insert format tools table tc help",
+                            menubar: "file edit view insert format tools table tc help",
                             toolbar1:
                               "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                               "alignleft aligncenter alignright alignjustify",
@@ -666,9 +623,7 @@ function InterPretAdd({ noEdit }) {
                           color="primary"
                           className="mr-2 btn-block-sm"
                           onClick={() =>
-                            window._$g.rdr(
-                              `/interpret/edit/${dataInterpret.interpret_id}`
-                            )
+                            window._$g.rdr(`/interpret/edit/${dataInterpret.interpret_id}`)
                           }
                         >
                           <i className="fa fa-edit mr-1" />
@@ -677,11 +632,7 @@ function InterPretAdd({ noEdit }) {
                       </CheckAccess>
                     ) : (
                       <>
-                        <CheckAccess
-                          permission={
-                            id ? `FOR_INTERPRET_EDIT` : `FOR_INTERPRET_ADD`
-                          }
-                        >
+                        <CheckAccess permission={id ? `FOR_INTERPRET_EDIT` : `FOR_INTERPRET_ADD`}>
                           <button
                             className="mr-2 btn-block-sm btn btn-primary"
                             onClick={() => {
@@ -694,11 +645,7 @@ function InterPretAdd({ noEdit }) {
                             Lưu
                           </button>
                         </CheckAccess>
-                        <CheckAccess
-                          permission={
-                            id ? `FOR_INTERPRET_EDIT` : `FOR_INTERPRET_ADD`
-                          }
-                        >
+                        <CheckAccess permission={id ? `FOR_INTERPRET_EDIT` : `FOR_INTERPRET_ADD`}>
                           <button
                             className="mr-2 btn-block-sm btn btn-success"
                             onClick={() => {
