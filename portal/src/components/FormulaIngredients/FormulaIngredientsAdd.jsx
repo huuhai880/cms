@@ -325,7 +325,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                     <Col xs={12}>
                       <FormGroup row>
                         <Label for="ingredient_name" sm={2}>
-                          Hình thức <span className="font-weight-bold red-text">*</span>
+                          Hình thức
                         </Label>
                         <Col sm={3}>
                           <Checkbox

@@ -212,7 +212,7 @@ export default class ContactCustomerAdd extends PureComponent {
           <Col xs={12}>
             <Card>
               <CardHeader>
-                <b>{contactCustomerEnt ? (noEdit ? 'Chi tiết' : 'Chỉnh sửa') : 'Thêm mới'} khách hàng liên hệ {contactCustomerEnt ? contactCustomerEnt.full_name : ''}</b>
+                <b>{contactCustomerEnt ? (noEdit ? 'Chi tiết' : 'Chỉnh sửa') : 'Thêm mới'} liên hệ {contactCustomerEnt ? contactCustomerEnt.full_name : ''}</b>
               </CardHeader>
               <CardBody>
                 {alerts.map(({ color, msg }, idx) => {
@@ -253,10 +253,10 @@ export default class ContactCustomerAdd extends PureComponent {
                               <Row>
                                 <Col xs={12}>
                                   <FormGroup row >
-                                    <Label for="full_name" sm={2}>
+                                    <Label for="full_name" sm={4}>
                                       Tên người liên hệ
                                     </Label>
-                                    <Col sm={10}>
+                                    <Col sm={8}>
                                       <InputGroup>
                                         <Field
                                           name="full_name"
@@ -275,38 +275,14 @@ export default class ContactCustomerAdd extends PureComponent {
                                   </FormGroup>
                                 </Col>
                               </Row>
+                              
                               <Row>
                                 <Col xs={12}>
                                   <FormGroup row >
-                                    <Label for="nick_name" sm={2}>
-                                      Biệt danh
-                                    </Label>
-                                    <Col sm={10}>
-                                      <InputGroup>
-                                        <Field
-                                          name="nick_name"
-                                          render={({ field /* _form */ }) => <Input
-                                            {...field}
-                                            onBlur={null}
-                                            type={`text`}
-                                            name="nick_name"
-                                            id="nick_name"
-                                            disabled={noEdit}
-                                          />}
-                                        />
-                                      </InputGroup>
-                                      <ErrorMessage name="nick_name" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
-                                    </Col>
-                                  </FormGroup>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Col xs={12}>
-                                  <FormGroup row >
-                                    <Label for="email" sm={2}>
+                                    <Label for="email" sm={4}>
                                       Email
                                     </Label>
-                                    <Col sm={10}>
+                                    <Col sm={8}>
                                       <InputGroup>
                                         <Field
                                           name="email"
@@ -330,10 +306,10 @@ export default class ContactCustomerAdd extends PureComponent {
                               <Row>
                                 <Col xs={12}>
                                   <FormGroup row >
-                                    <Label for="phone_number" sm={2}>
+                                    <Label for="phone_number" sm={4}>
                                       Số điện thoại
                                     </Label>
-                                    <Col sm={10}>
+                                    <Col sm={8}>
                                       <InputGroup>
                                         <Field
                                           name="phone_number"
@@ -348,56 +324,6 @@ export default class ContactCustomerAdd extends PureComponent {
                                         />
                                       </InputGroup>
                                       <ErrorMessage name="phone_number" component={({ children }) => <Alert color="danger" className="field-validation-errorr">{children}</Alert>} />
-                                    </Col>
-                                  </FormGroup>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Col xs={12}>
-                                  <FormGroup row >
-                                    <Label for="key_contact" sm={2}>
-                                      Trang liên hệ
-                                    </Label>
-                                    <Col sm={10}>
-                                      <InputGroup>
-                                        <Field
-                                          name="key_contact"
-                                          render={({ field /* _form */ }) => <Input
-                                            {...field}
-                                            onBlur={null}
-                                            type={`text`}
-                                            name="key_contact"
-                                            id="key_contact"
-                                            disabled={noEdit}
-                                          />}
-                                        />
-                                      </InputGroup>
-                                      <ErrorMessage name="key_contact" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
-                                    </Col>
-                                  </FormGroup>
-                                </Col>
-                              </Row>
-                              <Row>
-                                <Col xs={12}>
-                                  <FormGroup row >
-                                    <Label for="service_name" sm={2}>
-                                      Tên dịch vụ
-                                    </Label>
-                                    <Col sm={10}>
-                                      <InputGroup>
-                                        <Field
-                                          name="service_name"
-                                          render={({ field /* _form */ }) => <Input
-                                            {...field}
-                                            onBlur={null}
-                                            type={`text`}
-                                            name="service_name"
-                                            id="service_name"
-                                            disabled={noEdit}
-                                          />}
-                                        />
-                                      </InputGroup>
-                                      <ErrorMessage name="service_name" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
                                     </Col>
                                   </FormGroup>
                                 </Col>
@@ -433,7 +359,7 @@ export default class ContactCustomerAdd extends PureComponent {
                               {/* {
                                 noEdit ? (
                                   <CheckAccess permission="CRM_ContactCustomer_EDIT">
-                                    <Button color="primary" className="mr-2 btn-block-sm" onClick={() => window._$g.rdr(`/contact-customer/edit/${contactCustomerEnt.contact_customerid}`)}>
+                                    <Button color="primary" className="mr-2 btn-block-sm" onClick={() => window._$g.rdr(`/contact/edit/${contactCustomerEnt.contact_customerid}`)}>
                                       <i className="fa fa-edit mr-1" />Chỉnh sửa
                                     </Button>
                                   </CheckAccess>
@@ -447,7 +373,7 @@ export default class ContactCustomerAdd extends PureComponent {
                                     </Button>
                                   ]
                               } */}
-                              <Button disabled={isSubmitting} onClick={() => window._$g.rdr('/contact-customer')} className="btn-block-sm mt-md-0 mt-sm-2">
+                              <Button disabled={isSubmitting} onClick={() => window._$g.rdr('/contact')} className="btn-block-sm mt-md-0 mt-sm-2">
                                 <i className="fa fa-times-circle mr-1" />Đóng
                               </Button>
                             </Col>

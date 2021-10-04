@@ -2482,21 +2482,21 @@ const routes = [
 
   // // Contact cusomer
   {
-    path: "/contact-customer",
+    path: "/contact",
     exact: true,
-    name: "Danh sách khách hàng liên hệ",
-    function: "CRM_CONTACTCUSTOMER_VIEW",
+    name: "Danh sách liên hệ",
+    function: "CMS_CONTACT_VIEW",
     component: ContactCustomer,
   },
-  // { path: '/contact-customer/add', exact: true, name: 'Thêm mới', function: 'MD_CONTACT_CUSTOMER_ADD', component: ContactCustomerAdd },
+  // { path: '/contact/add', exact: true, name: 'Thêm mới', function: 'MD_CONTACT_CUSTOMER_ADD', component: ContactCustomerAdd },
   {
-    path: "/contact-customer/detail/:id",
+    path: "/contact/detail/:id",
     exact: true,
     name: "Chi tiết",
-    function: "CRM_CONTACTCUSTOMER_VIEW",
+    function: "CMS_CONTACT_VIEW",
     component: ContactCustomerDetail,
   },
-  // { path: '/contact-customer/edit/:id', exact: true, name: 'Chỉnh sửa', function: 'MD_CONTACT_CUSTOMER_EDIT', component: ContactCustomerEdit }
+  // { path: '/contact/edit/:id', exact: true, name: 'Chỉnh sửa', function: 'MD_CONTACT_CUSTOMER_EDIT', component: ContactCustomerEdit }
   // //.end#Contact cusomer
 
   //publishing company

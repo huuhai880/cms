@@ -27,10 +27,7 @@ const getIngredientsList = async (queryParams = {}) => {
         'CREATEDDATETO',
         apiHelper.getValueFromObject(queryParams, 'endDate')
       )
-      .input(
-        'ISTYPE',
-        apiHelper.getFilterBoolean(queryParams, 'selectdType')
-      )
+      .input('ISTYPE', apiHelper.getFilterBoolean(queryParams, 'selectdType'))
       .input(
         'ISACTIVE',
         apiHelper.getFilterBoolean(queryParams, 'selectdActive')
@@ -101,7 +98,13 @@ const addIngredient = async (body = {}) => {
     /////create or update number
     const requestIngredient = new sql.Request(transaction);
     // console.log(apiHelper.getValueFromObject(body, 'is_total_shortened') == 1)
-    if (apiHelper.getValueFromObject(body, 'is_total_shortened') == 1||apiHelper.getValueFromObject(body, 'is_no_total_shortened') == 1) {
+    if (
+      apiHelper.getValueFromObject(body, 'is_total_shortened') == 1 ||
+      apiHelper.getValueFromObject(body, 'is_no_total_shortened') == 1 ||
+      (apiHelper.getValueFromObject(body, 'is_total_shortened') == '' &&
+        apiHelper.getValueFromObject(body, 'is_no_total_shortened') == '' &&
+        apiHelper.getValueFromObject(body, 'is_total_2_digit') == '')
+    ) {
       const resultIngredient = await requestIngredient
         .input(
           'INGREDIENTID',
@@ -123,7 +126,10 @@ const addIngredient = async (body = {}) => {
         .input('ISVOWELs', apiHelper.getValueFromObject(body, 'is_vowel'))
         .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
         .input('ISAPPLYDOB', apiHelper.getValueFromObject(body, 'is_apply_dob'))
-        .input('VALUEINGREDIENTS', apiHelper.getValueFromObject(body, 'ingredient_value'))
+        .input(
+          'VALUEINGREDIENTS',
+          apiHelper.getValueFromObject(body, 'ingredient_value')
+        )
         .input(
           'ISAPPLYNAME',
           apiHelper.getValueFromObject(body, 'is_apply_name')
@@ -241,7 +247,10 @@ const addIngredient = async (body = {}) => {
         .input('ISVOWELs', apiHelper.getValueFromObject(body, 'is_vowel'))
         .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
         .input('ISAPPLYDOB', apiHelper.getValueFromObject(body, 'is_apply_dob'))
-        .input('VALUEINGREDIENTS', apiHelper.getValueFromObject(body, 'ingredient_value'))
+        .input(
+          'VALUEINGREDIENTS',
+          apiHelper.getValueFromObject(body, 'ingredient_value')
+        )
         .input(
           'ISAPPLYNAME',
           apiHelper.getValueFromObject(body, 'is_apply_name')

@@ -12,24 +12,35 @@ const fileHelper = require('../../common/helpers/file.helper');
 const config = require('../../../config/config');
 
 const getListContactCustomer = async (queryParams = {}) => {
+  console.log(queryParams)
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
-    const keyword = apiHelper.getSearch(queryParams);
     const pool = await mssql.pool;
-    const data = await pool.request()
-      .input('PAGESIZE', itemsPerPage)
-      .input('PAGEINDEX', currentPage)
-      .input('KEYWORD', keyword)
-      .input('KEYCONTACT', apiHelper.getValueFromObject(queryParams, 'key_contact'))
-      .execute(PROCEDURE_NAME.CRM_CONTACT_CUSTOMER_GETLIST);
-    
-    const contactCustomer = data.recordset;
+    const data = await pool
+      .request()
+      .input('PageSize', itemsPerPage)
+      .input('PageIndex', currentPage)
+      .input('KEYWORD', apiHelper.getValueFromObject(queryParams, 'search'))
+      .input(
+        'CREATEDDATEFROM',
+        apiHelper.getValueFromObject(queryParams, 'startDate')
+      )
+      .input(
+        'CREATEDDATETO',
+        apiHelper.getValueFromObject(queryParams, 'endDate')
+      )
+      .input(
+        'ISACTIVE',
+        apiHelper.getFilterBoolean(queryParams, 'is_active')
+      )
+      .execute('CRM_CONTACTCUSTOMER_GetList');
+    const result = data.recordset;
     return new ServiceResponse(true, '', {
-      'data': ContactCustomerClass.list(contactCustomer),
+      'data': ContactCustomerClass.list(result),
       'page': currentPage,
       'limit': itemsPerPage,
-      'total': apiHelper.getTotalData(contactCustomer),
+      'total': apiHelper.getTotalData(result),
     });
   } catch (e) {
     logger.error(e, {
@@ -78,7 +89,7 @@ const detailContactCustomer = async (contact_customer_id) => {
   try {
     const pool = await mssql.pool;
     const data = await pool.request()
-      .input('CONTACTCUSTOMERID', contact_customer_id)
+      .input('CONTACTID', contact_customer_id)
       .execute(PROCEDURE_NAME.CRM_CONTACT_CUSTOMER_GETBYID);
 
     const contactCustomer = data.recordset[0];
@@ -96,7 +107,7 @@ const deleteContactCustomer = async (contact_customer_id, auth_name) => {
   try {
     const pool = await mssql.pool;
     await pool.request()
-      .input('CONTACTCUSTOMERID', contact_customer_id)
+      .input('CONTACTID', contact_customer_id)
       .input('DELETEDUSER', auth_name)
       .execute(PROCEDURE_NAME.CRM_CONTACT_CUSTOMER_DELETE);
     return new ServiceResponse(true);

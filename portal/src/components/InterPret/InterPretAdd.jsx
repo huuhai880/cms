@@ -353,7 +353,7 @@ function InterPretAdd({ noEdit }) {
                           <span className="font-weight-bold red-text">*</span>
                         ) : null}
                       </Label>
-                      <Col sm={7}>
+                      <Col sm={8}>
                         <Select
                           className="MuiPaper-filter__custom--select"
                           id={`mainnumber_id`}
