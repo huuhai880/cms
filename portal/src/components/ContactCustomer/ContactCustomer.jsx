@@ -96,14 +96,14 @@ class ContactCustomer extends PureComponent {
   };
 
   handleClickAdd = () => {
-    window._$g.rdr("/contact-customer/add");
+    window._$g.rdr("/contact/add");
   };
 
   handleActionItemClick(type, id, rowIndex) {
     let routes = {
-      detail: "/contact-customer/detail/",
+      detail: "/contact/detail/",
       delete: "/contact-ustomer/delete/",
-      edit: "/contact-customer/edit/",
+      edit: "/contact/edit/",
     };
     const route = routes[type];
     if (type.match(/detail|edit/i)) {
@@ -137,10 +137,10 @@ class ContactCustomer extends PureComponent {
     }
   }
 
-  handleSubmitFilter = (search, key_contact) => {
+  handleSubmitFilter = (search, is_active) => {
     let query = { ...this.state.query };
     query.page = 1;
-    query = Object.assign(query, { search, key_contact });
+    query = Object.assign(query, { search, is_active });
     this.getData(query).catch(() => {
       window._$g.dialogs.alert(
         window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
@@ -164,8 +164,8 @@ class ContactCustomer extends PureComponent {
   render() {
     const columns = [
       configIDRowTable(
-        "contact_customer_id",
-        "/contact-customer/detail/",
+        "contact_id",
+        "/contact/detail/",
         this.state.query
       ),
       {
@@ -232,8 +232,8 @@ class ContactCustomer extends PureComponent {
         },
       },
       {
-        name: "key_contact",
-        label: "Trang liên hệ",
+        name: "content",
+        label: "Nội dung liên hệ",
         options: {
           filter: false,
           sort: false,
@@ -253,23 +253,22 @@ class ContactCustomer extends PureComponent {
         },
       },
       {
-        name: "service_name",
-        label: "Tên dịch vụ",
+        name: "is_active",
+        label: "Kích hoạt",
         options: {
           filter: false,
           sort: false,
           customHeadRender: (columnMeta, handleToggleColumn) => {
             return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
+              <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
                 <div className="text-center">{columnMeta.label}</div>
               </th>
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-left">{value}</div>;
+            return (
+              <div className="text-center">{value == 1 ? "Có" : value == 0 ? "Không" : "Không"}</div>
+            );
           },
         },
       },
@@ -292,15 +291,15 @@ class ContactCustomer extends PureComponent {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                {/* <Button color="warning" title="Chi tiết" className="mr-1" onClick={evt => this.handleActionItemClick('detail', this.state.data[tableMeta['rowIndex']].contact_customer_id, tableMeta['rowIndex'])}>
+                {/* <Button color="warning" title="Chi tiết" className="mr-1" onClick={evt => this.handleActionItemClick('detail', this.state.data[tableMeta['rowIndex']].contact_id, tableMeta['rowIndex'])}>
                   <i className="fa fa-info" />
                 </Button> */}
                 {/* <CheckAccess permission="CRM_CONTACT_CUSTOMER_EDIT">
-                  <Button color="primary" title="Chỉnh sửa" className="mr-1" onClick={evt => this.handleActionItemClick('edit', this.state.data[tableMeta['rowIndex']].contact_customer_id, tableMeta['rowIndex'])}>
+                  <Button color="primary" title="Chỉnh sửa" className="mr-1" onClick={evt => this.handleActionItemClick('edit', this.state.data[tableMeta['rowIndex']].contact_id, tableMeta['rowIndex'])}>
                     <i className="fa fa-edit" />
                   </Button>
                 </CheckAccess> */}
-                <CheckAccess permission="CRM_CONTACTCUSTOMER_DEL">
+                <CheckAccess permission="CMS_CONTACT_DEL">
                   <Button
                     color="danger"
                     title="Xóa"
@@ -309,7 +308,7 @@ class ContactCustomer extends PureComponent {
                       this.handleActionItemClick(
                         "delete",
                         this.state.data[tableMeta["rowIndex"]]
-                          .contact_customer_id,
+                          .contact_id,
                         tableMeta["rowIndex"]
                       )
                     }
@@ -323,19 +322,13 @@ class ContactCustomer extends PureComponent {
         },
       },
     ];
-    const keyContactMapList = {
-      contact: "Trang liên hệ",
-      author: "Trang góc tác giả",
-      publisingcompany: "Trang góc nhà xuất bản",
-      service: "Trang dịch vụ",
-      plan: "Trang dự án",
-    };
+
 
     const { count, page, query, data } = this.state;
-    data.forEach((el) => {
-      let nameContactType = el.key_contact;
-      el.key_contact = keyContactMapList[nameContactType];
-    });
+    // data.forEach((el) => {
+    //   let nameContactType = el.is_active;
+    //   el.key_contact = keyContactMapList[nameContactType];
+    // });
 
     const options = configTableOptions(count, page, query);
 
