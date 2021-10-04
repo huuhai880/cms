@@ -12,14 +12,12 @@ class ContactCustomerFilter extends PureComponent {
     this.state = {
       inputValue: "",
       keyContact: null,
-      keyContactOptions: [
-        { label: "Tất cả", value: "" },
-        { label: "Trang liên hệ", value: "contact" },
-        { label: "Trang góc tác giả", value: "author" },
-        { label: "Trang góc nhà xuất bản", value: "publisingcompany" },
-        { label: "Trang dịch vụ", value: "service" },
-        { label: "Trang dự án", value: "plan" },
+      isActives: [
+        { name: "Tất cả", id: 2 },
+        { name: "Có", id: 1 },
+        { name: "Không", id: 0 },
       ],
+      is_active:{ value: "1", label: "Có" },
     };
   }
 
@@ -37,20 +35,22 @@ class ContactCustomerFilter extends PureComponent {
       this.onSubmit();
     }
   };
-
+  handleChangeIsActive = (is_active) => {
+    this.setState({ is_active });
+  };
   onSubmit = () => {
-    const { inputValue, keyContact } = this.state;
+    const { inputValue, is_active } = this.state;
     const { handleSubmit } = this.props;
-    handleSubmit(inputValue, keyContact ? keyContact.value : undefined);
+    handleSubmit(inputValue, is_active ? is_active.value : undefined);
   };
 
   onClear = () => {
-    const { inputValue, status, keyContact } = this.state;
-    if (inputValue || status || keyContact) {
+    const { inputValue, status, is_active } = this.state;
+    if (inputValue || status || is_active) {
       this.setState(
         {
           inputValue: "",
-          keyContact: null,
+          is_active: { value: "1", label: "Có" },
         },
         () => {
           this.onSubmit();
@@ -91,18 +91,21 @@ class ContactCustomerFilter extends PureComponent {
                 <Col xs={12} sm={6}>
                   <FormGroup className="mb-2 mb-sm-0">
                     <Label for="" className="mr-sm-2">
-                      Trang liên hệ
+                      Kích hoạt
                     </Label>
                     <Select
-                      className="MuiPaper-filter__custom--select"
-                      id="keyContactOptions"
-                      name="keyContactOptions"
-                      onChange={this.handleChangePlanCategory}
-                      isSearchable={true}
-                      placeholder={"-- Chọn --"}
-                      value={this.state.keyContact}
-                      options={keyContactOptions}
-                    />
+                  className="MuiPaper-filter__custom--select"
+                  id="is_active"
+                  name="is_active"
+                  onChange={this.handleChangeIsActive}
+                  isSearchable={true}
+                  placeholder={"-- Chọn --"}
+                  value={this.state.is_active}
+                  options={this.state.isActives.map(({ name: label, id: value }) => ({
+                    value,
+                    label,
+                  }))}
+                />
                   </FormGroup>
                 </Col>
               </Row>
