@@ -129,6 +129,18 @@ function MainNumberAdd({ noEdit }) {
         window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
       }
     };
+    if (!formik.values.main_number_img.find((x) => x.partner_id == null)) {
+      if (formik.values.main_number_img.length == 0) {
+        let AddRowProFirst = {
+          partner_id: -1,
+          main_number_images_url: null,
+          partner_name: null,
+          img_is_default: 1,
+          img_is_active: 1,
+        };
+        formik.setFieldValue("main_number_img", [...formik.values.main_number_img, AddRowProFirst]);
+      }
+    }
     _callAPI();
   }, []);
   //// config table
@@ -140,20 +152,8 @@ function MainNumberAdd({ noEdit }) {
       img_is_default: 0,
       img_is_active: 1,
     };
-    if (!formik.values.main_number_img.find((x) => x.partner_id == null)) {
-      if (formik.values.main_number_img.length == 0) {
-        let AddRowProFirst = {
-          partner_id: -1,
-          main_number_images_url: null,
-          partner_name: null,
-          img_is_default: 1,
-          img_is_active: 1,
-        };
-        formik.setFieldValue("main_number_img", [...formik.values.main_number_img, AddRowProFirst]);
-      } else {
-        formik.setFieldValue("main_number_img", [...formik.values.main_number_img, AddRowPro]);
-      }
-    }
+    formik.setFieldValue("main_number_img", [...formik.values.main_number_img, AddRowPro]);
+    
   };
   // console.log()
   const handleDeleteRowNewImg = (index) => {
