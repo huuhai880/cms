@@ -138,9 +138,8 @@ export default class AttributesAdd extends PureComponent {
               value: Yup.string(),
               label: Yup.string(),
             })
-            .nullable()
             .required("Đối tác là bắt buộc."),
-          url_images: Yup.string().nullable().required("Hình ảnh là bắt buộc"),
+
         })
       )
       .test("list_attributes_image", null, (arr) => {
