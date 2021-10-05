@@ -4,6 +4,8 @@ const template = {
   group_name: '{{#? GROUPNAME}}',
   description: '{{#? DESCRIPTION}}',
   is_active: '{{ ISACTIVE? 1: 0}}',
+  is_powerditagram: '{{ ISPOWERDIAGRAM? 1: 0}}',
+  is_emptyditagram: '{{ ISEMPTYDIAGRAM? 1: 0}}',
 };
 
 let transform = new Transform(template);
@@ -14,6 +16,8 @@ const list = (AttibutesGroup = []) => {
     'group_name',
     'description',
     'is_active',
+    'is_powerditagram',
+    'is_emptyditagram',
   ]);
 };
 
@@ -23,6 +27,8 @@ const detail = (AttibutesGroup = []) => {
     'group_name',
     'description',
     'is_active',
+    'is_powerditagram',
+    'is_emptyditagram',
   ]);
 };
 

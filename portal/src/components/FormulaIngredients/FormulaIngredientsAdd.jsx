@@ -460,6 +460,17 @@ function FormulaIngredientsAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
+                              formik.setFieldValue(`is_gender`, e.target.checked ? 1 : 0);
+                            }}
+                            checked={formik.values.is_gender}
+                          >
+                            Giới tính
+                          </Checkbox>
+                        </Col>
+                        <Col sm={2} className="align-self-center">
+                          <Checkbox
+                            disabled={noEdit}
+                            onChange={(e) => {
                               formik.setFieldValue(`is_crrent_age`, e.target.checked ? 1 : 0);
                             }}
                             checked={formik.values.is_crrent_age}

@@ -35,6 +35,8 @@ export default class AttributesGroupModel extends Model {
     group_name: "",
     description: "",
     is_active: 1,
+    is_powerditagram: 0,
+    is_emptyditagram: 0
   });
 
   /**

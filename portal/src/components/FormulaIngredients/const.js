@@ -45,6 +45,7 @@ export const initialValues = {
   is_total_letter_first_digit: 0,
   is_total_letter_digit: 0,
   is_total: "",
+  is_gender: "",
   type: "",
 };
 
