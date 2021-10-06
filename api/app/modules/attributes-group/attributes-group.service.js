@@ -87,6 +87,7 @@ const createAttributesGroupOrUpdate = async (bodyParams) => {
         'GROUPNAME',
         apiHelper.getValueFromObject(bodyParams, 'group_name')
       )
+     
       .execute(PROCEDURE_NAME.FOR_ATTRIBUTESGROUP_CHECKNAME_ADMINWEB);
     if (!dataCheckName.recordset || dataCheckName.recordset[0].RESULT) {
       return new ServiceResponse(
@@ -101,6 +102,14 @@ const createAttributesGroupOrUpdate = async (bodyParams) => {
       .input(
         'GROUPNAME',
         apiHelper.getValueFromObject(bodyParams, 'group_name')
+      )
+      .input(
+        'ISPOWERDIAGRAM',
+        apiHelper.getValueFromObject(bodyParams, 'is_powerditagram')
+      )
+      .input(
+        'ISEMPTYDIAGRAM',
+        apiHelper.getValueFromObject(bodyParams, 'is_emptyditagram')
       )
       .input(
         'DESCRIPTION',

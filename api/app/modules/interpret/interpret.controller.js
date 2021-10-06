@@ -23,7 +23,24 @@ const getInterpretsList = async (req, res, next) => {
     );
   }
 };
-
+const getAttributesListDetail = async (req, res, next) => {
+  try {
+    const serviceRes = await interpretService.getAttributesListDetail(req.query);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    const { data } = serviceRes.getData();
+    return res.json(new ListResponse(data));
+  } catch (error) {
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+};
 const getDetailListByInterpret = async (req, res, next) => {
   try {
     const serviceRes = await interpretService.getDetailListByInterpret(
@@ -323,5 +340,6 @@ module.exports = {
   CheckDetailInterpret,
   detaiDetailInterpret,
   getListAttributeExcludeById,
-  copyIntergret
+  copyIntergret,
+  getAttributesListDetail
 };

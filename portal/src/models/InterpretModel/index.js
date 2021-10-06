@@ -5,6 +5,8 @@ export default class InterpretModel extends Model {
   static API_INTERPRET_ATTRIBUTE_EXCLUDE = "interpret/attribute/:id/exclude";
 
   static API_INTERPRET_MAINNUMBER_LIST = "interpret/mainnumber";
+  static API_INTERPRET_ATTRIBUTE_LIST_DETAIL = "interpret/attribute-detail";
+
   static API_INTERPRET_RELATIONSHIP_LIST = "interpret/relationship";
   static API_INTERPRET_INTERPRETPARENT_LIST = "interpret/interpretParent/:interpret_id";
   static API_INTERPRET_UPLOAD = "upload-file";
@@ -38,7 +40,10 @@ export default class InterpretModel extends Model {
     let data = Object.assign({}, _data);
     return this._api.get(_static.API_INTERPRET_LIST, data);
   }
-
+  getListAttributeDetail(_data = {}) {
+    let data = Object.assign({}, _data);
+    return this._api.get(_static.API_INTERPRET_ATTRIBUTE_LIST_DETAIL, data);
+  }
   getListInterpretParent(interpretId, interpretDetailId) {
     return this._api.get(`/interpret/parent/${interpretId}/${interpretDetailId}`);
   }

@@ -59,7 +59,7 @@ function MainNumberAdd({ noEdit }) {
   //// create Number
   const handleCreateOrNumber = async (values) => {
     try {
-      await _mainNumberModel.check({ main_number: values.main_number }).then((data) => {
+       _mainNumberModel.check({ main_number: values.main_number }).then((data) => {
         // console.log(data)
         if (data.MAINNUMBERID && formik.values.main_number != dataNumber.main_number) {
           // setalert("Email đã tồn tại!");
@@ -96,11 +96,11 @@ function MainNumberAdd({ noEdit }) {
   //// data detail
   const _initDataDetail = async () => {
     try {
-      await _mainNumberModel.detail(id).then((data) => {
+       _mainNumberModel.detail(id).then((data) => {
         setDataNumber(data);
         // console.log()
       });
-      await _mainNumberModel.listNumImg(id).then((data) => {
+       _mainNumberModel.listNumImg(id).then((data) => {
         formik.setFieldValue("main_number_img", [...formik.values.main_number_img, ...data.items]);
         // console.log([...formik.values.main_number_img, ...data.items])
         data.items.map((item, index) => {
@@ -118,7 +118,7 @@ function MainNumberAdd({ noEdit }) {
   useEffect(() => {
     const _callAPI = async () => {
       try {
-        await _mainNumberModel.getListPartner().then((data) => {
+         _mainNumberModel.getListPartner().then((data) => {
           let res = data.items;
           // console.log(res)
           res.push({ partner_id: -1, partner_name: "My success JSC" });

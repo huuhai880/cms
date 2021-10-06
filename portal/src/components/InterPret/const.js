@@ -3,7 +3,7 @@ import {
   configIDRowTable,
   numberFormat,
   getPropsConfigTable,
-  splitString
+  splitString,
 } from "../../utils/index";
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import React from "react";
@@ -22,6 +22,8 @@ export const initialValues = {
   mainnumber_id: "",
   compare_mainnumber_id: "",
   attribute_id: "",
+  attribute_list: [],
+
   is_active: 1,
   is_master: "",
   decs: "",
@@ -29,25 +31,25 @@ export const initialValues = {
   note: "",
   order_index: "",
   is_for_power_diagram: false,
-  compare_attribute_id :null
+  compare_attribute_id: null,
+  is_interpretspectial: 0,
 };
 
-export const validationSchema = (is_for_power_diagram = false) => {
+export const validationSchema = (is_for_power_diagram = false, is_interpretspectial = false) => {
   return yup.object().shape({
-    mainnumber_id: is_for_power_diagram ? yup.string().optional().nullable() : yup.string().required("Chỉ số không được để trống .").nullable(),
-    attribute_id: is_for_power_diagram ? yup.string().optional().nullable() : yup.string().required("Tên thuộc tính không được để trống .").nullable(),
+    mainnumber_id:
+      is_for_power_diagram || is_interpretspectial
+        ? yup.string().optional().nullable()
+        : yup.string().required("Chỉ số không được để trống .").nullable(),
+    attribute_id:
+      is_for_power_diagram || is_interpretspectial
+        ? yup.string().optional().nullable()
+        : yup.string().required("Tên thuộc tính không được để trống .").nullable(),
     order_index: yup.string().required("Vị trí hiển thị không được để trống .").nullable(),
-    decs: yup
-      .string()
-      .required("Mô tả không được để trống .")
-      .nullable(),
-    brief_decs: yup
-      .string()
-      .required("Tóm tắt không được để trống .")
-      .nullable(),
+    decs: yup.string().required("Mô tả không được để trống .").nullable(),
+    brief_decs: yup.string().required("Tóm tắt không được để trống .").nullable(),
   });
-
-}
+};
 
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   return [
@@ -84,9 +86,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return (
-            <div className="text-left">{value.replace(/<[^>]+>/g, "")}</div>
-          );
+          return <div className="text-left">{value.replace(/<[^>]+>/g, "")}</div>;
         },
       },
     },
@@ -206,7 +206,6 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
   ];
 };
 
-
 export const column = (handleDelete) => {
   return [
     {
@@ -215,9 +214,11 @@ export const column = (handleDelete) => {
       key: "name",
       responsive: ["md"],
       render: (text, record, index) => {
-        return <Link to={`/interpret/detail/${record['interpret_id']}`} target={"_self"}>
-          <div className="text-center">{index + 1}</div>
-        </Link>
+        return (
+          <Link to={`/interpret/detail/${record["interpret_id"]}`} target={"_self"}>
+            <div className="text-center">{index + 1}</div>
+          </Link>
+        );
       },
       width: "4%",
     },
@@ -227,6 +228,10 @@ export const column = (handleDelete) => {
       key: "attribute_name",
       responsive: ["md"],
       width: "20%",
+      render: (text, record, index) => {
+        // console.log(record)
+        return <div className="text-left">{record.is_interpretspectial==1 ? record.attributes_name : record.attribute_name }</div>;
+      },
     },
     {
       title: "Vị trí hiển thị",
@@ -273,9 +278,7 @@ export const column = (handleDelete) => {
                 title="Copy"
                 className="mr-1"
                 onClick={(evt) => {
-                  window._$g.rdr(
-                    `/interpret/copy/${record["interpret_id"]}`
-                  );
+                  window._$g.rdr(`/interpret/copy/${record["interpret_id"]}`);
                 }}
               >
                 <i className="fa fa-copy" />
@@ -288,9 +291,7 @@ export const column = (handleDelete) => {
                 title="Thêm mới luận giải chi tiết"
                 className="mr-1"
                 onClick={(evt) => {
-                  window._$g.rdr(
-                    `/interpret/d-add/${record["interpret_id"]}`
-                  );
+                  window._$g.rdr(`/interpret/d-add/${record["interpret_id"]}`);
                 }}
               >
                 <i className="fa fa-plus" />
@@ -303,10 +304,7 @@ export const column = (handleDelete) => {
                 title="Chi tiết luận giải trên web"
                 className="mr-1"
                 onClick={(evt) => {
-                  window.open(
-                    `/portal/interpret/detail-web/${record["interpret_id"]}`,
-                    "_blank"
-                  );
+                  window.open(`/portal/interpret/detail-web/${record["interpret_id"]}`, "_blank");
                 }}
               >
                 <i className="fa fa-eye" />
@@ -341,5 +339,4 @@ export const column = (handleDelete) => {
       responsive: ["md"],
     },
   ];
-}
-
+};

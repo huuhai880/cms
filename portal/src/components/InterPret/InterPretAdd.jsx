@@ -23,6 +23,7 @@ import { Checkbox } from "antd";
 import { Editor } from "@tinymce/tinymce-react";
 import Select from "react-select";
 import { readImageAsBase64 } from "../../utils/html";
+import { isBuffer } from "lodash";
 layoutFullWidthHeight();
 const _interpretModel = new InterpretModel();
 
@@ -34,20 +35,23 @@ function InterPretAdd({ noEdit }) {
   let { id = null } = useParams();
   const [btnType, setbtnType] = useState("");
   const [isForPowerDiagram, setIsForPowerDiagram] = useState(false);
+  const [isinterpretspectial, setIsinterpretspectial] = useState(false);
+  const [disableSpectial, setDisableSpectial] = useState(false);
+
   const [attributeExclude, setAttribuExclude] = useState([]);
   const [alerts, setAlerts] = useState([]);
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: dataInterpret,
-    validationSchema: validationSchema(isForPowerDiagram),
+    validationSchema: validationSchema(isForPowerDiagram,isinterpretspectial),
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: (values) => {
       handleCreateOrUpdate(values);
     },
   });
-
+// console.log(formik.errors)
   useEffect(() => {
     const _callAPI = async () => {
       try {
@@ -91,8 +95,24 @@ function InterPretAdd({ noEdit }) {
     if (id) {
       _initDataDetail();
     }
+    // if(id&&formik.values.is_interpretspectial==1){
+    //   setDisableSpectial(true)
+    // }
   }, [id]);
-
+  // console.log(true)
+  useEffect(() => {
+    if (id&&formik.values.is_interpretspectial) {
+      setIsinterpretspectial(true);
+      try {
+        _interpretModel.getListAttributeDetail({interpret_id:id}).then((data) => {
+          formik.setFieldValue("attribute_list", data.items);
+        })
+       
+      } catch (error) {
+        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
+      }
+    }
+  }, [formik.values.is_interpretspectial]);
   useEffect(() => {
     if (formik.values.attribute_id > 0) {
       getAttributeExclude(formik.values.attribute_id);
@@ -120,6 +140,9 @@ function InterPretAdd({ noEdit }) {
     try {
       let interpretDetail = await _interpretModel.detail(id);
       setDataInterpret(interpretDetail);
+      if(interpretDetail.is_interpretspectial){
+        setDisableSpectial(true)
+      }
       let { is_for_power_diagram = false } = interpretDetail || {};
       setIsForPowerDiagram(is_for_power_diagram);
     } catch (error) {
@@ -177,7 +200,17 @@ function InterPretAdd({ noEdit }) {
     }
     return [];
   };
-
+  const getMainNumBer = (mainnumber_id) => {
+    // console.log(mainnumber_id)
+    if (dataMainnumber && dataMainnumber.length) {
+      return dataMainnumber.map((item) => {
+        return mainnumber_id == item.mainnumber_id
+          ? item.mainnumber
+          : null
+      });
+    }
+    return [];
+  };
   const getOptionMainNumBer = () => {
     if (dataMainnumber && dataMainnumber.length) {
       return dataMainnumber.map((item) => {
@@ -210,22 +243,22 @@ function InterPretAdd({ noEdit }) {
       }
     });
   };
-
-  const handleCheckForPowerDiagram = (e) => {
-    formik.setFieldValue(`is_for_power_diagram`, e.target.checked);
-    setIsForPowerDiagram(e.target.checked);
-    if (e.target.checked) {
-      formik.setFieldValue("attribute_id", null);
-      formik.setFieldValue("relationship_id", null);
-      formik.setFieldValue("is_master", false);
-      formik.setFieldValue("mainnumber_id", null);
-      formik.setFieldValue("compare_attribute_id", null);
-      formik.setErrors({
-        attribute_id: "",
-        mainnumber_id: "",
-      });
-    }
-  };
+  // console.log(formik.values);
+  // const handleCheckForPowerDiagram = (e) => {
+  //   formik.setFieldValue(`is_for_power_diagram`, e.target.checked);
+  //   setIsForPowerDiagram(e.target.checked);
+  //   if (e.target.checked) {
+  //     formik.setFieldValue("attribute_id", null);
+  //     formik.setFieldValue("relationship_id", null);
+  //     formik.setFieldValue("is_master", false);
+  //     formik.setFieldValue("mainnumber_id", null);
+  //     formik.setFieldValue("compare_attribute_id", null);
+  //     formik.setErrors({
+  //       attribute_id: "",
+  //       mainnumber_id: "",
+  //     });
+  //   }
+  // };
 
   return (
     <div key={`view`} className="animated fadeIn news">
@@ -255,11 +288,15 @@ function InterPretAdd({ noEdit }) {
                       <Label for="is_for_power_diagram" sm={4}></Label>
                       <Col sm={8}>
                         <Checkbox
-                          disabled={noEdit}
-                          onChange={handleCheckForPowerDiagram}
-                          checked={formik.values.is_for_power_diagram}
+                          disabled={noEdit||disableSpectial}
+                          onChange={(e) => {
+                            formik.setFieldValue(`is_interpretspectial`, e.target.checked);
+                            formik.setFieldValue(`attribute_id`, "");
+                                setIsinterpretspectial(e.target.checked);
+                          }}
+                          checked={formik.values.is_interpretspectial}
                         >
-                          Dành cho sơ đồ sức mạnh
+                          Là luận giải đặc biệt
                         </Checkbox>
                       </Col>
                     </FormGroup>
@@ -275,146 +312,192 @@ function InterPretAdd({ noEdit }) {
                         ) : null}
                       </Label>
                       <Col sm={8}>
-                        <Select
-                          className="MuiPaper-filter__custom--select"
-                          id={`attribute_id`}
-                          name={`attribute_id`}
-                          isClearable={true}
-                          styles={{
-                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          }}
-                          menuPortalTarget={document.querySelector("body")}
-                          isDisabled={noEdit || formik.values.is_for_power_diagram}
-                          placeholder={"-- Chọn --"}
-                          value={convertValue(formik.values.attribute_id, getOptionAttribute())}
-                          options={getOptionAttribute()}
-                          onChange={(value) => {
-                            if (!value) {
-                              formik.setFieldValue("attribute_id", "");
-                              formik.setFieldValue("mainnumber_id", "");
-                            } else {
-                              formik.setFieldValue("attribute_id", value.value);
-                              formik.setFieldValue("mainnumber_id", value.mainnumber_id);
-                            }
-                          }}
-                        />
-                        {formik.errors.attribute_id && formik.touched.attribute_id ? (
-                          <div
-                            className="field-validation-error alert alert-danger fade show"
-                            role="alert"
-                          >
-                            {formik.errors.attribute_id}
-                          </div>
-                        ) : null}
+                        {formik.values.is_interpretspectial ? (
+                          <>
+                            <Select
+                              className="MuiPaper-filter__custom--select"
+                              id={`attribute_id`}
+                              name={`attribute_id`}
+                              isClearable={true}
+                              styles={{
+                                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                              }}
+                              menuPortalTarget={document.querySelector("body")}
+                              isDisabled={noEdit || formik.values.is_for_power_diagram}
+                              placeholder={"-- Chọn --"}
+                              value={convertValue(formik.values.attribute_list)}
+                              options={getOptionAttribute()}
+                              isMulti
+                              onChange={(value) => {
+                                // console.log(value)
+                                // if (!value) {
+                                // formik.setFieldValue("attribute_id", value);
+                                //   formik.setFieldValue("mainnumber_id", "");
+                                // } else {
+                                formik.setFieldValue("attribute_list", value);
+                                //   formik.setFieldValue("mainnumber_id", value.mainnumber_id);
+                                // }
+                              }}
+                            />
+                            {formik.errors.attribute_id && formik.touched.attribute_id ? (
+                              <div
+                                className="field-validation-error alert alert-danger fade show"
+                                role="alert"
+                              >
+                                {formik.errors.attribute_id}
+                              </div>
+                            ) : null}
+                          </>
+                        ) : (
+                          <>
+                            <Select
+                              className="MuiPaper-filter__custom--select"
+                              id={`attribute_id`}
+                              name={`attribute_id`}
+                              isClearable={true}
+                              styles={{
+                                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                              }}
+                              menuPortalTarget={document.querySelector("body")}
+                              isDisabled={noEdit || formik.values.is_for_power_diagram}
+                              placeholder={"-- Chọn --"}
+                              value={convertValue(formik.values.attribute_id, getOptionAttribute())}
+                              options={getOptionAttribute()}
+                              // isMulti
+                              onChange={(value) => {
+                                if (!value) {
+                                  formik.setFieldValue("attribute_id", "");
+                                  formik.setFieldValue("mainnumber_id", "");
+                                } else {
+                                  formik.setFieldValue("attribute_id", value.value);
+                                  formik.setFieldValue("mainnumber_id", value.mainnumber_id);
+                                }
+                              }}
+                            />
+                            {formik.errors.attribute_id && formik.touched.attribute_id ? (
+                              <div
+                                className="field-validation-error alert alert-danger fade show"
+                                role="alert"
+                              >
+                                {formik.errors.attribute_id}
+                              </div>
+                            ) : null}
+                          </>
+                        )}
                       </Col>
                     </FormGroup>
                   </Col>
                   <Col sm={6} xs={12}>
-                    <FormGroup row>
-                      <Label for="relationship_id" sm={4}>
-                        Mối quan hệ{" "}
-                      </Label>
-                      <Col sm={8}>
-                        <Select
-                          className="MuiPaper-filter__custom--select"
-                          id={`relationship_id`}
-                          name={`relationship_id`}
-                          isClearable={true}
-                          styles={{
-                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          }}
-                          menuPortalTarget={document.querySelector("body")}
-                          isDisabled={noEdit || formik.values.is_for_power_diagram}
-                          placeholder={"-- Chọn --"}
-                          value={convertValue(
-                            formik.values.relationship_id,
-                            getOptionRelationship()
-                          )}
-                          options={getOptionRelationship(formik.values.relationship_id, true)}
-                          onChange={(value) => {
-                            
-                            if (!value) {
-                              formik.setFieldValue("relationship_id", "");
-                            } else {
-                              formik.setFieldValue("relationship_id", value.value);
-                            }
-                          }}
-                        />{" "}
-                      </Col>
-                    </FormGroup>
+                    {!formik.values.is_interpretspectial ? (
+                      <FormGroup row>
+                        <Label for="relationship_id" sm={4}>
+                          Mối quan hệ{" "}
+                        </Label>
+                        <Col sm={8}>
+                          <Select
+                            className="MuiPaper-filter__custom--select"
+                            id={`relationship_id`}
+                            name={`relationship_id`}
+                            isClearable={true}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
+                            menuPortalTarget={document.querySelector("body")}
+                            isDisabled={noEdit || formik.values.is_for_power_diagram}
+                            placeholder={"-- Chọn --"}
+                            value={convertValue(
+                              formik.values.relationship_id,
+                              getOptionRelationship()
+                            )}
+                            options={getOptionRelationship(formik.values.relationship_id, true)}
+                            onChange={(value) => {
+                              if (!value) {
+                                formik.setFieldValue("relationship_id", "");
+                              } else {
+                                formik.setFieldValue("relationship_id", value.value);
+                              }
+                            }}
+                          />{" "}
+                        </Col>
+                      </FormGroup>
+                    ) : null}
                   </Col>
                 </Row>
                 <Row>
                   <Col sm={6} xs={12}>
-                    <FormGroup row>
-                      <Label for="mainnumber_id" sm={4}>
-                        Giá trị{" "}
-                        {!formik.values.is_for_power_diagram ? (
-                          <span className="font-weight-bold red-text">*</span>
-                        ) : null}
-                      </Label>
-                      <Col sm={8}>
-                        <Select
-                          className="MuiPaper-filter__custom--select"
-                          id={`mainnumber_id`}
-                          name={`mainnumber_id`}
-                          styles={{
-                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          }}
-                          menuPortalTarget={document.querySelector("body")}
-                          isDisabled={true}
-                          placeholder={"-- Chọn --"}
-                          value={convertValue(formik.values.mainnumber_id, getOptionMainNumBer())}
-                          options={getOptionMainNumBer(formik.values.mainnumber_id, true)}
-                          onChange={(value) => {
-                            formik.setFieldValue("mainnumber_id", value.value);
-                          }}
-                        />
-                        {formik.errors.mainnumber_id && formik.touched.mainnumber_id ? (
-                          <div
-                            className="field-validation-error alert alert-danger fade show"
-                            role="alert"
-                          >
-                            {formik.errors.mainnumber_id}
-                          </div>
-                        ) : null}
-                      </Col>
-                    </FormGroup>
+                    {!formik.values.is_interpretspectial ? (
+                      <FormGroup row>
+                        <Label for="mainnumber_id" sm={4}>
+                          Giá trị{" "}
+                          {!formik.values.is_for_power_diagram ? (
+                            <span className="font-weight-bold red-text">*</span>
+                          ) : null}
+                        </Label>
+                        <Col sm={8}>
+                          <Select
+                            className="MuiPaper-filter__custom--select"
+                            id={`mainnumber_id`}
+                            name={`mainnumber_id`}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
+                            menuPortalTarget={document.querySelector("body")}
+                            isDisabled={true}
+                            placeholder={"-- Chọn --"}
+                            value={convertValue(formik.values.mainnumber_id, getOptionMainNumBer())}
+                            options={getOptionMainNumBer(formik.values.mainnumber_id, true)}
+                            onChange={(value) => {
+                              formik.setFieldValue("mainnumber_id", value.value);
+                            }}
+                          />
+                          {formik.errors.mainnumber_id && formik.touched.mainnumber_id ? (
+                            <div
+                              className="field-validation-error alert alert-danger fade show"
+                              role="alert"
+                            >
+                              {formik.errors.mainnumber_id}
+                            </div>
+                          ) : null}
+                        </Col>
+                      </FormGroup>
+                    ) : null}
                   </Col>
 
                   <Col sm={6} xs={12}>
-                    <FormGroup row>
-                      <Label for="attribute_id" sm={4}>
-                        Thuộc tính so sánh{" "}
-                      </Label>
-                      <Col sm={8}>
-                        <Select
-                          id={`compare_attribute_id`}
-                          name={`compare_attribute_id`}
-                          styles={{
-                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          }}
-                          menuPortalTarget={document.querySelector("body")}
-                          isDisabled={
-                            noEdit ||
-                            !formik.values.relationship_id ||
-                            formik.values.is_for_power_diagram
-                          }
-                          placeholder={"-- Chọn --"}
-                          value={convertValue(
-                            formik.values.compare_attribute_id,
-                            getOptionAttribute()
-                          )}
-                          options={getOptionAttribute(true)}
-                          onChange={(selected) => {
-                            formik.setFieldValue(
-                              "compare_attribute_id",
-                              selected ? selected.value : null
-                            );
-                          }}
-                        />
-                      </Col>
-                    </FormGroup>
+                    {!formik.values.is_interpretspectial ? (
+                      <FormGroup row>
+                        <Label for="attribute_id" sm={4}>
+                          Thuộc tính so sánh{" "}
+                        </Label>
+                        <Col sm={8}>
+                          <Select
+                            id={`compare_attribute_id`}
+                            name={`compare_attribute_id`}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
+                            menuPortalTarget={document.querySelector("body")}
+                            isDisabled={
+                              noEdit ||
+                              !formik.values.relationship_id ||
+                              formik.values.is_for_power_diagram
+                            }
+                            placeholder={"-- Chọn --"}
+                            value={convertValue(
+                              formik.values.compare_attribute_id,
+                              getOptionAttribute()
+                            )}
+                            options={getOptionAttribute(true)}
+                            onChange={(selected) => {
+                              formik.setFieldValue(
+                                "compare_attribute_id",
+                                selected ? selected.value : null
+                              );
+                            }}
+                          />
+                        </Col>
+                      </FormGroup>
+                    ) : null}
                   </Col>
                 </Row>
                 <Row>
@@ -455,7 +538,7 @@ function InterPretAdd({ noEdit }) {
                           }}
                           checked={formik.values.is_master}
                         >
-                          Is master
+                          Chỉ số đặc biệt
                         </Checkbox>
                       </Col>
                       <Col sm={4}>
@@ -472,7 +555,83 @@ function InterPretAdd({ noEdit }) {
                     </FormGroup>
                   </Col>
                 </Row>
+                {formik.values.is_interpretspectial ? (
+                  <Row>
+                    <Col
+                      xs={12}
+                      // style={{ maxHeight: 351, overflowY: "auto" }}
+                      className="border-secondary align-middle"
+                    >
+                      <div
+                        className="col-xs-12 col-sm-12 col-md-12 col-lg-12 border align-middle"
+                        style={{ padding: 5 }}
+                      >
+                        <table className="table table-bordered table-hover ">
+                          <thead className="bg-light">
+                            <td className="align-middle text-center" width="10%">
+                              <b>STT</b>
+                            </td>
 
+                            <td className=" align-middle text-center" width="30%">
+                              <b>Thuộc tính</b>
+                            </td>
+                            <td className=" align-middle text-center" width="30%">
+                              <b>Giá trị</b>
+                            </td>
+                      
+                          </thead>
+
+                          {formik.values.attribute_list &&
+                            formik.values.attribute_list.map((item, index) => {
+                              // console.log(item)
+                              return (
+                                <tbody>
+                                  <tr key={index}>
+                                    <td className="align-middle text-center" width="10%">
+                                      {index + 1}
+                                    </td>
+                                    <td className=" align-middle" width="30%">
+                                      {item.label}
+                                    </td>
+                                    <td className=" align-middle text-center" width="30%">
+                                      {getMainNumBer(item.mainnumber_id)}
+                                      {/* <Select
+                                        className="MuiPaper-filter__custom--select"
+                                        id={`mainnumber_id`}
+                                        name={`mainnumber_id`}
+                                        styles={{
+                                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                        }}
+                                        menuPortalTarget={document.querySelector("body")}
+                                        isDisabled={true}
+                                        placeholder={"-- Chọn --"}
+                                        value={convertValue(
+                                          item.mainnumber_id,
+                                          getOptionMainNumBer()
+                                        )}
+                                        options={getOptionMainNumBer(
+                                          item.mainnumber_id,
+                                          true
+                                        )}
+                                      /> */}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              );
+                            })}
+                        </table>
+                        {formik.errors.attribute_list && formik.touched.attribute_list ? (
+                          <div
+                            className="col-xs-12 col-sm-12 col-md-12 col-lg-12 field-validation-error alert alert-danger fade show"
+                            role="alert"
+                          >
+                            {formik.errors.attribute_list}
+                          </div>
+                        ) : null}
+                      </div>
+                    </Col>
+                  </Row>
+                ) : null}
                 <Row>
                   <Col xs={12} sm={12}>
                     <FormGroup row>
@@ -534,6 +693,7 @@ function InterPretAdd({ noEdit }) {
                     </FormGroup>
                   </Col>
                 </Row>
+
                 <Row>
                   <Col xs={12} sm={12}>
                     <FormGroup row>
