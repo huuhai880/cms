@@ -358,6 +358,12 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                                 value: target.checked,
                                               },
                                             });
+                                            field.onChange({
+                                              target: {
+                                                name: "is_emptyditagram",
+                                                value: 0,
+                                              },
+                                            });
                                           }}
                                           type="checkbox"
                                           id="is_powerditagram"
@@ -390,6 +396,12 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                               target: {
                                                 name: "is_emptyditagram",
                                                 value: target.checked,
+                                              },
+                                            });
+                                            field.onChange({
+                                              target: {
+                                                name: "is_powerditagram",
+                                                value: 0,
                                               },
                                             });
                                           }}
