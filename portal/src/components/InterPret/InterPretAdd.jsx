@@ -44,14 +44,14 @@ function InterPretAdd({ noEdit }) {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: dataInterpret,
-    validationSchema: validationSchema(isForPowerDiagram,isinterpretspectial),
+    validationSchema: validationSchema(isForPowerDiagram, isinterpretspectial),
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: (values) => {
       handleCreateOrUpdate(values);
     },
   });
-// console.log(formik.errors)
+  // console.log(formik.errors)
   useEffect(() => {
     const _callAPI = async () => {
       try {
@@ -101,13 +101,12 @@ function InterPretAdd({ noEdit }) {
   }, [id]);
   // console.log(true)
   useEffect(() => {
-    if (id&&formik.values.is_interpretspectial) {
+    if (id && formik.values.is_interpretspectial) {
       setIsinterpretspectial(true);
       try {
-        _interpretModel.getListAttributeDetail({interpret_id:id}).then((data) => {
+        _interpretModel.getListAttributeDetail({ interpret_id: id }).then((data) => {
           formik.setFieldValue("attribute_list", data.items);
-        })
-       
+        });
       } catch (error) {
         window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
       }
@@ -140,8 +139,8 @@ function InterPretAdd({ noEdit }) {
     try {
       let interpretDetail = await _interpretModel.detail(id);
       setDataInterpret(interpretDetail);
-      if(interpretDetail.is_interpretspectial){
-        setDisableSpectial(true)
+      if (interpretDetail.is_interpretspectial) {
+        setDisableSpectial(true);
       }
       let { is_for_power_diagram = false } = interpretDetail || {};
       setIsForPowerDiagram(is_for_power_diagram);
@@ -179,7 +178,33 @@ function InterPretAdd({ noEdit }) {
     }
     return [];
   };
+  const getOptionAttributes = (is_exclude = false) => {
+    if (dataAttribute && dataAttribute.length) {
+      return dataAttribute.map((item) => {
+        let isDisabled = false;
 
+        // let find = attributeExclude.find((p) => p.attribute_id == item.attribute_id);
+        if (formik.values.attribute_list && formik.values.attribute_list.length) {
+          formik.values.attribute_list.map((itemAttribute) => {
+            console.log(itemAttribute.value == item.attribute_id);
+            console.log(item);
+            if (itemAttribute.value == item.attribute_id) {
+              isDisabled = true;
+            }
+          });
+        }
+
+        return {
+          value: item.attribute_id,
+          label: item.attribute_name,
+          mainnumber_id: item.mainnumber_id,
+          isDisabled,
+        };
+      });
+    }
+
+    return [];
+  };
   const getOptionAttribute = (is_exclude = false) => {
     if (dataAttribute && dataAttribute.length) {
       return dataAttribute.map((item) => {
@@ -204,9 +229,7 @@ function InterPretAdd({ noEdit }) {
     // console.log(mainnumber_id)
     if (dataMainnumber && dataMainnumber.length) {
       return dataMainnumber.map((item) => {
-        return mainnumber_id == item.mainnumber_id
-          ? item.mainnumber
-          : null
+        return mainnumber_id == item.mainnumber_id ? item.mainnumber : null;
       });
     }
     return [];
@@ -288,11 +311,15 @@ function InterPretAdd({ noEdit }) {
                       <Label for="is_for_power_diagram" sm={4}></Label>
                       <Col sm={8}>
                         <Checkbox
-                          disabled={noEdit||disableSpectial}
+                          disabled={noEdit || disableSpectial}
                           onChange={(e) => {
                             formik.setFieldValue(`is_interpretspectial`, e.target.checked);
                             formik.setFieldValue(`attribute_id`, "");
-                                setIsinterpretspectial(e.target.checked);
+                            setIsinterpretspectial(e.target.checked);
+                            if (e.target.checked == 0) {
+                              formik.setFieldValue(`attribute_id`, null);
+                              formik.setFieldValue(`attribute_list`, []);
+                            }
                           }}
                           checked={formik.values.is_interpretspectial}
                         >
@@ -325,18 +352,15 @@ function InterPretAdd({ noEdit }) {
                               menuPortalTarget={document.querySelector("body")}
                               isDisabled={noEdit || formik.values.is_for_power_diagram}
                               placeholder={"-- Chọn --"}
-                              value={convertValue(formik.values.attribute_list)}
-                              options={getOptionAttribute()}
-                              isMulti
+                              value={null}
+                              options={getOptionAttributes()}
+                              // isMulti
                               onChange={(value) => {
-                                // console.log(value)
-                                // if (!value) {
-                                // formik.setFieldValue("attribute_id", value);
-                                //   formik.setFieldValue("mainnumber_id", "");
-                                // } else {
-                                formik.setFieldValue("attribute_list", value);
-                                //   formik.setFieldValue("mainnumber_id", value.mainnumber_id);
-                                // }
+                                // console.log(typeof value);
+                                formik.setFieldValue("attribute_list", [
+                                  ...formik.values.attribute_list,
+                                  value,
+                                ]);
                               }}
                             />
                             {formik.errors.attribute_id && formik.touched.attribute_id ? (
@@ -423,6 +447,112 @@ function InterPretAdd({ noEdit }) {
                     ) : null}
                   </Col>
                 </Row>
+                {formik.values.is_interpretspectial ? (
+                  <Row className="mb15">
+                    <Label for="relationship_id" sm={2}>
+                      {/* Mối quan hệ{" "} */}
+                    </Label>
+                    <Col
+                      xs={10}
+                      // style={{ maxHeight: 351, overflowY: "auto" }}
+                      className="border-secondary align-middle"
+                    >
+                      <div
+                        className="col-xs-12 col-sm-12 col-md-12 col-lg-12 border align-middle"
+                        style={{ padding: 5 }}
+                      >
+                        <table className="table table-bordered table-hover ">
+                          <thead className="bg-light">
+                            <td className="align-middle text-center" width="10%">
+                              <b>STT</b>
+                            </td>
+
+                            <td className=" align-middle text-center" width="50%">
+                              <b>Thuộc tính</b>
+                            </td>
+                            <td className=" align-middle text-center" width="30%">
+                              <b>Giá trị</b>
+                            </td>
+                            <td className=" align-middle text-center" width="10%">
+                              <b>Thao tác</b>
+                            </td>
+                          </thead>
+                          
+                          {formik.values.attribute_list &&
+                            formik.values.attribute_list.map((item, index) => {
+                              return (
+                                <tbody>
+                                  <tr key={index}>
+                                    <td className="align-middle text-center" width="10%">
+                                      {index + 1}
+                                    </td>
+                                    <td className=" align-middle" width="50%">
+                                      {item.label}
+                                    </td>
+                                    <td className=" align-middle text-center" width="30%">
+                                      {getMainNumBer(item.mainnumber_id)}
+                                      {/* <Select
+                                        className="MuiPaper-filter__custom--select"
+                                        id={`mainnumber_id`}
+                                        name={`mainnumber_id`}
+                                        styles={{
+                                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                        }}
+                                        menuPortalTarget={document.querySelector("body")}
+                                        isDisabled={true}
+                                        placeholder={"-- Chọn --"}
+                                        value={convertValue(
+                                          item.mainnumber_id,
+                                          getOptionMainNumBer()
+                                        )}
+                                        options={getOptionMainNumBer(
+                                          item.mainnumber_id,
+                                          true
+                                        )}
+                                      /> */}
+                                    </td>
+                                    <td className=" align-middle text-center" width="10%">
+                                      <Button
+                                        color="danger"
+                                        title="Xóa"
+                                        className=""
+                                        disabled={noEdit}
+                                        type="button"
+                                        onClick={() => {
+                                          let clone = [...formik.values.attribute_list];
+                                          clone.splice(index, 1);
+                                          formik.setFieldValue("attribute_list", clone);
+                                        }}
+                                      >
+                                        <i className="fa fa-trash" />
+                                      </Button>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              );
+                            })}
+                           
+                        </table>
+                        {formik.values.attribute_list.length == 0 ? (
+                            <>
+                              {/* <tr key={index}></tr> */}
+                              <div className=" align-middle text-center" width="100%">
+                                <p>Không có dữ liệu</p>
+                              </div>
+                            </>
+                          ) : null}
+                        {formik.errors.attribute_list && formik.touched.attribute_list ? (
+                          <div
+                            className="col-xs-12 col-sm-12 col-md-12 col-lg-12 field-validation-error alert alert-danger fade show"
+                            role="alert"
+                          >
+                            {formik.errors.attribute_list}
+                          </div>
+                        ) : null}
+                      </div>
+                    </Col>
+                  </Row>
+                ) : null}
                 <Row>
                   <Col sm={6} xs={12}>
                     {!formik.values.is_interpretspectial ? (
@@ -555,83 +685,7 @@ function InterPretAdd({ noEdit }) {
                     </FormGroup>
                   </Col>
                 </Row>
-                {formik.values.is_interpretspectial ? (
-                  <Row>
-                    <Col
-                      xs={12}
-                      // style={{ maxHeight: 351, overflowY: "auto" }}
-                      className="border-secondary align-middle"
-                    >
-                      <div
-                        className="col-xs-12 col-sm-12 col-md-12 col-lg-12 border align-middle"
-                        style={{ padding: 5 }}
-                      >
-                        <table className="table table-bordered table-hover ">
-                          <thead className="bg-light">
-                            <td className="align-middle text-center" width="10%">
-                              <b>STT</b>
-                            </td>
 
-                            <td className=" align-middle text-center" width="30%">
-                              <b>Thuộc tính</b>
-                            </td>
-                            <td className=" align-middle text-center" width="30%">
-                              <b>Giá trị</b>
-                            </td>
-                      
-                          </thead>
-
-                          {formik.values.attribute_list &&
-                            formik.values.attribute_list.map((item, index) => {
-                              // console.log(item)
-                              return (
-                                <tbody>
-                                  <tr key={index}>
-                                    <td className="align-middle text-center" width="10%">
-                                      {index + 1}
-                                    </td>
-                                    <td className=" align-middle" width="30%">
-                                      {item.label}
-                                    </td>
-                                    <td className=" align-middle text-center" width="30%">
-                                      {getMainNumBer(item.mainnumber_id)}
-                                      {/* <Select
-                                        className="MuiPaper-filter__custom--select"
-                                        id={`mainnumber_id`}
-                                        name={`mainnumber_id`}
-                                        styles={{
-                                          menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                                        }}
-                                        menuPortalTarget={document.querySelector("body")}
-                                        isDisabled={true}
-                                        placeholder={"-- Chọn --"}
-                                        value={convertValue(
-                                          item.mainnumber_id,
-                                          getOptionMainNumBer()
-                                        )}
-                                        options={getOptionMainNumBer(
-                                          item.mainnumber_id,
-                                          true
-                                        )}
-                                      /> */}
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              );
-                            })}
-                        </table>
-                        {formik.errors.attribute_list && formik.touched.attribute_list ? (
-                          <div
-                            className="col-xs-12 col-sm-12 col-md-12 col-lg-12 field-validation-error alert alert-danger fade show"
-                            role="alert"
-                          >
-                            {formik.errors.attribute_list}
-                          </div>
-                        ) : null}
-                      </div>
-                    </Col>
-                  </Row>
-                ) : null}
                 <Row>
                   <Col xs={12} sm={12}>
                     <FormGroup row>
