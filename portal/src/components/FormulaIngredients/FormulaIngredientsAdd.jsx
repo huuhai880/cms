@@ -98,7 +98,7 @@ function FormulaIngredientsAdd({ noEdit }) {
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
-  
+
   useEffect(() => {
     const _callAPI = () => {
       try {
@@ -382,8 +382,6 @@ function FormulaIngredientsAdd({ noEdit }) {
                     </Col>
                   </Row>
 
-                 
-
                   <Row>
                     <Col xs={12}>
                       <FormGroup row>
@@ -456,6 +454,17 @@ function FormulaIngredientsAdd({ noEdit }) {
                         <Label for="ingredient_name" sm={2}>
                           {/* Hình thức <span className="font-weight-bold red-text">*</span> */}
                         </Label>
+                        <Col sm={2} className="align-self-center">
+                          <Checkbox
+                            disabled={noEdit}
+                            onChange={(e) => {
+                              formik.setFieldValue(`is_gender`, e.target.checked ? 1 : 0);
+                            }}
+                            checked={formik.values.is_gender}
+                          >
+                            Giới tính
+                          </Checkbox>
+                        </Col>
                         <Col sm={2} className="align-self-center">
                           <Checkbox
                             disabled={noEdit}
@@ -545,7 +554,6 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Row>
                                 <Label for="ingredient_name" sm={4}>
                                   Biến số ngày sinh
-                                  <span className="font-weight-bold red-text">*</span>
                                 </Label>
                                 <Col sm={8}>
                                   <Select
@@ -615,7 +623,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                         <Col xs={12}>
                           <Row>
                             <Label for="ingredient_name" sm={2} style={{ paddingLeft: "35px" }}>
-                              Biến số tên<span className="font-weight-bold red-text">*</span>
+                              Biến số tên
                             </Label>
                             <Col sm={4}>
                               <Select
@@ -644,7 +652,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                         <Col xs={12}>
                           <Row style={{ paddingTop: "15px" }}>
                             <Label for="ingredient_name" sm={2} style={{ paddingLeft: "35px" }}>
-                              Hình thức<span className="font-weight-bold red-text">*</span>
+                              Hình thức
                             </Label>
                             <Col sm={2} className="align-self-center">
                               <Checkbox

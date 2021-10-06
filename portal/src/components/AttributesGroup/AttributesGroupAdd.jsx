@@ -336,10 +336,80 @@ export default class AttrubtesGroupAdd extends PureComponent {
                               </Col>
                             </Row>
                             <Row>
-                              <Col sm={12}>
+                              <Label for="description" className="text-left" sm={3}>
+                                {/* Ghi chú */}
+                              </Label>
+                              <Col sm={9}>
                                 <FormGroup row>
-                                  <Label for="is_active" sm={3}></Label>
-                                  <Col sm={9}>
+                                  <Col sm={3}>
+                                    <Field
+                                      name="is_powerditagram"
+                                      render={({ field /* _form */ }) => (
+                                        <CustomInput
+                                          {...field}
+                                          className="pull-left"
+                                          onBlur={null}
+                                          checked={values.is_powerditagram}
+                                          onChange={(event) => {
+                                            const { target } = event;
+                                            field.onChange({
+                                              target: {
+                                                name: "is_powerditagram",
+                                                value: target.checked,
+                                              },
+                                            });
+                                          }}
+                                          type="checkbox"
+                                          id="is_powerditagram"
+                                          label="Sơ đồ sức mạnh"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                    <ErrorMessage
+                                      name="is_powerditagram"
+                                      component={({ children }) => (
+                                        <Alert color="danger" className="field-validation-error">
+                                          {children}
+                                        </Alert>
+                                      )}
+                                    />
+                                  </Col>
+                                  <Col sm={3}>
+                                    <Field
+                                      name="is_emptyditagram"
+                                      render={({ field /* _form */ }) => (
+                                        <CustomInput
+                                          {...field}
+                                          className="pull-left"
+                                          onBlur={null}
+                                          checked={values.is_emptyditagram}
+                                          onChange={(event) => {
+                                            const { target } = event;
+                                            field.onChange({
+                                              target: {
+                                                name: "is_emptyditagram",
+                                                value: target.checked,
+                                              },
+                                            });
+                                          }}
+                                          type="checkbox"
+                                          id="is_emptyditagram"
+                                          label="Sơ đồ trục trống"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                    <ErrorMessage
+                                      name="is_emptyditagram"
+                                      component={({ children }) => (
+                                        <Alert color="danger" className="field-validation-error">
+                                          {children}
+                                        </Alert>
+                                      )}
+                                    />
+                                  </Col>
+                                  <Col sm={3}>
                                     <Field
                                       name="is_active"
                                       render={({ field /* _form */ }) => (

@@ -122,6 +122,10 @@ const addIngredient = async (body = {}) => {
           'CALCULATIONID',
           apiHelper.getValueFromObject(body, 'calculation_id')
         )
+        .input(
+          'ISGENDER',
+          apiHelper.getValueFromObject(body, 'is_gender')
+        )
         .input('PARAMDOBID', apiHelper.getValueFromObject(body, 'param_dob_id'))
         .input('ISVOWELs', apiHelper.getValueFromObject(body, 'is_vowel'))
         .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
@@ -242,6 +246,10 @@ const addIngredient = async (body = {}) => {
         .input(
           'CALCULATIONID',
           apiHelper.getValueFromObject(body, 'calculation_id')
+        )
+        .input(
+          'ISGENDER',
+          apiHelper.getValueFromObject(body, 'is_gender')
         )
         .input('PARAMDOBID', apiHelper.getValueFromObject(body, 'param_dob_id'))
         .input('ISVOWELs', apiHelper.getValueFromObject(body, 'is_vowel'))

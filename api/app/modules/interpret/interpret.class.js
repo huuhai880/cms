@@ -14,6 +14,9 @@ const template = {
   relationship_id: '{{#? RELATIONSHIPID}}',
   relationship: '{{#? RELATIONSHIP}}',
   mainnumber_id: '{{#? MAINNUMBERID}}',
+  value: '{{#? VALUE}}',
+  label: '{{#? LABEL}}',
+
   compare_mainnumber_id: '{{#? COMPARENUM}}',
   mainnumber: '{{#? MAINNUMBER}}',
   attribute_id: '{{#? ATTRIBUTEID}}',
@@ -23,6 +26,7 @@ const template = {
   note: '{{#? NOTICE}}',
   is_active: '{{ISACTIVE ? 1 : 0}}',
   is_master: '{{ISMASTER ? 1 : 0}}',
+  is_interpretspectial: '{{ISINTERPRETSPECIAL ? 1 : 0}}',
   created_user: '{{#? CREATEDUSER}}',
   created_date: '{{#? CREATEDDATE}}',
   updated_user: '{{#? UPDATEDUSER}}',
@@ -30,10 +34,12 @@ const template = {
   is_deleted: '{{#? ISDELETED}}',
   deleted_user: '{{#? DELETEDUSER}}',
   deleted_date: '{{#? DELETEDDATE}}',
-  parent_id: "{{#? PARENTID}}",
+  parent_id: '{{#? PARENTID}}',
   parent_interpret_detail_name: '{{#? PARENTINTERPRETDETAILNAME}}',
   group_name: '{{#? GROUPNAME}}',
-  compare_attribute_id: "{{#? COMPAREATTRIBUTEID}}"
+  compare_attribute_id: '{{#? COMPAREATTRIBUTEID}}',
+  attributes_name: '{{#? ATTRIBUTESNAME}}',
+
 };
 
 let transform = new Transform(template);
@@ -47,7 +53,7 @@ const detailInterpretDetail = (users = []) => {
     'interpret_detail_short_content',
     'interpret_detail_full_content',
     'is_active',
-    'order_index'
+    'order_index',
   ]);
 };
 
@@ -61,17 +67,25 @@ const listInterpretDetail = (users = []) => {
     'interpret_id',
     'parent_id',
     'order_index',
-    'parent_interpret_detail_name'
+    'parent_interpret_detail_name',
   ]);
 };
-
+const listAttributeDetail = (users = []) => {
+  return transform.transform(users, [
+    'mainnumber_id',
+    'value',
+    'label'
+  ]);
+};
 const listInterpret = (users = []) => {
   return transform.transform(users, [
     'interpret_id',
     'attribute_name',
     'brief_decs',
     'is_active',
-    'order_index'
+    'order_index',
+    'attributes_name',
+    'is_interpretspectial'
   ]);
 };
 
@@ -91,7 +105,11 @@ const listMainnumber = (users = []) => {
 };
 
 const listAttribute = (users = []) => {
-  return transform.transform(users, ['attribute_id', 'attribute_name','mainnumber_id']);
+  return transform.transform(users, [
+    'attribute_id',
+    'attribute_name',
+    'mainnumber_id',
+  ]);
 };
 
 const detailInterpret = (users = []) => {
@@ -110,7 +128,8 @@ const detailInterpret = (users = []) => {
     'is_active',
     'order_index',
     'group_name',
-    'compare_attribute_id'
+    'compare_attribute_id',
+    'is_interpretspectial',
   ]);
 };
 
@@ -122,5 +141,5 @@ module.exports = {
   listInterpret,
   listInterpretDetail,
   listInterpretParent,
-  detailInterpretDetail,
+  detailInterpretDetail,listAttributeDetail
 };
