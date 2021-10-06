@@ -477,10 +477,9 @@ function InterPretAdd({ noEdit }) {
                               <b>Thao tác</b>
                             </td>
                           </thead>
-
+                          
                           {formik.values.attribute_list &&
                             formik.values.attribute_list.map((item, index) => {
-                              // console.log(item)
                               return (
                                 <tbody>
                                   <tr key={index}>
@@ -532,7 +531,16 @@ function InterPretAdd({ noEdit }) {
                                 </tbody>
                               );
                             })}
+                           
                         </table>
+                        {formik.values.attribute_list.length == 0 ? (
+                            <>
+                              {/* <tr key={index}></tr> */}
+                              <div className=" align-middle text-center" width="100%">
+                                <p>Không có dữ liệu</p>
+                              </div>
+                            </>
+                          ) : null}
                         {formik.errors.attribute_list && formik.touched.attribute_list ? (
                           <div
                             className="col-xs-12 col-sm-12 col-md-12 col-lg-12 field-validation-error alert alert-danger fade show"
