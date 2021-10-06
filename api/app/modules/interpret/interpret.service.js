@@ -216,8 +216,10 @@ const getMainNumberList = async (queryParams = {}) => {
 };
 
 const addIntergret = async (body = {}) => {
+   // console.log(body)
    try {
-      const pool = await mssql.pool;
+      if(apiHelper.getValueFromObject(body, 'is_interpretspectial')==0){
+         const pool = await mssql.pool;
       const resultIntergret = await pool.request()
          .input('INTERPRETID', apiHelper.getValueFromObject(body, 'interpret_id'))
          .input('ATTRIBUTEID', apiHelper.getValueFromObject(body, 'attribute_id'))
@@ -245,10 +247,84 @@ const addIntergret = async (body = {}) => {
          .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
          .input('ISFORPOWERDIAGRAM', apiHelper.getValueFromObject(body, 'is_for_power_diagram'))
          .input('COMPAREATTRIBUTEID', apiHelper.getValueFromObject(body, 'compare_attribute_id', null))
+         .input('ISINTERPRETSPECIAL', apiHelper.getValueFromObject(body, 'is_interpretspectial', null))
+
          .execute('FOR_INTERPRET_CreateOrUpdate_AdminWeb');
 
       const interpret_id = resultIntergret.recordset[0].RESULT;
       return new ServiceResponse(true, '', interpret_id);
+      }else if(apiHelper.getValueFromObject(body, 'is_interpretspectial')==1){
+         const pool = await mssql.pool;
+  const transaction = await new sql.Transaction(pool);
+         await transaction.begin();
+
+         /////create or update number
+         const requestInterpret = new sql.Request(transaction);
+         const resultIntergret = await requestInterpret
+         .input('INTERPRETID', apiHelper.getValueFromObject(body, 'interpret_id'))
+         .input('ATTRIBUTEID', apiHelper.getValueFromObject(body, 'attribute_id'))
+         .input(
+            'MAINNUMBERID',
+            apiHelper.getValueFromObject(body, 'mainnumber_id')
+         )
+         .input(
+            'RELATIONSHIPID',
+            apiHelper.getValueFromObject(body, 'relationship_id')
+         )
+         .input(
+            'COMPARENUM',
+            apiHelper.getValueFromObject(body, 'compare_mainnumber_id')
+         )
+         .input('ISMASTER', apiHelper.getValueFromObject(body, 'is_master'))
+         .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
+         .input('ORDERINDEX', apiHelper.getValueFromObject(body, 'order_index'))
+         .input('DESCRIPTION', apiHelper.getValueFromObject(body, 'decs'))
+         .input(
+            'BRIEFDESCRIPTION',
+            apiHelper.getValueFromObject(body, 'brief_decs')
+         )
+         .input('NOTE', apiHelper.getValueFromObject(body, 'note'))
+         .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
+         .input('ISFORPOWERDIAGRAM', apiHelper.getValueFromObject(body, 'is_for_power_diagram'))
+         .input('COMPAREATTRIBUTEID', apiHelper.getValueFromObject(body, 'compare_attribute_id', null))
+         .input('ISINTERPRETSPECIAL', apiHelper.getValueFromObject(body, 'is_interpretspectial', null))
+
+         .execute('FOR_INTERPRET_CreateOrUpdate_AdminWeb');
+
+      const interpret_id = resultIntergret.recordset[0].RESULT;
+         if (interpret_id > 0) {
+           await pool
+             .request()
+             .input('INTERPRETID', interpret_id)
+             .input('DELETEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
+             .execute('FOR_INTERPRET_ATTRIBUTES_Delete_AdminWeb');
+         }
+         if (interpret_id > 0) {
+           for (let index = 0; index < body.attribute_list.length; index++) {
+             const element = body.attribute_list[index];
+            
+             const requestInterpretAttibutes = new sql.Request(transaction);
+             await requestInterpretAttibutes
+
+               .input('ATTRIBUTEID', apiHelper.getValueFromObject(element, 'value'))
+               .input(
+                 'MAINNUMBERID',
+                 apiHelper.getValueFromObject(element, 'mainnumber_id')
+               )
+               .input('MAINNUMBER', apiHelper.getValueFromObject(element, 'label'))
+               .input(
+                 'INTERPRETID',
+                 interpret_id
+               )
+               .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
+               .execute('FOR_INTERPRET_ATTRIBUTES_CreateOrUpdate_AdminWeb');
+           }
+         } else {
+           await transaction.rollback();
+         }
+         await transaction.commit();
+         return new ServiceResponse(true, '', interpret_id);
+      }
 
    } catch (error) {
       logger.error(error, {
@@ -285,7 +361,32 @@ const detaiIntergret = async (interpret_id) => {
       return new ServiceResponse(false, e.message);
    }
 };
-
+const getAttributesListDetail = async (queryParams = {}) => {
+   // console.log(queryParams)
+   try {
+     const pool = await mssql.pool;
+     const data = await pool
+       .request()
+       
+       .input(
+         'INTERPRETID',
+         apiHelper.getFilterBoolean(queryParams, 'interpret_id')
+       )
+       .execute('FOR_INTERPRET_ATTRIBUTES_GetListAttribute_AdminWeb');
+     const result = data.recordset;
+   //   console.log(result);
+ 
+     return new ServiceResponse(true, '', {
+       data: InterpretClass.listAttributeDetail(result)
+     });
+   } catch (e) {
+     logger.error(e, {
+       function: 'MainNumberService.getAttributesListDetail',
+     });
+ 
+     return new ServiceResponse(true, '', {});
+   }
+ };
 const detaiDetailInterpret = async (interpret_detail_id) => {
    try {
       const pool = await mssql.pool;
@@ -439,5 +540,6 @@ module.exports = {
    CheckDetailInterpret,
    detaiDetailInterpret,
    getListAttributeExcludeById,
-   copyIntergret
+   copyIntergret,
+   getAttributesListDetail
 };

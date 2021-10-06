@@ -14,6 +14,9 @@ const template = {
   relationship_id: '{{#? RELATIONSHIPID}}',
   relationship: '{{#? RELATIONSHIP}}',
   mainnumber_id: '{{#? MAINNUMBERID}}',
+  value: '{{#? VALUE}}',
+  label: '{{#? LABEL}}',
+
   compare_mainnumber_id: '{{#? COMPARENUM}}',
   mainnumber: '{{#? MAINNUMBER}}',
   attribute_id: '{{#? ATTRIBUTEID}}',
@@ -35,6 +38,8 @@ const template = {
   parent_interpret_detail_name: '{{#? PARENTINTERPRETDETAILNAME}}',
   group_name: '{{#? GROUPNAME}}',
   compare_attribute_id: '{{#? COMPAREATTRIBUTEID}}',
+  attributes_name: '{{#? ATTRIBUTESNAME}}',
+
 };
 
 let transform = new Transform(template);
@@ -65,7 +70,13 @@ const listInterpretDetail = (users = []) => {
     'parent_interpret_detail_name',
   ]);
 };
-
+const listAttributeDetail = (users = []) => {
+  return transform.transform(users, [
+    'mainnumber_id',
+    'value',
+    'label'
+  ]);
+};
 const listInterpret = (users = []) => {
   return transform.transform(users, [
     'interpret_id',
@@ -73,6 +84,8 @@ const listInterpret = (users = []) => {
     'brief_decs',
     'is_active',
     'order_index',
+    'attributes_name',
+    'is_interpretspectial'
   ]);
 };
 
@@ -128,5 +141,5 @@ module.exports = {
   listInterpret,
   listInterpretDetail,
   listInterpretParent,
-  detailInterpretDetail,
+  detailInterpretDetail,listAttributeDetail
 };
