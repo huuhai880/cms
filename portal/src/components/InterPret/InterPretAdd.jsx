@@ -252,10 +252,26 @@ function InterPretAdd({ noEdit }) {
     return [];
   };
 
-  const handleUploadImage = async (blobInfo, success, failure) => {
+
+  //////config editor images
+  const handleUploadImageDesc = async (blobInfo, success, failure) => {
     readImageAsBase64(blobInfo.blob(), async (imageUrl) => {
       try {
-        const imageUpload = _interpretModel.upload({
+        const imageUpload = await _interpretModel.upload({
+          base64: imageUrl,
+          folder: "files",
+          includeCdn: true,
+        });
+        success(imageUpload);
+      } catch (error) {
+        failure(error);
+      }
+    });
+  };
+  const handleUploadImageShortDesc = async (blobInfo, success, failure) => {
+    readImageAsBase64(blobInfo.blob(), async (imageUrl) => {
+      try {
+        const imageUpload = await _interpretModel.upload({
           base64: imageUrl,
           folder: "files",
           includeCdn: true,
@@ -728,7 +744,7 @@ function InterPretAdd({ noEdit }) {
                             images_dataimg_filter: function (img) {
                               return img.hasAttribute("internal-blob");
                             },
-                            images_upload_handler: handleUploadImage,
+                            images_upload_handler: handleUploadImageShortDesc,
                           }}
                           onEditorChange={(newValue) => {
                             formik.setFieldValue("brief_decs", newValue);
@@ -790,7 +806,7 @@ function InterPretAdd({ noEdit }) {
                             images_dataimg_filter: function (img) {
                               return img.hasAttribute("internal-blob");
                             },
-                            images_upload_handler: handleUploadImage,
+                            images_upload_handler: handleUploadImageDesc,
                           }}
                           onEditorChange={(newValue) => {
                             formik.setFieldValue("decs", newValue);
