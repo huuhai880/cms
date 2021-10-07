@@ -40,61 +40,23 @@ function LetterAdd({ noEdit }) {
   //// create letter
   const handleCreateOrUpdate = async (values) => {
     try {
-      if (values.is_vowel == 0) {
-        await _letterModel.checkLetter({ letter: values.letter }).then((data) => {
-          // console.log(data)
-          if (data.LETTERID && formik.values.letter != dataLetter.letter) {
-            // setalert("Email đã tồn tại!");
-            formik.setFieldError("letter", "Chữ cái đã tồn tại!");
-            // window.scrollTo(0, 0);
+       _letterModel.create(values).then((data) => {
+        if (btnType == "save") {
+          if (id) {
+            setDataLetter(values);
           } else {
-            _letterModel.create(values).then((data) => {
-              if (btnType == "save") {
-                setDataLetter(initialValues);
-                // _initData();
-                // _initDataDetail();
-                window._$g.toastr.show("Lưu thành công!", "success");
-              } else if (btnType == "save&quit") {
-                window._$g.toastr.show("Lưu thành công!", "success");
-                setDataLetter(initialValues);
-                return window._$g.rdr("/letter");
-              }
-              // console.log(data);
-            });
-            // console.log(data);
+            formik.resetForm();
           }
-        });
-      } else {
-        await _letterModel.create(values).then((data) => {
-          if (btnType == "save") {
-            if(id){
-              setDataLetter(values)
-            }else{
-              formik.resetForm();
-            }
-            window._$g.toastr.show("Lưu thành công!", "success");
-          } else if (btnType == "save&quit") {
-            window._$g.toastr.show("Lưu thành công!", "success");
-            setDataLetter(initialValues);
-            return window._$g.rdr("/letter");
-          }
-          // console.log(data);
-        });
-      }
+          window._$g.toastr.show("Lưu thành công!", "success");
+        } else if (btnType == "save&quit") {
+          window._$g.toastr.show("Lưu thành công!", "success");
+          setDataLetter(initialValues);
+          return window._$g.rdr("/letter");
+        }
+        // console.log(data);
+      });
     } catch (error) {}
-    // try {
-    //   _letterModel.create(values).then((data) => {
-    //     if (btnType == "save") {
-    //       // _initData();
-    //       window._$g.toastr.show("Lưu thành công!", "success");
-    //     } else if (btnType == "save&quit") {
-    //       window._$g.toastr.show("Lưu thành công!", "success");
-    //       //   setDataPosition(initialValues);
-    //       return window._$g.rdr("/letter");
-    //     }
-    //     // console.log(data);
-    //   });
-    // } catch (error) {}
+   
   };
   //////get data detail
   useEffect(() => {
@@ -125,14 +87,13 @@ function LetterAdd({ noEdit }) {
             <CardHeader>
               {/* <b>{id ? "Chỉnh sửa" : "Thêm mới"}  </b> */}
               <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} chữ cái </b>
-
             </CardHeader>
             <CardBody>
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
-              <Col xs={12} sm={12}>
+                <Col xs={12} sm={12}>
                   <FormGroup row>
                     <Label for="letter" sm={4}>
-                    Tên chữ cái <span className="font-weight-bold red-text">*</span>
+                      Tên chữ cái <span className="font-weight-bold red-text">*</span>
                     </Label>
                     <Col sm={8}>
                       <Input
