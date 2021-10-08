@@ -57,7 +57,7 @@ function FarmousAdd({ noEdit }) {
           _farmousModel.create(values).then((data) => {
             window._$g.toastr.show("Lưu thành công!", "success");
             if (btnType == "save_n_close") {
-              return window._$g.rdr("/farmous");
+              return window._$g.rdr("/famous");
             }
             if (btnType == "save" && !id) {
               formik.resetForm();
@@ -482,7 +482,7 @@ function FarmousAdd({ noEdit }) {
                         <Button
                           color="primary"
                           className="mr-2 btn-block-sm"
-                          onClick={() => window._$g.rdr(`/farmous/edit/${dataFarmous.farmous_id}`)}
+                          onClick={() => window._$g.rdr(`/famous/edit/${dataFarmous.farmous_id}`)}
                         >
                           <i className="fa fa-edit mr-1" />
                           Chỉnh sửa
@@ -519,7 +519,7 @@ function FarmousAdd({ noEdit }) {
                     <button
                       className=" btn-block-sm btn btn-secondary"
                       type="button"
-                      onClick={() => window._$g.rdr(`/farmous`)}
+                      onClick={() => window._$g.rdr(`/famous`)}
                     >
                       <i className="fa fa-times-circle mr-1" />
                       Đóng

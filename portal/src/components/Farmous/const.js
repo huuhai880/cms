@@ -39,7 +39,7 @@ export const validationSchema = yup.object().shape({
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   // console.log(data);
   return [
-    configIDRowTable("farmous_id", "/farmous/detail/", query),
+    configIDRowTable("farmous_id", "/famous/detail/", query),
     {
       name: "farmous_name",
       label: "Họ và tên",
@@ -190,7 +190,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   title="Chỉnh sửa"
                   className="mr-1"
                   onClick={(evt) => {
-                    window._$g.rdr(`/farmous/edit/${data[tableMeta["rowIndex"]].farmous_id}`);
+                    window._$g.rdr(`/famous/edit/${data[tableMeta["rowIndex"]].farmous_id}`);
                   }}
                 >
                   <i className="fa fa-edit" />
