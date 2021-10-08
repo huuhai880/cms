@@ -340,20 +340,11 @@ const FormulaIngredientsEdit = React.lazy(() =>
 //.end#FormulaIngredients
 
 // Formula
-const Formula = React.lazy(() =>
-  import("./components/Formula/Formula")
-);
-const FormulaAdd = React.lazy(() =>
-  import("./components/Formula/FormulaAdd")
-);
-const FormulaDetail = React.lazy(() =>
-  import("./components/Formula/FormulaDetail")
-);
-const FormulaEdit = React.lazy(() =>
-  import("./components/Formula/FormulaEdit")
-);
+const Formula = React.lazy(() => import("./components/Formula/Formula"));
+const FormulaAdd = React.lazy(() => import("./components/Formula/FormulaAdd"));
+const FormulaDetail = React.lazy(() => import("./components/Formula/FormulaDetail"));
+const FormulaEdit = React.lazy(() => import("./components/Formula/FormulaEdit"));
 //.end#Formula
-
 
 // Customer Time Keeping
 const CustomerTimeKeeping = React.lazy(() =>
@@ -693,7 +684,12 @@ const SearchHistory = React.lazy(() => import("./components/SearchHistory/Search
 const SearchHistoryDetail = React.lazy(() =>
   import("./components/SearchHistory/SearchHistoryDetail")
 );
-
+//Farmous
+const Farmous = React.lazy(() => import("./components/Farmous/Farmous"));
+const FarmousAdd = React.lazy(() => import("./components/Farmous/FarmousAdd"));
+const FarmousDetail = React.lazy(() => import("./components/Farmous/FarmousDetail"));
+const FarmousEdit = React.lazy(() => import("./components/Farmous/FarmousEdit"));
+// end#Farmous
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   // dashboard
@@ -3176,36 +3172,66 @@ const routes = [
     component: FormulaIngredientsEdit,
   },
   // end#FormulaIngredients
-    //Formula
-    {
-      path: "/formula",
-      exact: true,
-      name: "Danh sách công thức",
-      function: "FOR_FORMULA_VIEW",
-      component: Formula,
-    },
-    {
-      path: "/formula/add",
-      exact: true,
-      name: "Thêm mới",
-      function: "FOR_FORMULA_ADD",
-      component: FormulaAdd,
-    },
-    {
-      path: "/formula/detail/:id",
-      exact: true,
-      name: "Chi tiết",
-      function: "FOR_FORMULA_VIEW",
-      component: FormulaDetail,
-    },
-    {
-      path: "/formula/edit/:id",
-      exact: true,
-      name: "Chỉnh sửa",
-      function: "FOR_FORMULA_EDIT",
-      component: FormulaEdit,
-    },
-    // end#Formula
+  //Formula
+  {
+    path: "/formula",
+    exact: true,
+    name: "Danh sách công thức",
+    function: "FOR_FORMULA_VIEW",
+    component: Formula,
+  },
+  {
+    path: "/formula/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "FOR_FORMULA_ADD",
+    component: FormulaAdd,
+  },
+  {
+    path: "/formula/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "FOR_FORMULA_VIEW",
+    component: FormulaDetail,
+  },
+  {
+    path: "/formula/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "FOR_FORMULA_EDIT",
+    component: FormulaEdit,
+  },
+  // end#Formula
+  //Farmous
+  {
+    path: "/famous",
+    exact: true,
+    name: "Danh sách người nổi tiếng",
+    function: "MD_FAMOUS_VIEW",
+    component: Farmous,
+  },
+  {
+    path: "/famous/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "MD_FAMOUS_ADD",
+    component: FarmousAdd,
+  },
+  {
+    path: "/famous/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "MD_FAMOUS_VIEW",
+    component: FarmousDetail,
+  },
+  {
+    path: "/famous/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "MD_FAMOUS_EDIT",
+    component: FarmousEdit,
+  },
+  // end#Farmous
 ];
 
 export default routes;
