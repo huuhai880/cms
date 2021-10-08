@@ -86,9 +86,18 @@ function FormulaIngredientsAdd({ noEdit }) {
   const _initDataDetail = async () => {
     try {
       _ingredientModel.detail(id).then((data) => {
-        // console.log(data);
-
-        // data = { ...data, type: true, is_total: true };
+        console.log(data)
+        if (data.is_total_2_digit == 1) {
+          data.is_numletter_digit= data.is_numletter_2digit;
+          data.is_total_value_digit= data.is_total_value_2digit;
+          data.is_total_letter_first_digit= data.is_total_letter_first_2digit;
+          data.is_total_letter_digit= data.is_total_letter_2digit;
+        }else{
+          data.is_numletter_digit= data.is_numletter_1digit;
+          data.is_total_value_digit= data.is_total_value_1digit;
+          data.is_total_letter_first_digit= data.is_total_letter_first_1digit;
+          data.is_total_letter_digit= data.is_total_letter_1digit;
+        }
         setDataIngredient(data);
         // formik.setFieldValue(`type`, true);
         // formik.setFieldValue(`is_total`, true);
@@ -98,7 +107,7 @@ function FormulaIngredientsAdd({ noEdit }) {
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
-
+  console.log(formik.values)
   useEffect(() => {
     const _callAPI = () => {
       try {
@@ -393,6 +402,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             menuPortalTarget={document.querySelector("body")}
                             isDisabled={noEdit}
+                            isClearable={true}
                             placeholder={"--Chọn thành phần--"}
                             value={convertValue(
                               formik.values.ingredient__child_1_id,
@@ -403,7 +413,12 @@ function FormulaIngredientsAdd({ noEdit }) {
                               true
                             )}
                             onChange={(value) => {
-                              formik.setFieldValue("ingredient__child_1_id", value.value);
+                              // formik.setFieldValue("ingredient__child_1_id", value.value);
+                              if (!value) {
+                                formik.setFieldValue("ingredient__child_1_id", "");
+                              } else {
+                                formik.setFieldValue("ingredient__child_1_id", value.value);
+                              }
                             }}
                           />
                         </Col>
@@ -412,6 +427,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             menuPortalTarget={document.querySelector("body")}
                             isDisabled={noEdit}
+                            isClearable={true}
                             placeholder={"-Chọn phép tính-"}
                             value={convertValue(
                               formik.values.calculation_id,
@@ -419,7 +435,12 @@ function FormulaIngredientsAdd({ noEdit }) {
                             )}
                             options={getOptionCalculation(formik.values.calculation_id, true)}
                             onChange={(value) => {
-                              formik.setFieldValue("calculation_id", value.value);
+                              // formik.setFieldValue("calculation_id", value.value);
+                              if (!value) {
+                                formik.setFieldValue("calculation_id", "");
+                              } else {
+                                formik.setFieldValue("calculation_id", value.value);
+                              }
                             }}
                           />
                         </Col>
@@ -431,6 +452,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             menuPortalTarget={document.querySelector("body")}
                             isDisabled={noEdit}
+                            isClearable={true}
                             placeholder={"--Chọn thành phần--"}
                             value={convertValue(
                               formik.values.ingredient__child_2_id,
@@ -441,7 +463,12 @@ function FormulaIngredientsAdd({ noEdit }) {
                               true
                             )}
                             onChange={(value) => {
-                              formik.setFieldValue("ingredient__child_2_id", value.value);
+                              // formik.setFieldValue("ingredient__child_2_id", value.value);
+                              if (!value) {
+                                formik.setFieldValue("ingredient__child_2_id", "");
+                              } else {
+                                formik.setFieldValue("ingredient__child_2_id", value.value);
+                              }
                             }}
                           />
                         </Col>
@@ -560,11 +587,17 @@ function FormulaIngredientsAdd({ noEdit }) {
                                     styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                                     menuPortalTarget={document.querySelector("body")}
                                     isDisabled={noEdit}
+                                    isClearable={true}
                                     placeholder={"--Chọn biến số--"}
                                     value={convertValue(formik.values.param_dob_id, getOptionDob())}
                                     options={getOptionDob(formik.values.param_dob_id, true)}
                                     onChange={(value) => {
-                                      formik.setFieldValue("param_dob_id", value.value);
+                                      // formik.setFieldValue("param_dob_id", value.value);
+                                      if (!value) {
+                                        formik.setFieldValue("param_dob_id", "");
+                                      } else {
+                                        formik.setFieldValue("param_dob_id", value.value);
+                                      }
                                     }}
                                   />
                                   {formik.errors.param_dob_id && formik.touched.param_dob_id ? (
@@ -629,12 +662,18 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Select
                                 styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                                 menuPortalTarget={document.querySelector("body")}
+                                isClearable={true}
                                 isDisabled={noEdit}
                                 placeholder={"--Chọn biến số--"}
                                 value={convertValue(formik.values.param_name_id, getOptionName())}
                                 options={getOptionName(formik.values.param_name_id, true)}
                                 onChange={(value) => {
-                                  formik.setFieldValue("param_name_id", value.value);
+                                  if (!value) {
+                                    formik.setFieldValue("param_name_id", "");
+                                  } else {
+                                    formik.setFieldValue("param_name_id", value.value);
+                                  }
+                                  // formik.setFieldValue("param_name_id", value.value);
                                 }}
                               />
                               {formik.errors.param_name_id && formik.touched.param_name_id ? (

@@ -15,7 +15,7 @@ const template = {
   calculation: '{{#? CALCULATION}}',
   is_active: '{{ISACTIVE ? 1 : 0}}',
   // is_vowel: '{{ISVOWEL ? 1 : 0}}',
-  // desc: '{{#? DESCRIPTION}}',
+  desc: '{{#? DESCRIPTION}}',
   created_user: '{{#? CREATEDUSER}}',
   created_date: '{{#? CREATEDDATE}}',
   updated_user: '{{#? UPDATEDUSER}}',
@@ -111,6 +111,7 @@ const detail = (users = []) => {
     'is_total_letter_1digit',
     'ingredient_value',
     'is_gender',
+    'desc',
   ]);
 };
 module.exports = {

@@ -48,19 +48,19 @@ function FormulaAdd({ noEdit }) {
   useEffect(() => {
     const _callAPI = async () => {
       try {
-         _formulaModel.getAttributeGruop().then((data) => {
+        _formulaModel.getAttributeGruop().then((data) => {
           setDataAttribute(data.items);
           //   console.log(setDataPartner);
         });
-         _formulaModel.getListCalculation().then((data) => {
+        _formulaModel.getListCalculation().then((data) => {
           setDataCalculation(data.items);
           //   console.log(setDataPartner);
         });
-         _formulaModel.getListFormulaParent().then((data) => {
+        _formulaModel.getListFormulaParent().then((data) => {
           setDataFormulaParent(data.items);
           //   console.log(setDataPartner);
         });
-         _formulaModel.getListIngredient().then((data) => {
+        _formulaModel.getListIngredient().then((data) => {
           setDataIngredient(data.items);
           //   console.log(setDataPartner);
         });
@@ -69,7 +69,7 @@ function FormulaAdd({ noEdit }) {
         window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
       }
     };
-    setTimeout(() => setisLoading(false), 1000);
+    setTimeout(() => setisLoading(false), 500);
     _callAPI();
   }, []);
   //// create letter
@@ -81,6 +81,8 @@ function FormulaAdd({ noEdit }) {
             _initDataDetail();
           } else {
             formik.resetForm();
+            setisLoading(true);
+            setTimeout(() => setisLoading(false), 500);
           }
           window._$g.toastr.show("Lưu thành công!", "success");
         } else if (btnType == "save&quit") {
@@ -101,7 +103,7 @@ function FormulaAdd({ noEdit }) {
   //// data detail
   const _initDataDetail = async () => {
     try {
-       _formulaModel.detail(id).then((data) => {
+      _formulaModel.detail(id).then((data) => {
         // console.log(data);
         setDataFormula(data);
         // console.log()
@@ -237,7 +239,7 @@ function FormulaAdd({ noEdit }) {
     }
     return [];
   };
-  console.log(formik.values);
+  // console.log(formik.values);
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
@@ -283,23 +285,35 @@ function FormulaAdd({ noEdit }) {
                         Chỉ số <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={8}>
-                        <Select
-                          className="MuiPaper-filter__custom--select"
-                          id={`attribute_gruop_id`}
-                          name={`attribute_gruop_id`}
-                          styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                          menuPortalTarget={document.querySelector("body")}
-                          isDisabled={noEdit}
-                          placeholder={"-- Chọn --"}
-                          value={convertValue(
-                            formik.values.attribute_gruop_id,
-                            getOptionAttribute()
-                          )}
-                          options={getOptionAttribute(formik.values.attribute_gruop_id, true)}
-                          onChange={(value) => {
-                            formik.setFieldValue("attribute_gruop_id", value.value);
-                          }}
-                        />
+                        {isLoading ? (
+                          <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                            <CircularProgress />
+                          </div>
+                        ) : (
+                          <Select
+                            className="MuiPaper-filter__custom--select"
+                            id={`attribute_gruop_id`}
+                            name={`attribute_gruop_id`}
+                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                            menuPortalTarget={document.querySelector("body")}
+                            isDisabled={noEdit}
+                            isClearable={true}
+                            placeholder={"-- Chọn --"}
+                            value={convertValue(
+                              formik.values.attribute_gruop_id,
+                              getOptionAttribute()
+                            )}
+                            options={getOptionAttribute(formik.values.attribute_gruop_id, true)}
+                            onChange={(value) => {
+                              // formik.setFieldValue("attribute_gruop_id", value.value);
+                              if (!value) {
+                                formik.setFieldValue("attribute_gruop_id", "");
+                              } else {
+                                formik.setFieldValue("attribute_gruop_id", value.value);
+                              }
+                            }}
+                          />
+                        )}
                         {formik.errors.attribute_gruop_id && formik.touched.attribute_gruop_id ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
@@ -388,12 +402,18 @@ function FormulaAdd({ noEdit }) {
                             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             menuPortalTarget={document.querySelector("body")}
                             isDisabled={noEdit}
+                            isClearable={true}
                             placeholder={"Chọn CT/TP 1"}
                             value={convertValue(formik.values.type1, getOptionType1())}
                             options={getOptionType1(formik.values.type1, true)}
                             onChange={(value) => {
-                              formik.setFieldValue("type1", value.value);
+                              // formik.setFieldValue("type1", value.value);
                               // formik.setFieldValue("orderid_1", "");
+                              if (!value) {
+                                formik.setFieldValue("type1", "");
+                              } else {
+                                formik.setFieldValue("type1", value.value);
+                              }
                             }}
                           />
                         </Col>
@@ -404,6 +424,7 @@ function FormulaAdd({ noEdit }) {
                               <Select
                                 className="MuiPaper-filter__custom--select"
                                 id={`orderid_1`}
+                                isClearable={true}
                                 name={`orderid_1`}
                                 styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                                 menuPortalTarget={document.querySelector("body")}
@@ -412,13 +433,19 @@ function FormulaAdd({ noEdit }) {
                                 value={convertValue(formik.values.orderid_1, getOptionIngdient())}
                                 options={getOptionIngdient(formik.values.orderid_1, true)}
                                 onChange={(value) => {
-                                  formik.setFieldValue("orderid_1", value.value);
+                                  // formik.setFieldValue("orderid_1", value.value);
+                                  if (!value) {
+                                    formik.setFieldValue("orderid_1", "");
+                                  } else {
+                                    formik.setFieldValue("orderid_1", value.value);
+                                  }
                                 }}
                               />
                             ) : (
                               <Select
                                 className="MuiPaper-filter__custom--select"
                                 id={`orderid_1`}
+                                isClearable={true}
                                 name={`orderid_1`}
                                 styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                                 menuPortalTarget={document.querySelector("body")}
@@ -427,7 +454,12 @@ function FormulaAdd({ noEdit }) {
                                 value={convertValue(formik.values.orderid_1, getOptionFormula())}
                                 options={getOptionFormula(formik.values.orderid_1, true)}
                                 onChange={(value) => {
-                                  formik.setFieldValue("orderid_1", value.value);
+                                  // formik.setFieldValue("orderid_1", value.value);
+                                  if (!value) {
+                                    formik.setFieldValue("orderid_1", "");
+                                  } else {
+                                    formik.setFieldValue("orderid_1", value.value);
+                                  }
                                 }}
                               />
                             )
@@ -447,6 +479,7 @@ function FormulaAdd({ noEdit }) {
                           <Select
                             className="MuiPaper-filter__custom--select"
                             id={`calculation_id`}
+                            isClearable={true}
                             name={`calculation_id`}
                             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             menuPortalTarget={document.querySelector("body")}
@@ -458,7 +491,12 @@ function FormulaAdd({ noEdit }) {
                             )}
                             options={getOptionCalculation(formik.values.calculation_id, true)}
                             onChange={(value) => {
-                              formik.setFieldValue("calculation_id", value.value);
+                              // formik.setFieldValue("calculation_id", value.value);
+                              if (!value) {
+                                formik.setFieldValue("calculation_id", "");
+                              } else {
+                                formik.setFieldValue("calculation_id", value.value);
+                              }
                             }}
                           />
                         </Col>
@@ -466,6 +504,7 @@ function FormulaAdd({ noEdit }) {
                           <Select
                             className="MuiPaper-filter__custom--select"
                             id={`orderid_1`}
+                            isClearable={true}
                             name={`orderid_2`}
                             styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                             menuPortalTarget={document.querySelector("body")}
@@ -474,8 +513,13 @@ function FormulaAdd({ noEdit }) {
                             value={convertValue(formik.values.type2, getOptionType2())}
                             options={getOptionType2(formik.values.type2, true)}
                             onChange={(value) => {
-                              formik.setFieldValue("type2", value.value);
+                              // formik.setFieldValue("type2", value.value);
                               // formik.setFieldValue("orderid_2", "");
+                              if (!value) {
+                                formik.setFieldValue("type2", "");
+                              } else {
+                                formik.setFieldValue("type2", value.value);
+                              }
                             }}
                           />
                         </Col>
@@ -485,6 +529,7 @@ function FormulaAdd({ noEdit }) {
                               <Select
                                 className="MuiPaper-filter__custom--select"
                                 id={`orderid_2`}
+                                isClearable={true}
                                 name={`orderid_2`}
                                 styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                                 menuPortalTarget={document.querySelector("body")}
@@ -493,12 +538,18 @@ function FormulaAdd({ noEdit }) {
                                 value={convertValue(formik.values.orderid_2, getOptionIngdient())}
                                 options={getOptionIngdient(formik.values.orderid_2, true)}
                                 onChange={(value) => {
-                                  formik.setFieldValue("orderid_2", value.value);
+                                  // formik.setFieldValue("orderid_2", value.value);
+                                  if (!value) {
+                                    formik.setFieldValue("orderid_2", "");
+                                  } else {
+                                    formik.setFieldValue("orderid_2", value.value);
+                                  }
                                 }}
                               />
                             ) : (
                               <Select
                                 className="MuiPaper-filter__custom--select"
+                                isClearable={true}
                                 id={`orderid_2`}
                                 name={`orderid_2`}
                                 styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
@@ -508,7 +559,12 @@ function FormulaAdd({ noEdit }) {
                                 value={convertValue(formik.values.orderid_2, getOptionFormula())}
                                 options={getOptionFormula(formik.values.orderid_2, true)}
                                 onChange={(value) => {
-                                  formik.setFieldValue("orderid_2", value.value);
+                                  // formik.setFieldValue("orderid_2", value.value);
+                                  if (!value) {
+                                    formik.setFieldValue("orderid_2", "");
+                                  } else {
+                                    formik.setFieldValue("orderid_2", value.value);
+                                  }
                                 }}
                               />
                             )
