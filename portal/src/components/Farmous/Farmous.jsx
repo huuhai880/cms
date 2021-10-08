@@ -93,7 +93,7 @@ function Farmous() {
         )}
       </Card>
       <Col xs={12} sm={4} className="d-flex align-items-end mb-3" style={{ padding: 0 }}>
-        <CheckAccess permission="MD_FARMOUS_ADD">
+        <CheckAccess permission="MD_FAMOUS_ADD">
           <FormGroup className="mb-2 mb-sm-0">
             <Button
               color="success"

@@ -129,7 +129,7 @@ function Filter({ handleSubmit }) {
                   autoComplete="nope"
                   type="text"
                   name="keyword"
-                  placeholder="Nhập tên, chức vụ người nổi tiếng"
+                  placeholder="Nhập tên, chức danh người nổi tiếng"
                   value={searchValue.keyword}
                   onKeyDown={handleKeyDown}
                   onChange={(e) => {

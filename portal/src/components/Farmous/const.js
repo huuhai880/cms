@@ -32,7 +32,7 @@ export const validationSchema = yup.object().shape({
   // desc: yup.string().required("Mô tả không được để trống .").nullable(),
   // short_desc: yup.string().required("Tóm tắt không được để trống .").nullable(),
   birthday: yup.string().required("Ngày sinh không được để trống .").nullable(),
-  position: yup.string().required("Chức vụ không được để trống .").nullable(),
+  position: yup.string().required("Chức danh không được để trống .").nullable(),
   gender: yup.string().required("Giới tính không được để trống .").nullable(),
   image_avatar: yup.string().required("Hình đại diện không được để trống .").nullable(),
 });
@@ -96,7 +96,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
     },
     {
       name: "position",
-      label: "Chức vụ",
+      label: "Chức danh",
       options: {
         filter: false,
         sort: true,
@@ -184,7 +184,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <div className="text-center">
-              <CheckAccess permission="MD_FARMOUS_EDIT">
+              <CheckAccess permission="MD_FAMOUS_EDIT">
                 <Button
                   color="primary"
                   title="Chỉnh sửa"
@@ -196,7 +196,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   <i className="fa fa-edit" />
                 </Button>
               </CheckAccess>
-              <CheckAccess permission="MD_FARMOUS_DEL">
+              <CheckAccess permission="MD_FAMOUS_DEL">
                 <Button
                   color="danger"
                   title="Xóa"
