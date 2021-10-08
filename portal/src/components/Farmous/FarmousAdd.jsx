@@ -182,7 +182,7 @@ function FarmousAdd({ noEdit }) {
                               style={{
                                 fontSize: 50,
                                 paddingTop: 65,
-                                paddingLeft: 60,
+                                paddingLeft: 70,
                               }}
                               className="user-imgage radius-50-percent fa fa-plus"
                             />
@@ -251,7 +251,7 @@ function FarmousAdd({ noEdit }) {
                               name="position"
                               id="position"
                               type="text"
-                              placeholder="Chức vụ"
+                              placeholder="Chức danh"
                               disabled={noEdit}
                               value={formik.values.position}
                               onChange={(e) => {
@@ -478,7 +478,7 @@ function FarmousAdd({ noEdit }) {
                 <div className="text-right mb-2">
                   <div>
                     {noEdit ? (
-                      <CheckAccess permission="MD_FARMOUS_VIEW">
+                      <CheckAccess permission="MD_FAMOUS_VIEW">
                         <Button
                           color="primary"
                           className="mr-2 btn-block-sm"
@@ -490,7 +490,7 @@ function FarmousAdd({ noEdit }) {
                       </CheckAccess>
                     ) : (
                       <>
-                        <CheckAccess permission={id ? `MD_FARMOUS_EDIT` : `MD_FARMOUS_ADD`}>
+                        <CheckAccess permission={id ? `MD_FAMOUS_EDIT` : `MD_FAMOUS_ADD`}>
                           <button
                             className="mr-2 btn-block-sm btn btn-primary"
                             onClick={() => {
@@ -502,7 +502,7 @@ function FarmousAdd({ noEdit }) {
                             Lưu
                           </button>
                         </CheckAccess>
-                        <CheckAccess permission={id ? `MD_FARMOUS_EDIT` : `MD_FARMOUS_ADD`}>
+                        <CheckAccess permission={id ? `MD_FAMOUS_EDIT` : `MD_FAMOUS_ADD`}>
                           <button
                             className="mr-2 btn-block-sm btn btn-success"
                             onClick={() => {

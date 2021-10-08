@@ -3204,31 +3204,31 @@ const routes = [
   // end#Formula
   //Farmous
   {
-    path: "/farmous",
+    path: "/famous",
     exact: true,
     name: "Danh sách người nổi tiếng",
-    function: "MD_FARMOUS_VIEW",
+    function: "MD_FAMOUS_VIEW",
     component: Farmous,
   },
   {
-    path: "/farmous/add",
+    path: "/famous/add",
     exact: true,
     name: "Thêm mới",
-    function: "MD_FARMOUS_ADD",
+    function: "MD_FAMOUS_ADD",
     component: FarmousAdd,
   },
   {
-    path: "/farmous/detail/:id",
+    path: "/famous/detail/:id",
     exact: true,
     name: "Chi tiết",
-    function: "MD_FARMOUS_VIEW",
+    function: "MD_FAMOUS_VIEW",
     component: FarmousDetail,
   },
   {
-    path: "/farmous/edit/:id",
+    path: "/famous/edit/:id",
     exact: true,
     name: "Chỉnh sửa",
-    function: "MD_FARMOUS_EDIT",
+    function: "MD_FAMOUS_EDIT",
     component: FarmousEdit,
   },
   // end#Farmous
