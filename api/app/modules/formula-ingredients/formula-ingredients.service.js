@@ -40,7 +40,7 @@ const getIngredientsList = async (queryParams = {}) => {
       data: IngredientClass.list(result),
       page: currentPage,
       limit: itemsPerPage,
-      total: result.length,
+      total: apiHelper.getTotalData(result),
     });
   } catch (e) {
     logger.error(e, {
@@ -92,7 +92,7 @@ const CheckIngredient = async (ingredient_name) => {
 const addIngredient = async (body = {}) => {
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
-  // console.log(body)
+  console.log(body)
   try {
     await transaction.begin();
     /////create or update number
@@ -122,10 +122,7 @@ const addIngredient = async (body = {}) => {
           'CALCULATIONID',
           apiHelper.getValueFromObject(body, 'calculation_id')
         )
-        .input(
-          'ISGENDER',
-          apiHelper.getValueFromObject(body, 'is_gender')
-        )
+        .input('ISGENDER', apiHelper.getValueFromObject(body, 'is_gender'))
         .input('PARAMDOBID', apiHelper.getValueFromObject(body, 'param_dob_id'))
         .input('ISVOWELs', apiHelper.getValueFromObject(body, 'is_vowel'))
         .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
@@ -247,10 +244,7 @@ const addIngredient = async (body = {}) => {
           'CALCULATIONID',
           apiHelper.getValueFromObject(body, 'calculation_id')
         )
-        .input(
-          'ISGENDER',
-          apiHelper.getValueFromObject(body, 'is_gender')
-        )
+        .input('ISGENDER', apiHelper.getValueFromObject(body, 'is_gender'))
         .input('PARAMDOBID', apiHelper.getValueFromObject(body, 'param_dob_id'))
         .input('ISVOWELs', apiHelper.getValueFromObject(body, 'is_vowel'))
         .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
@@ -415,7 +409,7 @@ const getIngredientList = async (queryParams = {}) => {
       .request()
       .execute('FOR_FORMULAINGREDIENTS_GetListIngredient_AdminWeb');
     const result = data.recordset;
-    console.log(result);
+    // console.log(result);
 
     return new ServiceResponse(true, '', {
       data: IngredientClass.listIngredient(result),

@@ -107,7 +107,7 @@ const addFormula = async (body = {}) => {
         'ATTRIBUTESGROUPID',
         apiHelper.getValueFromObject(body, 'attribute_gruop_id')
       )
-      .input('DESCRIPTION', apiHelper.getValueFromObject(body, 'decs'))
+      .input('DESCRIPTION', apiHelper.getValueFromObject(body, 'desc'))
       .input('ORDERINDEX', apiHelper.getValueFromObject(body, 'order_index'))
       .input('ISFOMULAORTHERID1', apiHelper.getValueFromObject(body, 'type1'))
       .input('ISFOMULAORTHERID2', apiHelper.getValueFromObject(body, 'type2'))

@@ -252,7 +252,6 @@ function InterPretAdd({ noEdit }) {
     return [];
   };
 
-
   //////config editor images
   const handleUploadImageDesc = async (blobInfo, success, failure) => {
     readImageAsBase64(blobInfo.blob(), async (imageUrl) => {
@@ -463,7 +462,7 @@ function InterPretAdd({ noEdit }) {
                     ) : null}
                   </Col>
                 </Row>
-                {formik.values.is_interpretspectial ? (
+                {formik.values.is_interpretspectial === 1 ? (
                   <Row className="mb15">
                     <Label for="relationship_id" sm={2}>
                       {/* Mối quan hệ{" "} */}
@@ -493,7 +492,7 @@ function InterPretAdd({ noEdit }) {
                               <b>Thao tác</b>
                             </td>
                           </thead>
-                          
+
                           {formik.values.attribute_list &&
                             formik.values.attribute_list.map((item, index) => {
                               return (
@@ -547,16 +546,16 @@ function InterPretAdd({ noEdit }) {
                                 </tbody>
                               );
                             })}
-                           
                         </table>
-                        {formik.values.attribute_list.length == 0 ? (
-                            <>
-                              {/* <tr key={index}></tr> */}
-                              <div className=" align-middle text-center" width="100%">
-                                <p>Không có dữ liệu</p>
-                              </div>
-                            </>
-                          ) : null}
+                        {formik.values.attribute_list === 1 &&
+                        formik.values.attribute_list.length == 0 ? (
+                          <>
+                            {/* <tr key={index}></tr> */}
+                            <div className=" align-middle text-center" width="100%">
+                              <p>Không có dữ liệu</p>
+                            </div>
+                          </>
+                        ) : null}
                         {formik.errors.attribute_list && formik.touched.attribute_list ? (
                           <div
                             className="col-xs-12 col-sm-12 col-md-12 col-lg-12 field-validation-error alert alert-danger fade show"
@@ -628,17 +627,23 @@ function InterPretAdd({ noEdit }) {
                               !formik.values.relationship_id ||
                               formik.values.is_for_power_diagram
                             }
+                            isClearable={true}
                             placeholder={"-- Chọn --"}
                             value={convertValue(
                               formik.values.compare_attribute_id,
                               getOptionAttribute()
                             )}
                             options={getOptionAttribute(true)}
-                            onChange={(selected) => {
-                              formik.setFieldValue(
-                                "compare_attribute_id",
-                                selected ? selected.value : null
-                              );
+                            onChange={(value) => {
+                              if (!value) {
+                                formik.setFieldValue("compare_attribute_id", "");
+                              } else {
+                                formik.setFieldValue("compare_attribute_id", value.value);
+                              }
+                              // formik.setFieldValue(
+                              //   "compare_attribute_id",
+                              //   selected ? selected.value : null
+                              // );
                             }}
                           />
                         </Col>
