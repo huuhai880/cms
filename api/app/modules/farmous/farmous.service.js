@@ -11,6 +11,8 @@ const config = require('../../../config/config');
 
 const getFarmoussList = async (queryParams = {}) => {
   try {
+    console.log(queryParams)
+
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
     const pool = await mssql.pool;

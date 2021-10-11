@@ -86,17 +86,17 @@ function FormulaIngredientsAdd({ noEdit }) {
   const _initDataDetail = async () => {
     try {
       _ingredientModel.detail(id).then((data) => {
-        console.log(data)
+        console.log(data);
         if (data.is_total_2_digit == 1) {
-          data.is_numletter_digit= data.is_numletter_2digit;
-          data.is_total_value_digit= data.is_total_value_2digit;
-          data.is_total_letter_first_digit= data.is_total_letter_first_2digit;
-          data.is_total_letter_digit= data.is_total_letter_2digit;
-        }else{
-          data.is_numletter_digit= data.is_numletter_1digit;
-          data.is_total_value_digit= data.is_total_value_1digit;
-          data.is_total_letter_first_digit= data.is_total_letter_first_1digit;
-          data.is_total_letter_digit= data.is_total_letter_1digit;
+          data.is_numletter_digit = data.is_numletter_2digit;
+          data.is_total_value_digit = data.is_total_value_2digit;
+          data.is_total_letter_first_digit = data.is_total_letter_first_2digit;
+          data.is_total_letter_digit = data.is_total_letter_2digit;
+        } else {
+          data.is_numletter_digit = data.is_numletter_1digit;
+          data.is_total_value_digit = data.is_total_value_1digit;
+          data.is_total_letter_first_digit = data.is_total_letter_first_1digit;
+          data.is_total_letter_digit = data.is_total_letter_1digit;
         }
         setDataIngredient(data);
         // formik.setFieldValue(`type`, true);
@@ -107,7 +107,7 @@ function FormulaIngredientsAdd({ noEdit }) {
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
-  console.log(formik.values)
+  console.log(formik.values);
   useEffect(() => {
     const _callAPI = () => {
       try {
@@ -811,11 +811,11 @@ function FormulaIngredientsAdd({ noEdit }) {
                                 disabled={noEdit}
                                 onChange={(e) => {
                                   formik.setFieldValue(
-                                    `is_total_value_digit`,
+                                    `is_total_letter_digit`,
                                     e.target.checked ? 1 : 0
                                   );
                                 }}
-                                checked={formik.values.is_total_value_digit}
+                                checked={formik.values.is_total_letter_digit}
                               >
                                 Tổng các chữ cái
                               </Checkbox>
@@ -839,11 +839,11 @@ function FormulaIngredientsAdd({ noEdit }) {
                                 disabled={noEdit}
                                 onChange={(e) => {
                                   formik.setFieldValue(
-                                    `is_total_letter_digit`,
+                                    `is_total_value_digit`,
                                     e.target.checked ? 1 : 0
                                   );
                                 }}
-                                checked={formik.values.is_total_letter_digit}
+                                checked={formik.values.is_total_value_digit}
                               >
                                 Tổng các giá trị
                               </Checkbox>

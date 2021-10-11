@@ -31,7 +31,7 @@ const getInterpretsList = async (queryParams = {}) => {
             .execute('FOR_INTERPRETDETAIL_GetListByIds_AdminWeb')
 
          let listInterPretDetail = InterpretClass.listInterpretDetail(resDetail.recordset) || [];
-
+         // console.log(resDetail)
          for (let index = 0; index < interprets.length; index++) {
             let interpret = interprets[index];
             let interpret_details = listInterPretDetail.filter(x => x.interpret_id == interpret.interpret_id);
@@ -43,7 +43,7 @@ const getInterpretsList = async (queryParams = {}) => {
          data: interprets,
          page: currentPage,
          limit: itemsPerPage,
-         total: result.length,
+         total: apiHelper.getTotalData(result),
       });
    } catch (e) {
       logger.error(e, {
@@ -121,6 +121,7 @@ const addIntergretDetail = async (body = {}) => {
          .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
          .execute('FOR_INTERPRET_Detail_CreateOrUpdate_AdminWeb');
       const interpret_id = resultIntergret.recordset[0].RESULT;
+      // console.log(interpret_id)
 
       return new ServiceResponse(true, '', interpret_id);
    } catch (error) {

@@ -30,8 +30,6 @@ function Position() {
   };
   ////call API
   const _callAPI = async (props) => {
-        // console.log("ủa em");
-
     try {
       await _positionModel.getList(props).then((data) => {
         setDataPosition(data);
@@ -64,6 +62,16 @@ function Position() {
         }
       }
     });
+  };
+  const handleChangeRowsPerPage = (event) => {
+    query.itemsPerPage = event.target.value;
+    query.page = 1;
+    _callAPI(query);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    query.page = newPage + 1;
+    _callAPI(query);
   };
   return (
     <div>
@@ -123,8 +131,8 @@ function Position() {
                     count={dataPosition.totalItems}
                     rowsPerPage={query.pageSize}
                     page={query.pageIndex - 1 || 0}
-                    // onChangePage={handleChangePage}
-                    // onChangeRowsPerPage={handleChangeRowsPerPage}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
                   />
                 </div>
               )}

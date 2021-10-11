@@ -20,11 +20,10 @@ function ViewDetail() {
     }
   }, [id]);
 
-
   //// data detail
-  const _initDataDetail = async () => {
+  const _initDataDetail = () => {
     try {
-      await _interpretModel.detail(id).then((data) => {
+      _interpretModel.detail(id).then((data) => {
         // console.log(
         //   (document.querySelector("#elementToBeReplace").innerHTML = data.brief_decs),
         //   (document.querySelector("#elementToBeReplace").innerHTML = data.decs)
