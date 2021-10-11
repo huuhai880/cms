@@ -87,7 +87,7 @@ const getMainNumberList = async (queryParams = {}) => {
       data: MainNumberClass.list(result),
       page: currentPage,
       limit: itemsPerPage,
-      total: result.length,
+      total: apiHelper.getTotalData(result),
     });
   } catch (e) {
     logger.error(e, {

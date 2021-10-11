@@ -3035,12 +3035,20 @@ const routes = [
   // end#ProductCombo
   //interpret
   {
+    path: "/interpret/show-list-child/:id",
+    exact: true,
+    name: "Danh sách luận giải",
+    function: "FOR_INTERPRET_VIEW",
+    component: InterPret,
+  },
+  {
     path: "/interpret",
     exact: true,
     name: "Danh sách luận giải",
     function: "FOR_INTERPRET_VIEW",
     component: InterPret,
   },
+
   {
     path: "/interpret/add",
     exact: true,
