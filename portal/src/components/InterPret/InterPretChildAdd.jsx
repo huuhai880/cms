@@ -56,7 +56,9 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
       interpretDetailEnt ? interpretDetailEnt.interpret_id : id,
       interpretDetailEnt ? interpretDetailEnt.interpret_detail_id : 0
     );
-    console.log({ interpretDetailEnt });
+    if (document.body.classList.contains("tox-fullscreen")) {
+      document.body.classList.remove("tox-fullscreen");
+    }
   }, []);
 
   const _initInterpretParent = async (interpretId, interpretDetailId) => {
@@ -263,7 +265,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                       <Editor
                         apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                         scriptLoading={{
-                          delay: 500,
+                          delay: 0,
                         }}
                         value={formik.values.interpret_detail_short_content}
                         disabled={noEdit}
@@ -322,7 +324,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                       <Editor
                         apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                         scriptLoading={{
-                          delay: 500,
+                          delay: 0,
                         }}
                         value={formik.values.interpret_detail_full_content}
                         disabled={noEdit}

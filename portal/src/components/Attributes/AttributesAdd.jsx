@@ -128,6 +128,7 @@ export default class AttributesAdd extends PureComponent {
     attribute_name: Yup.string().required("Tên thuộc tính là bắt buộc."),
     main_number_id: Yup.object().required("Giá trị là bắt buộc."),
     attributes_group_id: Yup.object().required("Chỉ số là bắt buộc."),
+
     list_attributes_image: Yup.array()
       .of(
         Yup.object().shape({
@@ -179,7 +180,7 @@ export default class AttributesAdd extends PureComponent {
     this.setState({ isOpenFamousList: !this.state.isOpenFamousList });
   };
   handlePickFamous = (news = {}) => {
-    console.log(news);
+    // console.log(news);
     const { setFieldValue, values } = this.formikProps;
     this.setState({ isOpenFamousList: false }, () => {
       let related =
@@ -194,34 +195,30 @@ export default class AttributesAdd extends PureComponent {
       this.setState({ dataRelated: related });
     });
   };
-   // Remove news item
-   handleRemoveFamous = (index) => {
-    window._$g.dialogs.prompt(
-      "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
-      "Xóa",
-      (confirm) => this.handleSubmitRemoveItem(confirm, index)
-    );
+
+  handleSortFDTeam = (type, item) => {
+    let { values, handleChange } = this.formikProps;
+    let { related: value } = values;
+    let nextIdx = null;
+    // console.log(value)
+    let foundIdx = value.findIndex((_item) => _item === item);
+    if (foundIdx < 0) {
+      return;
+    }
+    if ("up" === type) {
+      nextIdx = Math.max(0, foundIdx - 1);
+    }
+    if ("down" === type) {
+      nextIdx = Math.min(value.length - 1, foundIdx + 1);
+    }
+    if (foundIdx !== nextIdx && null !== nextIdx) {
+      let _tempItem = value[foundIdx];
+      value[foundIdx] = value[nextIdx];
+      value[nextIdx] = _tempItem;
+      handleChange({ target: { name: "related", value } });
+    }
   };
 
-  // Submit remove
-  async handleSubmitRemoveItem(confirm, index) {
-    let { values, handleChange } = this.formikProps;
-    const { NewsEnt } = this.props;
-    let { related } = values;
-    const famousSelected = related[index];
-    if (confirm) {
-      if (famousSelected.parent_id && NewsEnt) {
-        // Call api remove news related
-        await this._newsModel.deleteRelated(
-          NewsEnt.farmous_id,
-          famousSelected.farmous_id
-        );
-      }
-      let cloneData = JSON.parse(JSON.stringify(related));
-      cloneData.splice(index, 1);
-      handleChange({ target: { name: "related", value: cloneData } });
-    }
-  }
   handleFormikSubmit(values, formProps) {
     let { setSubmitting } = formProps;
     let willRedirect = false;
@@ -543,7 +540,7 @@ export default class AttributesAdd extends PureComponent {
                                     <Editor
                                       apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                                       scriptLoading={{
-                                        delay: 500,
+                                        delay: 0,
                                       }}
                                       value={values.description}
                                       disabled={noEdit}
@@ -585,7 +582,10 @@ export default class AttributesAdd extends PureComponent {
                                 <b className="underline">Thông tin người nổi tiếng</b>
                                 {/* <span className="font-weight-bold red-text">*</span> */}
                               </Col>
-                              <Col sm={8} className="d-flex align-items-center justify-content-end">
+                              <Col
+                                sm={8}
+                                className="d-flex align-items-center justify-content-end mb15"
+                              >
                                 <Button
                                   key="buttonAddItem"
                                   color="success"
@@ -620,41 +620,149 @@ export default class AttributesAdd extends PureComponent {
                                           </td>
                                         </tr>
                                       ) : (
-                                        (values.related || []).map((famous, index) => (
-                                          <tr key={index}>
-                                            <td className="text-center">{index + 1}</td>
-                                            <td>
-                                              <a
-                                                target="_blank"
-                                                href={`/famous/detail/${famous.farmous_id}`}
-                                              >
-                                                {famous.farmous_name}
-                                              </a>
-                                            </td>
-                                            <td>{famous.birthday}</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td className="text-center">
-                                              <Button
-                                                color="danger"
+                                        (values.related || []).map((famous, index) => {
+                                          return (
+                                            <tr key={index}>
+                                              <td className="text-center">{index + 1}</td>
+                                              <td>
+                                                <Media
+                                                  object
+                                                  src={famous.image_avatar}
+                                                  alt="User image"
+                                                  // className="user-imgage"
+                                                  style={{
+                                                    width: "30px",
+                                                    height: "30px",
+                                                    padding: 0,
+                                                    objectFit: "cover",
+                                                    
+                                                  }}
+                                                />
+                                                <a
+                                                  target="_blank"
+                                                  href={`/famous/detail/${famous.farmous_id}`}
+                                                >
+                                                  {famous.farmous_name}
+                                                </a>
+                                                \{famous.position}
+                                              </td>
+                                              <td className="text-center">{famous.birthday}</td>
+                                              <td
                                                 style={{
-                                                  width: 24,
-                                                  height: 24,
-                                                  padding: 0,
+                                                  verticalAlign: "middle",
+                                                  textAlign: "center",
                                                 }}
-                                                // onClick={(e) => this.handleRemoveItem(index)}
-                                                title="Xóa"
                                               >
-                                                <i className="fa fa-minus-circle" />
-                                              </Button>
-                                            </td>
-                                          </tr>
-                                        ))
+                                                <Button
+                                                  size="sm"
+                                                  color="primary"
+                                                  className="mr-1"
+                                                  type="button"
+                                                  disabled={0 === index || noEdit}
+                                                  onClick={(evt) =>
+                                                    this.handleSortFDTeam("up", famous, evt)
+                                                  }
+                                                >
+                                                  <i className="fa fa-arrow-up" />
+                                                </Button>
+                                                <Button
+                                                  size="sm"
+                                                  color="success"
+                                                  type="button"
+                                                  disabled={
+                                                    values.related.length - 1 === index || noEdit
+                                                  }
+                                                  onClick={(evt) =>
+                                                    this.handleSortFDTeam("down", famous, evt)
+                                                  }
+                                                >
+                                                  <i className="fa fa-arrow-down" />
+                                                </Button>
+                                              </td>
+                                              <td
+                                                className="text-center wrap-chbx"
+                                                style={{
+                                                  verticalAlign: "middle",
+                                                }}
+                                              >
+                                                <Col>
+                                                  <Field
+                                                    name="is_default"
+                                                    render={({ field /* _form */ }) => (
+                                                      <CustomInput
+                                                        {...field}
+                                                        onBlur={null}
+                                                        checked={values.related[index].is_default}
+                                                        onChange={(event) => {
+                                                          const { target } = event;
+                                                          values.related = values.related.map(
+                                                            (value) => {
+                                                              value.is_default = false;
+                                                              return value;
+                                                            }
+                                                          );
+                                                          values.related[index].is_default = true;
+                                                          field.onChange({
+                                                            target: {
+                                                              name: "related",
+                                                              value: [...values.related],
+                                                            },
+                                                          });
+                                                        }}
+                                                        type="checkbox"
+                                                        id={`is_default_${index}`}
+                                                        disabled={noEdit}
+                                                      />
+                                                    )}
+                                                  />
+                                                </Col>
+                                              </td>
+                                              <td className="text-center">
+                                                <Col>
+                                                  <Field
+                                                    name="is_default"
+                                                    render={({ field /* _form */ }) => (
+                                                      <Button
+                                                        color="danger"
+                                                        style={{
+                                                          width: 24,
+                                                          height: 24,
+                                                          padding: 0,
+                                                        }}
+                                                        onClick={(e) => {
+                                                          let clone = [...values.related];
+                                                          clone.splice(index, 1);
+                                                          field.onChange({
+                                                            target: {
+                                                              name: "related",
+                                                              value: clone,
+                                                            },
+                                                          });
+                                                        }}
+                                                        title="Xóa"
+                                                      >
+                                                        <i className="fa fa-minus-circle" />
+                                                      </Button>
+                                                    )}
+                                                  />
+                                                </Col>
+                                              </td>
+                                            </tr>
+                                          );
+                                        })
                                       )}
                                     </tbody>
                                   </Table>
                                 }
                               </Col>
+                              <ErrorMessage
+                                name="check_is_default_famous"
+                                component={({ children }) => (
+                                  <Alert color="danger" className="field-validation-error">
+                                    {children}
+                                  </Alert>
+                                )}
+                              />
                             </Row>
 
                             <Row className="mb15">
@@ -1200,6 +1308,7 @@ export default class AttributesAdd extends PureComponent {
                 isOpenFamousList={isOpenFamousList}
                 handlePick={this.handlePickFamous}
                 // excludeNewsId={NewsEnt ? NewsEnt.farmous_id : null}
+                related={this.formikProps.values.related}
               />
             </ModalBody>
           </Modal>

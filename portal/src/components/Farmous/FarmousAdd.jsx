@@ -26,7 +26,7 @@ import moment from "moment";
 import { Radio } from "antd";
 import { Editor } from "@tinymce/tinymce-react";
 import { readImageAsBase64 } from "../../utils/html";
-
+import "./styles.scss";
 layoutFullWidthHeight();
 
 function FarmousAdd({ noEdit }) {
@@ -44,6 +44,11 @@ function FarmousAdd({ noEdit }) {
       handleCreateOrUpdate(values);
     },
   });
+  useEffect(() => {
+    if (document.body.classList.contains("tox-fullscreen")) {
+      document.body.classList.remove("tox-fullscreen");
+    }
+  }, []);
   //// create farmous
   const handleCreateOrUpdate = async (values) => {
     try {
@@ -332,34 +337,41 @@ function FarmousAdd({ noEdit }) {
                     <Row>
                       <Col xs={12} sm={12}>
                         <FormGroup row>
-                          <Label for="desc" sm={2}>
+                          <Label for="short_desc" sm={2}>
                             Tóm tắt
                           </Label>
                           <Col sm={10}>
                             <Editor
                               apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
-                              scriptLoading={{ delay: 500 }}
+                              scriptLoading={{
+                                delay: 0,
+                              }}
                               value={formik.values.short_desc}
                               disabled={noEdit}
                               init={{
-                                height: "300px",
+                                height: "500px",
                                 width: "100%",
                                 menubar: false,
                                 branding: false,
                                 statusbar: false,
+                                entity_encoding: "raw",
                                 plugins: [
                                   "advlist autolink fullscreen lists link image charmap print preview anchor",
                                   "searchreplace visualblocks code fullscreen ",
-                                  "insertdatetime media table paste code help ",
+                                  "insertdatetime media table paste code help",
                                   "image imagetools ",
+                                  "toc",
                                 ],
                                 menubar: "file edit view insert format tools table tc help",
                                 toolbar1:
-                                  "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                                  "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                                   "alignleft aligncenter alignright alignjustify",
                                 toolbar2:
-                                  "bullist numlist outdent indent | removeformat | help | image",
+                                  "bullist numlist outdent indent | removeformat | help | image | toc",
                                 file_picker_types: "image",
+                                relative_urls: false,
+                                remove_script_host: false,
+                                convert_urls: true,
                                 images_dataimg_filter: function (img) {
                                   return img.hasAttribute("internal-blob");
                                 },
@@ -391,28 +403,35 @@ function FarmousAdd({ noEdit }) {
                           <Col sm={10}>
                             <Editor
                               apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
-                              scriptLoading={{ delay: 500 }}
+                              scriptLoading={{
+                                delay: 0,
+                              }}
                               value={formik.values.desc}
                               disabled={noEdit}
                               init={{
-                                height: "300px",
+                                height: "500px",
                                 width: "100%",
                                 menubar: false,
                                 branding: false,
                                 statusbar: false,
+                                entity_encoding: "raw",
                                 plugins: [
                                   "advlist autolink fullscreen lists link image charmap print preview anchor",
                                   "searchreplace visualblocks code fullscreen ",
-                                  "insertdatetime media table paste code help ",
+                                  "insertdatetime media table paste code help",
                                   "image imagetools ",
+                                  "toc",
                                 ],
                                 menubar: "file edit view insert format tools table tc help",
                                 toolbar1:
-                                  "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                                  "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                                   "alignleft aligncenter alignright alignjustify",
                                 toolbar2:
-                                  "bullist numlist outdent indent | removeformat | help | image",
+                                  "bullist numlist outdent indent | removeformat | help | image | toc",
                                 file_picker_types: "image",
+                                relative_urls: false,
+                                remove_script_host: false,
+                                convert_urls: true,
                                 images_dataimg_filter: function (img) {
                                   return img.hasAttribute("internal-blob");
                                 },
@@ -445,24 +464,6 @@ function FarmousAdd({ noEdit }) {
                             <Checkbox
                               disabled={noEdit}
                               onChange={(e) => {
-                                formik.setFieldValue(`is_default`, e.target.checked);
-                              }}
-                              checked={formik.values.is_default}
-                            >
-                              Mặc định
-                            </Checkbox>
-                          </Col>
-                        </FormGroup>
-                      </Col>
-                      <Col xs={12} sm={6}>
-                        <FormGroup row>
-                          <Label  sm={4}>
-                            {/* Chức danh<span className="font-weight-bold red-text">*</span> */}
-                          </Label>
-                          <Col sm={8}>
-                            <Checkbox
-                              disabled={noEdit}
-                              onChange={(e) => {
                                 formik.setFieldValue(`is_active`, e.target.checked);
                               }}
                               checked={formik.values.is_active}
@@ -472,6 +473,7 @@ function FarmousAdd({ noEdit }) {
                           </Col>
                         </FormGroup>
                       </Col>
+                      <Col xs={12} sm={6}></Col>
                     </Row>
                   </Col>
                 </Row>

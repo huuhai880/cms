@@ -5,6 +5,8 @@ const template = {
   order_id: '{{#? ORDERID}}',
   order_no: '{{#? ORDERNO}}',
   order_date: '{{#? ORDERDATE}}',
+  combo_name: '{{#? COMBONAME}}',
+
   status: '{{STATUS ? 1 : 0}}',
   is_day: '{{ISDAY ? 1 : 0}}',
   is_month: '{{ISMONTH ? 1 : 0}}',
@@ -36,6 +38,7 @@ const list = (users = []) => {
     'order_total_sub',
     'full_name',
     'phone_number',
+    'combo_name',
   ]);
 };
 const detailOrder = (users = []) => {
@@ -50,7 +53,8 @@ const detailOrder = (users = []) => {
     'address',
     'email',
     'order_total_discount',
-    'order_total_sub'
+    'order_total_sub',
+    'combo_name',
   ]);
 };
 const listProduct = (users = []) => {
@@ -58,10 +62,12 @@ const listProduct = (users = []) => {
     'order_detail_quantity',
     'product_price',
     'order_detail_total',
-    'product_name'
+    'product_name',
+    'combo_name',
   ]);
 };
 module.exports = {
   list,
-  detailOrder,listProduct
+  detailOrder,
+  listProduct,
 };

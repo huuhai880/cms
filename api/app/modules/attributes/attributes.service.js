@@ -88,10 +88,7 @@ const createAttributesOrUpdate = async (bodyParams) => {
       bodyParams,
       'list_attributes_image'
     );
-    let related = apiHelper.getValueFromObject(
-      bodyParams,
-      'related'
-    );
+    let related = apiHelper.getValueFromObject(bodyParams, 'related');
     let attribute_name = apiHelper.getValueFromObject(
       bodyParams,
       'attribute_name'
@@ -167,21 +164,19 @@ const createAttributesOrUpdate = async (bodyParams) => {
         )
         .execute(`FOR_ATTRIBUTES_FAMOUS_Delete_adminWeb`);
     }
-    // console.log(related)
     if (related && related.length > 0) {
       for (let i = 0; i < related.length; i++) {
         let item = related[i];
-
         const dataRelated = await pool
           .request()
           .input('ATTRIBUTEID', attributeId)
           .input('FAMOUSID', apiHelper.getValueFromObject(item, 'farmous_id'))
           .input('ISDEFAULT', apiHelper.getValueFromObject(item, 'is_default'))
+          .input('ORDERINDEX', i + 1)
           .input(
-            'ORDERINDEX',
-            apiHelper.getValueFromObject(item, 'order_index')
+            'CREATEDUSER',
+            apiHelper.getValueFromObject(bodyParams, 'auth_name')
           )
-          .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name'))
           .execute(`FOR_ATTRIBUTES_FAMOUS_Create_adminWeb`);
 
         const relatedId = dataRelated.recordset[0].RESULT;
@@ -256,8 +251,16 @@ const detailAttributes = async (attribute_id) => {
       let dataImage = dataAttributeImage.recordset;
       dataImage = attributesClass.detailAttributeImage(dataImage);
       datas.list_attributes_image = dataImage;
+      datas.related = [];
+      if (data.recordsets.length > 1) {
+        datas.related = attributesClass.detailAttributeFamous(
+          data.recordsets[1]
+        );
+      }
+      // console.log(datas)
       return new ServiceResponse(true, '', datas);
     }
+
     return new ServiceResponse(false, RESPONSE_MSG.NOT_FOUND);
   } catch (e) {
     logger.error(e, { function: 'attributesService.detailAttributes' });

@@ -195,6 +195,7 @@ class News extends Component {
     if (handlePick) {
       handlePick(this.state._pickDataItems);
     }
+    
   };
 
   render() {
@@ -274,6 +275,7 @@ class News extends Component {
             if (handlePick) {
               let item = this.state.data[tableMeta["rowIndex"]];
               let { _pickDataItems = {} } = this.state;
+              
               return (
                 <div className="text-center mb-1">
                   <Checkbox

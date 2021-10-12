@@ -1188,7 +1188,7 @@ export default class NewsAdd extends Component {
                                                       "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
                                                     }
                                                     scriptLoading={{
-                                                      delay: 500,
+                                                      delay: 0,
                                                     }}
                                                     value={values.content}
                                                     disabled={noEdit}

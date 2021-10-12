@@ -72,7 +72,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-left">{value == 1 ? "Nam" : "nữ"}</div>;
+          return <div className="text-center">{value == 1 ? "Nam" : "Nữ"}</div>;
         },
       },
     },

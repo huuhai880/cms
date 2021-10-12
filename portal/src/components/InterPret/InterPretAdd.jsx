@@ -68,6 +68,9 @@ function InterPretAdd({ noEdit }) {
       }
     };
     _callAPI();
+    if (document.body.classList.contains("tox-fullscreen")) {
+      document.body.classList.remove("tox-fullscreen");
+    }
   }, []);
 
   const handleCreateOrUpdate = async (values) => {
@@ -106,8 +109,7 @@ function InterPretAdd({ noEdit }) {
       try {
         _interpretModel.getListAttributeDetail({ interpret_id: id }).then((data) => {
           formik.setFieldValue("attribute_list", data.items);
-        // console.log(data)
-
+          // console.log(data)
         });
       } catch (error) {
         window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
@@ -720,7 +722,7 @@ function InterPretAdd({ noEdit }) {
                         <Editor
                           apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                           scriptLoading={{
-                            delay: 500,
+                            delay: 0,
                           }}
                           value={formik.values.brief_decs}
                           disabled={noEdit}
@@ -782,7 +784,7 @@ function InterPretAdd({ noEdit }) {
                         <Editor
                           apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                           scriptLoading={{
-                            delay: 500,
+                            delay: 0,
                           }}
                           value={formik.values.decs}
                           disabled={noEdit}

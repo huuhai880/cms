@@ -76,11 +76,13 @@ function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail 
           value: "0",
         },
       ],
+      filteredValue: ["1", ],
       render: (text, record, index) => {
         // console.log(reco)
         return <div className="text-center">{record.is_active ? "Có" : "Không"}</div>;
       },
-        onFilter: (value, record) =>record.is_active==value,
+      onFilter: (value, record) => record.is_active == value,
+   
     },
 
     {

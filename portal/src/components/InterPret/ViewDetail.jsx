@@ -61,8 +61,6 @@ function ViewDetail() {
             </div>
             <div class="bw_tetx">
               <div dangerouslySetInnerHTML={{ __html: dataInterpret.brief_decs }} />
-              {/* dangerouslySetInnerHTML={{ __html: this.state.note}} */}
-              {/* {dataInterpret.brief_decs} */}
             </div>
             <div class="bw_mt_40 bw_luangiai">
               <div class="bw_content_luangiai">
