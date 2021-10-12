@@ -244,7 +244,7 @@ function OrderDetail() {
                           </td>
 
                           <td className=" align-middle text-center" width="25%">
-                            <b>Tên sản phẩm</b>
+                            <b>Tên sản phẩm / combo</b>
                           </td>
                           <td className=" align-middle text-center" width="15%">
                             <b>Số lượng</b>
@@ -259,6 +259,7 @@ function OrderDetail() {
 
                         {formik.values.product_list &&
                           formik.values.product_list.map((item, index) => {
+                            // console.log(item)
                             return (
                               <tbody>
                                 <tr key={index}>
@@ -267,7 +268,7 @@ function OrderDetail() {
                                   </td>
 
                                   <td className=" align-middle text-left" width="25%">
-                                    {item.product_name}
+                                    {item.product_name?item.product_name:item.combo_name}
                                   </td>
                                   <td className=" align-middle text-center" width="15%">
                                     {item.order_detail_quantity}

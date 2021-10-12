@@ -24,7 +24,7 @@ export const initialValues = {
   status:""
 };
 export const getColumTable = (data, total, query, handleDelete) => {
-  console.log(data);
+  // console.log(data);
   return [
     configIDRowTable("order_id", "/order/detail/", query),
     {
@@ -34,6 +34,7 @@ export const getColumTable = (data, total, query, handleDelete) => {
         filter: false,
         sort: true,
         customHeadRender: (columnMeta, handleToggleColumn) => {
+          
           return (
             <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
               <div className="text-center">{columnMeta.label}</div>
@@ -47,7 +48,7 @@ export const getColumTable = (data, total, query, handleDelete) => {
     },
     {
       name: "product_name",
-      label: "Tên sản phẩm",
+      label: "Tên sản phẩm / combo",
       options: {
         filter: false,
         sort: true,
@@ -59,7 +60,7 @@ export const getColumTable = (data, total, query, handleDelete) => {
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          return <div className="text-left">{value}</div>;
+          return <div className="text-left">{value?value:data[tableMeta["rowIndex"]].combo_name}</div>;
         },
       },
     },

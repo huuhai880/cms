@@ -4802,12 +4802,13 @@ mark {
   font-variant: tabular-nums;
   line-height: 1.5715;
   list-style: none;
-  font-feature-settings: 'tnum';
+  font-feature-settings: 'tnum', "tnum";
   position: absolute;
   top: -9999px;
   left: -9999px;
   z-index: 1050;
   display: block;
+
 }
 .ant-dropdown::before {
   position: absolute;
@@ -23082,7 +23083,7 @@ td.ant-table-column-sort {
 .ant-table-filter-column {
   display: flex;
   align-items: center;
-  margin: -16px -16px;
+  margin-left: 45px;
 }
 .ant-table-filter-column-title {
   flex: auto;
@@ -23121,7 +23122,7 @@ td.ant-table-column-sort {
 .ant-table-filter-trigger .anticon {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 85%;
   transform: translate(-50%, -50%);
 }
 .ant-table-filter-trigger-container-open .ant-table-filter-trigger,
@@ -23139,6 +23140,7 @@ td.ant-table-column-sort {
   font-size: 14px;
   font-variant: tabular-nums;
   line-height: 1.5715;
+  margin-top: 15px; margin-right: -40px;
   list-style: none;
   font-feature-settings: 'tnum';
   min-width: 120px;
