@@ -86,17 +86,21 @@ function FormulaIngredientsAdd({ noEdit }) {
   const _initDataDetail = async () => {
     try {
       _ingredientModel.detail(id).then((data) => {
-        console.log(data);
         if (data.is_total_2_digit == 1) {
           data.is_numletter_digit = data.is_numletter_2digit;
           data.is_total_value_digit = data.is_total_value_2digit;
           data.is_total_letter_first_digit = data.is_total_letter_first_2digit;
           data.is_total_letter_digit = data.is_total_letter_2digit;
-        } else {
+        } else if(data.is_total_shortened == 1) {
           data.is_numletter_digit = data.is_numletter_1digit;
           data.is_total_value_digit = data.is_total_value_1digit;
           data.is_total_letter_first_digit = data.is_total_letter_first_1digit;
           data.is_total_letter_digit = data.is_total_letter_1digit;
+        }else{
+          data.is_numletter_digit = data.is_numletter_noshort;
+          data.is_total_value_digit = data.is_total_value_noshort;
+          data.is_total_letter_first_digit = data.is_total_letter_first_noshort;
+          data.is_total_letter_digit = data.is_total_letter_noshort;
         }
         setDataIngredient(data);
         // formik.setFieldValue(`type`, true);
