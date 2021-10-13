@@ -20,11 +20,10 @@ function ViewDetail() {
     }
   }, [id]);
 
-
   //// data detail
-  const _initDataDetail = async () => {
+  const _initDataDetail = () => {
     try {
-      await _interpretModel.detail(id).then((data) => {
+      _interpretModel.detail(id).then((data) => {
         // console.log(
         //   (document.querySelector("#elementToBeReplace").innerHTML = data.brief_decs),
         //   (document.querySelector("#elementToBeReplace").innerHTML = data.decs)
@@ -62,8 +61,6 @@ function ViewDetail() {
             </div>
             <div class="bw_tetx">
               <div dangerouslySetInnerHTML={{ __html: dataInterpret.brief_decs }} />
-              {/* dangerouslySetInnerHTML={{ __html: this.state.note}} */}
-              {/* {dataInterpret.brief_decs} */}
             </div>
             <div class="bw_mt_40 bw_luangiai">
               <div class="bw_content_luangiai">

@@ -68,11 +68,14 @@ function InterPretAdd({ noEdit }) {
       }
     };
     _callAPI();
+    if (document.body.classList.contains("tox-fullscreen")) {
+      document.body.classList.remove("tox-fullscreen");
+    }
   }, []);
 
   const handleCreateOrUpdate = async (values) => {
     try {
-      await _interpretModel.create(values);
+      let id = await _interpretModel.create(values);
       window._$g.toastr.show("Lưu thành công!", "success");
       if (btnType == "save_n_close") {
         return window._$g.rdr("/interpret");
@@ -106,6 +109,7 @@ function InterPretAdd({ noEdit }) {
       try {
         _interpretModel.getListAttributeDetail({ interpret_id: id }).then((data) => {
           formik.setFieldValue("attribute_list", data.items);
+          // console.log(data)
         });
       } catch (error) {
         window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
@@ -186,8 +190,8 @@ function InterPretAdd({ noEdit }) {
         // let find = attributeExclude.find((p) => p.attribute_id == item.attribute_id);
         if (formik.values.attribute_list && formik.values.attribute_list.length) {
           formik.values.attribute_list.map((itemAttribute) => {
-            console.log(itemAttribute.value == item.attribute_id);
-            console.log(item);
+            // console.log(itemAttribute.value == item.attribute_id);
+            // console.log(item);
             if (itemAttribute.value == item.attribute_id) {
               isDisabled = true;
             }
@@ -251,7 +255,6 @@ function InterPretAdd({ noEdit }) {
     }
     return [];
   };
-
 
   //////config editor images
   const handleUploadImageDesc = async (blobInfo, success, failure) => {
@@ -463,7 +466,7 @@ function InterPretAdd({ noEdit }) {
                     ) : null}
                   </Col>
                 </Row>
-                {formik.values.is_interpretspectial ? (
+                {formik.values.is_interpretspectial == 1 ? (
                   <Row className="mb15">
                     <Label for="relationship_id" sm={2}>
                       {/* Mối quan hệ{" "} */}
@@ -493,7 +496,7 @@ function InterPretAdd({ noEdit }) {
                               <b>Thao tác</b>
                             </td>
                           </thead>
-                          
+
                           {formik.values.attribute_list &&
                             formik.values.attribute_list.map((item, index) => {
                               return (
@@ -547,16 +550,16 @@ function InterPretAdd({ noEdit }) {
                                 </tbody>
                               );
                             })}
-                           
                         </table>
-                        {formik.values.attribute_list.length == 0 ? (
-                            <>
-                              {/* <tr key={index}></tr> */}
-                              <div className=" align-middle text-center" width="100%">
-                                <p>Không có dữ liệu</p>
-                              </div>
-                            </>
-                          ) : null}
+                        {formik.values.attribute_list === 1 &&
+                        formik.values.attribute_list.length == 0 ? (
+                          <>
+                            {/* <tr key={index}></tr> */}
+                            <div className=" align-middle text-center" width="100%">
+                              <p>Không có dữ liệu</p>
+                            </div>
+                          </>
+                        ) : null}
                         {formik.errors.attribute_list && formik.touched.attribute_list ? (
                           <div
                             className="col-xs-12 col-sm-12 col-md-12 col-lg-12 field-validation-error alert alert-danger fade show"
@@ -628,17 +631,23 @@ function InterPretAdd({ noEdit }) {
                               !formik.values.relationship_id ||
                               formik.values.is_for_power_diagram
                             }
+                            isClearable={true}
                             placeholder={"-- Chọn --"}
                             value={convertValue(
                               formik.values.compare_attribute_id,
                               getOptionAttribute()
                             )}
                             options={getOptionAttribute(true)}
-                            onChange={(selected) => {
-                              formik.setFieldValue(
-                                "compare_attribute_id",
-                                selected ? selected.value : null
-                              );
+                            onChange={(value) => {
+                              if (!value) {
+                                formik.setFieldValue("compare_attribute_id", "");
+                              } else {
+                                formik.setFieldValue("compare_attribute_id", value.value);
+                              }
+                              // formik.setFieldValue(
+                              //   "compare_attribute_id",
+                              //   selected ? selected.value : null
+                              // );
                             }}
                           />
                         </Col>
@@ -713,12 +722,12 @@ function InterPretAdd({ noEdit }) {
                         <Editor
                           apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                           scriptLoading={{
-                            delay: 500,
+                            delay: 0,
                           }}
                           value={formik.values.brief_decs}
                           disabled={noEdit}
                           init={{
-                            height: "300px",
+                            height: "500px",
                             width: "100%",
                             menubar: false,
                             branding: false,
@@ -775,12 +784,12 @@ function InterPretAdd({ noEdit }) {
                         <Editor
                           apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                           scriptLoading={{
-                            delay: 500,
+                            delay: 0,
                           }}
                           value={formik.values.decs}
                           disabled={noEdit}
                           init={{
-                            height: "300px",
+                            height: "600px",
                             width: "100%",
                             menubar: false,
                             branding: false,

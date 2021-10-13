@@ -56,17 +56,17 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
       interpretDetailEnt ? interpretDetailEnt.interpret_id : id,
       interpretDetailEnt ? interpretDetailEnt.interpret_detail_id : 0
     );
-    console.log({interpretDetailEnt})
+    if (document.body.classList.contains("tox-fullscreen")) {
+      document.body.classList.remove("tox-fullscreen");
+    }
   }, []);
 
   const _initInterpretParent = async (interpretId, interpretDetailId) => {
     try {
-      let data = await _interpretModel.getListInterpretParent(interpretId,interpretDetailId);
+      let data = await _interpretModel.getListInterpretParent(interpretId, interpretDetailId);
       setInterpretParent(data.items);
     } catch (error) {
-      window._$g.dialogs.alert(
-        window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
-      );
+      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
     }
   };
 
@@ -77,21 +77,16 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
         interpret_detail_name,
       });
       let { INTERPRETDETAILID = null } = data || {};
-      if (
-        INTERPRETDETAILID &&
-        interpret_detail_name != interpretDetail.interpret_detail_name
-      ) {
-        formik.setFieldError(
-          "interpret_detail_name",
-          "Tên luận giải đã tồn tại!"
-        );
+      if (INTERPRETDETAILID && interpret_detail_name != interpretDetail.interpret_detail_name) {
+        formik.setFieldError("interpret_detail_name", "Tên luận giải đã tồn tại!");
         return;
       } else {
-        await _interpretModel.createInterpretDetail(values);
+         await _interpretModel.createInterpretDetail(values);
+      //  console.log(values)
 
         window._$g.toastr.show("Lưu thành công!", "success");
         if (btnType == "save_n_close") {
-          return window._$g.rdr("/interpret");
+          return window._$g.rdr(`/interpret/show-list-child/${values.interpret_id}`);
         }
         if (btnType == "save" && !id) {
           formik.resetForm();
@@ -99,9 +94,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
       }
     } catch (error) {
       let { errors, statusText, message } = error;
-      let msg = [`<b>${statusText || message}</b>`]
-        .concat(errors || [])
-        .join("<br/>");
+      let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
 
       setAlerts([{ color: "danger", msg }]);
       window.scrollTo(0, 0);
@@ -144,12 +137,8 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
           <Card>
             <CardHeader>
               <b>
-                {interpretDetailEnt
-                  ? noEdit
-                    ? "Chi tiết"
-                    : "Chỉnh sửa"
-                  : "Thêm mới"}{" "}
-                luận giải chi tiết
+                {interpretDetailEnt ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} luận giải
+                chi tiết
               </b>
             </CardHeader>
             <CardBody>
@@ -171,8 +160,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                     <Col xs={6}>
                       <FormGroup row>
                         <Label for="interpret_detail_name" sm={4}>
-                          Tên luận giải{" "}
-                          <span className="font-weight-bold red-text">*</span>
+                          Tên luận giải <span className="font-weight-bold red-text">*</span>
                         </Label>
                         <Col sm={8}>
                           <Input
@@ -216,10 +204,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                             options={getOptionInterpretParent()}
                             onChange={(value) => {
                               console.log(value);
-                              formik.setFieldValue(
-                                "interpret_detail_parent_id",
-                                value.value
-                              );
+                              formik.setFieldValue("interpret_detail_parent_id", value.value);
                             }}
                           />
                         </Col>
@@ -230,8 +215,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                     <Col xs={6}>
                       <FormGroup row>
                         <Label for="order_index" sm={4}>
-                          Vị trí hiển thị{" "}
-                          <span className="font-weight-bold red-text">*</span>
+                          Vị trí hiển thị <span className="font-weight-bold red-text">*</span>
                         </Label>
                         <Col sm={8}>
                           <NumberFormat
@@ -239,15 +223,11 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                             id="order_index"
                             disabled={noEdit}
                             onChange={(value) => {
-                              formik.setFieldValue(
-                                "order_index",
-                                value.target.value
-                              );
+                              formik.setFieldValue("order_index", value.target.value);
                             }}
                             value={formik.values.order_index}
                           />
-                          {formik.errors.order_index &&
-                          formik.touched.order_index ? (
+                          {formik.errors.order_index && formik.touched.order_index ? (
                             <div
                               className="field-validation-error alert alert-danger fade show"
                               role="alert"
@@ -265,10 +245,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(
-                                `is_active`,
-                                e.target.checked ? 1 : 0
-                              );
+                              formik.setFieldValue(`is_active`, e.target.checked ? 1 : 0);
                             }}
                             checked={formik.values.is_active}
                           >
@@ -282,21 +259,18 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                 <Col>
                   <FormGroup row>
                     <Label for="interpret_detail_short_content" sm={2}>
-                      Mô tả ngắn{" "}
-                      <span className="font-weight-bold red-text">*</span>
+                      Mô tả ngắn <span className="font-weight-bold red-text">*</span>
                     </Label>
                     <Col sm={10}>
                       <Editor
-                        apiKey={
-                          "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
-                        }
+                        apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                         scriptLoading={{
-                          delay: 500,
+                          delay: 0,
                         }}
                         value={formik.values.interpret_detail_short_content}
                         disabled={noEdit}
                         init={{
-                          height: "300px",
+                          height: "600px",
                           width: "100%",
                           menubar: false,
                           entity_encoding: "raw",
@@ -309,8 +283,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                             "image imagetools ",
                             "toc",
                           ],
-                          menubar:
-                            "file edit view insert format tools table tc help",
+                          menubar: "file edit view insert format tools table tc help",
                           toolbar1:
                             "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                             "alignleft aligncenter alignright alignjustify",
@@ -326,10 +299,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                           images_upload_handler: handleUploadImage,
                         }}
                         onEditorChange={(newValue) => {
-                          formik.setFieldValue(
-                            "interpret_detail_short_content",
-                            newValue
-                          );
+                          formik.setFieldValue("interpret_detail_short_content", newValue);
                         }}
                       />
 
@@ -352,16 +322,14 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                     </Label>
                     <Col sm={10}>
                       <Editor
-                        apiKey={
-                          "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
-                        }
+                        apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                         scriptLoading={{
-                          delay: 500,
+                          delay: 0,
                         }}
                         value={formik.values.interpret_detail_full_content}
                         disabled={noEdit}
                         init={{
-                          height: "300px",
+                          height: "600px",
                           width: "100%",
                           menubar: false,
                           branding: false,
@@ -374,8 +342,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                             "image imagetools ",
                             "toc",
                           ],
-                          menubar:
-                            "file edit view insert format tools table tc help",
+                          menubar: "file edit view insert format tools table tc help",
                           toolbar1:
                             "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                             "alignleft aligncenter alignright alignjustify",
@@ -391,10 +358,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                           images_upload_handler: handleUploadImage,
                         }}
                         onEditorChange={(newValue) => {
-                          formik.setFieldValue(
-                            "interpret_detail_full_content",
-                            newValue
-                          );
+                          formik.setFieldValue("interpret_detail_full_content", newValue);
                         }}
                       />
                       {formik.errors.interpret_detail_full_content &&
@@ -417,11 +381,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                         <Button
                           color="primary"
                           className="mr-2 btn-block-sm"
-                          onClick={() =>
-                            window._$g.rdr(
-                              `/interpret/interpret-detail/edit/${id}`
-                            )
-                          }
+                          onClick={() => window._$g.rdr(`/interpret/interpret-detail/edit/${id}`)}
                           disabled={formik.isSubmitting}
                         >
                           <i className="fa fa-edit mr-1" />
@@ -432,9 +392,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                       <>
                         <CheckAccess
                           permission={
-                            interpretDetailEnt
-                              ? `FOR_INTERPRET_EDIT`
-                              : `FOR_INTERPRET_ADD`
+                            interpretDetailEnt ? `FOR_INTERPRET_EDIT` : `FOR_INTERPRET_ADD`
                           }
                         >
                           <button
@@ -451,9 +409,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                         </CheckAccess>
                         <CheckAccess
                           permission={
-                            interpretDetailEnt
-                              ? `FOR_INTERPRET_EDIT`
-                              : `FOR_INTERPRET_ADD`
+                            interpretDetailEnt ? `FOR_INTERPRET_EDIT` : `FOR_INTERPRET_ADD`
                           }
                         >
                           <button

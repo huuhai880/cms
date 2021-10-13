@@ -15,7 +15,7 @@ const template = {
   calculation: '{{#? CALCULATION}}',
   is_active: '{{ISACTIVE ? 1 : 0}}',
   // is_vowel: '{{ISVOWEL ? 1 : 0}}',
-  // desc: '{{#? DESCRIPTION}}',
+  desc: '{{#? DESCRIPTION}}',
   created_user: '{{#? CREATEDUSER}}',
   created_date: '{{#? CREATEDDATE}}',
   updated_user: '{{#? UPDATEDUSER}}',
@@ -38,12 +38,16 @@ const template = {
   is_value: '{{ISVALUEINGREDIENTS ? 1 : 0}}',
   is_get_last_2_digit: '{{GETLAST2DIGITS ? 1 : 0}}',
   is_count_tofnum: '{{ISCOUNTOFNUM ? 1 : 0}}',
+  is_numletter_noshort: '{{ISNUMLETTERNOSHORTENED ? 1 : 0}}',
   is_numletter_2digit: '{{ISNUMLETTERS2DIGIT ? 1 : 0}}',
   is_numletter_1digit: '{{ISNUMLETTERS1DIGIT ? 1 : 0}}',
+  is_total_value_noshort: '{{ISTOTALVALUENOSHORTENED ? 1 : 0}}',
   is_total_value_2digit: '{{ISTOTALVALUES2DIGIT ? 1 : 0}}',
   is_total_value_1digit: '{{ISTOTALVALUES1DIGIT ? 1 : 0}}',
+  is_total_letter_first_noshort: '{{ISTOTALFIRSTLETTERNOSHORTENED	 ? 1 : 0}}',
   is_total_letter_first_2digit: '{{ISTOTALFIRSTLETTER2DIGIT	 ? 1 : 0}}',
   is_total_letter_first_1digit: '{{ISTOTALFIRSTLETTER1DIGIT	 ? 1 : 0}}',
+  is_total_letter_noshort: '{{ISTOTALLETTERSNOSHORTENED	 ? 1 : 0}}',
   is_total_letter_2digit: '{{ISTOTALLETTERS2DIGIT	 ? 1 : 0}}',
   is_total_letter_1digit: '{{ISTOTALLETTERS1DIGIT	 ? 1 : 0}}',
   is_gender: '{{ISGENDER	 ? 1 : 0}}',
@@ -75,6 +79,10 @@ const listIngredient = (users = []) => {
 };
 const detail = (users = []) => {
   return transform.transform(users, [
+    'is_total_letter_noshort',
+    'is_total_letter_first_noshort',
+    'is_total_value_noshort',
+    'is_numletter_noshort',
     'ingredient_id',
     'ingredient_name',
     'is_apply_dob',
@@ -111,6 +119,7 @@ const detail = (users = []) => {
     'is_total_letter_1digit',
     'ingredient_value',
     'is_gender',
+    'desc',
   ]);
 };
 module.exports = {

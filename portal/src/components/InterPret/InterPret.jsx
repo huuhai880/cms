@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { layoutFullWidthHeight } from "../../utils/html";
 import Filter from "./Filter";
-import {
-  Alert,
-  Card,
-  CardBody,
-  CardHeader,
-  Col,
-  Input,
-  FormGroup,
-  Button,
-} from "reactstrap";
+import { Alert, Card, CardBody, CardHeader, Col, Input, FormGroup, Button } from "reactstrap";
 import { CircularProgress } from "@material-ui/core";
 import { column, getColumTable } from "./const";
 import MUIDataTable from "mui-datatables";
@@ -18,6 +9,7 @@ import { configTableOptions, splitString } from "../../utils/index";
 import CustomPagination from "../../utils/CustomPagination";
 import InterpretModel from "../../models/InterpretModel";
 import { CheckAccess } from "../../navigation/VerifyAccess";
+import { useParams } from "react-router";
 
 import { Table, Badge, Menu, Dropdown, Space } from "antd";
 import { DownOutlined } from "@ant-design/icons";
@@ -29,6 +21,7 @@ const regex = /(<([^>]+)>)/gi;
 const _interpretModel = new InterpretModel();
 
 function InterPret() {
+  let { id } = useParams();
   const [dataInterpret, setDataInterpret] = useState([]);
   const [toggleSearch, settoggleSearch] = useState(true);
   const [isLoading, setisLoading] = useState(true);
@@ -39,7 +32,12 @@ function InterPret() {
   });
 
   const [expandedRowKey, setExpandedRowKey] = useState([]);
-
+  useEffect(() => {
+    if (id) {
+      setExpandedRowKey([Number(id)]);
+      // console.log(id)
+    }
+  }, [id]);
   useEffect(() => {
     _callAPI(query);
   }, []);
@@ -49,42 +47,33 @@ function InterPret() {
     _callAPI(searchQuery);
   };
 
-
   const _callAPI = async (props) => {
     try {
       let data = await _interpretModel.getListInterpret(props);
       setDataInterpret(data);
     } catch (error) {
-      window._$g.dialogs.alert(
-        window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
-      );
+      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
     } finally {
       setisLoading(false);
     }
   };
 
   const handleDelete = (id) => {
-    window._$g.dialogs.prompt(
-      "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
-      "xóa",
-      (confirm) => {
-        if (confirm) {
-          try {
-            _interpretModel.deleteInterpret(id).then((data) => {
-              window._$g.toastr.show("Xóa thành công", "success");
-              _callAPI(query);
-            });
-          } catch (error) {
-            console.log(error);
-            window._$g.dialogs.alert(
-              window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
-            );
-          } finally {
-            setisLoading(false);
-          }
+    window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "xóa", (confirm) => {
+      if (confirm) {
+        try {
+          _interpretModel.deleteInterpret(id).then((data) => {
+            window._$g.toastr.show("Xóa thành công", "success");
+            _callAPI(query);
+          });
+        } catch (error) {
+          console.log(error);
+          window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+        } finally {
+          setisLoading(false);
         }
       }
-    );
+    });
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -98,40 +87,29 @@ function InterPret() {
     _callAPI(query);
   };
 
-
   const handleDelInterpretDetail = (id) => {
-    window._$g.dialogs.prompt(
-      "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
-      "xóa",
-      (confirm) => {
-        if (confirm) {
-          try {
-            _interpretModel.deleteInterpretDetail(id).then((data) => {
-              window._$g.toastr.show("Xóa thành công", "success");
-              _callAPI(query);
-            });
-
-          } catch (error) {
-            window._$g.dialogs.alert(
-              window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
-            );
-          } finally {
-            setisLoading(false);
-          }
+    window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "xóa", (confirm) => {
+      if (confirm) {
+        try {
+          _interpretModel.deleteInterpretDetail(id).then((data) => {
+            window._$g.toastr.show("Xóa thành công", "success");
+            _callAPI(query);
+          });
+        } catch (error) {
+          window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+        } finally {
+          setisLoading(false);
         }
       }
-    );
+    });
   };
-
+console.log(typeof expandedRowKey[0])
   return (
     <div>
       <Card className="animated fadeIn z-index-222 mb-3 ">
         <CardHeader className="d-flex">
           <div className="flex-fill font-weight-bold">Thông tin tìm kiếm</div>
-          <div
-            className="minimize-icon cur-pointer"
-            onClick={() => settoggleSearch(!toggleSearch)}
-          >
+          <div className="minimize-icon cur-pointer" onClick={() => settoggleSearch(!toggleSearch)}>
             <i className={`fa ${toggleSearch ? "fa-minus" : "fa-plus"}`} />
           </div>
         </CardHeader>
@@ -143,12 +121,7 @@ function InterPret() {
           </CardBody>
         )}
       </Card>
-      <Col
-        xs={12}
-        sm={4}
-        className="d-flex align-items-end mb-3"
-        style={{ padding: 0 }}
-      >
+      <Col xs={12} sm={4} className="d-flex align-items-end mb-3" style={{ padding: 0 }}>
         <FormGroup className="mb-2 mb-sm-0">
           <CheckAccess permission={"FOR_INTERPRET_ADD"}>
             <Button
@@ -190,9 +163,9 @@ function InterPret() {
                           handleDelInterpretDetail={handleDelInterpretDetail}
                         />
                       ),
-                      rowExpandable: (record) =>
-                        record.interpret_details.length > 0,
+                      rowExpandable: (record) => record.interpret_details.length > 0,
                       onExpand: (expanded, record) => {
+                        // console.log(expanded)
                         !expanded
                           ? setExpandedRowKey([])
                           : setExpandedRowKey([record.interpret_id]);

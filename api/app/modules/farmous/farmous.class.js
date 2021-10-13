@@ -37,6 +37,7 @@ const list = (users = []) => {
     'position',
     'birthday',
     'gender',
+    'image_avatar',
   ]);
 };
 const detail = (users = []) => {

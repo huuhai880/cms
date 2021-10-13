@@ -160,7 +160,16 @@ function Comment() {
     setCommentId(comment_id.id);
     setIsModalVisibleReview(true);
   };
+  const handleChangeRowsPerPage = (event) => {
+    query.itemsPerPage = event.target.value;
+    query.page = 1;
+    _callAPI(query);
+  };
 
+  const handleChangePage = (event, newPage) => {
+    query.page = newPage + 1;
+    _callAPI(query);
+  };
   return (
     <div>
       <Card className="animated fadeIn z-index-222 mb-3 ">
@@ -206,8 +215,8 @@ function Comment() {
                     count={dataComment.totalItems}
                     rowsPerPage={query.pageSize}
                     page={query.pageIndex - 1 || 0}
-                    // onChangePage={handleChangePage}
-                    // onChangeRowsPerPage={handleChangeRowsPerPage}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
                   />
                 </div>
               )}

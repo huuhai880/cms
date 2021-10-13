@@ -80,6 +80,7 @@ const removeCacheOptions = () => {
 };
 
 const createAttributesOrUpdate = async (bodyParams) => {
+  // console.log(bodyParams);
   try {
     let pool = await mssql.pool;
     let attribute_id = apiHelper.getValueFromObject(bodyParams, 'attribute_id');
@@ -87,6 +88,7 @@ const createAttributesOrUpdate = async (bodyParams) => {
       bodyParams,
       'list_attributes_image'
     );
+    let related = apiHelper.getValueFromObject(bodyParams, 'related');
     let attribute_name = apiHelper.getValueFromObject(
       bodyParams,
       'attribute_name'
@@ -145,7 +147,7 @@ const createAttributesOrUpdate = async (bodyParams) => {
     const attributeId = dataAttributes.recordset[0].RESULT;
 
     if (attribute_id) {
-      const delAttributes = await pool
+      await pool
         .request()
         .input('ATTRIBUTEID', attribute_id)
         .input(
@@ -153,8 +155,39 @@ const createAttributesOrUpdate = async (bodyParams) => {
           apiHelper.getValueFromObject(bodyParams, 'auth_name')
         )
         .execute(PROCEDURE_NAME.FOR_ATTRIBUTESIMAGE_DELETE);
+      await pool
+        .request()
+        .input('ATTRIBUTEID', attribute_id)
+        .input(
+          'DELETEDUSER',
+          apiHelper.getValueFromObject(bodyParams, 'auth_name')
+        )
+        .execute(`FOR_ATTRIBUTES_FAMOUS_Delete_adminWeb`);
     }
+    if (related && related.length > 0) {
+      for (let i = 0; i < related.length; i++) {
+        let item = related[i];
+        const dataRelated = await pool
+          .request()
+          .input('ATTRIBUTEID', attributeId)
+          .input('FAMOUSID', apiHelper.getValueFromObject(item, 'farmous_id'))
+          .input('ISDEFAULT', apiHelper.getValueFromObject(item, 'is_default'))
+          .input('ORDERINDEX', i + 1)
+          .input(
+            'CREATEDUSER',
+            apiHelper.getValueFromObject(bodyParams, 'auth_name')
+          )
+          .execute(`FOR_ATTRIBUTES_FAMOUS_Create_adminWeb`);
 
+        const relatedId = dataRelated.recordset[0].RESULT;
+        if (relatedId <= 0) {
+          return new ServiceResponse(
+            false,
+            RESPONSE_MSG.ATTRIBUTES.CREATE_FAILED
+          );
+        }
+      }
+    }
     if (list_attributes_image && list_attributes_image.length > 0) {
       for (let i = 0; i < list_attributes_image.length; i++) {
         let item = list_attributes_image[i];
@@ -218,8 +251,16 @@ const detailAttributes = async (attribute_id) => {
       let dataImage = dataAttributeImage.recordset;
       dataImage = attributesClass.detailAttributeImage(dataImage);
       datas.list_attributes_image = dataImage;
+      datas.related = [];
+      if (data.recordsets.length > 1) {
+        datas.related = attributesClass.detailAttributeFamous(
+          data.recordsets[1]
+        );
+      }
+      // console.log(datas)
       return new ServiceResponse(true, '', datas);
     }
+
     return new ServiceResponse(false, RESPONSE_MSG.NOT_FOUND);
   } catch (e) {
     logger.error(e, { function: 'attributesService.detailAttributes' });

@@ -99,7 +99,7 @@ function Farmous() {
               color="success"
               className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
               onClick={() => {
-                window._$g.rdr("/farmous/add");
+                window._$g.rdr("/famous/add");
               }}
               size="sm"
             >

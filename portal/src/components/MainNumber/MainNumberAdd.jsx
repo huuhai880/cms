@@ -96,12 +96,13 @@ function MainNumberAdd({ noEdit }) {
   //// data detail
   const _initDataDetail = async () => {
     try {
-       _mainNumberModel.detail(id).then((data) => {
+      await _mainNumberModel.detail(id).then((data) => {
         setDataNumber(data);
         // console.log()
       });
-       _mainNumberModel.listNumImg(id).then((data) => {
+      await _mainNumberModel.listNumImg(id).then((data) => {
         formik.setFieldValue("main_number_img", [...formik.values.main_number_img, ...data.items]);
+        
         // console.log([...formik.values.main_number_img, ...data.items])
         data.items.map((item, index) => {
           if (item.img_is_default == 1) {
@@ -141,8 +142,10 @@ function MainNumberAdd({ noEdit }) {
         formik.setFieldValue("main_number_img", [...formik.values.main_number_img, AddRowProFirst]);
       }
     }
+
     _callAPI();
   }, []);
+  console.log(formik.values.main_number_img)
   //// config table
   const addNewImg = () => {
     let AddRowPro = {

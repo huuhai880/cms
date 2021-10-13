@@ -22,6 +22,20 @@ const template = {
       '{{#else}}': undefined,
     },
   ],
+  farmous_id: '{{#? FAMOUSID}}',
+  farmous_name: '{{#? FAMOUSNAME}}',
+  position: '{{#? POSITIONNAME}}',
+  birthday: '{{#? BIRTHDAY}}',
+  gender: '{{#? GENDER}}',
+  order_index: '{{#? ORDERINDEX}}',
+  image_avatar: [
+    {
+      '{{#if IMAGEAVATAR}}': `${config.domain_cdn}{{IMAGEAVATAR}}`,
+    },
+    {
+      '{{#else}}': undefined,
+    },
+  ],
 };
 
 let transform = new Transform(template);
@@ -62,9 +76,21 @@ const detailAttributeImage = (AttibuteImage = []) => {
     'is_default',
   ]);
 };
-
+const detailAttributeFamous = (AttributeFamous = []) => {
+  return transform.transform(AttributeFamous, [
+    'farmous_id',
+    'farmous_name',
+    'position',
+    'birthday',
+    'gender',
+    'order_index',
+    'is_default',
+    'image_avatar',
+  ]);
+};
 module.exports = {
   list,
   detail,
   detailAttributeImage,
+  detailAttributeFamous,
 };

@@ -99,6 +99,7 @@ class DatePicker extends PureComponent {
     return (
       <SingleDatePicker
         {...other}
+        style={{ zIndex: 9999}}
         focused={this.state.focused}
         onFocusChange={({ focused }) => this.setState({ focused })}
         displayFormat="DD/MM/YYYY"

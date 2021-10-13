@@ -28,6 +28,8 @@ export const initialValues = {
 export const validationSchema = yup.object().shape({
   // interpret_detail_parentid: yup.string().required("Luận giải chi tiết cha không được để trống .").nullable(),
   interpret_detail_name: yup.string().required("Tên luận giải  không được để trống .").nullable(),
+  order_index: yup.string().required("Vị trí hiển thị không được để trống .").nullable(),
+  
   interpret_detail_full_content: yup
     .string()
     .required("Mô tả không được để trống .")
