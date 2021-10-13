@@ -115,6 +115,10 @@ const createAttributesGroupOrUpdate = async (bodyParams) => {
         'DESCRIPTION',
         apiHelper.getValueFromObject(bodyParams, 'description')
       )
+      .input(
+        'INTRODUCTION',
+        apiHelper.getValueFromObject(bodyParams, 'instruction')
+      )
       .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active'))
       .input(
         'CREATEDUSER',

@@ -142,7 +142,8 @@ function FarmousAdd({ noEdit }) {
   const _initDataDetail = async () => {
     try {
       await _farmousModel.detail(id).then((data) => {
-        console.log(data);
+        // data.birthday = "19/05/1980"
+
         setDataFarmous(data);
         // console.log()
       });
@@ -288,11 +289,13 @@ function FarmousAdd({ noEdit }) {
                               date={formik.values.birthday ? moment(formik.values.birthday) : null}
                               onDateChange={(dates) => {
                                 // setFieldValue("birth_day", dates);
+                                console.log(dates)
                                 formik.setFieldValue("birthday", dates);
                               }}
                               disabled={noEdit}
                               maxToday
                             />
+
                             {formik.errors.birthday && (
                               <div
                                 className="field-validation-error alert alert-danger fade show"

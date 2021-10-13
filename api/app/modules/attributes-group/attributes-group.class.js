@@ -3,6 +3,8 @@ const template = {
   attributes_group_id: '{{#? ATTRIBUTESGROUPID}}',
   group_name: '{{#? GROUPNAME}}',
   description: '{{#? DESCRIPTION}}',
+  instruction: '{{#? INTRODUCTION}}',
+
   is_active: '{{ ISACTIVE? 1: 0}}',
   is_powerditagram: '{{ ISPOWERDIAGRAM? 1: 0}}',
   is_emptyditagram: '{{ ISEMPTYDIAGRAM? 1: 0}}',
@@ -26,6 +28,7 @@ const detail = (AttibutesGroup = []) => {
     'attributes_group_id',
     'group_name',
     'description',
+    'instruction',
     'is_active',
     'is_powerditagram',
     'is_emptyditagram',

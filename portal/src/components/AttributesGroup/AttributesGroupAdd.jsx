@@ -15,6 +15,8 @@ import {
   Input,
   CustomInput,
 } from "reactstrap";
+import { readImageAsBase64 } from "../../utils/html";
+import { Editor } from "@tinymce/tinymce-react";
 
 // Component(s)
 import { CheckAccess } from "../../navigation/VerifyAccess";
@@ -22,6 +24,7 @@ import Loading from "../Common/Loading";
 
 // Model(s)
 import AttributesGroupModel from "../../models/AttributesGroupModel";
+import AuthorModel from "../../models/AuthorModel";
 
 /**
  * @class AttrubtesGroupAdd
@@ -35,6 +38,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
 
     // Init model(s)
     this._attributesGroupModel = new AttributesGroupModel();
+    this._authorModel = new AuthorModel();
 
     // Init state
     // +++
@@ -103,7 +107,20 @@ export default class AttrubtesGroupAdd extends PureComponent {
   formikValidationSchema = Yup.object().shape({
     group_name: Yup.string().trim().required("Tên chỉ số là bắt buộc."),
   });
-
+  handleUploadImage = async (blobInfo, success, failure) => {
+    readImageAsBase64(blobInfo.blob(), async (imageUrl) => {
+      try {
+        const imageUpload = await this._authorModel.upload({
+          base64: imageUrl,
+          folder: "files",
+          includeCdn: true,
+        });
+        success(imageUpload);
+      } catch (error) {
+        failure(error);
+      }
+    });
+  };
   handleFormikBeforeRender = ({ initialValues }) => {
     let { values } = this.formikProps;
     if (values === initialValues) {
@@ -306,20 +323,47 @@ export default class AttrubtesGroupAdd extends PureComponent {
                               <Col xs={12}>
                                 <FormGroup row>
                                   <Label for="description" className="text-left" sm={3}>
-                                    Ghi chú
+                                    Định nghĩa
                                   </Label>
                                   <Col sm={9}>
                                     <Field
                                       name="description"
                                       render={({ field /* _form */ }) => (
-                                        <Input
-                                          {...field}
-                                          style={{ height: "80px" }}
-                                          className="text-left"
-                                          onBlur={null}
-                                          type="textarea"
-                                          id="description"
+                                        <Editor
+                                          apiKey={
+                                            "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
+                                          }
+                                          value={values.description}
                                           disabled={noEdit}
+                                          init={{
+                                            height: "300px",
+                                            width: "100%",
+                                            menubar: false,
+                                            branding: false,
+                                            statusbar: false,
+                                            plugins: [
+                                              "advlist autolink fullscreen lists link image charmap print preview anchor",
+                                              "searchreplace visualblocks code fullscreen ",
+                                              "insertdatetime media table paste code help",
+                                              "image imagetools ",
+                                              "toc",
+                                            ],
+                                            menubar:
+                                              "file edit view insert format tools table tc help",
+                                            toolbar1:
+                                              "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                                              "alignleft aligncenter alignright alignjustify",
+                                            toolbar2:
+                                              "bullist numlist outdent indent | removeformat | help | image | toc",
+                                            file_picker_types: "image",
+                                            images_dataimg_filter: function (img) {
+                                              return img.hasAttribute("internal-blob");
+                                            },
+                                            images_upload_handler: this.handleUploadImage,
+                                          }}
+                                          onEditorChange={(newValue) => {
+                                            this.formikProps.setFieldValue("description", newValue);
+                                          }}
                                         />
                                       )}
                                     />
@@ -336,8 +380,68 @@ export default class AttrubtesGroupAdd extends PureComponent {
                               </Col>
                             </Row>
                             <Row>
+                              <Col xs={12}>
+                                <FormGroup row>
+                                  <Label for="instruction" className="text-left" sm={3}>
+                                    Lời dẫn
+                                  </Label>
+                                  <Col sm={9}>
+                                    <Field
+                                      name="instruction"
+                                      render={({ field /* _form */ }) => (
+                                        <Editor
+                                          apiKey={
+                                            "3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"
+                                          }
+                                          value={values.instruction}
+                                          disabled={noEdit}
+                                          init={{
+                                            height: "300px",
+                                            width: "100%",
+                                            menubar: false,
+                                            branding: false,
+                                            statusbar: false,
+                                            plugins: [
+                                              "advlist autolink fullscreen lists link image charmap print preview anchor",
+                                              "searchreplace visualblocks code fullscreen ",
+                                              "insertdatetime media table paste code help",
+                                              "image imagetools ",
+                                              "toc",
+                                            ],
+                                            menubar:
+                                              "file edit view insert format tools table tc help",
+                                            toolbar1:
+                                              "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                                              "alignleft aligncenter alignright alignjustify",
+                                            toolbar2:
+                                              "bullist numlist outdent indent | removeformat | help | image | toc",
+                                            file_picker_types: "image",
+                                            images_dataimg_filter: function (img) {
+                                              return img.hasAttribute("internal-blob");
+                                            },
+                                            images_upload_handler: this.handleUploadImage,
+                                          }}
+                                          onEditorChange={(newValue) => {
+                                            this.formikProps.setFieldValue("instruction", newValue);
+                                          }}
+                                        />
+                                      )}
+                                    />
+                                    <ErrorMessage
+                                      name="instruction"
+                                      component={({ children }) => (
+                                        <Alert color="danger" className="field-validation-error">
+                                          {children}
+                                        </Alert>
+                                      )}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
                               <Label for="description" className="text-left" sm={3}>
-                                {/* Ghi chú */}
+                                {/* Định nghĩa */}
                               </Label>
                               <Col sm={9}>
                                 <FormGroup row>

@@ -38,7 +38,7 @@ export default class AttributesGroupEdit extends PureComponent {
 
   render() {
     let { attributesGroupEnt } = this.state;
-
+    // console.log(attributesGroupEnt)
     // Ready?
     if (!attributesGroupEnt) {
       return <Loading />;
