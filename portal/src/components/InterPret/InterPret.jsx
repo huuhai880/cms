@@ -13,7 +13,7 @@ import { useParams } from "react-router";
 
 import { Table, Badge, Menu, Dropdown, Space } from "antd";
 import { DownOutlined } from "@ant-design/icons";
-import TableInterPretChild from "./TableInterPretChild";
+import TableInterPretChild from "./TableInterPretChild.jsx";
 
 layoutFullWidthHeight();
 
@@ -103,7 +103,7 @@ function InterPret() {
       }
     });
   };
-console.log(typeof expandedRowKey[0])
+// console.log(typeof expandedRowKey[0])
   return (
     <div>
       <Card className="animated fadeIn z-index-222 mb-3 ">
