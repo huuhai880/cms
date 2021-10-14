@@ -207,6 +207,24 @@ const detaiIntergret = async (req, res, next) => {
   }
 };
 
+const viewDetailWeb = async (req, res, next) => {
+  try {
+    const interpret_id = req.params.interpret_id;
+    const serviceRes = await interpretService.viewDetailWeb(interpret_id);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+};
 const detaiDetailInterpret = async (req, res, next) => {
   try {
     const interpret_detail_id = req.params.interpret_detail_id;
@@ -341,5 +359,6 @@ module.exports = {
   detaiDetailInterpret,
   getListAttributeExcludeById,
   copyIntergret,
-  getAttributesListDetail
+  getAttributesListDetail,
+  viewDetailWeb
 };

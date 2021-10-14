@@ -12,6 +12,8 @@ export default class InterpretModel extends Model {
   static API_INTERPRET_UPLOAD = "upload-file";
   static API_INTERPRET_DETAIL = "interpret/:interpret_id";
   static API_INTERPRET_DELETE = "interpret/:interpret_id/delete";
+  static API_INTERPRET_DETAIL_WEB = "interpret/view-web/:interpret_id";
+
 
   static API_INTERPRETDETAIL_LIST = "interpret/interpret-detail";
   static API_INTERPRETDETAIL_DELETE = "interpret/interpret-detail/:interpret_detail_id/delete";
@@ -81,7 +83,10 @@ export default class InterpretModel extends Model {
     let data = Object.assign({}, _data);
     return this._api.get(_static.API_INTERPRET_DETAIL.replace(":interpret_id", id), data);
   }
-
+  detailWeb(id, _data = {}) {
+    let data = Object.assign({}, _data);
+    return this._api.get(_static.API_INTERPRET_DETAIL_WEB.replace(":interpret_id", id), data);
+  }
   detailInterPretDetail(id, _data = {}) {
     let data = Object.assign({}, _data);
     return this._api.get(_static.API_INTERPRETDETAIL_DETAIL.replace(":interpret_detail_id", id), data);

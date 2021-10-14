@@ -304,7 +304,12 @@ export const column = (handleDelete) => {
                 title="Chi tiết luận giải trên web"
                 className="mr-1"
                 onClick={(evt) => {
-                  window.open(`/portal/interpret/detail-web/${record["interpret_id"]}`, "_blank");
+                 if(record.is_interpretspectial!=1){
+                  window.open(`/interpret/detail-web/${record["interpret_id"]}`, "_blank");
+                 }else{
+                  window.open(`/interpret/detail-web-spectial/${record["interpret_id"]}`, "_blank");
+
+                 }
                 }}
               >
                 <i className="fa fa-eye" />
