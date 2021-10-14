@@ -24,13 +24,8 @@ function ViewDetail() {
   const _initDataDetail = () => {
     try {
       _interpretModel.detail(id).then((data) => {
-        // console.log(
-        //   (document.querySelector("#elementToBeReplace").innerHTML = data.brief_decs),
-        //   (document.querySelector("#elementToBeReplace").innerHTML = data.decs)
-        // );
-
         setDataInterpret(data);
-        // console.log()
+        // console.log(data)
       });
     } catch (error) {
       console.log(error);

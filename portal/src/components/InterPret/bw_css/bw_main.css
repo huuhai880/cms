@@ -24,7 +24,7 @@ html {
 }
 .bw_wrapper {
   width: 210mm;
-  height: 297mm;
+  /* height: 297mm; */
   display: block;
   padding: 10mm 18mm;
   overflow: hidden;
@@ -33,7 +33,7 @@ html {
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
 }
 .bw_page_footer {
-  padding: 5mm 18mm;
+  padding: 2mm 18mm;
   bottom: 0;
   right: 0;
   left: 0;
@@ -108,7 +108,7 @@ p {
 }
 .bw_index_items p {
   font-family: Font_bondi;
-  font-size: 150px;
+  font-size: 80px;
   line-height: 150px;
   color: #fff;
   text-shadow: 0 0 70px #d35bbc;
@@ -129,7 +129,7 @@ p {
   font-style: italic;
 }
 .bw_luangiai {
-  max-width: 88%;
+  max-width: 100%;
   margin: 30px auto;
 }
 .bw_luangiai h3 {
@@ -142,7 +142,6 @@ p {
 .bw_luangiai ul {
   display: flex;
   justify-content: space-between;
-  margin-top: 20px;
 }
 .bw_luangiai ul li {
   padding: 7px 15px;
@@ -151,7 +150,6 @@ p {
   border-radius: 10px;
 }
 .bw_content_luangiai {
-  margin-top: 20px;
 }
 .ant-modal,
 .ant-modal-content {
@@ -174,4 +172,20 @@ p {
     left: 0;
     overflow-x: hidden;
     outline: 0;
+}
+.ant-modal, .ant-modal-content{
+  width: 100vw;
+  height: fit-content;
+  margin: 0;
+  top: 0;
+  bottom: 0;
+}
+.ant-modal-content {
+  position: relative;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+  pointer-events: auto;
 }

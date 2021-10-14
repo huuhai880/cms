@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Badge, Menu, Dropdown, Space } from "antd";
 import { Alert, Card, CardBody, CardHeader, Col, Input, FormGroup, Button } from "reactstrap";
 import { CheckAccess } from "../../navigation/VerifyAccess";
@@ -9,6 +9,8 @@ import { Label } from "reactstrap";
 const regex = /(<([^>]+)>)/gi;
 
 function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail }) {
+  const [dataInterpret, setDataInterpret] = useState(["1"]);
+
   const columns = [
     {
       title: "STT",
@@ -76,13 +78,14 @@ function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail 
           value: "0",
         },
       ],
-      filteredValue: ["1", ],
+      // filteredValue: dataInterpret,
       render: (text, record, index) => {
         // console.log(reco)
         return <div className="text-center">{record.is_active ? "Có" : "Không"}</div>;
       },
-      onFilter: (value, record) => record.is_active == value,
-   
+      onFilter: (value, record) => {
+        return record.is_active == value;
+      },
     },
 
     {
@@ -121,13 +124,16 @@ function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail 
       },
     },
   ];
-
+  const handleChange = (filters) => {
+    console.log(filters);
+  };
   return (
     <Table
       columns={columns}
       dataSource={data}
       pagination={false}
       bordered={true}
+      onChange={handleChange}
       // filters={filters}
     />
   );
