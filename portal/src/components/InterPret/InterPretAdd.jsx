@@ -75,10 +75,10 @@ function InterPretAdd({ noEdit }) {
 
   const handleCreateOrUpdate = async (values) => {
     try {
-      let id = await _interpretModel.create(values);
+      let interpret_id = await _interpretModel.create(values);
       window._$g.toastr.show("Lưu thành công!", "success");
       if (btnType == "save_n_close") {
-        return window._$g.rdr("/interpret");
+        return window._$g.rdr(`/interpret/show-list-child/${interpret_id}`);
       }
       if (btnType == "save" && !id) {
         formik.resetForm();
