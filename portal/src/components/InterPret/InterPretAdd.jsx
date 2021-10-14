@@ -142,6 +142,7 @@ function InterPretAdd({ noEdit }) {
   const _initDataDetail = async () => {
     try {
       let interpretDetail = await _interpretModel.detail(id);
+
       setDataInterpret(interpretDetail);
       if (interpretDetail.is_interpretspectial) {
         setDisableSpectial(true);

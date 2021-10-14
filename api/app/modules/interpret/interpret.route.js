@@ -47,6 +47,7 @@ routes
   .route('/interpret-detail/:interpret_detail_id(\\d+)')
   .get(InterpretController.detaiDetailInterpret);
 routes.route('/:interpret_id(\\d+)').get(InterpretController.detaiIntergret);
+routes.route('/view-web/:interpret_id(\\d+)').get(InterpretController.viewDetailWeb);
 routes.route('/:interpret_id/delete').put(InterpretController.deleteInterpret);
 routes
   .route('/interpret-detail/:interpret_detail_id/delete')
