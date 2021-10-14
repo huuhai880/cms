@@ -39,6 +39,8 @@ const template = {
   group_name: '{{#? GROUPNAME}}',
   compare_attribute_id: '{{#? COMPAREATTRIBUTEID}}',
   attributes_name: '{{#? ATTRIBUTESNAME}}',
+  desc_attributes_gruop: '{{#? DESCRIPTIONATTRIBUTESGRUOP}}',
+  introduction: '{{#? INTRODUCTION}}',
 
 };
 
@@ -71,11 +73,7 @@ const listInterpretDetail = (users = []) => {
   ]);
 };
 const listAttributeDetail = (users = []) => {
-  return transform.transform(users, [
-    'mainnumber_id',
-    'value',
-    'label'
-  ]);
+  return transform.transform(users, ['mainnumber_id', 'value', 'label']);
 };
 const listInterpret = (users = []) => {
   return transform.transform(users, [
@@ -85,7 +83,7 @@ const listInterpret = (users = []) => {
     'is_active',
     'order_index',
     'attributes_name',
-    'is_interpretspectial'
+    'is_interpretspectial',
   ]);
 };
 
@@ -132,7 +130,17 @@ const detailInterpret = (users = []) => {
     'is_interpretspectial',
   ]);
 };
-
+const detailInterpretWeb = (users = []) => {
+  return transform.transform(users, [
+    'mainnumber',
+    'attribute_name',
+    'interpret_id',
+    'decs',
+    'brief_decs',
+    'desc_attributes_gruop',
+    'introduction'
+  ]);
+};
 module.exports = {
   listRelationship,
   listMainnumber,
@@ -141,5 +149,6 @@ module.exports = {
   listInterpret,
   listInterpretDetail,
   listInterpretParent,
-  detailInterpretDetail,listAttributeDetail
+  detailInterpretDetail,
+  listAttributeDetail,detailInterpretWeb
 };

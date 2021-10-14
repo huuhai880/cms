@@ -336,7 +336,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                           value={values.description}
                                           disabled={noEdit}
                                           init={{
-                                            height: "300px",
+                                            height: "500px",
                                             width: "100%",
                                             menubar: false,
                                             branding: false,
@@ -348,10 +348,9 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                               "image imagetools ",
                                               "toc",
                                             ],
-                                            menubar:
-                                              "file edit view insert format tools table tc help",
+                                            menubar: "file edit view insert format tools table tc help",
                                             toolbar1:
-                                              "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                                              "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                                               "alignleft aligncenter alignright alignjustify",
                                             toolbar2:
                                               "bullist numlist outdent indent | removeformat | help | image | toc",
@@ -396,7 +395,7 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                           value={values.instruction}
                                           disabled={noEdit}
                                           init={{
-                                            height: "300px",
+                                            height: "500px",
                                             width: "100%",
                                             menubar: false,
                                             branding: false,
@@ -408,10 +407,9 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                               "image imagetools ",
                                               "toc",
                                             ],
-                                            menubar:
-                                              "file edit view insert format tools table tc help",
+                                            menubar: "file edit view insert format tools table tc help",
                                             toolbar1:
-                                              "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
+                                              "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                                               "alignleft aligncenter alignright alignjustify",
                                             toolbar2:
                                               "bullist numlist outdent indent | removeformat | help | image | toc",

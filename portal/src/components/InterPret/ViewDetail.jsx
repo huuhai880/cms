@@ -7,6 +7,9 @@ import "./bw_css/bw_blackwind.css";
 import "./bw_css/bw_main.css";
 import logo from "./bw_image/logo_c.png"; // relative path to image
 import { Modal } from "antd";
+import { layoutFullWidthHeight } from "../../utils/html";
+
+layoutFullWidthHeight();
 function ViewDetail() {
   const _interpretModel = new InterpretModel();
   const [dataInterpret, setDataInterpret] = useState("");
@@ -23,9 +26,9 @@ function ViewDetail() {
   //// data detail
   const _initDataDetail = () => {
     try {
-      _interpretModel.detail(id).then((data) => {
+      _interpretModel.detailWeb(id).then((data) => {
         setDataInterpret(data);
-        // console.log(data)
+        console.log(data);
       });
     } catch (error) {
       console.log(error);
@@ -55,17 +58,47 @@ function ViewDetail() {
               <p>{dataInterpret.mainnumber}</p>
             </div>
             <div class="bw_tetx">
-              <div dangerouslySetInnerHTML={{ __html: dataInterpret.brief_decs }} />
+              <div dangerouslySetInnerHTML={{ __html: dataInterpret.desc_attributes_gruop }} />
+            </div>
+            <div class="bw_mt_40 bw_luangiai">
+              <div class="bw_content_luangiai">
+                <div dangerouslySetInnerHTML={{ __html: dataInterpret.introduction }} />
+              </div>
+            </div>
+            <div class="bw_mt_40 bw_luangiai">
+              <div class="bw_content_luangiai">
+                <div dangerouslySetInnerHTML={{ __html: dataInterpret.brief_decs }} />
+              </div>
             </div>
             <div class="bw_mt_40 bw_luangiai">
               <div class="bw_content_luangiai">
                 <div dangerouslySetInnerHTML={{ __html: dataInterpret.decs }} />
               </div>
             </div>
+            {dataInterpret.interPretDetail &&
+              dataInterpret.interPretDetail.map((item, index) => {
+                return (
+                  <>
+                    <div class="bw_mt_40 bw_luangiai">
+                      <div class="bw_content_luangiai">
+                        <div
+                          dangerouslySetInnerHTML={{ __html: item.interpret_detail_short_content }}
+                        />
+                      </div>
+                    </div>
+                    <div class="bw_mt_40 bw_luangiai">
+                      <div class="bw_content_luangiai">
+                        <div
+                          dangerouslySetInnerHTML={{ __html: item.interpret_detail_full_content }}
+                        />
+                      </div>
+                    </div>
+                  </>
+                );
+              })}
           </div>
           <div class="bw_absolute bw_page_footer bw_color_black">
             <p> © 2021 - Bản quyền thuộc về ungdungthansohoc.com</p>
-            <p>Trang 4</p>
           </div>
         </div>
       </Modal>

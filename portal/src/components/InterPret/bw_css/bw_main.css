@@ -23,6 +23,7 @@ html {
   overflow: hidden;
 }
 .bw_wrapper {
+  font-family: 'Roboto';
   width: 210mm;
   /* height: 297mm; */
   display: block;
@@ -181,7 +182,7 @@ p {
   bottom: 0;
 }
 .ant-modal-content {
-  position: relative;
+  position: absolute;
   background-color: #fff;
   background-clip: padding-box;
   border: 0;
