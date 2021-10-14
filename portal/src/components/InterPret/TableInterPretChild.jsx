@@ -78,7 +78,7 @@ function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail 
           value: "0",
         },
       ],
-      filteredValue: dataInterpret,
+      // filteredValue: dataInterpret,
       render: (text, record, index) => {
         // console.log(reco)
         return <div className="text-center">{record.is_active ? "Có" : "Không"}</div>;
