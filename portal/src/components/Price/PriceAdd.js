@@ -713,6 +713,8 @@ function PriceAdd(props) {
                                                     isShow: true,
                                                     notSubmit: true,
                                                     icon: "save",
+                          permission: ["SL_PRICE_EDIT", "SL_PRICE_ADD"],
+
                                                     onClick: () => handleSubmitForm("save"),
                                                 },
                                                 {
@@ -721,6 +723,8 @@ function PriceAdd(props) {
                                                     isShow: true,
                                                     notSubmit: true,
                                                     icon: "save",
+                          permission: ["SL_PRICE_EDIT", "SL_PRICE_ADD"],
+
                                                     onClick: () => handleSubmitForm("save_n_close"),
                                                 },
                                                 {

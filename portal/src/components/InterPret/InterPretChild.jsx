@@ -95,7 +95,7 @@ function InterpretDetailChild() {
       </Card>
       <Col xs={12} sm={4} className="d-flex align-items-end mb-3" style={{ padding: 0 }}>
         <FormGroup className="mb-2 mb-sm-0">
-          <CheckAccess permission={"FOR_INTERPRET_DETAIL_ADD"}>
+          <CheckAccess permission={"FOR_INTERPRET_ADD"}>
             <Button
               color="success"
               className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"

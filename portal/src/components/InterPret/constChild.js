@@ -138,7 +138,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           // console.log(data[tableMeta["rowIndex"]].news_comment_user_fullname);
           return (
             <div className="text-center">
-              <CheckAccess permission="FOR_INTERPRET_DETAIL_EDIT">
+              <CheckAccess permission="FOR_INTERPRET_EDIT">
                 <Button
                   color={"primary"}
                   title="Chỉnh sửa"
@@ -155,7 +155,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                 </Button>
               </CheckAccess>
 
-              <CheckAccess permission="FOR_INTERPRET_DETAIL_DEL">
+              <CheckAccess permission="FOR_INTERPRET_DEL">
                 <Button
                   color="danger"
                   title="Xóa"
