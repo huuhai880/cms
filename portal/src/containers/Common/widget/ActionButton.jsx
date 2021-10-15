@@ -20,7 +20,20 @@ export default function ActionButton(props) {
       <Col sm={12} className="text-right">
         {buttonList.map((e, i) =>
           e.isShow ? (
-            <CheckAccess permission={e.permission} key={`aciton-button-${i}`}>
+            e.permission ? (
+              <CheckAccess permission={e.permission} key={`aciton-button-${i}`}>
+                <Button
+                  color={e.color}
+                  onClick={e.onClick}
+                  className="mr-2 btn-block-sm"
+                  disabled={isSubmitting}
+                  type={e.notSubmit ? "button" : "submit"}
+                >
+                  <i className={`fa fa-${e.icon} mr-2`} />
+                  {e.title}
+                </Button>
+              </CheckAccess>
+            ) : (
               <Button
                 color={e.color}
                 onClick={e.onClick}
@@ -31,19 +44,8 @@ export default function ActionButton(props) {
                 <i className={`fa fa-${e.icon} mr-2`} />
                 {e.title}
               </Button>
-            </CheckAccess>
-          ) : (
-            <Button
-              color={e.color}
-              onClick={e.onClick}
-              className="mr-2 btn-block-sm"
-              disabled={isSubmitting}
-              type={e.notSubmit ? "button" : "submit"}
-            >
-              <i className={`fa fa-${e.icon} mr-2`} />
-              {e.title}
-            </Button>
-          )
+            )
+          ) : null
         )}
       </Col>
     </Row>
