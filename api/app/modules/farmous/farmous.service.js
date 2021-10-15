@@ -11,7 +11,7 @@ const config = require('../../../config/config');
 
 const getFarmoussList = async (queryParams = {}) => {
   try {
-    console.log(queryParams)
+    // console.log(queryParams)
 
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
@@ -136,7 +136,7 @@ const detailFarmous = async (farmous_id) => {
       .input('FAMOUSID', farmous_id)
       .execute('MD_FARMOUS_GetById_AdminWeb');
     const Farmous = data.recordset[0];
-    // console.log(Farmous)
+    // console.log(FarmousClass.detail(Farmous))
     if (Farmous) {
       return new ServiceResponse(true, '', FarmousClass.detail(Farmous));
     }
