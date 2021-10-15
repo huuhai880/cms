@@ -3077,14 +3077,14 @@ const routes = [
     path: "/interpret/detail-web/:id",
     exact: true,
     // name: "Chi tiết",
-    function: "SL_INTERPRET_VIEW",
+    function: "FOR_INTERPRET_VIEW_DETAIL_WEB",
     component: InterPretView,
   },
   {
     path: "/interpret/detail-web-spectial/:id",
     exact: true,
     // name: "Chi tiết",
-    function: "SL_INTERPRET_VIEW",
+    function: "FOR_INTERPRET_VIEW_DETAIL_WEB",
     component: ViewDetailSpectial,
   },
   {
