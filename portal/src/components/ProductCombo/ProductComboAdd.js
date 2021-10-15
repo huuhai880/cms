@@ -451,6 +451,8 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
                                        color: "primary",
                                        isShow: !noEdit,
                                        notSubmit: true,
+                          permission: ["PRO_COMBOS_EDIT", "PRO_COMBOS_ADD"],
+
                                        icon: "save",
                                        onClick: () => handleSubmitForm("save"),
                                     },
@@ -458,6 +460,8 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
                                        title: "Lưu và đóng",
                                        color: "success",
                                        isShow: !noEdit,
+                          permission: ["PRO_COMBOS_EDIT", "PRO_COMBOS_ADD"],
+
                                        notSubmit: true,
                                        icon: "save",
                                        onClick: () => handleSubmitForm("save_n_close"),

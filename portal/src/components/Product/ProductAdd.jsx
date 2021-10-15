@@ -818,6 +818,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                           isShow: !noEdit,
                           notSubmit: true,
                           icon: "save",
+                          permission: ["MD_PRODUCT_EDIT", "MD_PRODUCT_ADD"],
                           onClick: () => handleSubmitForm("save"),
                         },
                         {
@@ -825,6 +826,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                           color: "success",
                           isShow: !noEdit,
                           notSubmit: true,
+                          permission: ["MD_PRODUCT_EDIT", "MD_PRODUCT_ADD"],
                           icon: "save",
                           onClick: () => handleSubmitForm("save_n_close"),
                         },
