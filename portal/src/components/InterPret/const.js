@@ -127,7 +127,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
         customBodyRender: (value, tableMeta, updateValue) => {
           return (
             <div className="text-center">
-              <CheckAccess permission="FOR_INTERPRET_DETAIL_ADD">
+              <CheckAccess permission="FOR_INTERPRET_ADD">
                 <Button
                   color="warning"
                   title="Thêm mới luận giải chi tiết"
@@ -141,7 +141,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   <i className="fa fa-plus" />
                 </Button>
               </CheckAccess>
-              <CheckAccess permission="FOR_INTERPRET_DETAIL_VIEW">
+              <CheckAccess permission="FOR_INTERPRET_VIEW">
                 <Button
                   title="Danh sách luận giải chi tiết"
                   className="mr-1"
@@ -154,7 +154,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   <i className="fa fa-list" />
                 </Button>
               </CheckAccess>
-              <CheckAccess permission="FOR_INTERPRET_DETAIL_VIEW">
+              <CheckAccess permission="FOR_INTERPRET_VIEW">
                 <Button
                   color="info"
                   title="Chi tiết luận giải trên web"
@@ -285,7 +285,7 @@ export const column = (handleDelete) => {
               </Button>
             </CheckAccess>
 
-            <CheckAccess permission="FOR_INTERPRET_DETAIL_ADD">
+            <CheckAccess permission="FOR_INTERPRET_ADD">
               <Button
                 color="warning"
                 title="Thêm mới luận giải chi tiết"
@@ -298,7 +298,7 @@ export const column = (handleDelete) => {
               </Button>
             </CheckAccess>
 
-            <CheckAccess permission="FOR_INTERPRET_DETAIL_VIEW">
+            <CheckAccess permission="FOR_INTERPRET_VIEW_DETAIL_WEB">
               <Button
                 color="info"
                 title="Chi tiết luận giải trên web"

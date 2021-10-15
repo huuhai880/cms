@@ -625,22 +625,21 @@ export default class AttributesAdd extends PureComponent {
                                             <tr key={index}>
                                               <td className="text-center">{index + 1}</td>
                                               <td>
-                                                <Media
-                                                  object
-                                                  src={famous.image_avatar}
-                                                  alt="User image"
-                                                  // className="user-imgage"
-                                                  style={{
-                                                    width: "30px",
-                                                    height: "30px",
-                                                    padding: 0,
-                                                    objectFit: "cover",
-                                                    
-                                                  }}
-                                                />
+                                                {famous.image_avatar ? (
+                                                  <img
+                                                    className="mr-2"
+                                                    style={{ width: 40, height: 40 }}
+                                                    src={
+                                                      famous.image_avatar
+                                                        ? famous.image_avatar
+                                                        : null
+                                                    }
+                                                    //   alt="H1"
+                                                  />
+                                                ) : null}
                                                 <a
                                                   target="_blank"
-                                                  href={`/famous/detail/${famous.farmous_id}`}
+                                                  href={`/portal/famous/detail/${famous.farmous_id}`}
                                                 >
                                                   {famous.farmous_name}
                                                 </a>

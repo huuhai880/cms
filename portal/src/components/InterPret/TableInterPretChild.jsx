@@ -96,7 +96,7 @@ function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail 
       render: (text, record, index) => {
         return (
           <div className="text-center">
-            <CheckAccess permission="FOR_INTERPRET_DETAIL_EDIT">
+            <CheckAccess permission="FOR_INTERPRET_EDIT">
               <Button
                 color={"primary"}
                 title="Chỉnh sửa"
@@ -109,7 +109,7 @@ function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail 
               </Button>
             </CheckAccess>
 
-            <CheckAccess permission="FOR_INTERPRET_DETAIL_DEL">
+            <CheckAccess permission="FOR_INTERPRET_DEL">
               <Button
                 color="danger"
                 title="Xóa"

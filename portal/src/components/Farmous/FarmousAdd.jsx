@@ -59,6 +59,7 @@ function FarmousAdd({ noEdit }) {
           formik.setFieldError("farmous_name", "Họ và tên đã tồn tại!");
           // window.scrollTo(0, 0);
         } else {
+          values.birthday=moment(values.birthday)
           _farmousModel.create(values).then((data) => {
             window._$g.toastr.show("Lưu thành công!", "success");
             if (btnType == "save_n_close") {
