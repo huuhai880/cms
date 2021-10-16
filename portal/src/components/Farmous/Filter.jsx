@@ -19,7 +19,7 @@ function Filter({ handleSubmit }) {
     { name: "Tất cả", id: 2 },
     { name: "Nam", id: 1 },
     { name: "Nữ", id: 0 },
-    { name: "Khác", id: -1 },
+    // { name: "Khác", id: -1 },
   ]);
 
   const [searchValue, setSearchValue] = useState({
