@@ -15,6 +15,7 @@ import { configTableOptions, configIDRowTable } from "../../utils/index";
 // Model(s)
 import SearchHistoryModel from "../../models/SearchHistoryModel";
 import SearchHistoryDetail from "./SearchHistoryDetail";
+import moment from "moment";
 
 // Set layout full-wh
 layoutFullWidthHeight();
@@ -46,7 +47,9 @@ class SearchHistory extends Component {
     query: {
       itemsPerPage: 25,
       page: 1,
-      is_active: 1,
+      is_active: 2,
+      start_date: moment().startOf("month").format("DD/MM/YYYY"),
+      end_date: moment().format("DD/MM/YYYY"),
     },
   };
 
@@ -85,6 +88,7 @@ class SearchHistory extends Component {
       // @TODO:
       this._searchHistoryModel.getList(this.state.query).then((data) => (bundle["data"] = data)),
     ];
+    console.log(this.state.query)
     await Promise.all(all).catch((err) => {
       window._$g.dialogs.alert(
         window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),

@@ -29,6 +29,7 @@ function InterPret() {
     itemsPerPage: 25,
     page: 1,
     selectdActive: 1,
+    selectdSpectial: 2,
   });
 
   const [expandedRowKey, setExpandedRowKey] = useState([]);

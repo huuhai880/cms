@@ -27,7 +27,7 @@ html {
   overflow: hidden;
 }
 .bw_wrapper{
-    font-family: 'Roboto';
+    /* font-family: 'Roboto'; */
   width: 210mm;
   /* height: 297mm; */
     display: block;

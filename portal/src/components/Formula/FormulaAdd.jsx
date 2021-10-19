@@ -407,10 +407,10 @@ function FormulaAdd({ noEdit }) {
                             value={convertValue(formik.values.type1, getOptionType1())}
                             options={getOptionType1(formik.values.type1, true)}
                             onChange={(value) => {
-                              // formik.setFieldValue("type1", value.value);
-                              // formik.setFieldValue("orderid_1", "");
                               if (!value) {
                                 formik.setFieldValue("type1", "");
+                                setisLoading(true);
+                                setTimeout(() => setisLoading(false), 100);
                               } else {
                                 formik.setFieldValue("type1", value.value);
                               }
@@ -517,6 +517,8 @@ function FormulaAdd({ noEdit }) {
                               // formik.setFieldValue("orderid_2", "");
                               if (!value) {
                                 formik.setFieldValue("type2", "");
+                                setisLoading(true);
+                                setTimeout(() => setisLoading(false), 100);
                               } else {
                                 formik.setFieldValue("type2", value.value);
                               }
