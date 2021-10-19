@@ -31,7 +31,7 @@ function ViewDetail() {
         data.interPretDetail.map((item, index) => {
           data.viewContent = data.viewContent + item.interpret_detail_full_content;
         });
-
+        console.log(data)
         setDataInterpret(data);
       });
     } catch (error) {
@@ -161,6 +161,10 @@ function ViewDetail() {
                   })} */}
               </div>
             </div>
+            <div class="bw_absolute bw_page_footer bw_color_black">
+                          <p> © 2021 - Bản quyền thuộc về ungdungthansohoc.com</p>
+
+                      </div>
           </div>
         </div>
         <div id="paginatedText"></div>

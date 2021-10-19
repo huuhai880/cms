@@ -126,7 +126,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          let NewValue = value.replace(regex, "");
+          let NewValue = value ? value.replace(regex, "") : "";
           NewValue = splitString(NewValue, 80);
           return <div className="text-left">{NewValue}</div>;
         },
