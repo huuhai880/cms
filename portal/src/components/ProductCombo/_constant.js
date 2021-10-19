@@ -80,7 +80,27 @@ export const getColumnTable = (data, query, handleActionItemClick, handlePick = 
          },
       },
 
-
+      {
+         name: "is_web_view",
+         label: "Hiển thị web",
+         options: {
+            filter: false,
+            sort: false,
+            customHeadRender: (columnMeta, handleToggleColumn) => {
+               return (
+                  <th
+                     key={`head-th-${columnMeta.label}`}
+                     className="MuiTableCell-root MuiTableCell-head"
+                  >
+                     <div className="text-center">{columnMeta.label}</div>
+                  </th>
+               );
+            },
+            customBodyRender: (value, tableMeta, updateValue) => {
+               return <div className="text-center">{value ? "Có" : "Không"}</div>;
+            },
+         },
+      },
       {
          name: "is_active",
          label: "Kích hoạt",
@@ -175,7 +195,9 @@ export const initialValues = {
    combo_id: null,
    combo_name: '',
    description: '',
+   content_detail:'',
    is_active: true,
+   is_web_view: true,
    combo_image_url: null,
    combo_products: []
 }
@@ -184,6 +206,10 @@ export const validationSchema = yup.object().shape({
    combo_name: yup.string()
       .required("Tên Combo là bắt buộc.")
       .max(400, "Tên Combo tối đa 400 ký tự."),
+      description: yup.string()
+      .required("Mô tả là bắt buộc."),
+      content_detail: yup.string()
+      .required("Mô tả chi tiết là bắt buộc."),
    combo_products: yup.array().nullable()
       .test(
          'product_attribute',

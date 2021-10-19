@@ -1,6 +1,6 @@
 import React from "react";
 import { DatePicker } from "antd";
-import "antd/dist/antd.css";
+// import "antd/dist/antd.css";
 import "moment/locale/vi";
 import moment from "moment";
 import "./style.css";

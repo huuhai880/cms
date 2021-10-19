@@ -612,28 +612,40 @@ const copyIntergret = async (body = {}) => {
 
     const interpret_id = resultIntergret.recordset[0].interpret_id;
     if (interpret_id > 0) {
-      for (let index = 0; index < body.attribute_list.length; index++) {
-        const element = body.attribute_list[index];
-        const requestInterpretAttibutes = new sql.Request(transaction);
-        const resultInterpretAttibutes = await requestInterpretAttibutes
-          .input('ATTRIBUTEID', apiHelper.getValueFromObject(element, 'value'))
-          .input(
-            'MAINNUMBERID',
-            apiHelper.getValueFromObject(element, 'mainnumber_id')
-          )
-          .input('MAINNUMBER', apiHelper.getValueFromObject(element, 'label'))
-          .input('INTERPRETID', interpret_id)
-          .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-          .execute('FOR_INTERPRET_ATTRIBUTES_CreateOrUpdate_AdminWeb');
-        const interpret_attribute_id =
-          resultInterpretAttibutes.recordset[0].RESULT;
-        if (interpret_attribute_id == 0) {
-          await transaction.rollback();
-          return new ServiceResponse(
-            false,
-            'Lỗi thêm mới thuộc tính khi copy luận giải đặt biệt',
-            null
-          );
+      if (
+        apiHelper.getValueFromObject(body, 'is_interpretspectial') == 1 &&
+        body.attribute_list &&
+        body.attribute_list.length
+      ) {
+        for (let index = 0; index < body.attribute_list.length; index++) {
+          const element = body.attribute_list[index];
+          const requestInterpretAttibutes = new sql.Request(transaction);
+          const resultInterpretAttibutes = await requestInterpretAttibutes
+            .input(
+              'ATTRIBUTEID',
+              apiHelper.getValueFromObject(element, 'value')
+            )
+            .input(
+              'MAINNUMBERID',
+              apiHelper.getValueFromObject(element, 'mainnumber_id')
+            )
+            .input('MAINNUMBER', apiHelper.getValueFromObject(element, 'label'))
+            .input('INTERPRETID', interpret_id)
+            .input(
+              'CREATEDUSER',
+              apiHelper.getValueFromObject(body, 'auth_name')
+            )
+            .execute('FOR_INTERPRET_ATTRIBUTES_CreateOrUpdate_AdminWeb');
+          const interpret_attribute_id =
+            resultInterpretAttibutes.recordset[0].RESULT;
+          if (interpret_attribute_id == 0) {
+            await transaction.rollback();
+            return new ServiceResponse(
+              false,
+              'Lỗi thêm mới thuộc tính khi copy luận giải đặt biệt',
+              null
+            );
+          }
         }
       }
     } else {

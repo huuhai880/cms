@@ -20,6 +20,7 @@ const getListCombo = async (queryParams = {}) => {
         const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
         const keyword = apiHelper.getSearch(queryParams);
         const is_active = apiHelper.getValueFromObject(queryParams, 'is_active', 2);
+        const is_web_view = apiHelper.getValueFromObject(queryParams, 'is_web_view', 2);
         const start_date = apiHelper.getValueFromObject(queryParams, 'start_date', null);
         const end_date = apiHelper.getValueFromObject(queryParams, 'end_date', null)
 
@@ -29,6 +30,7 @@ const getListCombo = async (queryParams = {}) => {
             .input('startdate', start_date)
             .input('enddate', end_date)
             .input('isactive', is_active)
+            .input('ISSHOWWEB', is_web_view)
             .input('pagesize', itemsPerPage)
             .input('pageindex', currentPage)
             .execute('PRO_COMBOS_GetList_AdminWeb');
@@ -69,6 +71,9 @@ const createCombo = async (bodyParams = {}) => {
             .input('description', apiHelper.getValueFromObject(bodyParams, 'description', ''))
             .input('comboimageurl', combo_image_url)
             .input('isactive', apiHelper.getValueFromObject(bodyParams, 'is_active', 0))
+            .input('COMBOCONTENTDETAIL', apiHelper.getValueFromObject(bodyParams, 'content_detail', ''))
+            .input('ISSHOWWEB', apiHelper.getValueFromObject(bodyParams, 'is_web_view', 0))
+            .input('ISSHOWMENU', apiHelper.getValueFromObject(bodyParams, 'is_show_menu', 0))
             .input('createduser', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
             .execute('PRO_COMBOS_Create_AdminWeb')
 
@@ -137,6 +142,9 @@ const updateCombo = async (bodyParams = {}) => {
             .input('description', apiHelper.getValueFromObject(bodyParams, 'description', ''))
             .input('comboimageurl', combo_image_url)
             .input('isactive', apiHelper.getValueFromObject(bodyParams, 'is_active', 0))
+            .input('COMBOCONTENTDETAIL', apiHelper.getValueFromObject(bodyParams, 'content_detail', ''))
+            .input('ISSHOWWEB', apiHelper.getValueFromObject(bodyParams, 'is_web_view', 0))
+            .input('ISSHOWMENU', apiHelper.getValueFromObject(bodyParams, 'is_show_menu', 0))
             .input('updateduser', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
             .execute('PRO_COMBOS_Update_AdminWeb')
 

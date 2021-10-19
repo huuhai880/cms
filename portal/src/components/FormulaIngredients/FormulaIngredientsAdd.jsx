@@ -372,7 +372,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                             }}
                             checked={formik.values.is_total_shortened}
                           >
-                            Tổng rút gọn/Tổng 1 chữ số
+                            Tổng 1 chữ số
                           </Checkbox>
                         </Col>
                         <Col sm={3}>

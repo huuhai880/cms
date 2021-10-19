@@ -78,6 +78,7 @@ function ViewDetail() {
       //Lấy danh sách page cần split
       // debugger
       let pagesPaging = document.getElementsByClassName("bw_split");
+
       //Duyệt
       for (let index = 0; index < pagesPaging.length; index++) {
         let page = pagesPaging[index];
@@ -129,8 +130,8 @@ function ViewDetail() {
             <div class="bw_index_items">
               <p>{dataInterpret.mainnumber}</p>
             </div>
-            <div class="bw_tetx">
-              <div dangerouslySetInnerHTML={{ __html: dataInterpret.desc_attributes_gruop }} />
+            <div class="bw_tetx" dangerouslySetInnerHTML={{ __html: dataInterpret.desc_attributes_gruop }}>
+              {/* <div  /> */}
             </div>
 
             <div class="bw_mt_40 bw_luangiai">

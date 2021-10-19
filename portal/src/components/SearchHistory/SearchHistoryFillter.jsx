@@ -7,7 +7,7 @@ import Select from "react-select";
 // import DatePicker from "../Common/DatePicker";
 // import { DatePicker } from "antd";
 import RangePicker from "../../containers/Common/widget/RangeTimePicker";
-import "antd/dist/antd.css";
+// import "antd/dist/antd.css";
 import "moment/locale/vi";
 import { FormSelectGroup } from "../../containers/Common/widget";
 import { mapDataOptions4Select } from "../../utils/html";
