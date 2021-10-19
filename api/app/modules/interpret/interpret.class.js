@@ -138,7 +138,8 @@ const detailInterpretWeb = (users = []) => {
     'decs',
     'brief_decs',
     'desc_attributes_gruop',
-    'introduction'
+    'introduction',
+    'group_name',
   ]);
 };
 module.exports = {
