@@ -80,7 +80,27 @@ export const getColumnTable = (data, query, handleActionItemClick, handlePick = 
          },
       },
 
-
+      {
+         name: "is_web_view",
+         label: "Hiển thị web",
+         options: {
+            filter: false,
+            sort: false,
+            customHeadRender: (columnMeta, handleToggleColumn) => {
+               return (
+                  <th
+                     key={`head-th-${columnMeta.label}`}
+                     className="MuiTableCell-root MuiTableCell-head"
+                  >
+                     <div className="text-center">{columnMeta.label}</div>
+                  </th>
+               );
+            },
+            customBodyRender: (value, tableMeta, updateValue) => {
+               return <div className="text-center">{value ? "Có" : "Không"}</div>;
+            },
+         },
+      },
       {
          name: "is_active",
          label: "Kích hoạt",
