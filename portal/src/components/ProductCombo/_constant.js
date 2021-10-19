@@ -177,6 +177,7 @@ export const initialValues = {
    description: '',
    content_detail:'',
    is_active: true,
+   is_web_view: true,
    combo_image_url: null,
    combo_products: []
 }
