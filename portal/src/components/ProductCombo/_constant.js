@@ -175,6 +175,7 @@ export const initialValues = {
    combo_id: null,
    combo_name: '',
    description: '',
+   content_detail:'',
    is_active: true,
    combo_image_url: null,
    combo_products: []
@@ -184,6 +185,10 @@ export const validationSchema = yup.object().shape({
    combo_name: yup.string()
       .required("Tên Combo là bắt buộc.")
       .max(400, "Tên Combo tối đa 400 ký tự."),
+      description: yup.string()
+      .required("Mô tả là bắt buộc."),
+      content_detail: yup.string()
+      .required("Mô tả chi tiết là bắt buộc."),
    combo_products: yup.array().nullable()
       .test(
          'product_attribute',

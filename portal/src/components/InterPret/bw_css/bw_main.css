@@ -13,7 +13,7 @@
   src: url(../bw_font/BODONI.otf);
 }
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", "sans-serif" ;
   height: 100vh;
   font-size: 16px;
   background: #fff;
@@ -24,6 +24,7 @@ html {
 }
 .bw_wrapper {
   /* font-family: 'Roboto'; */
+  font-family: "Roboto", sans-serif;
   width: 210mm;
   min-height: 297mm;
   display: block;
@@ -81,7 +82,7 @@ html {
   max-height: 35px;
 }
 p {
-  /* font-size: 15px; */
+  font-size: 15px;
   margin: 7px 0;
   line-height: 24px;
 }
@@ -112,24 +113,24 @@ p {
   z-index: 22;
 }
 .bw_index_items p {
-  font-family: Font_bondi;
+  font-family: "Roboto", sans-serif;
   font-size: 80px;
   line-height: 150px;
   color: #fff;
   text-shadow: 0 0 70px #d35bbc;
   padding-top: 35px;
 }
-.bw_tetx{
+.bw_tetx {
   margin: 0 auto;
   margin-top: -62px;
   padding: 20px 40px;
   border-radius: 20px;
   text-align: center;
   max-width: 88%;
-  border: 5px solid #D35BBC;
+  border: 5px solid #d35bbc;
   padding-top: 55px;
 }
-.bw_tetx p{
+.bw_tetx p {
   font-family: Font_bold;
   font-style: italic;
 }
@@ -144,7 +145,6 @@ p {
   text-align: center;
 }
 .bw_luangiai ul {
-  
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
@@ -155,16 +155,17 @@ p {
   color: #fff;
   border-radius: 10px;
 }
-.bw_content_luangiai{
+.bw_content_luangiai {
   margin: 0 auto;
   margin-top: 20px;
   max-width: 90%;
 }
-.bw_content_luangiai p{
+.bw_content_luangiai p {
   text-align: justify;
   list-style: 1.6 !important;
 }
-.bw_index_items{
+
+.bw_index_items {
   text-align: center;
   background: url(../bw_image/img_ss.png) center no-repeat;
   background-size: contain;
@@ -177,14 +178,14 @@ p {
   z-index: 22;
   margin-top: -15px;
 }
-.bw_index_items p{
+.bw_index_items p {
   font-family: Font_bondi;
-  font-size: 70px;
-  line-height: 150px ;
-  color: #fff;
-  text-shadow: 0 0 70px #D35BBC;
-  padding-top: 40px;
-  text-align: center;
+    font-size: 70px;
+    line-height: 150px ;
+    color: #fff;
+    text-shadow: 0 0 70px #D35BBC;
+    padding-top: 40px;
+    text-align: center;
 }
 .ant-modal,
 .ant-modal-content {
@@ -197,18 +198,19 @@ p {
   /* overflow-x: hidden; */
 }
 .ant-modal-body {
-    padding: 1px;
+  padding: 1px;
 }
 .ant-modal-wrap {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    overflow-x: hidden;
-    outline: 0;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-x: hidden;
+  outline: 0;
 }
-.ant-modal, .ant-modal-content{
+.ant-modal,
+.ant-modal-content {
   width: 100vw;
   height: fit-content;
   margin: 0;
@@ -221,7 +223,8 @@ p {
   background-clip: padding-box;
   border: 0;
   border-radius: 2px;
-  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+  box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%),
+    0 9px 28px 8px rgb(0 0 0 / 5%);
   pointer-events: auto;
 }
 #originalText {

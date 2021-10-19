@@ -4,7 +4,7 @@ import { Input, Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
 
 // Component(s)
 import RangePicker from "../../../containers/Common/widget/RangeTimePicker";
-import "antd/dist/antd.css";
+// import "antd/dist/antd.css";
 import "moment/locale/vi";
 import moment from "moment";
 

@@ -232,6 +232,7 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
                                     <FormGroup row>
                                        <Label className="col-sm-3 col-form-label">
                                           Mô tả
+                                          <span className="font-weight-bold red-text"> *</span>
                                        </Label>
                                        <Col sm={9}>
                                           <Input

@@ -14,11 +14,12 @@
 // ie fixes
 @import "ie-fix";
 
+// antd 
+@import "antd";
+
 body.tox-dialog__disable-scroll{
   overflow: auto !important;
 }
 body{
   overflow: scroll !important;
 }
-// antd 
-@import "antd";
