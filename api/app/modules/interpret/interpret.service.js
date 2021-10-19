@@ -643,6 +643,11 @@ const copyIntergret = async (body = {}) => {
             );
           }
         }
+      }else{
+        logger.error(error, {
+          function: 'Interpret.Service.copyIntergret',
+        });
+        return new ServiceResponse(false, e.message);
       }
     } else {
       await transaction.rollback();
