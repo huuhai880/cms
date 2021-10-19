@@ -39,7 +39,8 @@ const listCombo = (list = []) => {
         'is_active',
         'created_user',
         'created_date',
-        'created_user_full_name'
+        'created_user_full_name',
+        'is_web_view'
     ]);
 };
 

@@ -35,6 +35,7 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
         itemsPerPage: handlePick ? 10 : 25,
         page: 1,
         is_active: 1,
+        is_web_view:1,
         search: "",
         start_date: null,
         end_date: null,
