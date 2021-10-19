@@ -37,14 +37,14 @@ export const initialValues = {
 
 export const validationSchema = (is_for_power_diagram = false, is_interpretspectial = false) => {
   return yup.object().shape({
-    mainnumber_id:
-      is_for_power_diagram || is_interpretspectial
-        ? yup.string().optional().nullable()
-        : yup.string().required("Chỉ số không được để trống .").nullable(),
     attribute_id:
       is_for_power_diagram || is_interpretspectial
         ? yup.string().optional().nullable()
         : yup.string().required("Tên thuộc tính không được để trống .").nullable(),
+    mainnumber_id:
+      is_for_power_diagram || is_interpretspectial
+        ? yup.string().optional().nullable()
+        : yup.string().required("Chỉ số không được để trống .").nullable(),
     order_index: yup.string().required("Vị trí hiển thị không được để trống .").nullable(),
     decs: yup.string().required("Mô tả không được để trống .").nullable(),
     brief_decs: yup.string().required("Tóm tắt không được để trống .").nullable(),
@@ -230,7 +230,11 @@ export const column = (handleDelete) => {
       width: "20%",
       render: (text, record, index) => {
         // console.log(record)
-        return <div className="text-left">{record.is_interpretspectial==1 ? record.attributes_name : record.attribute_name }</div>;
+        return (
+          <div className="text-left">
+            {record.is_interpretspectial == 1 ? record.attributes_name : record.attribute_name}
+          </div>
+        );
       },
     },
     {
@@ -238,7 +242,7 @@ export const column = (handleDelete) => {
       dataIndex: "order_index",
       key: "order_index",
       responsive: ["md"],
-      width: "8%",
+      width: "10%",
       render: (text, record, index) => {
         return <div className="text-center">{text}</div>;
       },
@@ -255,7 +259,7 @@ export const column = (handleDelete) => {
       },
     },
     {
-      title: "Kich hoạt",
+      title: "Kích hoạt",
       dataIndex: "is_active",
       width: "8%",
       key: "is_active",
@@ -304,12 +308,14 @@ export const column = (handleDelete) => {
                 title="Chi tiết luận giải trên web"
                 className="mr-1"
                 onClick={(evt) => {
-                 if(record.is_interpretspectial!=1){
-                  window.open(`/portal/interpret/detail-web/${record["interpret_id"]}`, "_blank");
-                 }else{
-                  window.open(`/portal/interpret/detail-web-spectial/${record["interpret_id"]}`, "_blank");
-
-                 }
+                  if (record.is_interpretspectial != 1) {
+                    window.open(`/interpret/detail-web/${record["interpret_id"]}`, "_blank");
+                  } else {
+                    window.open(
+                      `/interpret/detail-web-spectial/${record["interpret_id"]}`,
+                      "_blank"
+                    );
+                  }
                 }}
               >
                 <i className="fa fa-eye" />

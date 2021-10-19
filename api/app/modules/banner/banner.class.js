@@ -13,6 +13,8 @@ const template = {
     },
   ],
   created_date: '{{#? CREATEDDATE}}',
+  link: '{{#? LINK}}',
+
   is_active: '{{ISACTIVE ? 1 : 0}}',
   placement: '{{#? SYSTEMNAME}}',
 };
@@ -23,6 +25,7 @@ const detail = (banner) => {
   return transform.transform(banner, [
     'banner_id',
     'picture_alias',
+    'link',
     'picture_url',
     'is_active',
     'placement',

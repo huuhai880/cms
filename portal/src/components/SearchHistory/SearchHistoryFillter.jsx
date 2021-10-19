@@ -26,6 +26,9 @@ class SearchHistoryFilter extends PureComponent {
         { name: "Có", id: 1 },
         { name: "Không", id: 0 },
       ],
+      startDate: moment().startOf('month'),
+      endDate: moment(),
+
     };
   }
 
@@ -49,44 +52,25 @@ class SearchHistoryFilter extends PureComponent {
   };
 
   onSubmit = (isReset = false) => {
-    let {
-      inputValue,
-      selectedActive,
-      startDate,
-      endDate,
-    } = this.state;
+    let { inputValue, selectedActive, startDate, endDate } = this.state;
     const { handleSubmit } = this.props;
     handleSubmit(
       inputValue ? inputValue.trim() : null,
       selectedActive ? selectedActive.value : 2,
-      moment(startDate).isValid()
-        ? moment(startDate, "DD/MM/YYYY").format("DD/MM/YYYY")
-        : null,
-      moment(endDate).isValid()
-        ? moment(endDate, "DD/MM/YYYY").format("DD/MM/YYYY")
-        : null,
+      moment(startDate).isValid() ? moment(startDate, "DD/MM/YYYY").format("DD/MM/YYYY") : null,
+      moment(endDate).isValid() ? moment(endDate, "DD/MM/YYYY").format("DD/MM/YYYY") : null
     );
   };
 
   onClear = () => {
-    const {
-      inputValue,
-      startDate,
-      endDate,
-      selectedActive,
-    } = this.state;
-    if (
-      inputValue ||
-      startDate ||
-      endDate ||
-      selectedActive
-    ) {
+    const { inputValue, startDate, endDate, selectedActive } = this.state;
+    if (inputValue || startDate || endDate || selectedActive) {
       this.setState(
         {
           inputValue: "",
-          startDate: null,
-          endDate: null,
-          selectedActive: { label: "Có", value: 1 },
+          startDate:  moment().startOf('month'),
+          endDate:  moment(),
+          selectedActive: { label: "Có", value: 2 },
         },
         () => {
           this.onSubmit(true);
@@ -101,7 +85,7 @@ class SearchHistoryFilter extends PureComponent {
       <div className="ml-3 mr-3 mb-3 mt-3">
         <Form autoComplete="nope" className="zoom-scale-9">
           <Row>
-            <Col xs={12} sm={3}>
+            <Col xs={12} sm={6}>
               <FormGroup className="mb-2 mb-sm-0">
                 <Label for="inputValue" className="mr-sm-2">
                   Từ khóa
@@ -131,37 +115,13 @@ class SearchHistoryFilter extends PureComponent {
                     setId="date1"
                     startDateValue={this.state.startDate}
                     endDateValue={this.state.endDate}
-                    handleDateValue={(startDate, endDate) =>
-                      this.setState({ startDate, endDate })
-                    }
+                    handleDateValue={(startDate, endDate) => this.setState({ startDate, endDate })}
                   />
                 </Col>
               </FormGroup>
             </Col>
-            <Col xs={12} sm={3}>
-              <FormGroup className="mb-2 mb-sm-0">
-                <Label for="" className="mr-sm-2">
-                  Kích hoạt
-                </Label>
-                <Select
-                  className="MuiPaper-filter__custom--select"
-                  id="isActives"
-                  name="isActives"
-                  onChange={this.handleChangeSelectActive}
-                  isSearchable={true}
-                  placeholder={"-- Chọn --"}
-                  value={this.state.selectedActive}
-                  options={this.state.isActives.map(
-                    ({ name: label, id: value }) => ({ value, label })
-                  )}
-                />
-              </FormGroup>
-            </Col>
-            <Col
-              xs={12}
-              sm={3}
-              className="d-flex align-items-end justify-content-end"
-            >
+
+            <Col xs={12} sm={3} className="d-flex align-items-end justify-content-end">
               <FormGroup className="mb-2 mb-sm-0">
                 <Button
                   className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"

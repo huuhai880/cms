@@ -28,14 +28,87 @@ function ViewDetailSpectial() {
   const _initDataDetail = () => {
     try {
       _interpretModel.detailWeb(id).then((data) => {
-        setDataInterpret(data);
+        data.viewContent = data.decs;
+        data.interPretDetail.map((item, index) => {
+          data.viewContent = data.viewContent + item.interpret_detail_full_content;
+        });
         console.log(data);
+        setDataInterpret(data);
       });
     } catch (error) {
       console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
+  useEffect(() => {
+    const createPage = (page, index) => {
+      let html = `<div class="bw_wrapper bw_page_20 bw_page_24 bw_page_33 ">
+                      <div class="bw_page_header bw_color_black">
+                      <img src=${logo_C} alt="1" />
+                      </div>
+                      <div class="bw_content bw_mt_20">
+                          <div class="bw_mt_40 bw_luangiai">
+                              <div class="bw_content_luangiai">
+                                  
+                              </div>
+                          </div>
+                      </div>
+                      <div class="bw_absolute bw_page_footer bw_color_black">
+                          <p> © 2021 - Bản quyền thuộc về ungdungthansohoc.com</p>
+
+                      </div>
+                  </div>`;
+      page.insertAdjacentHTML("afterend", html);
+    };
+
+    const appendToLastPage = (page, html) => {
+      //Child
+      let child = page.querySelector(".bw_content_luangiai");
+      //Noi dung
+      var pageText = child.innerHTML;
+      child.innerHTML += html; // saves the text of the last page
+      if (page.offsetHeight > 1123) {
+        child.innerHTML = pageText; //resets the page-text
+        return false; // returns false because page is full
+      } else {
+        return true; // returns true because word was successfully filled in the page
+      }
+    };
+
+    const paginateText = () => {
+      //Lấy danh sách page cần split
+      // debugger
+      let pagesPaging = document.getElementsByClassName("bw_split");
+      // console.log(pagesPaging);
+      //Duyệt
+      for (let index = 0; index < pagesPaging.length; index++) {
+        let page = pagesPaging[index];
+        //Lấy element content
+        let divLuanGiai = page.querySelector(".bw_content_luangiai");
+
+        var cloneDivLuanGiai = page.querySelector(".bw_content_luangiai").cloneNode(true);
+
+        //Lấy all Child
+        var childsLuanGiai = cloneDivLuanGiai.children;
+
+        //Reset
+        divLuanGiai.innerHTML = "";
+
+        for (let j = 0; j < childsLuanGiai.length; j++) {
+          const childHtml = childsLuanGiai[j];
+          let html = childHtml.outerHTML;
+          var success = appendToLastPage(page, html);
+          if (!success) {
+            createPage(page);
+            page = page.nextSibling;
+            appendToLastPage(page, html);
+          }
+        }
+      }
+    };
+
+    paginateText();
+  }, [dataInterpret]);
   return (
     <div>
       <Modal
@@ -51,69 +124,49 @@ function ViewDetailSpectial() {
           <div class="bw_page_header">
             <img src={logo} alt="1"></img>
           </div>
-          <div class="bw_content bw_back" style={{marginTop: "50mm"}}>
-                NHẬN ĐỊNH<br/>&<br/>CHÚ Ý RIÊNG<br/>CHO LÁ SỐ<br/>CỦA BẠN
-            </div>
+          <div class="bw_content bw_back" style={{ marginTop: "50mm" }}>
+            NHẬN ĐỊNH
+            <br />&<br />
+            CHÚ Ý RIÊNG
+            <br />
+            CHO LÁ SỐ
+            <br />
+            CỦA BẠN
+          </div>
         </div>
-        <div class="bw_wrapper bw_page_20 bw_page_24 bw_page_33">
+        <div class="bw_wrapper bw_page_20 bw_page_24 bw_page_33 bw_split">
           <div class="bw_page_header bw_color_black">
             <img src={logo_C} alt="1"></img>
           </div>
           <div>
             <h1>NHẬN ĐỊNH VÀ CHÚ Ý RIÊNG</h1>
-            <div class="bw_content_luangiai">
-              <p>
-                <b>
-                  <i>Dành riêng cho bản DELUXE của bạn</i>
-                </b>
-                , dưới đây là những luận giải đặc biệt nhất, riêng nhất và độc đáo nhất từ bộ môn
-                Numerology (Thần số học) mà chúng tôi đã nghiên cứu và đọc vị. Những luận giải này{" "}
-                <b>
-                  <i>dựa trên các khảo nghiệm, minh chứng từ hàng ngàn bộ số</i>
-                </b>{" "}
-                mà Đội ngũ Ứng dụng Thần số học đã nghiên cứu, hi vọng mang đến những Nhận định
-                riêng hữu ích cho hành trình phát triển của bạn!
-              </p>
-              <p>
-                <b>Bộ số của bạn tiết lộ những bí mật sau:</b>
-              </p>
-              <div class="bw_mt_40 bw_luangiai">
-              <div class="bw_content_luangiai">
-                <div dangerouslySetInnerHTML={{ __html: dataInterpret.brief_decs }} />
-              </div>
-            </div>
+            <p>
+                  <b>
+                    <i>Dành riêng cho bản DELUXE của bạn</i>
+                  </b>
+                  , dưới đây là những luận giải đặc biệt nhất, riêng nhất và độc đáo nhất từ bộ môn
+                  Numerology (Thần số học) mà chúng tôi đã nghiên cứu và đọc vị. Những luận giải này{" "}
+                  <b>
+                    <i>dựa trên các khảo nghiệm, minh chứng từ hàng ngàn bộ số</i>
+                  </b>{" "}
+                  mà Đội ngũ Ứng dụng Thần số học đã nghiên cứu, hi vọng mang đến những Nhận định
+                  riêng hữu ích cho hành trình phát triển của bạn!
+                </p>
+                <p>
+                  <b>Bộ số của bạn tiết lộ những bí mật sau:</b>
+                </p>
             <div class="bw_mt_40 bw_luangiai">
-              <div class="bw_content_luangiai">
-                <div dangerouslySetInnerHTML={{ __html: dataInterpret.decs }} />
-              </div>
-            </div>
-            {dataInterpret.interPretDetail &&
-              dataInterpret.interPretDetail.map((item, index) => {
-                return (
-                  <>
-                    <div class="bw_mt_40 bw_luangiai">
-                      <div class="bw_content_luangiai">
-                        <div
-                          dangerouslySetInnerHTML={{ __html: item.interpret_detail_short_content }}
-                        />
-                      </div>
-                    </div>
-                    <div class="bw_mt_40 bw_luangiai">
-                      <div class="bw_content_luangiai">
-                        <div
-                          dangerouslySetInnerHTML={{ __html: item.interpret_detail_full_content }}
-                        />
-                      </div>
-                    </div>
-                  </>
-                );
-              })}
+              <div
+                class="bw_content_luangiai"
+                dangerouslySetInnerHTML={{ __html: dataInterpret.viewContent }}
+              ></div>
             </div>
           </div>
           <div class="bw_absolute bw_page_footer bw_color_black">
             <p> © 2021 - Bản quyền thuộc về ungdungthansohoc.com</p>
           </div>
         </div>
+        <div id="paginatedText"></div>
       </Modal>
     </div>
   );
