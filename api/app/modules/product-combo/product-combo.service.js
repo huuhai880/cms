@@ -69,6 +69,9 @@ const createCombo = async (bodyParams = {}) => {
             .input('description', apiHelper.getValueFromObject(bodyParams, 'description', ''))
             .input('comboimageurl', combo_image_url)
             .input('isactive', apiHelper.getValueFromObject(bodyParams, 'is_active', 0))
+            .input('COMBOCONTENTDETAIL', apiHelper.getValueFromObject(bodyParams, 'content_detail', ''))
+            .input('ISSHOWWEB', apiHelper.getValueFromObject(bodyParams, 'is_web_view', 0))
+            .input('ISSHOWMENU', apiHelper.getValueFromObject(bodyParams, 'is_show_menu', 0))
             .input('createduser', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
             .execute('PRO_COMBOS_Create_AdminWeb')
 
@@ -137,6 +140,9 @@ const updateCombo = async (bodyParams = {}) => {
             .input('description', apiHelper.getValueFromObject(bodyParams, 'description', ''))
             .input('comboimageurl', combo_image_url)
             .input('isactive', apiHelper.getValueFromObject(bodyParams, 'is_active', 0))
+            .input('COMBOCONTENTDETAIL', apiHelper.getValueFromObject(bodyParams, 'content_detail', ''))
+            .input('ISSHOWWEB', apiHelper.getValueFromObject(bodyParams, 'is_web_view', 0))
+            .input('ISSHOWMENU', apiHelper.getValueFromObject(bodyParams, 'is_show_menu', 0))
             .input('updateduser', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
             .execute('PRO_COMBOS_Update_AdminWeb')
 

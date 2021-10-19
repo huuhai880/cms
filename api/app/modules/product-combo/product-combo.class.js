@@ -22,7 +22,11 @@ const template = {
     product_name: "{{#? PRODUCTNAME}}",
     number_search: "{{#? NUMBERSEARCH}}",
     is_time_limit: "{{ISTIMELIMIT ? 1 : 0}}",
-    time_limit: '{{#? TIMELIMIT}}'
+    time_limit: '{{#? TIMELIMIT}}',
+    is_web_view: "{{ISSHOWWEB ? 1 : 0}}",
+    is_show_menu: "{{ISSHOWMENU ? 1 : 0}}",
+    content_detail: "{{#? COMBOCONTENTDETAIL}}",
+
 }
 
 let transform = new Transform(template);
@@ -46,6 +50,9 @@ const detailCombo = (combo = {}) => {
         'description',
         'is_active',
         'combo_image_url',
+        'is_web_view',
+        'is_show_menu',
+        'content_detail',
     ]) : null;
 }
 
