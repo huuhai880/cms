@@ -612,7 +612,11 @@ const copyIntergret = async (body = {}) => {
 
     const interpret_id = resultIntergret.recordset[0].interpret_id;
     if (interpret_id > 0) {
-      if (body.attribute_list && body.attribute_list.length) {
+      if (
+        apiHelper.getValueFromObject(body, 'is_interpretspectial') == 1 &&
+        body.attribute_list &&
+        body.attribute_list.length
+      ) {
         for (let index = 0; index < body.attribute_list.length; index++) {
           const element = body.attribute_list[index];
           const requestInterpretAttibutes = new sql.Request(transaction);
@@ -643,11 +647,6 @@ const copyIntergret = async (body = {}) => {
             );
           }
         }
-      }else{
-        logger.error(error, {
-          function: 'Interpret.Service.copyIntergret',
-        });
-        return new ServiceResponse(false, e.message);
       }
     } else {
       await transaction.rollback();
