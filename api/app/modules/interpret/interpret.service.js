@@ -21,6 +21,10 @@ const getInterpretsList = async (queryParams = {}) => {
         'ISACTIVE',
         apiHelper.getFilterBoolean(queryParams, 'selectdActive')
       )
+      .input(
+        'ISINTERPRETSPECIAL',
+        apiHelper.getFilterBoolean(queryParams, 'selectdSpectial')
+      )
       .execute('FOR_INTERPRET_GetList_AdminWeb');
 
     const result = data.recordset;
@@ -465,19 +469,15 @@ const viewDetailWeb = async (interpret_detail_id) => {
       .input('INTERPRETID', interpret_detail_id)
       .execute('FOR_INTERPRET_ViewDetailWeb_AdminWeb');
     const Intergret = InterpretClass.detailInterpretWeb(data.recordset[0]);
-  
+
     if (data.recordsets[1]) {
       Intergret.interPretDetail = InterpretClass.detailInterpretDetail(
-         data.recordsets[1]
+        data.recordsets[1]
       );
     }
 
     if (Intergret) {
-      return new ServiceResponse(
-        true,
-        '',
-        Intergret
-      );
+      return new ServiceResponse(true, '', Intergret);
     }
     return new ServiceResponse(false, '', null);
   } catch (e) {
@@ -562,10 +562,12 @@ const getListAttributeExcludeById = async (attribute_id, interpret_id) => {
 };
 
 const copyIntergret = async (body = {}) => {
+  const pool = await mssql.pool;
+  const transaction = await new sql.Transaction(pool);
   try {
-    const pool = await mssql.pool;
-    const resultIntergret = await pool
-      .request()
+    await transaction.begin();
+    const requestInterpret = new sql.Request(transaction);
+    const resultIntergret = await requestInterpret
       .input(
         'INTERPRETIDCOPY',
         apiHelper.getValueFromObject(body, 'interpret_id')
@@ -588,6 +590,11 @@ const copyIntergret = async (body = {}) => {
       .input('ORDERINDEX', apiHelper.getValueFromObject(body, 'order_index'))
       .input('DESCRIPTION', apiHelper.getValueFromObject(body, 'decs'))
       .input(
+        'ISINTERPRETSPECIAL',
+        apiHelper.getValueFromObject(body, 'is_interpretspectial')
+      )
+
+      .input(
         'BRIEFDESCRIPTION',
         apiHelper.getValueFromObject(body, 'brief_decs')
       )
@@ -603,7 +610,36 @@ const copyIntergret = async (body = {}) => {
       )
       .execute('FOR_INTERPRET_Copy_AdminWeb');
 
-    const { interpret_id } = resultIntergret.recordset[0];
+    const interpret_id = resultIntergret.recordset[0].interpret_id;
+    if (interpret_id > 0) {
+      for (let index = 0; index < body.attribute_list.length; index++) {
+        const element = body.attribute_list[index];
+        const requestInterpretAttibutes = new sql.Request(transaction);
+        const resultInterpretAttibutes = await requestInterpretAttibutes
+          .input('ATTRIBUTEID', apiHelper.getValueFromObject(element, 'value'))
+          .input(
+            'MAINNUMBERID',
+            apiHelper.getValueFromObject(element, 'mainnumber_id')
+          )
+          .input('MAINNUMBER', apiHelper.getValueFromObject(element, 'label'))
+          .input('INTERPRETID', interpret_id)
+          .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
+          .execute('FOR_INTERPRET_ATTRIBUTES_CreateOrUpdate_AdminWeb');
+        const interpret_attribute_id =
+          resultInterpretAttibutes.recordset[0].RESULT;
+        if (interpret_attribute_id == 0) {
+          await transaction.rollback();
+          return new ServiceResponse(
+            false,
+            'Lỗi thêm mới thuộc tính khi copy luận giải đặt biệt',
+            null
+          );
+        }
+      }
+    } else {
+      await transaction.rollback();
+    }
+    await transaction.commit();
     return new ServiceResponse(true, '', interpret_id);
   } catch (error) {
     logger.error(error, {

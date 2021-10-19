@@ -24,6 +24,8 @@ import { Editor } from "@tinymce/tinymce-react";
 import Select from "react-select";
 import { readImageAsBase64 } from "../../utils/html";
 import { isBuffer } from "lodash";
+import { CircularProgress } from "@material-ui/core";
+
 layoutFullWidthHeight();
 const _interpretModel = new InterpretModel();
 
@@ -37,7 +39,7 @@ function InterPretAdd({ noEdit }) {
   const [isForPowerDiagram, setIsForPowerDiagram] = useState(false);
   const [isinterpretspectial, setIsinterpretspectial] = useState(false);
   const [disableSpectial, setDisableSpectial] = useState(false);
-
+  const [isLoading, setisLoading] = useState(false);
   const [attributeExclude, setAttribuExclude] = useState([]);
   const [alerts, setAlerts] = useState([]);
 
@@ -72,7 +74,16 @@ function InterPretAdd({ noEdit }) {
       document.body.classList.remove("tox-fullscreen");
     }
   }, []);
-
+  //// scroll to error
+  useEffect(() => {
+    if (!formik.isSubmitting) return;
+    if (Object.keys(formik.errors).length > 0) {
+      document
+        .getElementById(Object.keys(formik.errors)[0])
+        .scrollIntoView({ behavior: "smooth", block: "end", inline: "start" });
+      // console.log(Object.keys(formik.errors)[0])
+    }
+  }, [formik]);
   const handleCreateOrUpdate = async (values) => {
     try {
       let interpret_id = await _interpretModel.create(values);
@@ -82,6 +93,8 @@ function InterPretAdd({ noEdit }) {
       }
       if (btnType == "save" && !id) {
         formik.resetForm();
+        setisLoading(true);
+        setTimeout(() => setisLoading(false), 500);
       }
     } catch (error) {
       let { errors, statusText, message } = error;
@@ -361,28 +374,35 @@ function InterPretAdd({ noEdit }) {
                       <Col sm={8}>
                         {formik.values.is_interpretspectial ? (
                           <>
-                            <Select
-                              className="MuiPaper-filter__custom--select"
-                              id={`attribute_id`}
-                              name={`attribute_id`}
-                              isClearable={true}
-                              styles={{
-                                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                              }}
-                              menuPortalTarget={document.querySelector("body")}
-                              isDisabled={noEdit || formik.values.is_for_power_diagram}
-                              placeholder={"-- Chọn --"}
-                              value={null}
-                              options={getOptionAttributes()}
-                              // isMulti
-                              onChange={(value) => {
-                                // console.log(typeof value);
-                                formik.setFieldValue("attribute_list", [
-                                  ...formik.values.attribute_list,
-                                  value,
-                                ]);
-                              }}
-                            />
+                            {isLoading ? (
+                              <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                                <CircularProgress />
+                              </div>
+                            ) : (
+                              <Select
+                                className="MuiPaper-filter__custom--select"
+                                id={`attribute_id`}
+                                name={`attribute_id`}
+                                isClearable={true}
+                                styles={{
+                                  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                }}
+                                menuPortalTarget={document.querySelector("body")}
+                                isDisabled={noEdit || formik.values.is_for_power_diagram}
+                                placeholder={"-- Chọn --"}
+                                value={null}
+                                options={getOptionAttributes()}
+                                // isMulti
+                                onChange={(value) => {
+                                  // console.log(typeof value);
+                                  formik.setFieldValue("attribute_list", [
+                                    ...formik.values.attribute_list,
+                                    value,
+                                  ]);
+                                }}
+                              />
+                            )}
+
                             {formik.errors.attribute_id && formik.touched.attribute_id ? (
                               <div
                                 className="field-validation-error alert alert-danger fade show"
@@ -394,30 +414,40 @@ function InterPretAdd({ noEdit }) {
                           </>
                         ) : (
                           <>
-                            <Select
-                              className="MuiPaper-filter__custom--select"
-                              id={`attribute_id`}
-                              name={`attribute_id`}
-                              isClearable={true}
-                              styles={{
-                                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                              }}
-                              menuPortalTarget={document.querySelector("body")}
-                              isDisabled={noEdit || formik.values.is_for_power_diagram}
-                              placeholder={"-- Chọn --"}
-                              value={convertValue(formik.values.attribute_id, getOptionAttribute())}
-                              options={getOptionAttribute()}
-                              // isMulti
-                              onChange={(value) => {
-                                if (!value) {
-                                  formik.setFieldValue("attribute_id", "");
-                                  formik.setFieldValue("mainnumber_id", "");
-                                } else {
-                                  formik.setFieldValue("attribute_id", value.value);
-                                  formik.setFieldValue("mainnumber_id", value.mainnumber_id);
-                                }
-                              }}
-                            />
+                            {isLoading ? (
+                              <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                                <CircularProgress />
+                              </div>
+                            ) : (
+                              <Select
+                                className="MuiPaper-filter__custom--select"
+                                id={`attribute_id`}
+                                name={`attribute_id`}
+                                isClearable={true}
+                                styles={{
+                                  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                                }}
+                                menuPortalTarget={document.querySelector("body")}
+                                isDisabled={noEdit || formik.values.is_for_power_diagram}
+                                placeholder={"-- Chọn --"}
+                                value={convertValue(
+                                  formik.values.attribute_id,
+                                  getOptionAttribute()
+                                )}
+                                options={getOptionAttribute()}
+                                // isMulti
+                                onChange={(value) => {
+                                  if (!value) {
+                                    formik.setFieldValue("attribute_id", "");
+                                    formik.setFieldValue("mainnumber_id", "");
+                                  } else {
+                                    formik.setFieldValue("attribute_id", value.value);
+                                    formik.setFieldValue("mainnumber_id", value.mainnumber_id);
+                                  }
+                                }}
+                              />
+                            )}
+
                             {formik.errors.attribute_id && formik.touched.attribute_id ? (
                               <div
                                 className="field-validation-error alert alert-danger fade show"
@@ -438,30 +468,39 @@ function InterPretAdd({ noEdit }) {
                           Mối quan hệ{" "}
                         </Label>
                         <Col sm={8}>
-                          <Select
-                            className="MuiPaper-filter__custom--select"
-                            id={`relationship_id`}
-                            name={`relationship_id`}
-                            isClearable={true}
-                            styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                            }}
-                            menuPortalTarget={document.querySelector("body")}
-                            isDisabled={noEdit || formik.values.is_for_power_diagram}
-                            placeholder={"-- Chọn --"}
-                            value={convertValue(
-                              formik.values.relationship_id,
-                              getOptionRelationship()
-                            )}
-                            options={getOptionRelationship(formik.values.relationship_id, true)}
-                            onChange={(value) => {
-                              if (!value) {
-                                formik.setFieldValue("relationship_id", "");
-                              } else {
-                                formik.setFieldValue("relationship_id", value.value);
-                              }
-                            }}
-                          />{" "}
+                          {isLoading ? (
+                            <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                              <CircularProgress />
+                            </div>
+                          ) : (
+                            <Select
+                              className="MuiPaper-filter__custom--select"
+                              id={`relationship_id`}
+                              name={`relationship_id`}
+                              isClearable={true}
+                              styles={{
+                                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                              }}
+                              menuPortalTarget={document.querySelector("body")}
+                              isDisabled={noEdit || formik.values.is_for_power_diagram}
+                              placeholder={"-- Chọn --"}
+                              value={convertValue(
+                                formik.values.relationship_id,
+                                getOptionRelationship()
+                              )}
+                              options={getOptionRelationship(formik.values.relationship_id, true)}
+                              onChange={(value) => {
+                                if (!value) {
+                                  formik.setFieldValue("relationship_id", "");
+                                  formik.setFieldValue("compare_attribute_id", "");
+                                  setisLoading(true);
+                                  setTimeout(() => setisLoading(false), 100);
+                                } else {
+                                  formik.setFieldValue("relationship_id", value.value);
+                                }
+                              }}
+                            />
+                          )}
                         </Col>
                       </FormGroup>
                     ) : null}
@@ -584,22 +623,32 @@ function InterPretAdd({ noEdit }) {
                           ) : null}
                         </Label>
                         <Col sm={8}>
-                          <Select
-                            className="MuiPaper-filter__custom--select"
-                            id={`mainnumber_id`}
-                            name={`mainnumber_id`}
-                            styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                            }}
-                            menuPortalTarget={document.querySelector("body")}
-                            isDisabled={true}
-                            placeholder={"-- Chọn --"}
-                            value={convertValue(formik.values.mainnumber_id, getOptionMainNumBer())}
-                            options={getOptionMainNumBer(formik.values.mainnumber_id, true)}
-                            onChange={(value) => {
-                              formik.setFieldValue("mainnumber_id", value.value);
-                            }}
-                          />
+                          {isLoading ? (
+                            <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                              <CircularProgress />
+                            </div>
+                          ) : (
+                            <Select
+                              className="MuiPaper-filter__custom--select"
+                              id={`mainnumber_id`}
+                              name={`mainnumber_id`}
+                              styles={{
+                                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                              }}
+                              menuPortalTarget={document.querySelector("body")}
+                              isDisabled={true}
+                              placeholder={"-- Chọn --"}
+                              value={convertValue(
+                                formik.values.mainnumber_id,
+                                getOptionMainNumBer()
+                              )}
+                              options={getOptionMainNumBer(formik.values.mainnumber_id, true)}
+                              onChange={(value) => {
+                                formik.setFieldValue("mainnumber_id", value.value);
+                              }}
+                            />
+                          )}
+
                           {formik.errors.mainnumber_id && formik.touched.mainnumber_id ? (
                             <div
                               className="field-validation-error alert alert-danger fade show"
@@ -620,37 +669,43 @@ function InterPretAdd({ noEdit }) {
                           Thuộc tính so sánh{" "}
                         </Label>
                         <Col sm={8}>
-                          <Select
-                            id={`compare_attribute_id`}
-                            name={`compare_attribute_id`}
-                            styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                            }}
-                            menuPortalTarget={document.querySelector("body")}
-                            isDisabled={
-                              noEdit ||
-                              !formik.values.relationship_id ||
-                              formik.values.is_for_power_diagram
-                            }
-                            isClearable={true}
-                            placeholder={"-- Chọn --"}
-                            value={convertValue(
-                              formik.values.compare_attribute_id,
-                              getOptionAttribute()
-                            )}
-                            options={getOptionAttribute(true)}
-                            onChange={(value) => {
-                              if (!value) {
-                                formik.setFieldValue("compare_attribute_id", "");
-                              } else {
-                                formik.setFieldValue("compare_attribute_id", value.value);
+                          {isLoading ? (
+                            <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                              <CircularProgress />
+                            </div>
+                          ) : (
+                            <Select
+                              id={`compare_attribute_id`}
+                              name={`compare_attribute_id`}
+                              styles={{
+                                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                              }}
+                              menuPortalTarget={document.querySelector("body")}
+                              isDisabled={
+                                noEdit ||
+                                !formik.values.relationship_id ||
+                                formik.values.is_for_power_diagram
                               }
-                              // formik.setFieldValue(
-                              //   "compare_attribute_id",
-                              //   selected ? selected.value : null
-                              // );
-                            }}
-                          />
+                              isClearable={true}
+                              placeholder={"-- Chọn --"}
+                              value={convertValue(
+                                formik.values.compare_attribute_id,
+                                getOptionAttribute()
+                              )}
+                              options={getOptionAttribute(true)}
+                              onChange={(value) => {
+                                if (!value) {
+                                  formik.setFieldValue("compare_attribute_id", "");
+                                } else {
+                                  formik.setFieldValue("compare_attribute_id", value.value);
+                                }
+                                // formik.setFieldValue(
+                                //   "compare_attribute_id",
+                                //   selected ? selected.value : null
+                                // );
+                              }}
+                            />
+                          )}
                         </Col>
                       </FormGroup>
                     ) : null}
@@ -727,6 +782,7 @@ function InterPretAdd({ noEdit }) {
                           }}
                           value={formik.values.brief_decs}
                           disabled={noEdit}
+                          id="brief_decs"
                           init={{
                             height: "500px",
                             width: "100%",
@@ -787,6 +843,7 @@ function InterPretAdd({ noEdit }) {
                           scriptLoading={{
                             delay: 0,
                           }}
+                          id="decs"
                           value={formik.values.decs}
                           disabled={noEdit}
                           init={{

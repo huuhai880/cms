@@ -419,6 +419,9 @@ export default class BannerAdd extends PureComponent {
                                                       })
                                                     }
                                                   ></DropzoneArea> */}
+                                                  <Label>
+                                                    Ưu tiên up ảnh kích thước có chiều dài 600 px
+                                                  </Label>
                                                 </div>
                                               );
                                             }}
@@ -439,7 +442,28 @@ export default class BannerAdd extends PureComponent {
                                     </FormGroup>
                                   </Col>
                                 </Row>
-
+                                <Row>
+                                  <Col xs={12}>
+                                    <FormGroup row>
+                                      <Label sm={3}>Link</Label>
+                                      <Col sm={9}>
+                                        <Field
+                                          name="link"
+                                          render={({ field }) => (
+                                            <Input
+                                              {...field}
+                                              onBlur={null}
+                                              type="text"
+                                              placeholder=""
+                                              disabled={noEdit}
+                                              maxLength={200}
+                                            />
+                                          )}
+                                        />
+                                      </Col>
+                                    </FormGroup>
+                                  </Col>
+                                </Row>
                                 <Row>
                                   <Col xs={12}>
                                     <FormGroup row>

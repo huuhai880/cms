@@ -23,6 +23,7 @@ import { Checkbox } from "antd";
 import { Editor } from "@tinymce/tinymce-react";
 import Select from "react-select";
 import { readImageAsBase64 } from "../../utils/html";
+import { CircularProgress } from "@material-ui/core";
 import { convertValueSelect } from "utils/index";
 layoutFullWidthHeight();
 
@@ -34,6 +35,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
   const [interpretParent, setInterpretParent] = useState([]);
   const [btnType, setbtnType] = useState("");
   const [alerts, setAlerts] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -60,7 +62,16 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
       document.body.classList.remove("tox-fullscreen");
     }
   }, []);
-
+  //// scroll to error
+  useEffect(() => {
+    if (!formik.isSubmitting) return;
+    if (Object.keys(formik.errors).length > 0) {
+      document
+        .getElementById(Object.keys(formik.errors)[0])
+        .scrollIntoView({ behavior: "smooth", block: "end", inline: "start" });
+      // console.log(Object.keys(formik.errors)[0])
+    }
+  }, [formik]);
   const _initInterpretParent = async (interpretId, interpretDetailId) => {
     try {
       let data = await _interpretModel.getListInterpretParent(interpretId, interpretDetailId);
@@ -81,15 +92,17 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
         formik.setFieldError("interpret_detail_name", "Tên luận giải đã tồn tại!");
         return;
       } else {
-         await _interpretModel.createInterpretDetail(values);
-      //  console.log(values)
+        await _interpretModel.createInterpretDetail(values);
+        //  console.log(values)
 
         window._$g.toastr.show("Lưu thành công!", "success");
         if (btnType == "save_n_close") {
           return window._$g.rdr(`/interpret/show-list-child/${values.interpret_id}`);
         }
-        if (btnType == "save" && !id) {
+        if (btnType == "save" && !values.interpret_detail_id) {
           formik.resetForm();
+          setisLoading(true);
+          setTimeout(() => setisLoading(false), 500);
         }
       }
     } catch (error) {
@@ -190,23 +203,29 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                           Luận giải phụ thuộc
                         </Label>
                         <Col sm={8}>
-                          <Select
-                            styles={{
-                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                            }}
-                            menuPortalTarget={document.querySelector("body")}
-                            isDisabled={noEdit}
-                            placeholder={"-- Chọn --"}
-                            value={convertValueSelect(
-                              formik.values.interpret_detail_parent_id,
-                              getOptionInterpretParent()
-                            )}
-                            options={getOptionInterpretParent()}
-                            onChange={(value) => {
-                              console.log(value);
-                              formik.setFieldValue("interpret_detail_parent_id", value.value);
-                            }}
-                          />
+                          {isLoading ? (
+                            <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                              <CircularProgress />
+                            </div>
+                          ) : (
+                            <Select
+                              styles={{
+                                menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                              }}
+                              menuPortalTarget={document.querySelector("body")}
+                              isDisabled={noEdit}
+                              placeholder={"-- Chọn --"}
+                              value={convertValueSelect(
+                                formik.values.interpret_detail_parent_id,
+                                getOptionInterpretParent()
+                              )}
+                              options={getOptionInterpretParent()}
+                              onChange={(value) => {
+                                console.log(value);
+                                formik.setFieldValue("interpret_detail_parent_id", value.value);
+                              }}
+                            />
+                          )}
                         </Col>
                       </FormGroup>
                     </Col>
@@ -267,6 +286,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                         scriptLoading={{
                           delay: 0,
                         }}
+                        id="interpret_detail_short_content"
                         value={formik.values.interpret_detail_short_content}
                         disabled={noEdit}
                         init={{
@@ -322,6 +342,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                     </Label>
                     <Col sm={10}>
                       <Editor
+                        id="interpret_detail_full_content"
                         apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                         scriptLoading={{
                           delay: 0,

@@ -106,8 +106,8 @@ export default function InterPretCopy(props) {
   const handleCopyInterpret = async (values) => {
     //   console.log(values)
     try {
-      values.interpret_id = "";
-      await _interpretModel.create(values);
+      // values.interpret_id = "";
+      await _interpretModel.copyInterpret(values);
       window._$g.toastr.show("Lưu thành công!", "success");
       if (btnType == "save_n_close") {
         return window._$g.rdr("/interpret");
@@ -248,22 +248,22 @@ export default function InterPretCopy(props) {
     }
   };
 
-  const handleCheckForPowerDiagram = (e) => {
-    formik.setFieldValue(`is_for_power_diagram`, e.target.checked);
-    setIsForPowerDiagram(e.target.checked);
-    if (e.target.checked) {
-      formik.setFieldValue("attribute_id", null);
-      formik.setFieldValue("relationship_id", null);
-      formik.setFieldValue("is_master", false);
-      formik.setFieldValue("mainnumber_id", null);
-      formik.setFieldValue("compare_mainnumber_id", null);
+  // const handleCheckForPowerDiagram = (e) => {
+  //   formik.setFieldValue(`is_for_power_diagram`, e.target.checked);
+  //   setIsForPowerDiagram(e.target.checked);
+  //   if (e.target.checked) {
+  //     formik.setFieldValue("attribute_id", null);
+  //     formik.setFieldValue("relationship_id", null);
+  //     formik.setFieldValue("is_master", false);
+  //     formik.setFieldValue("mainnumber_id", null);
+  //     formik.setFieldValue("compare_mainnumber_id", null);
 
-      formik.setErrors({
-        attribute_id: "",
-        mainnumber_id: "",
-      });
-    }
-  };
+  //     formik.setErrors({
+  //       attribute_id: "",
+  //       mainnumber_id: "",
+  //     });
+  //   }
+  // };
 
   return (
     <div key={`view`} className="animated fadeIn news">
