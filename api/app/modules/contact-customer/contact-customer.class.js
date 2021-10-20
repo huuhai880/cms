@@ -12,6 +12,8 @@ const template = {
   service_name: '{{#? SERVICENAME}}',
   // contact_id: '{{#? CONTACTID}}',
   content: '{{#? CONTENT}}',
+  contact_status: '{{#? CONTACTSTATUS}}',
+  note: '{{#? NOTE}}',
 
   is_active: '{{ISACTIVE ? 1 : 0}}',
 };
@@ -25,12 +27,9 @@ const detail = (author) => {
     'nick_name',
     'email',
     'content',
-    'key_contact',
     'phone_number',
-    'service_id',
-    'service_name',
-    'is_active',
-    'content',
+    'contact_status',
+    'note'
   ]);
 };
 
@@ -39,11 +38,14 @@ const list = (plan = []) => {
     'contact_id',
     'full_name',
     'phone_number',
+    'contact_status',
     'email',
     'key_contact',
     'service_name',
     'is_active',
     'content',
+    'contact_status',
+
   ]);
 };
 

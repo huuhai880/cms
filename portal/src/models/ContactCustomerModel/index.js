@@ -16,15 +16,14 @@ export default class ContactCustomerModel extends Model {
   primaryKey = 'contact_customer_id';
 
   fillable = () => ({
-    "contact_customer_id": null,
+
     "full_name": null,
     "phone_number": null,
     "full_name": null,
     "email": null,
     "content": null,
-    "key_contact": null,
-    "service_id": null,
-    "service_name": null,
+    "contact_status": null,
+    "note": null,
     "contact_id": null
   
   });
@@ -44,10 +43,10 @@ export default class ContactCustomerModel extends Model {
   //   return this._api.post(_static.API_CONTACT_CUSTOMER_LIST, data);
   // }
 
-  // update(id, _data) {
-  //   let data = Object.assign({}, _data);
-  //   return this._api.put(_static.API_CONTACT_CUSTOMER_UPDATE.replace(':id', id), data);
-  // }
+  update(id, _data) {
+    let data = Object.assign({}, _data);
+    return this._api.put(_static.API_CONTACT_CUSTOMER_UPDATE.replace(':id', id), data);
+  }
 
 
   delete(id, _data = {}) {
