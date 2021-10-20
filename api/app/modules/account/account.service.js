@@ -172,7 +172,7 @@ const createCRMAccountOrUpdate = async (body = {}) => {
       live_image = path_live_image;
     }
   }
-  // console.log(body)
+  console.log(body)
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
   try {

@@ -28,10 +28,12 @@ function ViewDetail() {
     try {
       _interpretModel.detailWeb(id).then((data) => {
         data.viewContent = data.introduction + data.decs;
-        data.interPretDetail.map((item, index) => {
-          data.viewContent = data.viewContent + item.interpret_detail_full_content;
-        });
-        console.log(data)
+        if (data.interPretDetail && data.interPretDetail.length) {
+          data.interPretDetail.map((item, index) => {
+            data.viewContent = data.viewContent + item.interpret_detail_full_content;
+          });
+        }
+
         setDataInterpret(data);
       });
     } catch (error) {
@@ -41,7 +43,7 @@ function ViewDetail() {
   };
   useEffect(() => {
     const createPage = (page, index) => {
-      let html = `<div class="bw_wrapper bw_page_8 ">
+      let html = `<div class="bw_wrapper bw_page_8 bw_page_9">
                       <div class="bw_page_header bw_color_black">
                       <img src=${logo} alt="1" />
                       </div>
@@ -78,7 +80,6 @@ function ViewDetail() {
       //Lấy danh sách page cần split
       // debugger
       let pagesPaging = document.getElementsByClassName("bw_split");
-
       //Duyệt
       for (let index = 0; index < pagesPaging.length; index++) {
         let page = pagesPaging[index];
@@ -119,7 +120,7 @@ function ViewDetail() {
         zIndex="99999"
         closable={false}
       >
-        <div class="bw_wrapper bw_page_8 bw_split">
+        <div class="bw_wrapper bw_page_8 bw_page_9 bw_split">
           <div class="bw_page_header bw_color_black">
             <img src={logo} alt="1"></img>
           </div>
@@ -130,8 +131,8 @@ function ViewDetail() {
             <div class="bw_index_items">
               <p>{dataInterpret.mainnumber}</p>
             </div>
-            <div class="bw_tetx" dangerouslySetInnerHTML={{ __html: dataInterpret.desc_attributes_gruop }}>
-              {/* <div  /> */}
+            <div class="bw_tetx">
+              <div dangerouslySetInnerHTML={{ __html: dataInterpret.desc_attributes_gruop }} />
             </div>
 
             <div class="bw_mt_40 bw_luangiai">
@@ -163,9 +164,8 @@ function ViewDetail() {
               </div>
             </div>
             <div class="bw_absolute bw_page_footer bw_color_black">
-                          <p> © 2021 - Bản quyền thuộc về ungdungthansohoc.com</p>
-
-                      </div>
+              <p> © 2021 - Bản quyền thuộc về ungdungthansohoc.com</p>
+            </div>
           </div>
         </div>
         <div id="paginatedText"></div>

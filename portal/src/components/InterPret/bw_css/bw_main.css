@@ -90,6 +90,16 @@ p {
   background: url(../bw_image/26.jpeg) no-repeat;
   background-size: cover;
 }
+.bw_page_9 .bw_luangiai ul{
+  display: block;
+}
+.bw_page_9 .bw_luangiai ul li{
+  margin-left: 20px;
+  background: url(../bw_image/i__li.png) no-repeat center left;
+  background-size: 15px 15px;
+  color: #123764;
+  padding-left: 30px;
+}
 .bw_sdfs h1 {
   font-size: 40px;
   color: #123764;
