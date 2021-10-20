@@ -29,7 +29,7 @@ function MainNumber() {
   ////search
   const handleSubmitFillter = async (value) => {
     let searchQuery = Object.assign(query, value);
-    // console.log(searchQuery);
+    console.log(searchQuery);
     _callAPI(searchQuery);
   };
   ////call API
