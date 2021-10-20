@@ -11,7 +11,8 @@ import ContactCustomerFilter from "./ContactCustomerFilter";
 import { configTableOptions, configIDRowTable } from "../../utils/index";
 
 import ContactCustomerModel from "../../models/ContactCustomerModel";
-
+import { splitString } from "../../utils/index";
+const regex = /(<([^>]+)>)/gi;
 class ContactCustomer extends PureComponent {
   constructor(props) {
     super(props);
@@ -27,6 +28,7 @@ class ContactCustomer extends PureComponent {
       itemsPerPage: 25,
       page: 1,
       is_active: 1,
+      contact_status: 0,
     },
     isLoading: false,
   };
@@ -60,11 +62,7 @@ class ContactCustomer extends PureComponent {
 
   async _getBundleData() {
     let bundle = {};
-    let all = [
-      this._contactCustomerModel
-        .getList()
-        .then((data) => (bundle["data"] = data)),
-    ];
+    let all = [this._contactCustomerModel.getList(this.state.query).then((data) => (bundle["data"] = data))];
     await Promise.all(all).catch((err) => {
       window._$g.dialogs.alert(
         window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
@@ -109,10 +107,8 @@ class ContactCustomer extends PureComponent {
     if (type.match(/detail|edit/i)) {
       window._$g.rdr(`${route}${id}`);
     } else {
-      window._$g.dialogs.prompt(
-        "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
-        "Xóa",
-        (confirm) => this.handleClose(confirm, id, rowIndex)
+      window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "Xóa", (confirm) =>
+        this.handleClose(confirm, id, rowIndex)
       );
     }
   }
@@ -130,21 +126,17 @@ class ContactCustomer extends PureComponent {
           });
         })
         .catch(() => {
-          window._$g.dialogs.alert(
-            window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
-          );
+          window._$g.dialogs.alert(window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!"));
         });
     }
   }
 
-  handleSubmitFilter = (search, is_active) => {
+  handleSubmitFilter = (search, is_active, contact_status) => {
     let query = { ...this.state.query };
     query.page = 1;
-    query = Object.assign(query, { search, is_active });
+    query = Object.assign(query, { search, is_active, contact_status });
     this.getData(query).catch(() => {
-      window._$g.dialogs.alert(
-        window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!")
-      );
+      window._$g.dialogs.alert(window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!"));
     });
   };
 
@@ -163,11 +155,7 @@ class ContactCustomer extends PureComponent {
 
   render() {
     const columns = [
-      configIDRowTable(
-        "contact_id",
-        "/contact/detail/",
-        this.state.query
-      ),
+      configIDRowTable("contact_id", "/contact/detail/", this.state.query),
       {
         name: "full_name",
         label: "Tên người liên hệ",
@@ -248,7 +236,34 @@ class ContactCustomer extends PureComponent {
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-left">{value}</div>;
+            let NewValue = value ? value.replace(regex, "") : "";
+            NewValue = splitString(NewValue, 60);
+            return <div className="text-left">{NewValue}</div>;
+          },
+        },
+      },
+      {
+        name: "contact_status",
+        label: "Trạng thái",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return (
+              <div className="text-center">
+                {value == 1 ? "Liên hệ mới" : value == 2 ? "Đã xử lý" : ""}
+              </div>
+            );
           },
         },
       },
@@ -260,14 +275,19 @@ class ContactCustomer extends PureComponent {
           sort: false,
           customHeadRender: (columnMeta, handleToggleColumn) => {
             return (
-              <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+              <th
+                key={`head-th-${columnMeta.label}`}
+                className="MuiTableCell-root MuiTableCell-head"
+              >
                 <div className="text-center">{columnMeta.label}</div>
               </th>
             );
           },
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
-              <div className="text-center">{value == 1 ? "Có" : value == 0 ? "Không" : "Không"}</div>
+              <div className="text-center">
+                {value == 1 ? "Có" : value == 0 ? "Không" : "Không"}
+              </div>
             );
           },
         },
@@ -291,14 +311,18 @@ class ContactCustomer extends PureComponent {
           customBodyRender: (value, tableMeta, updateValue) => {
             return (
               <div className="text-center">
-                {/* <Button color="warning" title="Chi tiết" className="mr-1" onClick={evt => this.handleActionItemClick('detail', this.state.data[tableMeta['rowIndex']].contact_id, tableMeta['rowIndex'])}>
-                  <i className="fa fa-info" />
-                </Button> */}
-                {/* <CheckAccess permission="CRM_CONTACT_CUSTOMER_EDIT">
-                  <Button color="primary" title="Chỉnh sửa" className="mr-1" onClick={evt => this.handleActionItemClick('edit', this.state.data[tableMeta['rowIndex']].contact_id, tableMeta['rowIndex'])}>
-                    <i className="fa fa-edit" />
+                <CheckAccess permission="CMS_CONTACT_VIEW">
+                  <Button
+                    color="warning"
+                    title="Chi tiết"
+                    className="mr-1"
+                    onClick={(evt) => {
+                      window._$g.rdr(`/contact/detail/${data[tableMeta["rowIndex"]].contact_id}`);
+                    }}
+                  >
+                    <i className="fa fa-info" />
                   </Button>
-                </CheckAccess> */}
+                </CheckAccess>
                 <CheckAccess permission="CMS_CONTACT_DEL">
                   <Button
                     color="danger"
@@ -307,8 +331,7 @@ class ContactCustomer extends PureComponent {
                     onClick={(evt) =>
                       this.handleActionItemClick(
                         "delete",
-                        this.state.data[tableMeta["rowIndex"]]
-                          .contact_id,
+                        this.state.data[tableMeta["rowIndex"]].contact_id,
                         tableMeta["rowIndex"]
                       )
                     }
@@ -322,7 +345,6 @@ class ContactCustomer extends PureComponent {
         },
       },
     ];
-
 
     const { count, page, query, data } = this.state;
     // data.forEach((el) => {
@@ -345,11 +367,7 @@ class ContactCustomer extends PureComponent {
                 }))
               }
             >
-              <i
-                className={`fa ${
-                  this.state.toggleSearch ? "fa-minus" : "fa-plus"
-                }`}
-              />
+              <i className={`fa ${this.state.toggleSearch ? "fa-minus" : "fa-plus"}`} />
             </div>
           </CardHeader>
           {this.state.toggleSearch && (
@@ -375,11 +393,7 @@ class ContactCustomer extends PureComponent {
                 </div>
               ) : (
                 <div>
-                  <MUIDataTable
-                    data={data}
-                    columns={columns}
-                    options={options}
-                  />
+                  <MUIDataTable data={data} columns={columns} options={options} />
                   <CustomPagination
                     count={count}
                     rowsPerPage={query.itemsPerPage}
