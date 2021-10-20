@@ -20,6 +20,7 @@ const getListProduct = async (queryParams = {}) => {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
     const keyword = apiHelper.getSearch(queryParams);
+    const is_web_view = apiHelper.getValueFromObject(queryParams, 'is_web_view', 2);
 
     const pool = await mssql.pool;
     const resProduct = await pool
@@ -29,6 +30,7 @@ const getListProduct = async (queryParams = {}) => {
       .input('startdate', apiHelper.getValueFromObject(queryParams, 'start_date', null))
       .input('enddate', apiHelper.getValueFromObject(queryParams, 'end_date', null))
       .input('isactive', apiHelper.getValueFromObject(queryParams, 'is_active', 2))
+      .input('ISSHOWWEB', is_web_view)
       .input('pagesize', itemsPerPage)
       .input('pageindex', currentPage)
       .execute(PROCEDURE_NAME.MD_PRODUCT_GETLIST_ADMINWEB);

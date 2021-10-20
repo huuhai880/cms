@@ -257,6 +257,8 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
                               name="description"
                               {...formik.getFieldProps("description")}
                             />
+                            <MessageError formik={formik} name="description" />
+
                           </Col>
                         </FormGroup>
                       </Col>

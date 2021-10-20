@@ -240,80 +240,15 @@ p{
     font-family: Font_bold;
     font-size: 28px;
 }
-.bw_page_20 h1{
-    text-transform: uppercase;
-    font-size: 34px;
-    text-align: center;
-    color: #212121;
-}
-.bw_page_20 .bw_content_luangiai p{
-    text-align: justify;
-    color: #212121;
-    text-align: justify;
-}
-.bw_page_16{
-    text-align: center;
-    color: #fff;
-    background: url(../bw_image_spectial/24.jpg);
-    background-size: cover;
-}
-.bw_page_16 h1{
-    font-size: 38px;
-    text-transform: uppercase;
-    color: #fff;
-    margin-top: 35mm;
-}
-.bw_page_16 .bw_content{
-    font-size: 60px;
-    line-height: 76px;
-    color: #fff;
-    text-transform: uppercase;
-    text-shadow: 0 0 30px rgb(211 91 188 / 80%);
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 30px;
-    background: rgba(211,91,188,0.4);
-    max-width: 150mm;
-    height: 140mm;
-    position: relative;
-    font-family: Font_bold;
-}
-.bw_page_16 .bw_content::after{
-    position: absolute;
-    /* background: url(../bw_image_spectial/i__lotus_2.svg) no-repeat bottom -4px center; */
-    content: "";
-    top: 4mm;
-    left: 4mm;
-    right: 4mm;
-    bottom: 4mm;
-    border: 2px solid #fff;
-}
-.bw_page_16 p.bw_text_s{
-    font-size: 20px;
-    color: #fff;
-    line-height: 30px;
-    max-width: 80%;
-    margin: 20px auto;
-    margin-top: 40px;
-}
+
+
 .bw_page_33{
     background: url(../bw_image_spectial/17.jpg) no-repeat;
     background-size: cover;
 }
 
 
-.bw_page_23{
-    background: url(../bw_image_spectial/18.jpg);
-    background-size: cover;
-}
-.bw_page_23 .bw_flex{
-    height: calc(100vh - 10mm) ;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-}.ant-modal-body {
+.ant-modal-body {
     padding: 1px;
 }
 .ant-modal,
