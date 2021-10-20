@@ -42,33 +42,7 @@ function Filter({ handleSubmitFillter }) {
       }
     };
     _callAPI();
-    ///config datepicker
-    document.getElementById('your_unique_start_date_id').setAttribute('readonly', 'readonly');
-    document.getElementById('your_unique_end_date_id').setAttribute('readonly', 'readonly');
-    let pickerLeft = document.querySelector("#your_unique_start_date_id");
-    pickerLeft.addEventListener("keyup", (e) => {
-      if (e.target.value) {
-        var checkStartDate =
-          /^(?:0?[1-9]?|[12]\d|3[01])(?:\/(?:0?[1-9]|1[012])?)\/\d{0,4}$|^\d{4}?$/.test(
-            e.target.value
-          );
-      }
-
-      setCheckStartDate(checkStartDate);
-      setDateFromDate(e.target.value);
-    });
-
-    let pickerRight = document.querySelector("#your_unique_end_date_id");
-    pickerRight.addEventListener("keyup", (e) => {
-      if (e.target.value) {
-        var checkEndDate =
-          /^(?:0?[1-9]?|[12]\d|3[01])(?:\/(?:0?[1-9]|1[012])?)\/\d{0,4}$|^\d{4}?$/.test(
-            e.target.value
-          );
-      }
-      setCheckEndDate(checkEndDate);
-      setDateToDate(e.target.value);
-    });
+   
   }, []);
   const _handleSubmitFillter = () => {
     let { keyword,partner_id, selectdActive, startDate, endDate } = searchValue;
@@ -124,7 +98,7 @@ function Filter({ handleSubmitFillter }) {
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
         <Row>
-          <Col xs={3} style={{ padding: 0 }}>
+          <Col xs={6} style={{ padding: 0 }}>
             <Col
               xs={12}
               style={{
@@ -183,7 +157,7 @@ function Filter({ handleSubmitFillter }) {
               </Col>
             </Col>
           </Col>
-          <Col xs={3} style={{ padding: 0 }}>
+          {/* <Col xs={3} style={{ padding: 0 }}>
             <Col
               xs={12}
               style={{
@@ -211,7 +185,7 @@ function Filter({ handleSubmitFillter }) {
                 />
               </Col>
             </Col>
-          </Col>
+          </Col> */}
           <Col xs={3} style={{ padding: 0 }}>
             <Col
               xs={12}
