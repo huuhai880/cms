@@ -91,7 +91,11 @@ function FormulaAdd({ noEdit }) {
           return window._$g.rdr("/formula");
         }
       });
-    } catch (error) {}
+    } catch (error) {}finally {
+      formik.setSubmitting(false);
+      window.scrollTo(0, 0);
+
+    }
   };
   //////get data detail
   useEffect(() => {

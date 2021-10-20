@@ -73,7 +73,11 @@ function PositionAdd() {
           });
         }
       });
-    } catch (error) {}
+    } catch (error) {}finally {
+      formik.setSubmitting(false);
+      window.scrollTo(0, 0);
+
+    }
   };
   //// data detail
   const _initDataDetail = async () => {

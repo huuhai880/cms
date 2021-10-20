@@ -108,9 +108,9 @@ function AccountAdd({ noEdit }) {
   });
   //// update account
   const handleUpdateAcount = async (values) => {
-    let newbirth = formik.values.birth_day;
-    let birth_day = moment(newbirth).format("DD/MM/YYYY");
-    values = { ...values, birth_day };
+    values.birth_day=moment(values.birth_day)
+    values.id_card_date=moment(values.id_card_date)
+
     try {
       await _accountModel.check({ email: values.email }).then((data) => {
         if (data.MEMBERID && formik.values.email != dataAccount.email) {
@@ -144,7 +144,11 @@ function AccountAdd({ noEdit }) {
           });
         }
       });
-    } catch (error) {}
+    } catch (error) {}finally {
+      formik.setSubmitting(false);
+      window.scrollTo(0, 0);
+
+    }
   };
   ///// get data partnert
   useEffect(() => {

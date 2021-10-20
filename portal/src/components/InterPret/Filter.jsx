@@ -27,7 +27,21 @@ function Filter({ handleSubmitFillter }) {
     startDate: null,
     endDate: null,
   });
+  useEffect(() => {
+    if (localStorage.getItem("keywordInterpret")) {
+      setSearchValue({
+        ...searchValue,
+        keyword: localStorage.getItem("keywordInterpret"),
+      });
+      let value = {
+        keyword: localStorage.getItem("keywordInterpret")
+          ? localStorage.getItem("keywordInterpret")
+          : null,
+      };
 
+      handleSubmitFillter(value);
+    }
+  }, []);
   const _handleSubmitFillter = () => {
     let { keyword, selectdActive, selectdSpectial, startDate, endDate } = searchValue;
     var mydate = moment(dateToDate, "DD/MM/YYYY");
@@ -44,6 +58,9 @@ function Filter({ handleSubmitFillter }) {
         window.location.reload();
       });
     }
+    if (keyword) {
+      localStorage.setItem("keywordInterpret", keyword);
+    }
     let value = {
       keyword: keyword ? keyword : null,
       selectdActive: selectdActive ? selectdActive.value : null,
@@ -56,6 +73,7 @@ function Filter({ handleSubmitFillter }) {
   };
 
   const handleClear = () => {
+    localStorage.removeItem("keywordInterpret");
     setSearchValue({
       keyword: "",
       selectdActive: { value: "1", label: "Có" },
@@ -66,7 +84,7 @@ function Filter({ handleSubmitFillter }) {
     let value = {
       keyword: null,
       selectdActive: 1,
-      selectdSpectial:2,
+      selectdSpectial: 2,
       startDate: null,
       endDate: null,
     };
