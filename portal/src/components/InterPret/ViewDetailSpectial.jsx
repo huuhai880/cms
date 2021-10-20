@@ -29,10 +29,12 @@ function ViewDetailSpectial() {
     try {
       _interpretModel.detailWeb(id).then((data) => {
         data.viewContent = data.decs;
-        data.interPretDetail.map((item, index) => {
-          data.viewContent = data.viewContent + item.interpret_detail_full_content;
-        });
-        console.log(data);
+        if(data.interPretDetail && data.interPretDetail.length){
+          data.interPretDetail.map((item, index) => {
+            data.viewContent = data.viewContent + item.interpret_detail_full_content;
+          });
+        }
+        
         setDataInterpret(data);
       });
     } catch (error) {

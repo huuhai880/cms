@@ -113,6 +113,8 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
       window.scrollTo(0, 0);
     } finally {
       formik.setSubmitting(false);
+      window.scrollTo(0, 0);
+
     }
   };
 
