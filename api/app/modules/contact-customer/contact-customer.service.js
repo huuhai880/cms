@@ -12,7 +12,7 @@ const fileHelper = require('../../common/helpers/file.helper');
 const config = require('../../../config/config');
 
 const getListContactCustomer = async (queryParams = {}) => {
-  console.log(queryParams)
+  // console.log(queryParams)
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
@@ -34,6 +34,10 @@ const getListContactCustomer = async (queryParams = {}) => {
         'ISACTIVE',
         apiHelper.getFilterBoolean(queryParams, 'is_active')
       )
+      .input(
+        'CONTACTSTATUS',
+        apiHelper.getFilterBoolean(queryParams, 'contact_status')
+      )
       .execute('CRM_CONTACTCUSTOMER_GetList');
     const result = data.recordset;
     return new ServiceResponse(true, '', {
@@ -51,38 +55,25 @@ const getListContactCustomer = async (queryParams = {}) => {
   }
 };
 
-// const createContactCustomer = async (body = {}) => {
-//   body.contact_customer_id = null;
-//   return await createContactCustomerOrUpdate(body);
-// };
-
-// const updateContactCustomer = async (body = {}, contact_customer_id) => {
-//   body.contact_customer_id = contact_customer_id;
-//   return await createContactCustomerOrUpdate(body);
-// };
-
-// const createContactCustomerOrUpdate = async (body = {}) => {
-  
-//   try {
-//     const pool = await mssql.pool;
-//     const resultContactCustomer = await pool.request()
-//       .input('CONTACTCUSTOMERID', apiHelper.getValueFromObject(body, 'contact_customer_id'))
-//       .input('FULLNAME', apiHelper.getValueFromObject(body, 'full_name'))
-//       .input('NICKNAME', apiHelper.getValueFromObject(body, 'nick_name'))
-//       .input('PHONENUMBER', apiHelper.getValueFromObject(body, 'phone_number'))
-//       .input('KEYCONTACT', apiHelper.getValueFromObject(body, 'key_contact'))
-//       .input('CONTENT', apiHelper.getValueFromObject(body, 'content'))
-//       .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-//       .execute(PROCEDURE_NAME.CRM_CONTACT_CUSTOMER_CREATEORUPDATE);
-//     const contact_customer_id = resultContactCustomer.recordset[0].RESULT;
-//     return new ServiceResponse(true, '', contact_customer_id);
-//   } catch (error) {
-//     logger.error(error, {
-//       'function': 'ContactCustomerService.createContactCustomerOrUpdate',
-//     });
-//     return new ServiceResponse(false, e.message);
-//   }
-// };
+const updateContactCustomer = async (body = {}) => {
+  // console.log(body)
+  try {
+    const pool = await mssql.pool;
+    const resultContactCustomer = await pool.request()
+      .input('CONTACTID', apiHelper.getValueFromObject(body, 'contact_id'))
+      .input('CONTACTSTATUS', apiHelper.getValueFromObject(body, 'contact_status'))
+      .input('NOTE', apiHelper.getValueFromObject(body, 'note'))
+      .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
+      .execute('CRM_CONTACTCUSTOMER_CreateOrUpdate');
+    const contact_customer_id = resultContactCustomer.recordset[0].RESULT;
+    return new ServiceResponse(true, '', contact_customer_id);
+  } catch (error) {
+    logger.error(error, {
+      'function': 'ContactCustomerService.UpdateCustomer',
+    });
+    return new ServiceResponse(false, e.message);
+  }
+};
 
 
 const detailContactCustomer = async (contact_customer_id) => {
@@ -123,7 +114,7 @@ const deleteContactCustomer = async (contact_customer_id, auth_name) => {
 module.exports = {
   getListContactCustomer,
   // createContactCustomer,
-  // updateContactCustomer,
+  updateContactCustomer,
   detailContactCustomer,
   deleteContactCustomer,
 };

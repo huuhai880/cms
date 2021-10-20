@@ -41,18 +41,18 @@ const getListContactCustomer = async (req, res, next) => {
 // };
 
 // Update Contact Customer
-// const updateContactCustomer = async (req, res, next) => {
-//   try {
-//     const ContactCustomer_id = req.params.id;
-//     const serviceRes = await ContactCustomerService.updateContactCustomer(req.body,ContactCustomer_id);
-//     if(serviceRes.isFailed()) {
-//       return next(serviceRes);
-//     }
-//     return res.json(new SingleResponse(null, RESPONSE_MSG.ContactCustomer.UPDATE_SUCCESS));
-//   } catch (error) {
-//     return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
-//   }
-// };
+const updateContactCustomer = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const serviceRes = await ContactCustomerService.updateContactCustomer(req.body,id);
+    if(serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(null, RESPONSE_MSG.PLAN.UPDATE_SUCCESS));
+  } catch (error) {
+    return next(new ErrorResponse(httpStatus.NOT_IMPLEMENTED, error, RESPONSE_MSG.REQUEST_FAILED));
+  }
+};
 
 // Delete Contact Customer
 const deleteContactCustomer = async (req, res, next) => {
@@ -87,7 +87,7 @@ const detailContactCustomer = async (req, res, next) => {
 module.exports = {
   getListContactCustomer,
   // createContactCustomer,
-  // updateContactCustomer,
+  updateContactCustomer,
   deleteContactCustomer,
   detailContactCustomer
 };

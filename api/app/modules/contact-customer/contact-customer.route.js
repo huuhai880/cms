@@ -13,9 +13,9 @@ routes.route('')
 // routes.route('')
 //   .post(contactCustomerController.createContactCustomer);
 
-// // Update a Contact Customer
-// routes.route('/:id(\\d+)')
-//   .put(contactCustomerController.updateContactCustomer);
+// Update a Contact Customer
+routes.route('/:id(\\d+)')
+  .put(contactCustomerController.updateContactCustomer);
 
 // Delete a Contact Customer
 routes.route('/:id(\\d+)')
