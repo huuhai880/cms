@@ -267,31 +267,31 @@ class ContactCustomer extends PureComponent {
           },
         },
       },
-      {
-        name: "is_active",
-        label: "Kích hoạt",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return (
-              <div className="text-center">
-                {value == 1 ? "Có" : value == 0 ? "Không" : "Không"}
-              </div>
-            );
-          },
-        },
-      },
+      // {
+      //   name: "is_active",
+      //   label: "Kích hoạt",
+      //   options: {
+      //     filter: false,
+      //     sort: false,
+      //     customHeadRender: (columnMeta, handleToggleColumn) => {
+      //       return (
+      //         <th
+      //           key={`head-th-${columnMeta.label}`}
+      //           className="MuiTableCell-root MuiTableCell-head"
+      //         >
+      //           <div className="text-center">{columnMeta.label}</div>
+      //         </th>
+      //       );
+      //     },
+      //     customBodyRender: (value, tableMeta, updateValue) => {
+      //       return (
+      //         <div className="text-center">
+      //           {value == 1 ? "Có" : value == 0 ? "Không" : "Không"}
+      //         </div>
+      //       );
+      //     },
+      //   },
+      // },
       {
         name: "Thao tác",
         options: {
