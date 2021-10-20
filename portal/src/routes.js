@@ -2863,7 +2863,7 @@ const routes = [
     path: "/attributes-group/add",
     exact: true,
     name: "Thêm mới",
-    function: "FOR_ATTRIBUTESGROUPE_ADD",
+    function: "FOR_ATTRIBUTESGROUP_ADD",
     component: AttributesGroupAdd,
   },
   {
