@@ -36,6 +36,7 @@ function Product({ handlePick = null, isOpenModal = false, products = [] }) {
     itemsPerPage: handlePick ? 10 : 25,
     page: 1,
     is_active: 1,
+    is_web_view:1,
     search: "",
     product_category_id: null,
     start_date: null,

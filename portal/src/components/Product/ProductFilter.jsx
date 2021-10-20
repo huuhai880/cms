@@ -28,7 +28,11 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
     { label: "Có", value: 1 },
     { label: "Không", value: 0 },
   ]);
-
+  const [dataIsShowWeb] = useState([
+    { label: "Tất cả", value: 2 },
+    { label: "Có", value: 1 },
+    { label: "Không", value: 0 },
+  ]);
   useEffect(() => {
     getProductCategoryOption();
   }, []);
@@ -78,7 +82,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
     let {
       search,
       isActiveSelected,
-      productCategorySelected,
+      productCategorySelected,isShowWebSelected,
       startDate,
       endDate,
     } = filter;
@@ -86,6 +90,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
     handleSubmitFilter({
       search: search ? search.trim() : null,
       is_active: isActiveSelected ? isActiveSelected.value : 1,
+      is_web_view: isShowWebSelected ? isShowWebSelected.value : 1,
       product_category_id: productCategorySelected,
       start_date: startDate ? startDate.format("DD/MM/YYYY") : null,
       end_date: endDate ? endDate.format("DD/MM/YYYY") : null,
@@ -97,6 +102,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
     setFilter({
       search: "",
       isActiveSelected: { label: "Có", value: 1 },
+      isShowWebSelected: { label: "Có", value: 1 },
       productCategorySelected: null,
       startDate: null,
       endDate: null,
@@ -106,6 +112,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
       search: "",
       is_active: 1,
       product_category_id: null,
+      is_web_view: 1,
       start_date: null,
       end_date: null,
       page: 1,
@@ -124,7 +131,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
         <Row>
-          <Col xs={12} sm={3}>
+          <Col xs={12} sm={4}>
             <FormGroup className="mb-2 mb-sm-0">
               <Label for="inputValue" className="mr-sm-2">
                 Từ khóa
@@ -144,7 +151,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
               />
             </FormGroup>
           </Col>
-          <Col xs={12} sm={3}>
+          <Col xs={12} sm={2}>
             <FormGroup className="mb-2 mb-sm-0">
               <Label for="" className="mr-sm-2">
                 Danh mục sản phẩm
@@ -187,7 +194,7 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
               </Col>
             </FormGroup>
           </Col>
-          <Col xs={12} sm={3}>
+          <Col xs={12} sm={2}>
             <FormGroup className="mb-2 mb-sm-0">
               <Label for="" className="mr-sm-2">
                 Ngày tạo từ
@@ -204,7 +211,24 @@ function ProductFilter({ query = {}, handleSubmitFilter, handlePick = null }) {
               </Col>
             </FormGroup>
           </Col>
-          <Col xs={12} sm={3}>
+          <Col xs={12} sm={2}>
+            <FormGroup className="mb-2 mb-sm-0">
+              <Label for="" className="mr-sm-2">
+                Hiển thị web
+              </Label>
+              <Select
+                className="MuiPaper-filter__custom--select"
+                id="isShowWebSelected"
+                name="isShowWebSelected"
+                onChange={(selected) => handleChangeSelect(selected, "isShowWebSelected")}
+                isSearchable={true}
+                placeholder={"-- Chọn --"}
+                value={filter.isShowWebSelected}
+                options={dataIsShowWeb}
+              />
+            </FormGroup>
+          </Col>
+          <Col xs={12} sm={2}>
             <FormGroup className="mb-2 mb-sm-0">
               <Label for="" className="mr-sm-2">
                 Kích hoạt

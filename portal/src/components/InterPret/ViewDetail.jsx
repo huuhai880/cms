@@ -10,7 +10,7 @@ import { Modal } from "antd";
 import { layoutFullWidthHeight } from "../../utils/html";
 
 layoutFullWidthHeight();
-function ViewDetail() {
+function ViewDetail() { 
   const _interpretModel = new InterpretModel();
   const [dataInterpret, setDataInterpret] = useState("");
   const [visible, setVisible] = useState(true);
@@ -67,6 +67,7 @@ function ViewDetail() {
       let child = page.querySelector(".bw_content_luangiai");
       //Noi dung
       var pageText = child.innerHTML;
+      console.log(pageText)
       child.innerHTML += html; // saves the text of the last page
       if (page.offsetHeight > 1123) {
         child.innerHTML = pageText; //resets the page-text
@@ -80,6 +81,7 @@ function ViewDetail() {
       //Lấy danh sách page cần split
       // debugger
       let pagesPaging = document.getElementsByClassName("bw_split");
+
       //Duyệt
       for (let index = 0; index < pagesPaging.length; index++) {
         let page = pagesPaging[index];
@@ -90,6 +92,7 @@ function ViewDetail() {
 
         //Lấy all Child
         var childsLuanGiai = cloneDivLuanGiai.children;
+
 
         //Reset
         divLuanGiai.innerHTML = "";
@@ -140,27 +143,6 @@ function ViewDetail() {
                 class="bw_content_luangiai"
                 dangerouslySetInnerHTML={{ __html: dataInterpret.viewContent }}
               >
-                {/* <div  /> */}
-                {/* <div dangerouslySetInnerHTML={{ __html: dataInterpret.introduction }} />
-
-                <div dangerouslySetInnerHTML={{ __html: dataInterpret.brief_decs }} />
-
-                <div dangerouslySetInnerHTML={{ __html: dataInterpret.decs }} />
-
-                {dataInterpret.interPretDetail &&
-                  dataInterpret.interPretDetail.map((item, index) => {
-                    return (
-                      <>
-                        <div
-                          dangerouslySetInnerHTML={{ __html: item.interpret_detail_short_content }}
-                        />
-
-                        <div
-                          dangerouslySetInnerHTML={{ __html: item.interpret_detail_full_content }}
-                        />
-                      </>
-                    );
-                  })} */}
               </div>
             </div>
             <div class="bw_absolute bw_page_footer bw_color_black">
