@@ -162,7 +162,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                   onClick={(evt) => {
                     // window._$g.rdr(`/interpret/detail-web/${data[tableMeta["rowIndex"]].interpret_id}`);
                     window.open(
-                      `/interpret/detail-web/${data[tableMeta["rowIndex"]].interpret_id}`,
+                      `/portal/interpret/detail-web/${data[tableMeta["rowIndex"]].interpret_id}`,
                       "_blank"
                     );
                     // window._$g.rdr(
@@ -309,10 +309,10 @@ export const column = (handleDelete) => {
                 className="mr-1"
                 onClick={(evt) => {
                   if (record.is_interpretspectial != 1) {
-                    window.open(`/interpret/detail-web/${record["interpret_id"]}`, "_blank");
+                    window.open(`/portal/interpret/detail-web/${record["interpret_id"]}`, "_blank");
                   } else {
                     window.open(
-                      `/interpret/detail-web-spectial/${record["interpret_id"]}`,
+                      `/portal/interpret/detail-web-spectial/${record["interpret_id"]}`,
                       "_blank"
                     );
                   }
