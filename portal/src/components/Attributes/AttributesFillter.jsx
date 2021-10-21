@@ -42,6 +42,7 @@ class AttributesFilter extends PureComponent {
 
   componentDidMount() {
     (async () => {
+      const { handleSubmit } = this.props;
       let OptsGroup = await this._attributesModel.getOptionGroup({
         is_active: 1,
       });
@@ -50,6 +51,23 @@ class AttributesFilter extends PureComponent {
       });
       OptsPartner = this.state.OptsPartner.concat(OptsPartner);
       this.setState({ OptsGroup, OptsPartner });
+      if (localStorage.getItem("keywordAttributes")) {
+        this.setState({
+          inputValue: localStorage.getItem("keywordAttributes"),
+        });
+        let value = {
+          inputValue: localStorage.getItem("keywordAttributes")
+            ? localStorage.getItem("keywordAttributes")
+            : null,
+        };
+        const { inputValue } = this.state;
+        handleSubmit(
+          inputValue ? localStorage.getItem("keywordAttributes") : ""
+          // attributes_group_id ? attributes_group_id.value : "",
+          // is_active ? is_active.value : undefined,
+          // partner_id ? partner_id.value : null
+        );
+      }
     })();
     //.end
   }
@@ -64,6 +82,9 @@ class AttributesFilter extends PureComponent {
   onSubmit = () => {
     const { inputValue, is_active, attributes_group_id, partner_id } = this.state;
     const { handleSubmit } = this.props;
+    if (inputValue) {
+      localStorage.setItem("keywordAttributes", inputValue);
+    }
     handleSubmit(
       inputValue ? inputValue.trim() : "",
       attributes_group_id ? attributes_group_id.value : "",
@@ -74,6 +95,7 @@ class AttributesFilter extends PureComponent {
 
   onClear = () => {
     if (this.state.inputValue || this.state.is_active || this.state.partner_id) {
+      localStorage.removeItem("keywordAttributes");
       this.setState(
         {
           inputValue: "",
@@ -116,7 +138,7 @@ class AttributesFilter extends PureComponent {
             <Col xs={12} sm={3}>
               <FormGroup className="mb-2 mb-sm-0 ">
                 <Label for="" className="mr-sm-2">
-                Chỉ số
+                  Chỉ số
                 </Label>
                 <Select
                   className="MuiPaper-filter__custom--select"

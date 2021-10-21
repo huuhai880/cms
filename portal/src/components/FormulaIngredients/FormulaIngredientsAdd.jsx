@@ -63,6 +63,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                 _initDataDetail();
               } else {
                 formik.resetForm();
+                _callAPI()
               }
               window._$g.toastr.show("Lưu thành công!", "success");
             } else if (btnType == "save&quit") {
@@ -73,10 +74,10 @@ function FormulaIngredientsAdd({ noEdit }) {
           });
         }
       });
-    } catch (error) {}finally {
+    } catch (error) {
+    } finally {
       formik.setSubmitting(false);
       window.scrollTo(0, 0);
-
     }
   };
   //////get data detail
@@ -95,12 +96,12 @@ function FormulaIngredientsAdd({ noEdit }) {
           data.is_total_value_digit = data.is_total_value_2digit;
           data.is_total_letter_first_digit = data.is_total_letter_first_2digit;
           data.is_total_letter_digit = data.is_total_letter_2digit;
-        } else if(data.is_total_shortened == 1) {
+        } else if (data.is_total_shortened == 1) {
           data.is_numletter_digit = data.is_numletter_1digit;
           data.is_total_value_digit = data.is_total_value_1digit;
           data.is_total_letter_first_digit = data.is_total_letter_first_1digit;
           data.is_total_letter_digit = data.is_total_letter_1digit;
-        }else{
+        } else {
           data.is_numletter_digit = data.is_numletter_noshort;
           data.is_total_value_digit = data.is_total_value_noshort;
           data.is_total_letter_first_digit = data.is_total_letter_first_noshort;
@@ -115,32 +116,27 @@ function FormulaIngredientsAdd({ noEdit }) {
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
-  console.log(formik.values);
+  // call api option
+  const _callAPI = () => {
+    try {
+      _ingredientModel.getListCalculation().then((data) => {
+        setDataCalculation(data.items);
+      });
+      _ingredientModel.getListParamDob().then((data) => {
+        setDataParamDob(data.items);
+      });
+      _ingredientModel.getListParamName().then((data) => {
+        setDataParamName(data.items);
+      });
+      _ingredientModel.getListIngredientChild().then((data) => {
+        setDataIngredientChild(data.items);
+      });
+    } catch (error) {
+      console.log(error);
+      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+    }
+  };
   useEffect(() => {
-    const _callAPI = () => {
-      try {
-        _ingredientModel.getListCalculation().then((data) => {
-          setDataCalculation(data.items);
-          //   console.log(setDataPartner);
-        });
-        _ingredientModel.getListParamDob().then((data) => {
-          setDataParamDob(data.items);
-
-          //   console.log(setDataPartner);
-        });
-        _ingredientModel.getListParamName().then((data) => {
-          setDataParamName(data.items);
-          //   console.log(setDataPartner);
-        });
-        _ingredientModel.getListIngredientChild().then((data) => {
-          setDataIngredientChild(data.items);
-          //   console.log(setDataPartner);
-        });
-      } catch (error) {
-        console.log(error);
-        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
-      }
-    };
     _callAPI();
   }, []);
   ////config select
@@ -162,7 +158,6 @@ function FormulaIngredientsAdd({ noEdit }) {
   const getOptionCalculation = () => {
     if (dataCalculation && dataCalculation.length) {
       return dataCalculation.map((item) => {
-        // console.log(dataPartner);
         return formik.values.calculation_id == item.calculation_id
           ? {
               value: item.calculation_id,
@@ -181,12 +176,10 @@ function FormulaIngredientsAdd({ noEdit }) {
   const getOptionName = () => {
     if (dataParamName && dataParamName.length) {
       return dataParamName.map((item) => {
-        // console.log(dataPartner);
         return formik.values.param_name_id == item.param_name_id
           ? {
               value: item.param_name_id,
               label: item.name_type,
-              // isDisabled: true,
             }
           : {
               value: item.param_name_id,
@@ -200,7 +193,6 @@ function FormulaIngredientsAdd({ noEdit }) {
   const getOptionIngredientChild2 = () => {
     if (dataIngredientChild && dataIngredientChild.length) {
       return dataIngredientChild.map((item) => {
-        // console.log(dataIngredientChild);
         return formik.values.ingredient__child_2_id == item.ingredient_id ||
           formik.values.ingredient__child_1_id == item.ingredient_id
           ? {

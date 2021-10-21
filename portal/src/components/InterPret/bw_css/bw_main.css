@@ -82,7 +82,7 @@ html {
   max-height: 35px;
 }
 p {
-  font-size: 15px;
+  font-size: 17px;
   margin: 7px 0;
   line-height: 24px;
 }
@@ -92,6 +92,9 @@ p {
 }
 .bw_page_9 .bw_luangiai ul{
   display: block;
+  
+  font-size: 17px;
+
 }
 .bw_page_9 .bw_luangiai ul li{
   margin-left: 20px;
@@ -117,7 +120,7 @@ p {
   line-height: 76px;
   color: #fff;
   text-transform: uppercase;
-  text-shadow: 0 0 30px rgb(211 91 188 / 80%);
+  text-shadow: 0 0 30px rgb(211 91 188 / 110%);
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -143,7 +146,7 @@ p {
   font-size: 20px;
   color: #fff;
   line-height: 30px;
-  max-width: 80%;
+  max-width: 110%;
   margin: 20px auto;
   margin-top: 40px;
 }
@@ -225,10 +228,10 @@ p {
   border: 5px solid #d35bbc;
   padding-top: 55px;
 }
-.bw_tetx p {
+/* .bw_tetx p {
   font-family: Font_bold;
   font-style: italic;
-}
+} */
 .bw_luangiai {
   margin: 30px auto;
 }

@@ -44,31 +44,31 @@ function FormulaAdd({ noEdit }) {
       handleCreateOrUpdate(values);
     },
   });
-  ///// get data partnert
+  ///// get data option
+  const _callAPI = async () => {
+    try {
+      _formulaModel.getAttributeGruop().then((data) => {
+        setDataAttribute(data.items);
+        //   console.log(setDataPartner);
+      });
+      _formulaModel.getListCalculation().then((data) => {
+        setDataCalculation(data.items);
+        //   console.log(setDataPartner);
+      });
+      _formulaModel.getListFormulaParent().then((data) => {
+        setDataFormulaParent(data.items);
+        //   console.log(setDataPartner);
+      });
+      _formulaModel.getListIngredient().then((data) => {
+        setDataIngredient(data.items);
+        //   console.log(setDataPartner);
+      });
+    } catch (error) {
+      console.log(error);
+      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+    }
+  };
   useEffect(() => {
-    const _callAPI = async () => {
-      try {
-        _formulaModel.getAttributeGruop().then((data) => {
-          setDataAttribute(data.items);
-          //   console.log(setDataPartner);
-        });
-        _formulaModel.getListCalculation().then((data) => {
-          setDataCalculation(data.items);
-          //   console.log(setDataPartner);
-        });
-        _formulaModel.getListFormulaParent().then((data) => {
-          setDataFormulaParent(data.items);
-          //   console.log(setDataPartner);
-        });
-        _formulaModel.getListIngredient().then((data) => {
-          setDataIngredient(data.items);
-          //   console.log(setDataPartner);
-        });
-      } catch (error) {
-        console.log(error);
-        window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
-      }
-    };
     setTimeout(() => setisLoading(false), 500);
     _callAPI();
   }, []);
@@ -81,6 +81,7 @@ function FormulaAdd({ noEdit }) {
             _initDataDetail();
           } else {
             formik.resetForm();
+            _callAPI();
             setisLoading(true);
             setTimeout(() => setisLoading(false), 500);
           }
@@ -91,10 +92,10 @@ function FormulaAdd({ noEdit }) {
           return window._$g.rdr("/formula");
         }
       });
-    } catch (error) {}finally {
+    } catch (error) {
+    } finally {
       formik.setSubmitting(false);
       window.scrollTo(0, 0);
-
     }
   };
   //////get data detail
@@ -604,7 +605,7 @@ function FormulaAdd({ noEdit }) {
                           }}
                           checked={formik.values.is_default}
                         >
-                          Mặc định
+                          Ưu tiên
                         </Checkbox>
                       </Col>
                       <Col xs={2}>
@@ -621,34 +622,47 @@ function FormulaAdd({ noEdit }) {
                     </FormGroup>
                   </Col>
                 </Row>
-                {/* </Col> */}
-                <div className="text-right mb-2 mt-2">
+                <div className="text-right mb-2">
                   <div>
-                    <CheckAccess permission={id ? `FOR_FORMULA_EDIT` : `FOR_FORMULA_ADD`}>
-                      <button
-                        className="mr-2 btn-block-sm btn btn-primary"
-                        onClick={() => {
-                          setbtnType("save");
-                        }}
-                        type="submit"
-                      >
-                        <i className="fa fa-save mr-1" />
-                        Lưu
-                      </button>
-                    </CheckAccess>
-                    <CheckAccess permission={id ? `FOR_FORMULA_EDIT` : `FOR_FORMULA_ADD`}>
-                      <button
-                        className="mr-2 btn-block-sm btn btn-success"
-                        onClick={() => {
-                          setbtnType("save&quit");
-                        }}
-                        type="submit"
-                      >
-                        <i className="fa fa-save mr-1" />
-                        Lưu và đóng
-                      </button>
-                    </CheckAccess>
-
+                    {noEdit ? (
+                      <CheckAccess permission="FOR_FORMULA_VIEW">
+                        <button
+                          color="primary"
+                          className="mr-2 btn-block-sm btn btn-primary"
+                          onClick={() => window._$g.rdr(`/formula/edit/${id}`)}
+                        >
+                          <i className="fa fa-edit mr-1" />
+                          Chỉnh sửa
+                        </button>
+                      </CheckAccess>
+                    ) : (
+                      <>
+                        <CheckAccess permission={id ? `FOR_FORMULA_EDIT` : `FOR_FORMULA_ADD`}>
+                          <button
+                            className="mr-2 btn-block-sm btn btn-primary"
+                            onClick={() => {
+                              setbtnType("save");
+                            }}
+                            type="submit"
+                          >
+                            <i className="fa fa-save mr-1" />
+                            Lưu
+                          </button>
+                        </CheckAccess>
+                        <CheckAccess permission={id ? `FOR_FORMULA_EDIT` : `FOR_FORMULA_ADD`}>
+                          <button
+                            className="mr-2 btn-block-sm btn btn-success"
+                            onClick={() => {
+                              setbtnType("save&quit");
+                            }}
+                            type="submit"
+                          >
+                            <i className="fa fa-save mr-1" />
+                            Lưu và đóng
+                          </button>
+                        </CheckAccess>
+                      </>
+                    )}
                     <button
                       className=" btn-block-sm btn btn-secondary"
                       type="button"
