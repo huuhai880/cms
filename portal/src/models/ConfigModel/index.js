@@ -24,6 +24,7 @@ export default class ConfigModel extends Model {
   updatePageConfig(page, config = {}) {
     return this._api.put(_static.API_CONFIG_LIST_PAGE_CONFIG.replace(':page', page), config);
   }
+  
 
 }
 // Make alias

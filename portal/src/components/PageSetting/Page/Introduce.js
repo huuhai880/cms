@@ -199,6 +199,7 @@ export default class IntroducePage extends PureComponent {
         //.end
     }
     handleFormikSubmit(values, formProps) {
+       
         let { setSubmitting } = formProps;
         let alerts = [];
         let apiCall = this._configModel.updatePageConfig('INTRODUCE', values);
@@ -215,8 +216,7 @@ export default class IntroducePage extends PureComponent {
             .finally(() => {
                 setSubmitting(false);
                 this.setState(() => ({ alerts }), () => { window.scrollTo(0, 0); });
-            })
-            ;
+            });
     }
 
     // Sap xep lai cac item trong 5W1H
