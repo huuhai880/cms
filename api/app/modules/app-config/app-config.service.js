@@ -11,6 +11,7 @@ const fileHelper = require('../../common/helpers/file.helper');
 const folderName = 'config';
 const config = require('../../../config/config');
 const BANNER = require('../../common/const/banner.const');
+const { log } = require('../../common/classes/logger.class');
 
 
 const getListPlacementForBanner = async () => {
@@ -79,7 +80,7 @@ const updatePageConfig = async (bodyParams = {}) => {
   try {
     let { page, configs = {} } = bodyParams;
   // console.log(page,configs)
-
+   
     delete configs.auth_id;
     delete configs.auth_name;
     delete configs.data;

@@ -90,6 +90,7 @@ export default class Footer extends PureComponent {
         if (this.state.configEnt) {
             values = Object.assign(values, this.state.configEnt);
         }
+        
         Object.keys(values).forEach((key) => {
             if (null === values[key]) {
                 values[key] = "";
@@ -133,6 +134,7 @@ export default class Footer extends PureComponent {
     handleFormikSubmit(values, formProps) {
         let { setSubmitting } = formProps;
         let alerts = [];
+
         let apiCall = this._configModel.updatePageConfig("FOOTER", values);
         apiCall
             .then((data) => {
@@ -192,7 +194,7 @@ export default class Footer extends PureComponent {
                             {(formikProps) => {
                                 let { errors, handleSubmit, handleReset, isSubmitting } =
                                     (this.formikProps =
-                                    window._formikProps =
+                                        window._formikProps =
                                         formikProps);
                                 // Render
                                 return (

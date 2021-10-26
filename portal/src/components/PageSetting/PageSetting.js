@@ -28,6 +28,7 @@ import SEO from "./Page/SEO";
 import Login from "./Page/Login";
 import Footer from "./Page/Footer";
 import Decryption from "./Page/Decryption";
+import SearchResults from "./Page/SearchResult";
 
 // Model(s)
 import AppConfigModel from "../../models/AppConfigModel";
@@ -47,7 +48,7 @@ export default class PageSetting extends React.Component {
         };
     }
 
-    componentDidMount() {}
+    componentDidMount() { }
 
     renderTab = () => {
         const { activeTab } = this.state;
@@ -64,6 +65,8 @@ export default class PageSetting extends React.Component {
                 return <Contact />;
             case "LOGIN":
                 return <Login />;
+            case 'SEARCHRESULTS':
+                return <SearchResults />
             case "FOOTER":
                 return <Footer />;
             case "DECRYPTION":
@@ -89,9 +92,8 @@ export default class PageSetting extends React.Component {
                                     <Nav tabs>
                                         <NavItem>
                                             <NavLink
-                                                className={`${
-                                                    activeTab === "HOME" ? "active" : ""
-                                                }`}
+                                                className={`${activeTab === "HOME" ? "active" : ""
+                                                    }`}
                                                 onClick={() => this.setState({ activeTab: "HOME" })}
                                             >
                                                 Trang chủ
@@ -99,9 +101,8 @@ export default class PageSetting extends React.Component {
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
-                                                className={`${
-                                                    activeTab === "CONTACT" ? "active" : ""
-                                                }`}
+                                                className={`${activeTab === "CONTACT" ? "active" : ""
+                                                    }`}
                                                 onClick={() =>
                                                     this.setState({ activeTab: "CONTACT" })
                                                 }
@@ -111,9 +112,8 @@ export default class PageSetting extends React.Component {
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
-                                                className={`${
-                                                    activeTab === "LOGIN" ? "active" : ""
-                                                }`}
+                                                className={`${activeTab === "LOGIN" ? "active" : ""
+                                                    }`}
                                                 onClick={() =>
                                                     this.setState({ activeTab: "LOGIN" })
                                                 }
@@ -123,9 +123,8 @@ export default class PageSetting extends React.Component {
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
-                                                className={`${
-                                                    activeTab === "DECRYPTION" ? "active" : ""
-                                                }`}
+                                                className={`${activeTab === "DECRYPTION" ? "active" : ""
+                                                    }`}
                                                 onClick={() =>
                                                     this.setState({ activeTab: "DECRYPTION" })
                                                 }
@@ -135,9 +134,19 @@ export default class PageSetting extends React.Component {
                                         </NavItem>
                                         <NavItem>
                                             <NavLink
-                                                className={`${
-                                                    activeTab === "FOOTER" ? "active" : ""
-                                                }`}
+                                                className={`${activeTab === "SEARCHRESULTS" ? "active" : ""
+                                                    }`}
+                                                onClick={() =>
+                                                    this.setState({ activeTab: "SEARCHRESULTS" })
+                                                }
+                                            >
+                                                Kết quả tra cứu
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${activeTab === "FOOTER" ? "active" : ""
+                                                    }`}
                                                 onClick={() =>
                                                     this.setState({ activeTab: "FOOTER" })
                                                 }
