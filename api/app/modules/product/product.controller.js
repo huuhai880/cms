@@ -29,7 +29,17 @@ const detailProduct = async (req, res, next) => {
     return next(error);
   }
 };
-
+const getListInterPretAttributesGroup = async (req, res, next) => {
+  try {
+    const serviceRes = await productService.getListInterPretAttributesGroup(req.query);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    return next(error);
+  }
+};
 
 const createProduct = async (req, res, next) => {
   try {
@@ -122,5 +132,6 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getOptions,
-  getListAttributesGroup
+  getListAttributesGroup,
+  getListInterPretAttributesGroup
 };

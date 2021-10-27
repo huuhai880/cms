@@ -32,8 +32,9 @@ import { initialValues, validationSchema } from "./ProductConstant";
 import ProductModel from "models/ProductModel/index";
 import MessageError from "./MessageError";
 import Loading from "../Common/Loading";
+import InterpretConfig from "./InterpretConfig";
 import InterpertTable from "./InterpertTable";
-import "./style.scss";
+
 const _authorModel = new AuthorModel();
 const _productCategoryModel = new ProductCategoryModel();
 const _productModel = new ProductModel();
@@ -46,7 +47,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const [attributesGroup, setAttributesGroup] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isShowConfig, setShowConfig] = useState(null);
-  const [attributeGroupSelected, setAttributeGroupSelected] = useState(null);
+  const [interpertData, setInterpretDataSelected] = useState(null);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -73,8 +74,8 @@ function ProductAdd({ noEdit = false, productId = null }) {
           ...product,
         };
         setProduct(value);
-        console.log(value)
       }
+
       let data = await _productCategoryModel.getOptions({ is_active: 1 });
       let productCategoryOption = mapDataOptions4Select(data);
 
@@ -86,7 +87,6 @@ function ProductAdd({ noEdit = false, productId = null }) {
       });
       setProductCategories(productCategoryOption);
       let listAttributesGroup = await _productModel.getListAttributesGroup();
-
       setAttributesGroup(listAttributesGroup);
     } catch (error) {
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
@@ -129,6 +129,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
       } else {
         result = await _productModel.create(values);
       }
+
       window._$g.toastr.show("Lưu thành công!", "success");
       if (buttonType == "save_n_close") {
         return window._$g.rdr("/product");
@@ -177,113 +178,79 @@ function ProductAdd({ noEdit = false, productId = null }) {
     }
     return [];
   };
-  const callAPIInterPret = async (query) => {
-    let attrProduct = [...formik.values.product_attributes];
-    let interprets = await _productModel.interpretList({
-      attributes_group_id: query.attributes_group_id,
-    });
 
-    attrProduct[query.index].interprets = interprets.listInterpret
-      ? interprets.listInterpret.map((item) => {
-          return {
-            ...item,
-            ...{
-              is_show_search_result: true,
-              text_url: "",
-              url: "",
-              is_selected: true,
-            },
-          };
-        })
-      : [];
-
-    attrProduct[query.index].interprets = attrProduct[query.index].interprets.map((item, index) => {
-      return {
-        ...item,
-        interpret_details: item.interpret_details.map((itemChild) => {
-          return {
-            ...itemChild,
-            ...{
-              is_show_search_result: true,
-              text_url: "",
-              url: "",
-              is_selected: true,
-            },
-          };
-        }),
-      };
-    });
-    formik.setFieldValue("product_attributes", attrProduct);
-  };
-  const handleChangeAttributesGroup = (selected, index) => {
+  const handleChangeAttributesGroup = async (selected, index) => {
     let attrProduct = [...formik.values.product_attributes];
     attrProduct[index].attributes_group_id = selected ? selected.value : null;
-    attrProduct[index].rowIndex = parseInt(index);
-    formik.setFieldValue("product_attributes", attrProduct);
 
-    let query = {
-      index: index,
-      attributes_group_id: selected ? selected.value : null,
-    };
-    callAPIInterPret(query);
+    let interprets = await _productModel.interpretList(attrProduct[index].attributes_group_id);
+    attrProduct[index].interprets = interprets.listInterpret
+      ? interprets.listInterpret.map(
+          ({ order_index, brief_desc, interpret_id, attribute_id, attribute_name }) => {
+            return {
+              attribute_name,
+              interpret_id,
+              attribute_id,
+              order_index,
+              brief_desc,
+              is_show_search_result: true,
+              text_url: "",
+              url: "",
+              is_show_search_result: interpret_id ? true : false,
+            };
+          }
+        )
+      : [];
+    formik.setFieldValue("product_attributes", attrProduct);
   };
 
-  // const optionInterpretDetail = (attributes_group_id) => {
-  //   if (attributesGroup && attributesGroup.length > 0) {
-  //     let attributeGg = attributesGroup.find(
-  //       (p) => p.attributes_group_id == attributes_group_id
-  //     );
-  //     return attributeGg
-  //       ? attributeGg.interprets.map(
-  //           ({ interpret_detail_id: value, interpret_detail_name: label }) => {
-  //             return {
-  //               label,
-  //               value,
-  //             };
-  //           }
-  //         )
-  //       : [];
-  //   }
-  //   return [];
-  // };
+  const optionInterpretDetail = (attributes_group_id) => {
+    if (attributesGroup && attributesGroup.length > 0) {
+      let attributeGg = attributesGroup.find((p) => p.attributes_group_id == attributes_group_id);
+      return attributeGg
+        ? attributeGg.interprets.map(
+            ({ interpret_detail_id: value, interpret_detail_name: label }) => {
+              return {
+                label,
+                value,
+              };
+            }
+          )
+        : [];
+    }
+    return [];
+  };
 
-  // const handleChangeInterpretDetail = (selected, index) => {
-  //   let attrProduct = [...formik.values.product_attributes];
+  const handleChangeInterpretDetail = (selected, index) => {
+    let attrProduct = [...formik.values.product_attributes];
 
-  //   let { attributes_group_id } = attrProduct[index];
-  //   let attributeGg = attributesGroup.find(
-  //     (p) => p.attributes_group_id == attributes_group_id
-  //   );
+    let { attributes_group_id } = attrProduct[index];
+    let attributeGg = attributesGroup.find((p) => p.attributes_group_id == attributes_group_id);
 
-  //   let interpret_select =
-  //     attributeGg && selected
-  //       ? attributeGg.interprets.filter((p) => {
-  //           return selected.find((x) => x.value == p.interpret_detail_id);
-  //         })
-  //       : [];
+    let interpret_select =
+      attributeGg && selected
+        ? attributeGg.interprets.filter((p) => {
+            return selected.find((x) => x.value == p.interpret_detail_id);
+          })
+        : [];
 
-  //   attrProduct[index].interprets = interpret_select
-  //     ? interpret_select.map(
-  //         ({
-  //           interpret_detail_id,
-  //           interpret_id,
-  //           attribute_id,
-  //           interpret_detail_name,
-  //         }) => {
-  //           return {
-  //             interpret_detail_id,
-  //             interpret_id,
-  //             attribute_id,
-  //             is_show_search_result: true,
-  //             text_url: "",
-  //             url: "",
-  //             interpret_detail_name,
-  //           };
-  //         }
-  //       )
-  //     : [];
-  //   formik.setFieldValue("product_attributes", attrProduct);
-  // };
+    attrProduct[index].interprets = interpret_select
+      ? interpret_select.map(
+          ({ interpret_detail_id, interpret_id, attribute_id, interpret_detail_name }) => {
+            return {
+              interpret_detail_id,
+              interpret_id,
+              attribute_id,
+              is_show_search_result: true,
+              text_url: "",
+              url: "",
+              interpret_detail_name,
+            };
+          }
+        )
+      : [];
+    formik.setFieldValue("product_attributes", attrProduct);
+  };
 
   const handleRemoveAttributeProduct = (index) => {
     let attrProduct = [...formik.values.product_attributes];
@@ -317,10 +284,12 @@ function ProductAdd({ noEdit = false, productId = null }) {
       <Table size="sm" bordered striped hover className="tb-product-attributes mt-2">
         <thead>
           <tr>
-            <th className="text-center" style={{ width: 100 }}>
+            <th className="text-center" style={{ width: 50 }}>
               STT
             </th>
-            <th className="text-center">Chỉ số</th>
+            <th className="text-center" style={{ width: "30%" }}>
+              Chỉ số
+            </th>
             {/* <th className="text-center">Luận giải chi tiết</th> */}
             <th className="text-center" style={{ width: 100 }}>
               Cấu hình
@@ -389,9 +358,9 @@ function ProductAdd({ noEdit = false, productId = null }) {
                 >
                   <Button
                     color="primary"
-                    onClick={() => handleShowPopupConfig(item, index)}
+                    onClick={() => handleShowPopupConfig(item,index)}
                     className="btn-sm"
-                    disabled={item.attributes_group_id==null || noEdit}
+                    disabled={item.interprets.length == 0 || noEdit}
                   >
                     {" "}
                     <i className="fa fa-cog"></i>
@@ -428,30 +397,24 @@ function ProductAdd({ noEdit = false, productId = null }) {
     );
   };
 
-  const handleShowPopupConfig = async (item, index) => {
-    let itemCl = JSON.parse(JSON.stringify(item));
-    setAttributeGroupSelected(itemCl);
+  const handleShowPopupConfig = (item,index) => {
     setShowConfig(true);
+    let itemCl = {...JSON.parse(JSON.stringify(item)),index};
+    setInterpretDataSelected(itemCl);
   };
 
   const handleClosePopupConfig = () => {
     setShowConfig(false);
-    setAttributeGroupSelected(null);
+    setInterpretDataSelected(null);
   };
 
-  const handleSubmitConfig = (interpert) => {
+  const handleSubmitConfig = (interpertData) => {
     let attrProducts = [...formik.values.product_attributes];
-    attrProducts = attrProducts.map((item) => {
-      return item.attributes_group_id == interpert.attributes_group_id
-        ? { ...item, interprets: interpert.interprets }
-        : item;
-    });
-
+    attrProducts.interprets = interpertData
     formik.setFieldValue("product_attributes", attrProducts);
     setShowConfig(false);
-    setAttributeGroupSelected(null);
+    setInterpretDataSelected(null);
   };
-
   return loading ? (
     <Loading />
   ) : (
@@ -816,9 +779,8 @@ function ProductAdd({ noEdit = false, productId = null }) {
           <ModalBody className="p-0">
             <InterpertTable
               handleClose={handleClosePopupConfig}
-              attributeGroup={attributeGroupSelected}
+              interpertData={interpertData}
               handleSubmit={handleSubmitConfig}
-              callAPIInterPret={callAPIInterPret}
             />
           </ModalBody>
         </Modal>

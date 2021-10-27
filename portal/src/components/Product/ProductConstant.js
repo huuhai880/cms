@@ -277,18 +277,18 @@ export const validationSchema = yup.object().shape({
     //     )
     //     .required('Giá sản phẩm là bắt buộc'),
 
-    product_attributes: yup.array().nullable()
-        .test(
-            'product_attribute',
-            'Nội dung là bắt buộc',
-            value => {
-                let check = (value || []).find(p => !p.attributes_group_id || !p.interprets.length)
-                if (check) {
-                    return false;
-                }
-                return true;
-            }
-        )
-        .required("Nội dung là bắt buộc"),
+    // product_attributes: yup.array().nullable()
+    //     .test(
+    //         'product_attribute',
+    //         'Nội dung là bắt buộc',
+    //         value => {
+    //             let check = (value || []).find(p => !p.attributes_group_id || !p.interprets.length)
+    //             if (check) {
+    //                 return false;
+    //             }
+    //             return true;
+    //         }
+    //     )
+    //     .required("Nội dung là bắt buộc"),
 
 })
