@@ -142,6 +142,7 @@ export default class Decryption extends PureComponent {
       let { setSubmitting } = formProps;
       let alerts = [];
       let apiCall = this._configModel.updatePageConfig("DECRYPTION", values);
+      console.log(values)
       apiCall
          .then((data) => {
             // OK

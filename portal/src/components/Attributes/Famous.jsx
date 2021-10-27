@@ -74,7 +74,6 @@ class News extends Component {
     this.setState({ isLoading: true });
     (async () => {
       let bundle = await this._getBundleData();
-      console.log(bundle);
       let { data } = bundle;
       let dataConfig = data ? data.items : [];
       let isLoading = false;
@@ -275,7 +274,7 @@ class News extends Component {
             if (handlePick) {
               let item = this.state.data[tableMeta["rowIndex"]];
               let { _pickDataItems = {} } = this.state;
-              
+              console.log(_pickDataItems)
               return (
                 <div className="text-center mb-1">
                   <Checkbox
@@ -367,6 +366,7 @@ class News extends Component {
     const { count, page, query } = this.state;
     const { handlePick } = this.props;
     const options = configTableOptions(count, page, query);
+
     return (
       <div>
         <Card
@@ -376,7 +376,7 @@ class News extends Component {
         >
           <CardHeader className="d-flex">
             <div className="flex-fill font-weight-bold">
-              {handlePick ? "Thêm bài viết liên quan" : "Thông tin tìm kiếm"}
+              {handlePick ? "Thêm người nổi tiếng" : "Thông tin tìm kiếm"}
             </div>
             {handlePick ? (
               <Button color="danger" size="md" onClick={() => handlePick({})}>

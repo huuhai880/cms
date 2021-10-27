@@ -56,8 +56,10 @@ function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail 
       key: "interpret_detail_short_content",
       responsive: ["md"],
       render: (text, record, index) => {
-        let value = text.replace(regex, "");
-        value = splitString(value, 50);
+        let value = text ? text.replace(regex, "") : null;
+        if (value) {
+          value = splitString(value, 50);
+        }
         return value;
       },
     },

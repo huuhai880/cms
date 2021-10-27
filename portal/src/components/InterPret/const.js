@@ -253,7 +253,7 @@ export const column = (handleDelete) => {
       key: "brief_decs",
       responsive: ["md"],
       render: (text, record, index) => {
-        let value = text.replace(regex, "");
+        let value = text ? text.replace(regex, "") : "";
         value = splitString(value, 80);
         return value;
       },

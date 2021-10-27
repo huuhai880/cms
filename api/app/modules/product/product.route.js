@@ -19,7 +19,9 @@ routes
   .get(productController.detailProduct)
   .put(validate(rules.updateProduct), productController.updateProduct)
   .delete(productController.deleteProduct);
-
+  routes
+  .route('/interpret')
+  .get(productController.getListInterPretAttributesGroup)
 routes.route('/get-options').get(productController.getOptions);
 routes.route('/attributes-group').get(productController.getListAttributesGroup);
 
