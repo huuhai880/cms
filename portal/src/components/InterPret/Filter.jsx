@@ -58,9 +58,7 @@ function Filter({ handleSubmitFillter }) {
         window.location.reload();
       });
     }
-    if (keyword) {
-      localStorage.setItem("keywordInterpret", keyword);
-    }
+    localStorage.setItem("keywordInterpret", keyword);
     let value = {
       keyword: keyword ? keyword : null,
       selectdActive: selectdActive ? selectdActive.value : null,

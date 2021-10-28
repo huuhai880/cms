@@ -20,16 +20,32 @@ const getListProduct = async (queryParams = {}) => {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
     const keyword = apiHelper.getSearch(queryParams);
-    const is_web_view = apiHelper.getValueFromObject(queryParams, 'is_web_view', 2);
+    const is_web_view = apiHelper.getValueFromObject(
+      queryParams,
+      'is_web_view',
+      2
+    );
 
     const pool = await mssql.pool;
     const resProduct = await pool
       .request()
       .input('keyword', keyword)
-      .input('productcategoryid', apiHelper.getValueFromObject(queryParams, 'product_category_id', null))
-      .input('startdate', apiHelper.getValueFromObject(queryParams, 'start_date', null))
-      .input('enddate', apiHelper.getValueFromObject(queryParams, 'end_date', null))
-      .input('isactive', apiHelper.getValueFromObject(queryParams, 'is_active', 2))
+      .input(
+        'productcategoryid',
+        apiHelper.getValueFromObject(queryParams, 'product_category_id', null)
+      )
+      .input(
+        'startdate',
+        apiHelper.getValueFromObject(queryParams, 'start_date', null)
+      )
+      .input(
+        'enddate',
+        apiHelper.getValueFromObject(queryParams, 'end_date', null)
+      )
+      .input(
+        'isactive',
+        apiHelper.getValueFromObject(queryParams, 'is_active', 2)
+      )
       .input('ISSHOWWEB', is_web_view)
       .input('pagesize', itemsPerPage)
       .input('pageindex', currentPage)
@@ -37,7 +53,7 @@ const getListProduct = async (queryParams = {}) => {
 
     let list = productClass.list(resProduct.recordset);
     let total = apiHelper.getTotalData(resProduct.recordset);
-    return new ServiceResponse(true, "", { list, total })
+    return new ServiceResponse(true, '', { list, total });
   } catch (e) {
     logger.error(e, {
       function: 'product.service.getListProduct',
@@ -104,49 +120,94 @@ const removeCacheOptions = () => {
   return cacheHelper.removeByKey(CACHE_CONST.MD_PRODUCT_OPTIONS);
 };
 
-
 const getListAttributesGroup = async () => {
   try {
-
     const pool = await mssql.pool;
-    const res = await pool.request()
-      .execute('FOR_ATTRIBUTESGROUP_GetList_AdminWeb')
+    const res = await pool
+      .request()
+      .execute('FOR_ATTRIBUTESGROUP_GetList_AdminWeb');
 
-    let listAttributesGroup = productClass.listAttributesGroup(res.recordsets[0]);
-    let listInterpret = productClass.listInterpret(res.recordsets[1])
+    let listAttributesGroup = productClass.listAttributesGroup(
+      res.recordsets[0]
+    );
+    let listInterpret = productClass.listInterpret(res.recordsets[1]);
 
     if (listAttributesGroup && listAttributesGroup.length > 0) {
       for (let index = 0; index < listAttributesGroup.length; index++) {
         let attributesGroup = listAttributesGroup[index];
-        let interpretOfGroup = listInterpret.filter(p => p.attributes_group_id == attributesGroup.attributes_group_id);
-        attributesGroup.interprets = interpretOfGroup ? interpretOfGroup : []
+        let interpretOfGroup = listInterpret.filter(
+          (p) => p.attributes_group_id == attributesGroup.attributes_group_id
+        );
+        attributesGroup.interprets = interpretOfGroup ? interpretOfGroup : [];
       }
     }
 
-    return new ServiceResponse(true, "", listAttributesGroup)
-
+    return new ServiceResponse(true, '', listAttributesGroup);
   } catch (e) {
     logger.error(e, {
       function: 'product.service.getListAttributesGroup',
     });
     return new ServiceResponse(false, e.message);
   }
-}
+};
+const getListInterPretAttributesGroup = async (queryParams = {}) => {
+  try {
+    const pool = await mssql.pool;
+    const res = await pool
+      .request()
+      .input(
+        'ATTRIBUTESGROUPID',
+        apiHelper.getValueFromObject(queryParams, 'attributes_group_id', null)
+      )
+      .execute('FOR_Interpret_GetListInterpretbyAttributesGruopId_AdminWeb');
+    let listInterpret = productClass.listInterpret(res.recordsets[0]);
 
+    if (listInterpret && listInterpret.length > 0) {
+      let interPretIds = listInterpret
+        .map((item) => item.interpret_id)
+        .join(',');
+
+      const resDetail = await pool
+        .request()
+        .input('INTERPRETIDS', interPretIds)
+        .execute('FOR_INTERPRETDETAIL_GetListByIds_AdminWeb');
+      let listInterPretDetail =
+        productClass.listInterpretDetail(resDetail.recordset) || [];
+
+      for (let index = 0; index < listInterpret.length; index++) {
+        let interpret = listInterpret[index];
+        let interpret_details = listInterPretDetail.filter(
+          (x) => x.interpret_id == interpret.interpret_id
+        );
+        interpret.interpret_details = interpret_details || [];
+      }
+    }
+    return new ServiceResponse(true, '', {
+      listInterpret,
+    });
+  } catch (e) {
+    logger.error(e, {
+      function: 'product.service.getListInterPretAttributesGroup',
+    });
+    return new ServiceResponse(false, e.message);
+  }
+};
 const createProduct = async (bodyParams = {}) => {
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
   try {
-
-    let product_images = apiHelper.getValueFromObject(bodyParams, 'product_images', []);
+    let product_images = apiHelper.getValueFromObject(
+      bodyParams,
+      'product_images',
+      []
+    );
     if (product_images.length > 0) {
       for (let index = 0; index < product_images.length; index++) {
         let image = product_images[index];
         const image_url = await saveImage('product', image.picture_url);
         if (image_url) {
-          image.picture_url = image_url
-        }
-        else {
+          image.picture_url = image_url;
+        } else {
           return new ServiceResponse(false, RESPONSE_MSG.NEWS.UPLOAD_FAILED);
         }
       }
@@ -157,27 +218,56 @@ const createProduct = async (bodyParams = {}) => {
     //Product
     const reqProduct = new sql.Request(transaction);
     const resProduct = await reqProduct
-      .input('PRODUCTCATEGORYID', apiHelper.getValueFromObject(bodyParams, 'product_category_id', 0))
-      .input('PRODUCTNAME', apiHelper.getValueFromObject(bodyParams, 'product_name', null))
-      .input('PRODUCTNAMESHOWWEB', apiHelper.getValueFromObject(bodyParams, 'product_name_show_web', null))
-      .input('URLPRODUCT', apiHelper.getValueFromObject(bodyParams, 'url_product', null))
-      .input('SHORTDESCRIPTION', apiHelper.getValueFromObject(bodyParams, 'short_description', null))
-      .input('PRODUCTCONTENTDETAIL', apiHelper.getValueFromObject(bodyParams, 'product_content_detail', null))
-      .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active', 1))
-      .input('ISSHOWWEB', apiHelper.getValueFromObject(bodyParams, 'is_show_web', 0))
-      .input('ISWEBVIEW', apiHelper.getValueFromObject(bodyParams, 'is_web_view', 0))
-      .input('ISSHOWMENU', apiHelper.getValueFromObject(bodyParams, 'is_show_menu', 0))
-      .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-      .execute('MD_PRODUCT_Create_AdminWeb')
+      .input(
+        'PRODUCTCATEGORYID',
+        apiHelper.getValueFromObject(bodyParams, 'product_category_id', 0)
+      )
+      .input(
+        'PRODUCTNAME',
+        apiHelper.getValueFromObject(bodyParams, 'product_name', null)
+      )
+      .input(
+        'PRODUCTNAMESHOWWEB',
+        apiHelper.getValueFromObject(bodyParams, 'product_name_show_web', null)
+      )
+      .input(
+        'URLPRODUCT',
+        apiHelper.getValueFromObject(bodyParams, 'url_product', null)
+      )
+      .input(
+        'SHORTDESCRIPTION',
+        apiHelper.getValueFromObject(bodyParams, 'short_description', null)
+      )
+      .input(
+        'PRODUCTCONTENTDETAIL',
+        apiHelper.getValueFromObject(bodyParams, 'product_content_detail', null)
+      )
+      .input(
+        'ISACTIVE',
+        apiHelper.getValueFromObject(bodyParams, 'is_active', 1)
+      )
+      .input(
+        'ISSHOWWEB',
+        apiHelper.getValueFromObject(bodyParams, 'is_show_web', 0)
+      )
+      .input(
+        'ISWEBVIEW',
+        apiHelper.getValueFromObject(bodyParams, 'is_web_view', 0)
+      )
+      .input(
+        'ISSHOWMENU',
+        apiHelper.getValueFromObject(bodyParams, 'is_show_menu', 0)
+      )
+      .input(
+        'CREATEDUSER',
+        apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator')
+      )
+      .execute('MD_PRODUCT_Create_AdminWeb');
 
     let { product_id } = resProduct.recordset[0];
     if (!product_id) {
       await transaction.rollback();
-      return new ServiceResponse(
-        false,
-        "Lỗi thêm mới sản phẩm",
-        null
-      );
+      return new ServiceResponse(false, 'Lỗi thêm mới sản phẩm', null);
     }
 
     //Images Product
@@ -189,63 +279,118 @@ const createProduct = async (bodyParams = {}) => {
           .input('PRODUCTID', product_id)
           .input('PICTUREURL', image.picture_url)
           .input('ISDEFAULT', image.is_default)
-          .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-          .execute('PRO_PRODUCTIMAGES_Create_AdminWeb')
+          .input(
+            'CREATEDUSER',
+            apiHelper.getValueFromObject(
+              bodyParams,
+              'auth_name',
+              'administrator'
+            )
+          )
+          .execute('PRO_PRODUCTIMAGES_Create_AdminWeb');
       }
     }
 
     //Product Attribute
-    let product_attributes = apiHelper.getValueFromObject(bodyParams, 'product_attributes', []);
+    let product_attributes = apiHelper.getValueFromObject(
+      bodyParams,
+      'product_attributes',
+      []
+    );
     if (product_attributes && product_attributes.length > 0) {
       const reqAttribute = new sql.Request(transaction);
+      const reqInterPretDertail = new sql.Request(transaction);
+
       for (let index = 0; index < product_attributes.length; index++) {
         const attribute = product_attributes[index];
-        let { interprets = [] } = attribute || {}
+        let { interprets = [] } = attribute || {};
         for (let j = 0; j < interprets.length; j++) {
           const interpret = interprets[j];
-
-          await reqAttribute.input('PRODUCTID', product_id)
-            .input('ATTRIBUTESGROUPID', attribute.attributes_group_id)
-            .input('INTERPRETID', interpret.interpret_id)
-            .input('INTERPRETDETAILID', interpret.interpret_detail_id)
-            .input('ISSHOWSEARCHRESULT', interpret.is_show_search_result)
-            .input('TEXTURL', interpret.text_url)
-            .input('URL', interpret.url)
-            .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-            .execute('MD_PRODUCT_ATTRIBUTES_Create_AdminWeb')
+          if (interpret.is_selected == true) {
+            //// lưu luận giải
+            await reqAttribute
+              .input('PRODUCTID', product_id)
+              .input('ATTRIBUTESGROUPID', attribute.attributes_group_id)
+              .input('INTERPRETID', interpret.interpret_id)
+              .input('INTERPRETDETAILID', interpret.interpret_detail_id)
+              .input('ISSHOWSEARCHRESULT', interpret.is_show_search_result)
+              .input('TEXTURL', interpret.text_url)
+              .input('URL', interpret.url)
+              .input(
+                'CREATEDUSER',
+                apiHelper.getValueFromObject(
+                  bodyParams,
+                  'auth_name',
+                  'administrator'
+                )
+              )
+              .execute('MD_PRODUCT_ATTRIBUTES_Create_AdminWeb');
+            ////lưu luận giải con
+            if (
+              interpret.interpret_details &&
+              interpret.interpret_details.length
+            ) {
+              for (
+                let index = 0;
+                index < interpret.interpret_details.length;
+                index++
+              ) {
+                const element = interpret.interpret_details[index];
+                if (element.is_selected == true) {
+                  await reqInterPretDertail
+                    .input('PRODUCTID', product_id)
+                    .input('ATTRIBUTESGROUPID', attribute.attributes_group_id)
+                    .input('INTERPRETID', interpret.interpret_id)
+                    .input('INTERPRETDETAILID', element.interpret_detail_id)
+                    .input('ISSHOWSEARCHRESULT', element.is_show_search_result)
+                    .input('TEXTURL', element.text_url)
+                    .input('URL', element.url)
+                    .input(
+                      'CREATEDUSER',
+                      apiHelper.getValueFromObject(
+                        bodyParams,
+                        'auth_name',
+                        'administrator'
+                      )
+                    )
+                    .execute('MD_PRODUCT_ATTRIBUTES_Create_AdminWeb');
+                }
+              }
+            }
+          }
         }
       }
     }
 
     await transaction.commit();
     removeCacheOptions();
-    return new ServiceResponse(true, "", product_id)
-
+    return new ServiceResponse(true, '', product_id);
   } catch (e) {
-    await transaction.rollback()
+    await transaction.rollback();
 
     logger.error(e, {
       function: 'product.service.createProduct',
     });
     return new ServiceResponse(false, e.message);
   }
-}
+};
 
 const updateProduct = async (bodyParams = {}) => {
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
   try {
-
-    let product_images = apiHelper.getValueFromObject(bodyParams, 'product_images', []);
+    let product_images = apiHelper.getValueFromObject(
+      bodyParams,
+      'product_images',
+      []
+    );
     if (product_images.length > 0) {
       for (let index = 0; index < product_images.length; index++) {
         let image = product_images[index];
         const image_url = await saveImage('product', image.picture_url);
         if (image_url) {
-          image.picture_url = image_url
-        }
-        else {
-
+          image.picture_url = image_url;
+        } else {
           return new ServiceResponse(false, RESPONSE_MSG.NEWS.UPLOAD_FAILED);
         }
       }
@@ -259,37 +404,68 @@ const updateProduct = async (bodyParams = {}) => {
     const reqProduct = new sql.Request(transaction);
     const resProduct = await reqProduct
       .input('PRODUCTID', product_id)
-      .input('PRODUCTCATEGORYID', apiHelper.getValueFromObject(bodyParams, 'product_category_id', 0))
-      .input('PRODUCTNAME', apiHelper.getValueFromObject(bodyParams, 'product_name', null))
-      .input('PRODUCTNAMESHOWWEB', apiHelper.getValueFromObject(bodyParams, 'product_name_show_web', null))
-      .input('URLPRODUCT', apiHelper.getValueFromObject(bodyParams, 'url_product', null))
-      .input('SHORTDESCRIPTION', apiHelper.getValueFromObject(bodyParams, 'short_description', null))
-      .input('PRODUCTCONTENTDETAIL', apiHelper.getValueFromObject(bodyParams, 'product_content_detail', null))
-      .input('ISACTIVE', apiHelper.getValueFromObject(bodyParams, 'is_active', 1))
-      .input('ISSHOWWEB', apiHelper.getValueFromObject(bodyParams, 'is_show_web', 0))
-      .input('ISWEBVIEW', apiHelper.getValueFromObject(bodyParams, 'is_web_view', 0))
-      .input('ISSHOWMENU', apiHelper.getValueFromObject(bodyParams, 'is_show_menu', 0))
-      .input('UPDATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-      .execute('MD_PRODUCT_Update_AdminWeb')
+      .input(
+        'PRODUCTCATEGORYID',
+        apiHelper.getValueFromObject(bodyParams, 'product_category_id', 0)
+      )
+      .input(
+        'PRODUCTNAME',
+        apiHelper.getValueFromObject(bodyParams, 'product_name', null)
+      )
+      .input(
+        'PRODUCTNAMESHOWWEB',
+        apiHelper.getValueFromObject(bodyParams, 'product_name_show_web', null)
+      )
+      .input(
+        'URLPRODUCT',
+        apiHelper.getValueFromObject(bodyParams, 'url_product', null)
+      )
+      .input(
+        'SHORTDESCRIPTION',
+        apiHelper.getValueFromObject(bodyParams, 'short_description', null)
+      )
+      .input(
+        'PRODUCTCONTENTDETAIL',
+        apiHelper.getValueFromObject(bodyParams, 'product_content_detail', null)
+      )
+      .input(
+        'ISACTIVE',
+        apiHelper.getValueFromObject(bodyParams, 'is_active', 1)
+      )
+      .input(
+        'ISSHOWWEB',
+        apiHelper.getValueFromObject(bodyParams, 'is_show_web', 0)
+      )
+      .input(
+        'ISWEBVIEW',
+        apiHelper.getValueFromObject(bodyParams, 'is_web_view', 0)
+      )
+      .input(
+        'ISSHOWMENU',
+        apiHelper.getValueFromObject(bodyParams, 'is_show_menu', 0)
+      )
+      .input(
+        'UPDATEDUSER',
+        apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator')
+      )
+      .execute('MD_PRODUCT_Update_AdminWeb');
 
     let { result } = resProduct.recordset[0];
 
     if (result == 0) {
       await transaction.rollback();
-      return new ServiceResponse(
-        false,
-        "Lỗi cập nhật sản phẩm",
-        null
-      );
+      return new ServiceResponse(false, 'Lỗi cập nhật sản phẩm', null);
     }
-
 
     //Images Product
     const reqDelImage = new sql.Request(transaction);
     await reqDelImage
       .input('PRODUCTID', product_id)
-      .input('DELETEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-      .execute('PRO_PRODUCTIMAGES_Delete_AdminWeb')
+      .input(
+        'DELETEDUSER',
+        apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator')
+      )
+      .execute('PRO_PRODUCTIMAGES_Delete_AdminWeb');
 
     if (product_images && product_images.length > 0) {
       const reqImage = new sql.Request(transaction);
@@ -299,124 +475,190 @@ const updateProduct = async (bodyParams = {}) => {
           .input('PRODUCTID', product_id)
           .input('PICTUREURL', image.picture_url)
           .input('ISDEFAULT', image.is_default)
-          .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-          .execute('PRO_PRODUCTIMAGES_Create_AdminWeb')
+          .input(
+            'CREATEDUSER',
+            apiHelper.getValueFromObject(
+              bodyParams,
+              'auth_name',
+              'administrator'
+            )
+          )
+          .execute('PRO_PRODUCTIMAGES_Create_AdminWeb');
       }
     }
-
 
     //Product Attribute
     const reqDelAttribute = new sql.Request(transaction);
     await reqDelAttribute
       .input('PRODUCTID', product_id)
-      .input('DELETEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-      .execute('MD_PRODUCT_ATTRIBUTES_Delete_AdminWeb')
+      .input(
+        'DELETEDUSER',
+        apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator')
+      )
+      .execute('MD_PRODUCT_ATTRIBUTES_Delete_AdminWeb');
 
-    let product_attributes = apiHelper.getValueFromObject(bodyParams, 'product_attributes', []);
+    let product_attributes = apiHelper.getValueFromObject(
+      bodyParams,
+      'product_attributes',
+      []
+    );
     if (product_attributes && product_attributes.length > 0) {
       const reqAttribute = new sql.Request(transaction);
+      const reqInterPretDertail = new sql.Request(transaction);
+
       for (let index = 0; index < product_attributes.length; index++) {
         const attribute = product_attributes[index];
-        let { interprets = [] } = attribute || {}
+        let { interprets = [] } = attribute || {};
         for (let j = 0; j < interprets.length; j++) {
           const interpret = interprets[j];
+          if (interpret.is_selected == true) {
+           console.log(interpret)
+            await reqAttribute
+              .input('PRODUCTID', product_id)
+              .input('ATTRIBUTESGROUPID', interpret.attributes_group_id)
+              .input('INTERPRETID', interpret.interpret_id)
+              .input('INTERPRETDETAILID', interpret.interpret_detail_id)
+              .input('ISSHOWSEARCHRESULT', interpret.is_show_search_result)
+              .input('TEXTURL', interpret.text_url)
+              .input('URL', interpret.url)
+              .input(
+                'CREATEDUSER',
+                apiHelper.getValueFromObject(
+                  bodyParams,
+                  'auth_name',
+                  'administrator'
+                )
+              )
+              .execute('MD_PRODUCT_ATTRIBUTES_Create_AdminWeb');
 
-          await reqAttribute
-            .input('PRODUCTID', product_id)
-            .input('ATTRIBUTESGROUPID', attribute.attributes_group_id)
-            .input('INTERPRETID', interpret.interpret_id)
-            .input('INTERPRETDETAILID', interpret.interpret_detail_id)
-            .input('ISSHOWSEARCHRESULT', interpret.is_show_search_result)
-            .input('TEXTURL', interpret.text_url)
-            .input('URL', interpret.url)
-            .input('UPDATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-            .execute('MD_PRODUCT_ATTRIBUTES_Update_AdminWeb')
+          }
+          ////lưu luận giải con
+          if (
+            interpret.interpret_details &&
+            interpret.interpret_details.length
+          ) {
+            for (
+              let index = 0;
+              index < interpret.interpret_details.length;
+              index++
+            ) {
+              const element = interpret.interpret_details[index];
+
+              if (element.is_selected == true) {
+                await reqInterPretDertail
+                  .input('PRODUCTID', product_id)
+                  .input('ATTRIBUTESGROUPID', interpret.attributes_group_id)
+                  .input('INTERPRETID', interpret.interpret_id)
+                  .input('INTERPRETDETAILID', element.interpret_detail_id)
+                  .input('ISSHOWSEARCHRESULT', element.is_show_search_result)
+                  .input('TEXTURL', element.text_url)
+                  .input('URL', element.url)
+                  .input(
+                    'CREATEDUSER',
+                    apiHelper.getValueFromObject(
+                      bodyParams,
+                      'auth_name',
+                      'administrator'
+                    )
+                  )
+                  .execute('MD_PRODUCT_ATTRIBUTES_Create_AdminWeb');
+              }
+            }
+          }
         }
       }
     }
 
     await transaction.commit();
     removeCacheOptions();
-    return new ServiceResponse(true, "", true)
+    return new ServiceResponse(true, '', true);
   } catch (e) {
-    await transaction.rollback()
+    await transaction.rollback();
     logger.error(e, {
       function: 'product.service.updateProduct',
     });
     return new ServiceResponse(false, e.message);
   }
-}
+};
 
 const detailProduct = async (product_id) => {
   try {
     const pool = await mssql.pool;
-    const resProduct = await pool.request()
+    const resProduct = await pool
+      .request()
       .input('PRODUCTID', product_id)
-      .execute('MD_PRODUCT_GetById_AdminWeb')
+      .execute('MD_PRODUCT_GetById_AdminWeb');
 
-    let product_images = []
+    let product_images = [];
     let product = productClass.detail(resProduct.recordsets[0][0]);
     product_images = productClass.listPicture(resProduct.recordsets[1]);
-    let attributes = productClass.listAttributes(resProduct.recordsets[2])
+    let attributes = productClass.listAttributes(resProduct.recordsets[2]);
 
     let product_attributes = [];
     if (attributes && attributes.length > 0) {
       for (let index = 0; index < attributes.length; index++) {
         const attr = attributes[index];
-        let {
+        let { attributes_group_id, product_id } = attr || {};
+        product_attributes.push({
           attributes_group_id,
-          attribute_id,
-          interpret_id,
-          interpret_detail_id,
           product_id,
-          is_show_search_result,
-          text_url,
-          url,
-          interpret_detail_name
-        } = attr || {}
-        let find = product_attributes.find(p => p.attributes_group_id == attributes_group_id);
-        if (!find) {
-          product_attributes.push({
-            attributes_group_id,
-            product_id,
-            interprets: [{
-              attribute_id,
-              interpret_id,
-              interpret_detail_id,
-              is_show_search_result,
-              text_url,
-              url,
-              interpret_detail_name
-            }]
-          })
-        }
-        else {
-          find.interprets = [...find.interprets, {
-            attribute_id,
-            interpret_id,
-            interpret_detail_id,
-            is_show_search_result,
-            text_url,
-            url,
-            interpret_detail_name
-          }]
-        }
+        });
       }
     }
-    if (product) {
-      product.product_images = product_images;
-      product.product_attributes = product_attributes
+    for (let index = 0; index < product_attributes.length; index++) {
+      const element = product_attributes[index];
+      const res = await pool
+        .request()
+        .input(
+          'ATTRIBUTESGROUPID',
+          apiHelper.getValueFromObject(element, 'attributes_group_id', null)
+        )
+        .input(
+          'PRODUCTID',
+          apiHelper.getValueFromObject(element, 'product_id', null)
+        )
+        .execute('FOR_Interpret_GetListInterpretbyAttributesGruopId_AdminWeb');
+      let listInterpret = productClass.listInterpret(res.recordsets[1]);
+
+      if (listInterpret && listInterpret.length > 0) {
+        let interPretIds = listInterpret
+          .map((item) => item.interpret_id)
+          .join(',');
+        const resDetail = await pool
+          .request()
+          .input('INTERPRETIDS', interPretIds)
+          .input(
+            'PRODUCTID',
+            apiHelper.getValueFromObject(element, 'product_id', null)
+          )
+          .execute('FOR_INTERPRETDETAIL_GetListByIds_AdminWeb');
+        let listInterPretDetail =
+          productClass.listInterpretDetail(resDetail.recordsets[1]) || [];
+            console.log(listInterPretDetail)
+        for (let index = 0; index < listInterpret.length; index++) {
+          let interpret = listInterpret[index];
+          let interpret_details = listInterPretDetail.filter(
+            (x) => x.interpret_id == interpret.interpret_id
+          );
+          interpret.interpret_details = interpret_details || [];
+        }
+        product_attributes[index].interprets = listInterpret;
+      }
     }
 
-    return new ServiceResponse(true, "", product)
+    if (product) {
+      product.product_images = product_images;
+      product.product_attributes = product_attributes;
+    }
 
+    return new ServiceResponse(true, '', product);
   } catch (e) {
     logger.error(e, {
       function: 'product.service.detailProduct',
     });
     return new ServiceResponse(false, e.message);
   }
-}
+};
 
 module.exports = {
   getListProduct,
@@ -425,5 +667,6 @@ module.exports = {
   getListAttributesGroup,
   createProduct,
   updateProduct,
-  detailProduct
+  detailProduct,
+  getListInterPretAttributesGroup,
 };

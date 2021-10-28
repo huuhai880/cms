@@ -32,12 +32,13 @@ const getInterpretsList = async (queryParams = {}) => {
     let interprets = InterpretClass.listInterpret(result);
     if (interprets && interprets.length > 0) {
       let interPretIds = interprets.map((item) => item.interpret_id).join(',');
+     
       const resDetail = await pool
         .request()
         .input('INTERPRETIDS', interPretIds)
         .input('KEYWORD', keyword)
         .execute('FOR_INTERPRETDETAIL_GetListByIds_AdminWeb');
-
+        console.log(resDetail)
       let listInterPretDetail =
         InterpretClass.listInterpretDetail(resDetail.recordset) || [];
       // console.log(resDetail)
