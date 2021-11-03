@@ -16,6 +16,7 @@ import {
   Modal,
   ModalBody,
 } from "reactstrap";
+import TableAnt from 'antd/es/table';
 import "react-image-lightbox/style.css";
 import { ActionButton } from "@widget";
 import { useState } from "react";
@@ -30,13 +31,17 @@ import { useEffect } from "react";
 import { useFormik } from "formik";
 import { initialValues, validationSchema } from "./ProductConstant";
 import ProductModel from "models/ProductModel/index";
+import ProductPage from "models/ProductPage/index"; // product page
 import MessageError from "./MessageError";
 import Loading from "../Common/Loading";
 import InterpertTable from "./InterpertTable";
 import "./style.scss";
+import { columns, columns_config, columns_config_child, columns_page_child, columns_product_page } from "./const_page";
+import PopUpChildPage from "./PopUpChildPage";
 const _authorModel = new AuthorModel();
 const _productCategoryModel = new ProductCategoryModel();
 const _productModel = new ProductModel();
+const _productPageModel = new ProductPage();
 
 function ProductAdd({ noEdit = false, productId = null }) {
   const [alerts, setAlerts] = useState([]);
@@ -47,6 +52,20 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const [loading, setLoading] = useState(false);
   const [isShowConfig, setShowConfig] = useState(null);
   const [attributeGroupSelected, setAttributeGroupSelected] = useState(null);
+  const [dataPage, setdataPage] = useState([])
+  const [expandedRowKeys, set_expandedRowKeys] = useState([]);
+  const [isShowProductConfig, setShowProductConfig] = useState(false);
+  const [dataProductPage, setDataProductPage] = useState([]);
+  const [total_page, set_total_page] = useState(0);
+  const [productPageAttributeGroup, setProductAttributeGroup] = useState([]);
+  const [namePageProduct, setNamePageProduct] = useState({
+    name_page: null,
+    product_page_id: null,
+    attributes_group_id: null,
+    index_parent: null,
+    index_child: null,
+  });
+  const [itemInterPertPage, setItemInterPertPage] = useState([]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -61,6 +80,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
 
   useEffect(() => {
     initData();
+
   }, []);
 
   const initData = async () => {
@@ -72,8 +92,15 @@ function ProductAdd({ noEdit = false, productId = null }) {
           ...initialValues,
           ...product,
         };
+
+        let data_productPage = [...product.product_page]
+
+        for (let i = 0; i < data_productPage.length; i++) {
+          data_productPage[i].rowIndex = i;
+        }
+        formik.setFieldValue("product_page", data_productPage);
         setProduct(value);
-        console.log(value)
+        
       }
       let data = await _productCategoryModel.getOptions({ is_active: 1 });
       let productCategoryOption = mapDataOptions4Select(data);
@@ -88,6 +115,10 @@ function ProductAdd({ noEdit = false, productId = null }) {
       let listAttributesGroup = await _productModel.getListAttributesGroup();
 
       setAttributesGroup(listAttributesGroup);
+      setProductAttributeGroup(listAttributesGroup);// set attribute for page product
+      // get list produt page
+      const dataProductPage = await _productPageModel.getListProductPage();
+      setDataProductPage(dataProductPage);
     } catch (error) {
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
     } finally {
@@ -141,7 +172,6 @@ function ProductAdd({ noEdit = false, productId = null }) {
       let { errors, statusText, message } = error;
 
       let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
-
       setAlerts([{ color: "danger", msg }]);
       window.scrollTo(0, 0);
     } finally {
@@ -168,15 +198,16 @@ function ProductAdd({ noEdit = false, productId = null }) {
       return attributesGroup.map(({ attributes_group_id: value, attributes_group_name: label }) => {
         return product_attributes.find((p) => p.attributes_group_id == value)
           ? {
-              value,
-              label,
-              isDisabled: true,
-            }
+            value,
+            label,
+            isDisabled: true,
+          }
           : { value, label };
       });
     }
     return [];
   };
+
   const callAPIInterPret = async (query) => {
     let attrProduct = [...formik.values.product_attributes];
     let interprets = await _productModel.interpretList({
@@ -185,16 +216,16 @@ function ProductAdd({ noEdit = false, productId = null }) {
 
     attrProduct[query.index].interprets = interprets.listInterpret
       ? interprets.listInterpret.map((item) => {
-          return {
-            ...item,
-            ...{
-              is_show_search_result: true,
-              text_url: "",
-              url: "",
-              is_selected: true,
-            },
-          };
-        })
+        return {
+          ...item,
+          ...{
+            is_show_search_result: true,
+            text_url: "",
+            url: "",
+            is_selected: true,
+          },
+        };
+      })
       : [];
 
     attrProduct[query.index].interprets = attrProduct[query.index].interprets.map((item, index) => {
@@ -333,6 +364,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
         <tbody>
           {formik.values.product_attributes && formik.values.product_attributes.length ? (
             formik.values.product_attributes.map((item, index) => (
+
               <tr key={index}>
                 <td
                   className="text-center"
@@ -391,7 +423,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                     color="primary"
                     onClick={() => handleShowPopupConfig(item, index)}
                     className="btn-sm"
-                    disabled={item.attributes_group_id==null || noEdit}
+                    disabled={item.attributes_group_id == null || noEdit}
                   >
                     {" "}
                     <i className="fa fa-cog"></i>
@@ -414,6 +446,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                     <i className="fa fa-trash" />
                   </Button>
                 </td>
+
               </tr>
             ))
           ) : (
@@ -428,6 +461,255 @@ function ProductAdd({ noEdit = false, productId = null }) {
     );
   };
 
+
+
+  const optionPageProductGroup = () => {
+    let { product_page = [] } = formik.values || {};
+    if (dataProductPage && dataProductPage.length > 0) {
+      return dataProductPage.map(({ product_page_id: value, title_page: label }) => {
+        return product_page.find((p) => p.product_page_id == value)
+          ? {
+            value,
+            label,
+            isDisabled: true,
+          }
+          : { value, label };
+      });
+    }
+    return [];
+  };
+
+  const optionAttProductPage = (parent_key) => {
+
+    let product_page = formik.values.product_page[parent_key] || {};
+    if (productPageAttributeGroup && productPageAttributeGroup.length > 0) {
+      return productPageAttributeGroup.map(({ attributes_group_id: value, attributes_group_name: label }) => {
+        return product_page.data_child.find((p) => p.attributes_group_id == value)
+          ? {
+            value,
+            label,
+            isDisabled: true,
+          }
+          : { value, label };
+      });
+    }
+    return [];
+  };
+
+
+  const handleChangeProductPageGroup = (selected, record, index) => { // change select page product
+    let pageProduct = [...formik.values.product_page];
+    pageProduct[index].product_page_id = selected ? selected.value : null;
+    pageProduct[index].rowIndex = parseInt(index);
+    pageProduct[index].name_page = selected ? selected.label : null;
+    
+
+    setNamePageProduct({
+      name_page: record.name_page,
+      product_page_id: record.product_page_id,
+      attributes_group_id: null,
+      index_parent: null,
+      index_child: null,
+    });
+    formik.setFieldValue("product_page", pageProduct);
+    onTableRowExpand(true, { rowIndex: pageProduct[index].rowIndex });
+
+  }
+
+  const handleChangeAttributesPageProduct = (selected, record, index, parent_key) => {
+    let pageProduct = [...formik.values.product_page];
+    pageProduct[parent_key].data_child[index].attributes_group_id = selected ? selected.value : null;
+    pageProduct[parent_key].data_child[index].show_index = parseInt(index + 1);
+    pageProduct[parent_key].data_child[index].data_selected = [];
+    formik.setFieldValue("product_page", pageProduct);
+
+    setNamePageProduct({
+      ...namePageProduct,
+      attributes_group_id: pageProduct[parent_key].data_child[index].attributes_group_id,
+
+
+    });
+
+    // some thing here
+    let query = {
+      index_parent: parent_key,
+      index_child: index,
+      attributes_group_id: selected ? selected.value : null,
+    };
+    callAPIInterPretProductPage(query);
+
+
+  }
+
+  // thay đổi vị trí hiển thị
+  const changeShowIndex = (value, parent_index, index) => {
+    let pageProduct = [...formik.values.product_page];
+    let show_index = pageProduct[parent_index].data_child.length == 1 ? 1 : value;
+    pageProduct[parent_index].data_child[index].show_index = show_index;
+    formik.setFieldValue("product_page", pageProduct);
+
+  }
+
+  // call api get interpret for product page
+  const callAPIInterPretProductPage = async (query) => {
+    let product_page = [...formik.values.product_page];
+    let interprets = await _productPageModel.getListInterPertProductPage(query.attributes_group_id);
+    product_page[query.index_parent].data_child[query.index_child].data_interpret = interprets;
+    formik.setFieldValue("product_page", product_page);
+  };
+
+  const setShowProductPage = async (data_interpret, index, parent_key) => { // show model product page
+    await setItemInterPertPage(data_interpret);
+    setNamePageProduct({
+      ...namePageProduct,
+      index_parent: parent_key,
+      index_child: index,
+    });
+    setShowProductConfig(true);
+  }
+
+  const handleAddProductPage = () => { // add new apge
+
+    let product_page_add = {
+      id_product_page: null, // page_id
+      product_page_id: null,
+      name_page: null,
+      data_child: [
+        {
+          attributes_group_id: null,
+          show_index: null,
+          data_interpret: null,
+          data_selected: null,
+        },
+      ]
+    };
+
+    let { product_page = [] } = formik.values || {};
+    let check_product_page = dataProductPage.find((p) => p.product_page_id == product_page_add.product_page_id);
+    if (!check_product_page) {
+      formik.setFieldValue("product_page", [...product_page, product_page_add]);
+    }
+
+  }
+
+
+  const handleAddChildProductPage = (index) => { // add item child product page
+    let pageProduct = [...formik.values.product_page];
+    const new_child = [...pageProduct[index].data_child]
+    new_child.push(
+      {
+        attributes_group_id: null,
+        show_index: null,
+        data_interpret: null,
+        data_selected: null,
+      },
+    )
+    pageProduct[index].data_child = new_child;
+    formik.setFieldValue("product_page", pageProduct);
+  }
+
+  const deleteItemPage = (index) => {
+
+    let pageProduct = [...formik.values.product_page];
+    pageProduct.splice(index, 1);
+    formik.setFieldValue("product_page", pageProduct);
+  }
+
+  const handleDeleteChildProductPage = (child_key, parent_key) => { // xoá child product page
+    const pageProduct = [...formik.values.product_page];
+    const index_parent = pageProduct.findIndex((item, index) => index === parent_key);
+    const index_child = pageProduct[index_parent].data_child.findIndex((item, index) => index === child_key);
+    const newPageProduct = [...pageProduct];
+    newPageProduct[index_parent].data_child.map((item, index) => {
+      if (newPageProduct[index_parent].data_child[index_child].show_index < newPageProduct[index_parent].data_child[index].show_index) {
+        newPageProduct[index_parent].data_child[index].show_index = newPageProduct[index_parent].data_child[index].show_index - 1
+      }
+    })
+    if (index_child !== -1) {
+      pageProduct[index_parent].data_child.splice(index_child, 1);
+    }
+    formik.setFieldValue("product_page", pageProduct);
+  }
+
+
+
+  const _expandableProductPage = (parent_index, data_child) => { // children product page
+    let new_data = [...data_child];
+
+    return (
+      <div style={{ paddingLeft: 27 }}>
+        <TableAnt
+          rowKey="key"
+          className="custome_table"
+          columns={columns_page_child(
+            parent_index,
+            handleDeleteChildProductPage,
+            setShowProductPage,
+            noEdit,
+            optionAttProductPage(parent_index),
+            handleChangeAttributesPageProduct,
+            setNamePageProduct,
+            changeShowIndex,
+          )}
+          locale={{
+            emptyText: 'Không có dữ liệu',
+          }}
+          dataSource={new_data}
+          pagination={false}
+          bordered={true}
+          footer={() => {
+            return (
+              <Button
+                color="success"
+                className="btn-sm"
+                type="button"
+                onClick={() => {
+                  handleAddChildProductPage(parent_index)
+
+                }}>
+                <i className="fa fa-plus" />
+                Thêm dòng
+              </Button>
+            )
+          }}
+        />
+
+      </div>
+    )
+  }
+
+  const onTableRowExpand = (expanded, record) => {
+    let keys = [];
+    if (expanded) {
+      keys.push(record.rowIndex);
+    }
+    set_expandedRowKeys(keys);
+  }
+  const renderProductPage = () => { // product page
+    return (
+      <TableAnt
+        columns={columns_product_page(
+          noEdit,
+          deleteItemPage,
+          optionPageProductGroup,
+          handleChangeProductPageGroup
+        )}
+        rowKey={record => record.rowIndex}
+        locale={{
+          emptyText: 'Không có dữ liệu',
+        }}
+        bordered={true}
+        expandedRowKeys={expandedRowKeys}
+        onExpand={onTableRowExpand}
+        expandable={{
+          expandedRowRender: (record, index) => _expandableProductPage(index, record.data_child),
+          rowExpandable: (record) => record.product_page_id !== null,
+        }}
+        dataSource={formik.values.product_page}
+        pagination={false}
+      />
+    )
+  }
   const handleShowPopupConfig = async (item, index) => {
     let itemCl = JSON.parse(JSON.stringify(item));
     setAttributeGroupSelected(itemCl);
@@ -535,7 +817,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                                 formik.setFieldValue("product_name_show_web", target.value);
                                 formik.setFieldValue("url_product", changeAlias(target.value));
                               }}
-                              // {...formik.getFieldProps("product_name")}
+                            // {...formik.getFieldProps("product_name")}
                             />
                             <MessageError formik={formik} name="product_name" />
                           </Col>
@@ -559,7 +841,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                                 formik.setFieldValue("product_name_show_web", target.value);
                                 formik.setFieldValue("url_product", changeAlias(target.value));
                               }}
-                              // {...formik.getFieldProps("product_name_show_web")}
+                            // {...formik.getFieldProps("product_name_show_web")}
                             />
                             <MessageError formik={formik} name="product_name_show_web" />
                           </Col>
@@ -647,7 +929,32 @@ function ProductAdd({ noEdit = false, productId = null }) {
                     )}
                   </Col>
                 </Row>
+                <Row className="mb-4">
+                  <Col xs={12}>
+                    <b className="title_page_h1 text-primary">Nội dung Page </b>
+                    <span className="font-weight-bold red-text"> * </span>
+                  </Col>
+                  <Col style={{ marginTop: 8 }} sm={12}>
+                    {renderProductPage()}
+                    <MessageError formik={formik} name="product_page" />
+                  </Col>
 
+                  <Col style={{ marginTop: 8 }} xs={12}>
+                    {!noEdit && (
+                      <Button
+                        className="btn-sm mt-1"
+                        color="secondary"
+                        onClick={handleAddProductPage}
+                        disabled={
+                          (formik.values.product_page || []).length == dataProductPage.length
+                        }
+                      >
+                        <i className="fa fa-plus mr-2" />
+                        Thêm dòng
+                      </Button>
+                    )}
+                  </Col>
+                </Row>
                 <Row className="mb-4">
                   <Col xs={12}>
                     <b className="title_page_h1 text-primary">Mô tả chi tiết </b>
@@ -819,6 +1126,18 @@ function ProductAdd({ noEdit = false, productId = null }) {
               attributeGroup={attributeGroupSelected}
               handleSubmit={handleSubmitConfig}
               callAPIInterPret={callAPIInterPret}
+            />
+          </ModalBody>
+        </Modal>
+      ) : null}
+      {isShowProductConfig ? (
+        <Modal isOpen={true} size={"lg"} style={{ maxWidth: "80rem" }}>
+          <ModalBody className="p-0">
+            <PopUpChildPage
+              handleClose={() => setShowProductConfig(false)}
+              detail_page={namePageProduct}
+              data_interpret={itemInterPertPage}
+              formik={formik}
             />
           </ModalBody>
         </Modal>

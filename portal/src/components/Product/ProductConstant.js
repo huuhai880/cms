@@ -241,7 +241,9 @@ export const initialValues = {
     is_show_web: true,
     product_attributes: [],
     is_web_view: false, //false: export pdf, true: show web
-    is_show_menu: false //co show tren menu hay khong?
+    is_show_menu: false, //co show tren menu hay khong?
+    product_page: [],
+    product_attributes: []
 }
 
 export const validationSchema = yup.object().shape({
@@ -261,6 +263,81 @@ export const validationSchema = yup.object().shape({
     product_content_detail: yup.string().required(
         "Mô tả là bắt buộc"
     ),
+    product_attributes: yup.array().nullable().required('Nội dung là bắt buộc.'),
+
+    product_page: yup.array()
+        .required('Nội dung page là bắt buộc.')
+        .test('product_page', null, (arr) => {
+            // check chọn page
+            const checkPageId = arr.findIndex((item, index) => {
+                return item.product_page_id == null
+            });
+            if (checkPageId !== -1) {
+                return new yup.ValidationError("Tên Page là bắt buôc.", null, 'product_page')
+            }
+            // check chọn chỉ số
+            const checkAttributesGroup = arr.findIndex((item) => {
+                return item.data_child.findIndex((item_child) => item_child.attributes_group_id == null) != -1
+            })
+            if (checkAttributesGroup !== -1) {
+                return new yup.ValidationError("Chỉ số là bắt buộc.", null, 'product_page')
+            }
+            // check value chi so
+
+            // check data chi so
+            const checkDataAttributesGroup = arr.findIndex((item) => {
+                return item.data_child.length == 0
+            })
+            if (checkDataAttributesGroup !== -1) {
+                return new yup.ValidationError("Chỉ số là bắt buộc.", null, 'product_page')
+            }
+
+
+            // check chọn luận giải chi tiết
+            const checkInterPertSelected = arr.findIndex((item) => {
+                return item.data_child.findIndex((item_child) => item_child.data_selected == null || item_child.data_selected.length == 0) != -1
+            })
+            if (checkInterPertSelected !== -1) {
+                return new yup.ValidationError("Luận giải chi tiết là bắt buộc.", null, 'product_page');
+            }
+
+            // check null thu tu hien thi
+            const checkValueShowIndex = arr.findIndex((item) => {
+                return item.data_child.findIndex((item_child) => item_child.show_index == null || item_child.show_index=='') != -1
+            })
+            if (checkValueShowIndex !== -1) {
+                return new yup.ValidationError("Vị trí hiển thị là bắt buộc.", null, 'product_page')
+            }
+
+            // check thứ tự hiển thị
+            const checkIndexAttGruop = arr.findIndex((item) => {
+                return item.data_child.findIndex((item_child) => item_child.show_index > item.data_child.length) != -1
+            });
+
+            if (checkIndexAttGruop !== -1) {
+                return new yup.ValidationError("Thứ tự hiển thị không lớn hơn số lượng chỉ số.", null, 'product_page');
+            }
+
+            // kiểm tra trùng lặp thứ tự hiển thị
+
+            let checkSameIndex = false;
+
+            arr.findIndex((item) => {
+                let alreadySeen = [];
+                item.data_child.forEach(function (str) {
+                    if (alreadySeen[str.show_index])
+                        checkSameIndex = true;
+                    else
+                        alreadySeen[str.show_index] = true;
+                });
+
+            });
+            if (checkSameIndex === true) {
+                return new yup.ValidationError("Thứ tự hiển thị không được trùng lặp.", null, 'product_page');
+            }
+
+            return true;
+        })
     // url_product: yup.string().required(
     //     "Url sản phẩm là bắt buộc"
     // ).nullable(),
