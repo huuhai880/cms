@@ -225,7 +225,7 @@ export const initialValues = {
   short_description: "",
   product_content_detail: "",
   product_images: [],
-  product_attributes:[],
+  product_attributes: [],
   is_active: true,
   is_show_web: true,
   product_attributes: [],
@@ -255,10 +255,10 @@ export const validationSchema = yup.object().shape({
     .test("product_attributes", null, (arr) => {
       // check chọn page
       const checkPageId = arr.findIndex((item, index) => {
-        return item.product_page_id == null;
+        return item.attributes_group_id == null;
       });
       if (checkPageId !== -1) {
-        return new yup.ValidationError("Chỉ số là bắt buôc.", null, "product_attributes");
+        return new yup.ValidationError("Chỉ số là bắt buộc.", null, "product_attributes");
       }
 
       return true;
