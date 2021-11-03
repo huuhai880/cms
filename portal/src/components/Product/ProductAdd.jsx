@@ -73,7 +73,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
           ...product,
         };
         setProduct(value);
-        console.log(value)
+        console.log(value);
       }
       let data = await _productCategoryModel.getOptions({ is_active: 1 });
       let productCategoryOption = mapDataOptions4Select(data);
@@ -391,7 +391,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                     color="primary"
                     onClick={() => handleShowPopupConfig(item, index)}
                     className="btn-sm"
-                    disabled={item.attributes_group_id==null || noEdit}
+                    disabled={item.attributes_group_id == null || noEdit}
                   >
                     {" "}
                     <i className="fa fa-cog"></i>
