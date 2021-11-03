@@ -99,7 +99,7 @@ export const column = (handleChangeInterpretConfig, handleChangeInterpretChildBy
       ),
     },
     {
-      title: "Text Link",
+      title: "Link",
       dataIndex: "url",
       width: "15%",
       key: "url",
