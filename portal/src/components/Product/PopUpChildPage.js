@@ -18,8 +18,6 @@ import { CircularProgress } from "@material-ui/core";
 import "./style.scss";
 import { columns_child_page_select, columns_page_selected } from "./const_page";
 
-
-
 const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, noEdit }) => {
     const [msgError, setMsgError] = useState(null);
     const [dataSelected, set_dataSelected] = useState([])
@@ -314,23 +312,19 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
 
     const checkShowIndexSelected = () => {
         let alreadySeen = [];
-        let alreadyIndex = [];
+        //  let alreadyIndex = [];
         let error_samekey = false;
         let error_mostkey = false;
         dataSelected.forEach(function (str) {
-            if (alreadySeen[str.attributes_id]) {
-                if (alreadyIndex[str.showIndex]) {
-                    error_samekey = true;
-                }
+            if (alreadySeen[str.attributes_id + '.' + str.showIndex]) {
+                error_samekey = true;
             } else {
-                alreadySeen[str.attributes_id] = true;
-                alreadyIndex[str.showIndex] = true;
+                alreadySeen[str.attributes_id + '.' + str.showIndex] = true;
+
             };
         });
         const counts = {};
-
         dataSelected.forEach(function (x) { counts[x.attributes_id] = (counts[x.attributes_id] || 0) + 1; });
-
         Object.keys(counts).map(function (objectKey, index) {
             let value = counts[objectKey];
             for (let i = 0; i < dataSelected.length; i++) {
@@ -339,13 +333,12 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                 }
             }
         });
-
-        if (error_samekey === true) {
-            formik.setFieldError("error_samekey", "Thứ tự không thể trùng lặp!");
+        if (dataSelected.findIndex((item) => item.showIndex == null || item.showIndex.length == 0) != -1) {
+            formik.setFieldError("error_samekey", "Thứ tự hiển thị là bắt buộc!");
+        } else if (error_samekey === true) {
+            formik.setFieldError("error_samekey", "Thứ tự hiển thị không thể trùng lặp!");
         } else if (error_mostkey === true) {
             formik.setFieldError("error_samekey", "Thứ tự không lớn hơn số thuộc tính!");
-        } else if (dataSelected.findIndex((item) => item.showIndex == null || item.showIndex.length == 0) != -1) {
-            formik.setFieldError("error_samekey", "Thứ tự hiển thị là bắt buộc!");
         }
         else {
             _handleSubmitSelectPageProduct();
@@ -357,6 +350,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
         pageProduct[detail_page.index_parent].data_child[detail_page.index_child].data_selected = dataSelected;
         formik.setFieldValue("product_page", pageProduct);
         handleClose();
+        
     }
 
     return (
@@ -370,7 +364,11 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                     }}
                 >
                     <div className="flex-fill font-weight-bold">CHỌN LUẬN GIẢI CHI TIẾT PAGE {detail_page.name_page} </div>
-                    <Button color="danger" size="md" onClick={handleClose}>
+                    <Button color="danger" size="md" onClick={()=>{
+                        handleClose()
+                        formik.setFieldError('error_samekey',false)
+                        
+                    }}>
                         <i className={`fa fa-remove`} />
                     </Button>
                 </CardHeader>
@@ -625,7 +623,10 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                     <FormGroup className="mb-2 ml-2 mb-sm-0">
                         <Button
                             className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                            onClick={() => handleClose()}
+                            onClick={() => {
+                                handleClose();
+                                formik.setFieldError('error_samekey',false)
+                            }}
                             type="button"
                             size="sm"
                         >
