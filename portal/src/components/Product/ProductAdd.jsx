@@ -56,7 +56,6 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const [expandedRowKeys, set_expandedRowKeys] = useState([]);
   const [isShowProductConfig, setShowProductConfig] = useState(false);
   const [dataProductPage, setDataProductPage] = useState([]);
-  const [total_page, set_total_page] = useState(0);
   const [productPageAttributeGroup, setProductAttributeGroup] = useState([]);
   const [namePageProduct, setNamePageProduct] = useState({
     name_page: null,
@@ -65,6 +64,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
     index_parent: null,
     index_child: null,
   });
+  const [save_dateProductPage, setSaveDataProductPage] = useState([]);
   const [itemInterPertPage, setItemInterPertPage] = useState([]);
 
   const formik = useFormik({
@@ -98,9 +98,10 @@ function ProductAdd({ noEdit = false, productId = null }) {
         for (let i = 0; i < data_productPage.length; i++) {
           data_productPage[i].rowIndex = i;
         }
+        setSaveDataProductPage([...product.product_page]);
         formik.setFieldValue("product_page", data_productPage);
         setProduct(value);
-        
+
       }
       let data = await _productCategoryModel.getOptions({ is_active: 1 });
       let productCategoryOption = mapDataOptions4Select(data);
@@ -346,17 +347,17 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const renderProductAttributes = () => {
     return (
       <Table size="sm" bordered striped hover className="tb-product-attributes mt-2">
-        <thead>
+        <thead >
           <tr>
             <th className="text-center" style={{ width: 100 }}>
               STT
             </th>
-            <th className="text-center">Chỉ số</th>
+            <th className="text-center"  >Chỉ số</th>
             {/* <th className="text-center">Luận giải chi tiết</th> */}
-            <th className="text-center" style={{ width: 100 }}>
+            <th className="text-center" style={{ width: 100 }} >
               Cấu hình
             </th>
-            <th className="text-center" style={{ width: 100 }}>
+            <th className="text-center" style={{ width: 100 }} >
               Thao tác
             </th>
           </tr>
@@ -502,7 +503,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
     pageProduct[index].product_page_id = selected ? selected.value : null;
     pageProduct[index].rowIndex = parseInt(index);
     pageProduct[index].name_page = selected ? selected.label : null;
-    
+
 
     setNamePageProduct({
       name_page: record.name_page,
@@ -521,8 +522,8 @@ function ProductAdd({ noEdit = false, productId = null }) {
     pageProduct[parent_key].data_child[index].attributes_group_id = selected ? selected.value : null;
     pageProduct[parent_key].data_child[index].show_index = parseInt(index + 1);
     pageProduct[parent_key].data_child[index].data_selected = [];
+   
     formik.setFieldValue("product_page", pageProduct);
-
     setNamePageProduct({
       ...namePageProduct,
       attributes_group_id: pageProduct[parent_key].data_child[index].attributes_group_id,
@@ -637,10 +638,10 @@ function ProductAdd({ noEdit = false, productId = null }) {
     let new_data = [...data_child];
 
     return (
-      <div style={{ paddingLeft: 27 }}>
+      <div style={{ paddingLeft: 27, marginTop: -4 }}>
         <TableAnt
           rowKey="key"
-          className="custome_table"
+          className="custome_table custome_table_border"
           columns={columns_page_child(
             parent_index,
             handleDeleteChildProductPage,
@@ -663,6 +664,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                 color="success"
                 className="btn-sm"
                 type="button"
+                disabled={noEdit}
                 onClick={() => {
                   handleAddChildProductPage(parent_index)
 
@@ -688,6 +690,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const renderProductPage = () => { // product page
     return (
       <TableAnt
+        className="custome_table"
         columns={columns_product_page(
           noEdit,
           deleteItemPage,
@@ -696,7 +699,13 @@ function ProductAdd({ noEdit = false, productId = null }) {
         )}
         rowKey={record => record.rowIndex}
         locale={{
-          emptyText: 'Không có dữ liệu',
+          emptyText: (
+            <tr className={'emty_data_table_ant'}>
+              <td className="text-center" colSpan={50}>
+                Không có dữ liệu
+              </td>
+            </tr>
+          )
         }}
         bordered={true}
         expandedRowKeys={expandedRowKeys}
@@ -1138,6 +1147,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
               detail_page={namePageProduct}
               data_interpret={itemInterPertPage}
               formik={formik}
+              noEdit={noEdit}
             />
           </ModalBody>
         </Modal>
