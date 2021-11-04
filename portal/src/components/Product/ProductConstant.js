@@ -228,7 +228,6 @@ export const initialValues = {
   product_attributes: [],
   is_active: true,
   is_show_web: true,
-  product_attributes: [],
   is_web_view: false, //false: export pdf, true: show web
   is_show_menu: false, //co show tren menu hay khong?
 };
