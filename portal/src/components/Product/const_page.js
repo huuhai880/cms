@@ -173,6 +173,7 @@ export const columns_page_child = (parent_key,
                         <Input
                             type="number"
                             name="url"
+                            className={'text-center'}
                             disabled={noEdit}
                             readOnly={record.isEdit}
                             value={showIndex}
@@ -286,10 +287,7 @@ export const columns_page_selected = (un_selected, changeRowIndexSelect,noEdit) 
         key: 'attributes_name',
         render: (attributes_name) => {
             return (
-                <div style={{
-                    display: "flex",
-                    justifyContent: "center"
-                }}>
+                <div>
                     <span>
                         {attributes_name}
                     </span>
@@ -304,7 +302,7 @@ export const columns_page_selected = (un_selected, changeRowIndexSelect,noEdit) 
         key: 'interpret_detail_name',
         render: (interpret_detail_name) => {
             return (
-                <div >
+                <div>
                     <span>
                         {interpret_detail_name}
                     </span>
@@ -329,6 +327,7 @@ export const columns_page_selected = (un_selected, changeRowIndexSelect,noEdit) 
                         disabled={noEdit}
                         type="number"
                         name="url"
+                        className={'text-center'}
                         readOnly={record.isEdit}
                         onChange={(e) => changeRowIndexSelect(index, e.target.value)}
                         value={showIndex}

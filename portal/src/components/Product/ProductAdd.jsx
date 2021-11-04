@@ -38,6 +38,7 @@ import InterpertTable from "./InterpertTable";
 import "./style.scss";
 import { columns, columns_config, columns_config_child, columns_page_child, columns_product_page } from "./const_page";
 import PopUpChildPage from "./PopUpChildPage";
+
 const _authorModel = new AuthorModel();
 const _productCategoryModel = new ProductCategoryModel();
 const _productModel = new ProductModel();
@@ -98,7 +99,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
         for (let i = 0; i < data_productPage.length; i++) {
           data_productPage[i].rowIndex = i;
         }
-        setSaveDataProductPage([...product.product_page]);
+        setSaveDataProductPage(JSON.parse(JSON.stringify(product.product_page)));
         formik.setFieldValue("product_page", data_productPage);
         setProduct(value);
 
@@ -519,10 +520,25 @@ function ProductAdd({ noEdit = false, productId = null }) {
 
   const handleChangeAttributesPageProduct = (selected, record, index, parent_key) => {
     let pageProduct = [...formik.values.product_page];
+    const save_data = [...save_dateProductPage];
     pageProduct[parent_key].data_child[index].attributes_group_id = selected ? selected.value : null;
     pageProduct[parent_key].data_child[index].show_index = parseInt(index + 1);
-    pageProduct[parent_key].data_child[index].data_selected = [];
-   
+
+    if (save_data.length > 0) {
+      if (save_data[parent_key] !== undefined) {
+        const checkIndexKey = save_data[parent_key].data_child.findIndex((item) => item.attributes_group_id === selected.value)
+        if (checkIndexKey !== -1) {
+          pageProduct[parent_key].data_child[index].data_selected = save_data[parent_key].data_child[checkIndexKey].data_selected;
+        } else {
+          pageProduct[parent_key].data_child[index].data_selected = [];
+        }
+      } else {
+        pageProduct[parent_key].data_child[index].data_selected = [];
+      }
+    } else {
+      pageProduct[parent_key].data_child[index].data_selected = [];
+    }
+
     formik.setFieldValue("product_page", pageProduct);
     setNamePageProduct({
       ...namePageProduct,
@@ -941,7 +957,6 @@ function ProductAdd({ noEdit = false, productId = null }) {
                 <Row className="mb-4">
                   <Col xs={12}>
                     <b className="title_page_h1 text-primary">Nội dung Page </b>
-                    <span className="font-weight-bold red-text"> * </span>
                   </Col>
                   <Col style={{ marginTop: 8 }} sm={12}>
                     {renderProductPage()}

@@ -17,8 +17,8 @@ import { Table } from "antd";
 import { CircularProgress } from "@material-ui/core";
 import "./style.scss";
 import { columns_child_page_select, columns_page_selected } from "./const_page";
-import { useFormik } from "formik";
-import MessageError from "./MessageError";
+
+
 
 const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, noEdit }) => {
     const [msgError, setMsgError] = useState(null);
@@ -86,12 +86,11 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
         return str;
     };
     const rowSelection = {
-        onChange: (selectedRowKeys) => {
-            setSelectedRowKeys(selectedRowKeys);
-        },
         onSelect: (record, selected) => {
-            const data_select = [...dataSelected]
+            const data_select = [...dataSelected];
+            const selectKeys = [...isSelectedRowKeys];
             if (selected) {
+                selectKeys.push(record.interpret_detail_id);
                 const set_data_selected = {
                     attributes_id: record.attributes_id,
                     attributes_name: record.attributes_name,
@@ -115,12 +114,16 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                 });
             } else {
                 const index_select = data_select.findIndex((item) => item.interpret_detail_id === record.interpret_detail_id);
+                const index_rowKey = selectKeys.findIndex((item) => item == record.interpret_detail_id);
                 for (let i = 0; i < data_select.length; i++) {
-                    if (data_select[index_select].showIndex < data_select[i].showIndex) {
+                    if (data_select[index_select].showIndex < data_select[i].showIndex
+                        && data_select[i].attributes_id == record.attributes_id
+                    ) {
                         data_select[i].showIndex = data_select[i].showIndex - 1;
                     }
                 }
                 data_select.splice(index_select, 1);
+                selectKeys.splice(index_rowKey, 1);
                 const length_attributes = data_select.filter(item => item.attributes_id == record.attributes_id).length;
                 if (length_attributes === 1) {
                     data_select.map((item, index) => {
@@ -130,44 +133,90 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                     })
                 }
             }
+            setSelectedRowKeys(selectKeys);
             set_dataSelected(data_select);
             setSaveDataSelected(data_select);
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
-            const data_select = []
+            const data_select = [...dataSelected];
+            const selectAllKeys = [...isSelectedRowKeys];
             if (selected) {
-                selectedRows.map((item) => {
-                    const set_data_selected = {
-                        id_product_page: null,
-                        attributes_id: item.attributes_id,
-                        attributes_name: item.attributes_name,
-                        attributes_group_id: item.attributes_group_id,
-                        interpret_id: item.interpret_id,
-                        interpret_detail_id: item.interpret_detail_id,
-                        interpret_detail_name: item.interpret_detail_name,
-                        showIndex: 1,
-                        isEdit: true,
-                    }
-                    data_select.map((item_select, index) => {
-                        if (item_select.attributes_id === item.attributes_id) {
-                            set_data_selected.showIndex = set_data_selected.showIndex + 1;
-                            set_data_selected.isEdit = false;
-                            data_select[index].isEdit = false;
+                if (data_select.length > 0) {
+                    selectedRows.map((item) => {
+                        if (item != undefined || item != null) {
+                            const checkexist = data_select.findIndex((item_child) => item.interpret_detail_id == item_child.interpret_detail_id);
+                            if (checkexist === -1) {
+                                selectAllKeys.push(item.interpret_detail_id);
+                                const set_data_selected = {
+                                    id_product_page: null,
+                                    attributes_id: item.attributes_id,
+                                    attributes_name: item.attributes_name,
+                                    attributes_group_id: item.attributes_group_id,
+                                    interpret_id: item.interpret_id,
+                                    interpret_detail_id: item.interpret_detail_id,
+                                    interpret_detail_name: item.interpret_detail_name,
+                                    showIndex: 1,
+                                    isEdit: true,
+                                }
+                                data_select.map((item_select, index) => {
+                                    if (item_select.attributes_id === item.attributes_id) {
+                                        set_data_selected.showIndex = set_data_selected.showIndex + 1;
+                                        set_data_selected.isEdit = false;
+                                        data_select[index].isEdit = false;
+                                    }
+                                })
+                                data_select.push(set_data_selected);
+                            }
                         }
                     })
-
-                    data_select.push(set_data_selected);
-                })
+                } else {
+                    selectedRows.map((item) => {
+                        if (item != undefined || item != null) {
+                            selectAllKeys.push(item.interpret_detail_id);
+                            const set_data_selected = {
+                                id_product_page: null,
+                                attributes_id: item.attributes_id,
+                                attributes_name: item.attributes_name,
+                                attributes_group_id: item.attributes_group_id,
+                                interpret_id: item.interpret_id,
+                                interpret_detail_id: item.interpret_detail_id,
+                                interpret_detail_name: item.interpret_detail_name,
+                                showIndex: 1,
+                                isEdit: true,
+                            }
+                            data_select.map((item_select, index) => {
+                                if (item_select.attributes_id === item.attributes_id) {
+                                    set_data_selected.showIndex = set_data_selected.showIndex + 1;
+                                    set_data_selected.isEdit = false;
+                                    data_select[index].isEdit = false;
+                                }
+                            })
+                            data_select.push(set_data_selected);
+                        }
+                    })
+                }
                 data_select.sort(function (a, b) {
                     return a.attributes_id - b.attributes_id
                 });
 
+            } else {
+
+                changeRows.map((item) => {
+                    data_select.map((item_child, index_child) => {
+                        if (item.interpret_detail_id === item_child.interpret_detail_id) {
+                            data_select.splice(index_child, 1);
+                            const index_rowKey = selectAllKeys.findIndex((item) => item == item_child.interpret_detail_id);
+                            selectAllKeys.splice(index_rowKey, 1);
+                        }
+                    })
+                })
             }
+            setSelectedRowKeys(selectAllKeys);
             set_dataSelected(data_select);
             setSaveDataSelected(data_select);
         },
-        getCheckboxProps:()=>({
-            disabled:noEdit
+        getCheckboxProps: () => ({
+            disabled: noEdit
         })
     };
 
@@ -335,9 +384,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                             </span>
                             <Form autoComplete="nope" className="zoom-scale-9">
                                 <Row>
-
                                     <Col sm={6} xs={12}>
-
                                         <FormGroup className="mb-2 mb-sm-0">
                                             <Label for="inputValue" className="mr-sm-2">
                                                 Từ khóa
@@ -375,7 +422,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                                                 className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                                                 onClick={() => {
                                                     searchInterPertDetail("");
-                                                    setKeyword("")
+                                                    setKeyword("");
                                                 }}
                                                 type="button"
                                                 size="sm"
@@ -520,7 +567,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                         <Col xs={12} sm={12}>
                             {isloadingSelected ? (
                                 <Card className={`animated fadeIn mb-3 `}>
-                                    <div  className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                                    <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
                                         <CircularProgress />
                                     </div>
                                 </Card>
