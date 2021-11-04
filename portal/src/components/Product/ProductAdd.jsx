@@ -929,7 +929,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                     )}
                   </Col>
                 </Row>
-                <Row className="mb-4">
+                {/* <Row className="mb-4">
                   <Col xs={12}>
                     <b className="title_page_h1 text-primary">Nội dung Page </b>
                     <span className="font-weight-bold red-text"> * </span>
@@ -954,7 +954,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                       </Button>
                     )}
                   </Col>
-                </Row>
+                </Row> */}
                 <Row className="mb-4">
                   <Col xs={12}>
                     <b className="title_page_h1 text-primary">Mô tả chi tiết </b>

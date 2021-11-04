@@ -362,40 +362,41 @@ const createProduct = async (bodyParams = {}) => {
         }
       }
     }
-    // tạo product page
-    let product_page = apiHelper.getValueFromObject(
-      bodyParams,
-      'product_page',
-      []
-    );
 
-    if (product_page && product_page.length > 0) {
-      const reqProductPage = new sql.Request(transaction);
-      for (let i = 0; i < product_page.length; i++) {
-        const data_child = product_page[i].data_child;
-        for (let j = 0; j < data_child.length; j++) {
-          const data_selected = data_child[j].data_selected;
-          for (let k = 0; k < data_selected.length; k++) {
-            await reqProductPage
-              .input('PRODUCTPAGEID', product_page[i].id_product_page)
-              .input('PRODUCTID', product_id)
-              .input('PAGEID', product_page[i].product_page_id)
-              .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
-              .input('ATTRIBUTEID', data_selected[k].attributes_id)
-              .input('INTERPRETID', data_selected[k].interpret_id)
-              .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
-              .input('ORDERINDEX', data_child[j].show_index)
-              .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
-              .input('CREATEDUSER', apiHelper.getValueFromObject(
-                bodyParams,
-                'auth_name',
-                'administrator'
-              ))
-              .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
-          }
-        }
-      }
-    }
+    // tạo product page
+    // let product_page = apiHelper.getValueFromObject(
+    //   bodyParams,
+    //   'product_page',
+    //   []
+    // );
+
+    // if (product_page && product_page.length > 0) {
+    //   const reqProductPage = new sql.Request(transaction);
+    //   for (let i = 0; i < product_page.length; i++) {
+    //     const data_child = product_page[i].data_child;
+    //     for (let j = 0; j < data_child.length; j++) {
+    //       const data_selected = data_child[j].data_selected;
+    //       for (let k = 0; k < data_selected.length; k++) {
+    //         await reqProductPage
+    //           .input('PRODUCTPAGEID', product_page[i].id_product_page)
+    //           .input('PRODUCTID', product_id)
+    //           .input('PAGEID', product_page[i].product_page_id)
+    //           .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
+    //           .input('ATTRIBUTEID', data_selected[k].attributes_id)
+    //           .input('INTERPRETID', data_selected[k].interpret_id)
+    //           .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
+    //           .input('ORDERINDEX', data_child[j].show_index)
+    //           .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
+    //           .input('CREATEDUSER', apiHelper.getValueFromObject(
+    //             bodyParams,
+    //             'auth_name',
+    //             'administrator'
+    //           ))
+    //           .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+    //       }
+    //     }
+    //   }
+    // }
     //--- end --
 
 
@@ -607,50 +608,48 @@ const updateProduct = async (bodyParams = {}) => {
     }
 
     // ---- update product page ---
+    // let product_page = apiHelper.getValueFromObject(
+    //   bodyParams,
+    //   'product_page',
+    //   []
+    // );
+    // const reqDelPageProduct = new sql.Request(transaction);
+    // await reqDelPageProduct
+    //   .input('PRODUCTID', product_id)
+    //   .input(
+    //     'DELETEDUSER',
+    //     apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator')
+    //   )
+    //   .execute('MD_PRODUCT_PAGE_DeleteProductPage_AdminWeb');
 
-
-    let product_page = apiHelper.getValueFromObject(
-      bodyParams,
-      'product_page',
-      []
-    );
-    const reqDelPageProduct = new sql.Request(transaction);
-    await reqDelPageProduct
-      .input('PRODUCTID', product_id)
-      .input(
-        'DELETEDUSER',
-        apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator')
-      )
-      .execute('MD_PRODUCT_PAGE_DeleteProductPage_AdminWeb');
-
-    if (product_page && product_page.length > 0) {
-      const reqProductPage = new sql.Request(transaction);
-      for (let i = 0; i < product_page.length; i++) {
-        const data_child = product_page[i].data_child;
-        for (let j = 0; j < data_child.length; j++) {
-          const data_selected = data_child[j].data_selected;
+    // if (product_page && product_page.length > 0) {
+    //   const reqProductPage = new sql.Request(transaction);
+    //   for (let i = 0; i < product_page.length; i++) {
+    //     const data_child = product_page[i].data_child;
+    //     for (let j = 0; j < data_child.length; j++) {
+    //       const data_selected = data_child[j].data_selected;
           
-          for (let k = 0; k < data_selected.length; k++) {
-            await reqProductPage
-              .input('PRODUCTPAGEID', data_selected[k].product_page_id)
-              .input('PRODUCTID', product_id)
-              .input('PAGEID', product_page[i].product_page_id)
-              .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
-              .input('ATTRIBUTEID', data_selected[k].attributes_id)
-              .input('INTERPRETID', data_selected[k].interpret_id)
-              .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
-              .input('ORDERINDEX', data_child[j].show_index)
-              .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
-              .input('CREATEDUSER', apiHelper.getValueFromObject(
-                bodyParams,
-                'auth_name',
-                'administrator'
-              ))
-              .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
-          }
-        }
-      }
-    }
+    //       for (let k = 0; k < data_selected.length; k++) {
+    //         await reqProductPage
+    //           .input('PRODUCTPAGEID', data_selected[k].product_page_id)
+    //           .input('PRODUCTID', product_id)
+    //           .input('PAGEID', product_page[i].product_page_id)
+    //           .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
+    //           .input('ATTRIBUTEID', data_selected[k].attributes_id)
+    //           .input('INTERPRETID', data_selected[k].interpret_id)
+    //           .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
+    //           .input('ORDERINDEX', data_child[j].show_index)
+    //           .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
+    //           .input('CREATEDUSER', apiHelper.getValueFromObject(
+    //             bodyParams,
+    //             'auth_name',
+    //             'administrator'
+    //           ))
+    //           .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+    //       }
+    //     }
+    //   }
+    // }
 
 
     await transaction.commit();
