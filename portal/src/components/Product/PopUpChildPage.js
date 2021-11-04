@@ -20,7 +20,7 @@ import { columns_child_page_select, columns_page_selected } from "./const_page";
 import { useFormik } from "formik";
 import MessageError from "./MessageError";
 
-const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) => {
+const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, noEdit }) => {
     const [msgError, setMsgError] = useState(null);
     const [dataSelected, set_dataSelected] = useState([])
     const [keyword, setKeyword] = useState('');
@@ -165,9 +165,10 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
             }
             set_dataSelected(data_select);
             setSaveDataSelected(data_select);
-        }
-
-
+        },
+        getCheckboxProps:()=>({
+            disabled:noEdit
+        })
     };
 
     const un_rowSelection = (record) => {
@@ -294,7 +295,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
             formik.setFieldError("error_samekey", "Thứ tự không thể trùng lặp!");
         } else if (error_mostkey === true) {
             formik.setFieldError("error_samekey", "Thứ tự không lớn hơn số thuộc tính!");
-        }else if(dataSelected.findIndex((item)=>item.showIndex==null||item.showIndex.length==0) !=-1){
+        } else if (dataSelected.findIndex((item) => item.showIndex == null || item.showIndex.length == 0) != -1) {
             formik.setFieldError("error_samekey", "Thứ tự hiển thị là bắt buộc!");
         }
         else {
@@ -415,14 +416,17 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                             ) : (
                                 <div>
                                     <Table
+                                        disabled={true}
                                         rowKey={record => record.interpret_detail_id}
                                         className="components-table-demo-nested"
                                         dataSource={data_select}
                                         bordered={true}
                                         rowSelection={{
                                             selectedRowKeys: isSelectedRowKeys,
-                                            ...rowSelection
+                                            hideSelectAll: noEdit,
+                                            ...rowSelection,
                                         }}
+
                                         columns={columns_child_page_select()}
                                         locale={{
                                             emptyText: 'Không có dữ liệu',
@@ -516,7 +520,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                         <Col xs={12} sm={12}>
                             {isloadingSelected ? (
                                 <Card className={`animated fadeIn mb-3 `}>
-                                    <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                                    <div  className="d-flex flex-fill justify-content-center mt-5 mb-5">
                                         <CircularProgress />
                                     </div>
                                 </Card>
@@ -531,7 +535,8 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                                         }}
                                         columns={columns_page_selected(
                                             un_rowSelection,
-                                            changeRowIndexSelect
+                                            changeRowIndexSelect,
+                                            noEdit
                                         )}
                                         pagination={false}
                                         scroll={{ y: 270 }}
@@ -562,7 +567,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                             type="button"
                             size="sm"
                             disabled={
-                                dataSelected.length == 0
+                                dataSelected.length == 0 || noEdit
                             }
                             onClick={() => checkShowIndexSelected()}
                         >
