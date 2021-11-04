@@ -349,7 +349,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                     name={`attribute_group_id_${item.attributes_group_id}`}
                     onChange={(value) => handleChangeAttributesGroup(value, index)}
                     isSearchable={true}
-                    placeholder={"-- Chọn Thuộc tính --"}
+                    placeholder={"-- Chọn chỉ số--"}
                     value={convertValue(item.attributes_group_id, optionAttributesGroup() || [])}
                     options={optionAttributesGroup()}
                     isDisabled={noEdit}
