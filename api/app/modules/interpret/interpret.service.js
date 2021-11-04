@@ -32,13 +32,13 @@ const getInterpretsList = async (queryParams = {}) => {
     let interprets = InterpretClass.listInterpret(result);
     if (interprets && interprets.length > 0) {
       let interPretIds = interprets.map((item) => item.interpret_id).join(',');
-     
+
       const resDetail = await pool
         .request()
         .input('INTERPRETIDS', interPretIds)
         .input('KEYWORD', keyword)
         .execute('FOR_INTERPRETDETAIL_GetListByIds_AdminWeb');
-        console.log(resDetail)
+      console.log(resDetail);
       let listInterPretDetail =
         InterpretClass.listInterpretDetail(resDetail.recordset) || [];
       // console.log(resDetail)
@@ -349,19 +349,26 @@ const addIntergret = async (body = {}) => {
       if (interpret_id > 0) {
         for (let index = 0; index < body.attribute_list.length; index++) {
           const element = body.attribute_list[index];
+          // console.log(element);
 
           const requestInterpretAttibutes = new sql.Request(transaction);
           await requestInterpretAttibutes
-
+            .input(
+              'INTERPRETATTRIBUTEID',
+              apiHelper.getValueFromObject(element, 'interpret_attribute_id')
+            )
             .input(
               'ATTRIBUTEID',
-              apiHelper.getValueFromObject(element, 'value')
+              apiHelper.getValueFromObject(element, 'attribute_id')
             )
             .input(
               'MAINNUMBERID',
               apiHelper.getValueFromObject(element, 'mainnumber_id')
             )
-            .input('MAINNUMBER', apiHelper.getValueFromObject(element, 'label'))
+            .input(
+              'MAINNUMBER',
+              apiHelper.getValueFromObject(element, 'mainnumber')
+            )
             .input('INTERPRETID', interpret_id)
             .input(
               'CREATEDUSER',
@@ -630,7 +637,10 @@ const copyIntergret = async (body = {}) => {
               'MAINNUMBERID',
               apiHelper.getValueFromObject(element, 'mainnumber_id')
             )
-            .input('MAINNUMBER', apiHelper.getValueFromObject(element, 'label'))
+            .input(
+              'MAINNUMBER',
+              apiHelper.getValueFromObject(element, 'mainnumber')
+            )
             .input('INTERPRETID', interpret_id)
             .input(
               'CREATEDUSER',

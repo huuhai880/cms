@@ -101,9 +101,8 @@ function InterpertTable({ handleClose, attributeGroup, handleSubmit, callAPIInte
   const _handleSubmitFillter = (keyword) => {
     setLoading(true);
     let cl = { ...attributeGroup };
-
-    const searchFilter = cl.interprets.filter(
-      (interpert) => interpert.attribute_name.indexOf(changeAlias(keyword)) !== -1
+    const searchFilter = cl.interprets.filter((interpert) =>
+      changeAlias(interpert.attribute_name).includes(changeAlias(keyword))
     );
     cl.interprets = searchFilter;
     setInterpert(cl);

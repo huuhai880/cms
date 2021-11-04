@@ -105,7 +105,6 @@ function InterPretAdd({ noEdit }) {
     } finally {
       formik.setSubmitting(false);
       window.scrollTo(0, 0);
-
     }
   };
 
@@ -208,16 +207,20 @@ function InterPretAdd({ noEdit }) {
           formik.values.attribute_list.map((itemAttribute) => {
             // console.log(itemAttribute.value == item.attribute_id);
             // console.log(item);
-            if (itemAttribute.value == item.attribute_id) {
+            if (itemAttribute.attribute_id == item.attribute_id) {
               isDisabled = true;
             }
           });
         }
 
         return {
+          interpret_attribute_id: item.interpret_attribute_id,
           value: item.attribute_id,
           label: item.attribute_name,
+          attribute_id: item.attribute_id,
+          attribute_name: item.attribute_name,
           mainnumber_id: item.mainnumber_id,
+          mainnumber: item.mainnumber,
           isDisabled,
         };
       });
@@ -396,7 +399,7 @@ function InterPretAdd({ noEdit }) {
                                 options={getOptionAttributes()}
                                 // isMulti
                                 onChange={(value) => {
-                                  // console.log(typeof value);
+                                  // console.log(value);
                                   formik.setFieldValue("attribute_list", [
                                     ...formik.values.attribute_list,
                                     value,
@@ -541,6 +544,7 @@ function InterPretAdd({ noEdit }) {
 
                           {formik.values.attribute_list &&
                             formik.values.attribute_list.map((item, index) => {
+                              // console.log(formik.values.attribute_list);
                               return (
                                 <tbody>
                                   <tr key={index}>
@@ -548,7 +552,7 @@ function InterPretAdd({ noEdit }) {
                                       {index + 1}
                                     </td>
                                     <td className=" align-middle" width="50%">
-                                      {item.label}
+                                      {item.attribute_name}
                                     </td>
                                     <td className=" align-middle text-center" width="30%">
                                       {getMainNumBer(item.mainnumber_id)}

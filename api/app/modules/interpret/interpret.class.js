@@ -3,6 +3,7 @@ const config = require('../../../config/config');
 const template = {
   interpret_id: '{{#? INTERPRETID}}',
   interpret_detail_parent_id: '{{#? INTERPRETID}}',
+  interpret_attribute_id: '{{#? INTERPRETATTRIBUTEID}}',
   interpret_detail_id: '{{#? INTERPRETDETAILID}}',
   interpret_detail_name: '{{#? INTERPRETDETAILNAME}}',
   interpret_detail_parent_id: '{{#? PARENTID}}',
@@ -41,7 +42,6 @@ const template = {
   attributes_name: '{{#? ATTRIBUTESNAME}}',
   desc_attributes_gruop: '{{#? DESCRIPTIONATTRIBUTESGRUOP}}',
   introduction: '{{#? INTRODUCTION}}',
-
 };
 
 let transform = new Transform(template);
@@ -73,7 +73,7 @@ const listInterpretDetail = (users = []) => {
   ]);
 };
 const listAttributeDetail = (users = []) => {
-  return transform.transform(users, ['mainnumber_id', 'value', 'label']);
+  return transform.transform(users, ['interpret_attribute_id','mainnumber_id', 'attribute_id', 'attribute_name','mainnumber']);
 };
 const listInterpret = (users = []) => {
   return transform.transform(users, [
@@ -107,6 +107,7 @@ const listAttribute = (users = []) => {
     'attribute_id',
     'attribute_name',
     'mainnumber_id',
+    'mainnumber',
   ]);
 };
 
@@ -151,5 +152,6 @@ module.exports = {
   listInterpretDetail,
   listInterpretParent,
   detailInterpretDetail,
-  listAttributeDetail,detailInterpretWeb
+  listAttributeDetail,
+  detailInterpretWeb,
 };
