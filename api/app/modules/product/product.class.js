@@ -46,7 +46,16 @@ const template = {
   text_url: '{{#? TEXTURL}}',
   url: '{{#? URL}}',
   is_show_search_result: '{{ISSHOWSEARCHRESULT ? 1 : 0}}',
-  is_selected:'{{ISSELECTED ? 1 : 0}}',
+  is_selected: '{{ISSELECTED ? 1 : 0}}',
+
+  page_id: '{{#? PAGEID}}',
+  title_page: '{{#? TITLEPAGE}}',
+  group_name: '{{#? GROUPNAME}}',
+  attributes_id: '{{#? ATTRIBUTEID}}',
+  attributes_name: '{{#? ATTRIBUTENAME}}',
+  showIndex: '{{#? ORDERINDEXINTERPRET}}',
+  product_page_id:'{{#? PRODUCTPAGEID}}'
+
 };
 
 let transform = new Transform(template);
@@ -54,18 +63,18 @@ let transform = new Transform(template);
 const detail = (product) => {
   return Object.keys(product).length > 0
     ? transform.transform(product, [
-        'product_id',
-        'product_category_id',
-        'product_name',
-        'product_name_show_web',
-        'product_content_detail',
-        'short_description',
-        'is_show_web',
-        'is_active',
-        'url_product',
-        'is_web_view',
-        'is_show_menu',
-      ])
+      'product_id',
+      'product_category_id',
+      'product_name',
+      'product_name_show_web',
+      'product_content_detail',
+      'short_description',
+      'is_show_web',
+      'is_active',
+      'url_product',
+      'is_web_view',
+      'is_show_menu',
+    ])
     : null;
 };
 
@@ -159,6 +168,49 @@ const listInterpretDetail = (users = []) => {
     'is_selected'
   ]);
 };
+
+const list_page_product = (users = []) => {
+  return transform.transform(users, [
+    'page_id',
+    'title_page',
+  ]);
+};
+
+const listAttGroupProductPage = (users = []) => {
+  return transform.transform(users, [
+    'page_id',
+    'attributes_group_id',
+    'group_name',
+    'order_index',
+  ]);
+}
+
+
+const listInterPertPage = (users = []) => {
+  return transform.transform(users, [
+    'product_page_id',
+    'interpret_detail_id',
+    'interpret_id',
+    'attributes_group_id',
+    'attributes_id',
+    'attributes_name',
+    'interpret_detail_name',
+    'showIndex',
+
+  ]);
+}
+
+const list_Interpert = (users = []) => {
+  return transform.transform(users, [
+    'interpret_detail_id',
+    'interpret_id',
+    'attributes_group_id',
+    'attributes_id',
+    'attributes_name',
+    'interpret_detail_name',
+  ]);
+}
+
 module.exports = {
   options,
   detail,
@@ -167,5 +219,10 @@ module.exports = {
   listAttributes,
   listAttributesGroup,
   listInterpret,
-  listInterpretDetail,detailInterpret
+  listInterpretDetail,
+  detailInterpret,
+  list_page_product,
+  listAttGroupProductPage,
+  listInterPertPage,
+  list_Interpert,
 };

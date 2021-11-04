@@ -13,6 +13,7 @@ const folderName = 'productpicture';
 const fileHelper = require('../../common/helpers/file.helper');
 const config = require('../../../config/config');
 const { saveImage } = require('../../common/helpers/saveFile.helper');
+const { createOrUpdatePageProduct } = require('../product-page/product-page.service');
 
 const savedPath = 'product_image';
 const getListProduct = async (queryParams = {}) => {
@@ -361,6 +362,43 @@ const createProduct = async (bodyParams = {}) => {
         }
       }
     }
+    // tạo product page
+    let product_page = apiHelper.getValueFromObject(
+      bodyParams,
+      'product_page',
+      []
+    );
+
+    if (product_page && product_page.length > 0) {
+      const reqProductPage = new sql.Request(transaction);
+      for (let i = 0; i < product_page.length; i++) {
+        const data_child = product_page[i].data_child;
+        for (let j = 0; j < data_child.length; j++) {
+          const data_selected = data_child[j].data_selected;
+          for (let k = 0; k < data_selected.length; k++) {
+            await reqProductPage
+              .input('PRODUCTPAGEID', product_page[i].id_product_page)
+              .input('PRODUCTID', product_id)
+              .input('PAGEID', product_page[i].product_page_id)
+              .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
+              .input('ATTRIBUTEID', data_selected[k].attributes_id)
+              .input('INTERPRETID', data_selected[k].interpret_id)
+              .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
+              .input('ORDERINDEX', data_child[j].show_index)
+              .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
+              .input('CREATEDUSER', apiHelper.getValueFromObject(
+                bodyParams,
+                'auth_name',
+                'administrator'
+              ))
+              .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+          }
+        }
+      }
+    }
+    //--- end --
+
+
 
     await transaction.commit();
     removeCacheOptions();
@@ -512,7 +550,6 @@ const updateProduct = async (bodyParams = {}) => {
         for (let j = 0; j < interprets.length; j++) {
           const interpret = interprets[j];
           if (interpret.is_selected == true) {
-           console.log(interpret)
             await reqAttribute
               .input('PRODUCTID', product_id)
               .input('ATTRIBUTESGROUPID', interpret.attributes_group_id)
@@ -568,6 +605,53 @@ const updateProduct = async (bodyParams = {}) => {
         }
       }
     }
+
+    // ---- update product page ---
+
+
+    let product_page = apiHelper.getValueFromObject(
+      bodyParams,
+      'product_page',
+      []
+    );
+    const reqDelPageProduct = new sql.Request(transaction);
+    await reqDelPageProduct
+      .input('PRODUCTID', product_id)
+      .input(
+        'DELETEDUSER',
+        apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator')
+      )
+      .execute('MD_PRODUCT_PAGE_DeleteProductPage_AdminWeb');
+
+    if (product_page && product_page.length > 0) {
+      const reqProductPage = new sql.Request(transaction);
+      for (let i = 0; i < product_page.length; i++) {
+        const data_child = product_page[i].data_child;
+        for (let j = 0; j < data_child.length; j++) {
+          const data_selected = data_child[j].data_selected;
+          
+          for (let k = 0; k < data_selected.length; k++) {
+            await reqProductPage
+              .input('PRODUCTPAGEID', data_selected[k].product_page_id)
+              .input('PRODUCTID', product_id)
+              .input('PAGEID', product_page[i].product_page_id)
+              .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
+              .input('ATTRIBUTEID', data_selected[k].attributes_id)
+              .input('INTERPRETID', data_selected[k].interpret_id)
+              .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
+              .input('ORDERINDEX', data_child[j].show_index)
+              .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
+              .input('CREATEDUSER', apiHelper.getValueFromObject(
+                bodyParams,
+                'auth_name',
+                'administrator'
+              ))
+              .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+          }
+        }
+      }
+    }
+
 
     await transaction.commit();
     removeCacheOptions();
@@ -634,7 +718,6 @@ const detailProduct = async (product_id) => {
           .execute('FOR_INTERPRETDETAIL_GetListByIds_AdminWeb');
         let listInterPretDetail =
           productClass.listInterpretDetail(resDetail.recordsets[1]) || [];
-            console.log(listInterPretDetail)
         for (let index = 0; index < listInterpret.length; index++) {
           let interpret = listInterpret[index];
           let interpret_details = listInterPretDetail.filter(
@@ -646,9 +729,63 @@ const detailProduct = async (product_id) => {
       }
     }
 
+
+    // get detail product page
+    let product_page = [];
+    const product_page_detail = await pool
+      .request()
+      .input(
+        'PRODUCTID',
+        product_id
+      )
+      .execute('MD_PRODUCT_PAGE_GetListPage_AdminWeb');
+    const result_page = productClass.list_page_product(product_page_detail.recordset);
+    // data child
+    for (let i = 0; i < result_page.length; i++) {
+      let page_product = {
+        product_page_id: result_page[i].page_id,
+        title_page: result_page[i].title_page,
+        data_child: []
+      }
+      const att_group_detail = await pool
+        .request()
+        .input('PRODUCTID', product_id)
+        .input('PAGEID', result_page[i].page_id)
+        .execute('MD_PRODUCT_PAGE_GetAttGroup_AdminWeb');
+
+      const result_AttGroup_Page = productClass.listAttGroupProductPage(att_group_detail.recordset);
+      for (let j = 0; j < result_AttGroup_Page.length; j++) {
+        const interpert_detail = await pool
+          .request()
+          .input('PRODUCTID', product_id)
+          .input('PAGEID', result_page[i].page_id)
+          .input('ATTRIBUTESGROUPID', result_AttGroup_Page[j].attributes_group_id)
+          .execute('MD_PRODUCT_PAGE_GetIntePertDetail_AdminWeb');
+        const interpert_page = productClass.listInterPertPage(interpert_detail.recordset);
+
+        const interpert_list = await pool
+          .request()
+          .input('ATTRIBUTESGROUPID', result_AttGroup_Page[j].attributes_group_id)
+          .execute('MD_PRODUCT_PAGE_GetListInterPret_AdminWeb');
+        const interpert = productClass.listInterPertPage(interpert_list.recordset);
+        page_product.data_child.push(
+          {
+            attributes_group_id: result_AttGroup_Page[j].attributes_group_id,
+            show_index: result_AttGroup_Page[j].order_index,
+            data_interpret: [...interpert],
+            data_selected: [...interpert_page],
+          }
+        )
+      }
+
+      product_page.push(page_product);
+    }
+
     if (product) {
       product.product_images = product_images;
       product.product_attributes = product_attributes;
+      product.product_page = product_page;
+
     }
 
     return new ServiceResponse(true, '', product);
@@ -659,6 +796,11 @@ const detailProduct = async (product_id) => {
     return new ServiceResponse(false, e.message);
   }
 };
+
+// get option page
+const getOptionsPage = () => {
+
+}
 
 module.exports = {
   getListProduct,
