@@ -100,11 +100,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
         }
         formik.setFieldValue("product_page", data_productPage);
         setProduct(value);
-<<<<<<< HEAD
-        console.log(value);
-=======
         
->>>>>>> origin/feature/20211028_AddConfigPageProduct
       }
       let data = await _productCategoryModel.getOptions({ is_active: 1 });
       let productCategoryOption = mapDataOptions4Select(data);
