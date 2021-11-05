@@ -39,7 +39,7 @@ export const columns_product_page = (noEdit, deleteItemPage, optionPageProductGr
                     name={`attribute_group_id_${record.title_page}`}
                     onChange={(value) => handleChangeProductPageGroup(value, record, index)}
                     isSearchable={true}
-                    placeholder={"-- Chọn Thuộc tính --"}
+                    placeholder={"-- Chọn chỉ số --"}
                     value={convertValue(record.product_page_id, optionPageProductGroup() || [])}
                     options={optionPageProductGroup()}
                     isDisabled={noEdit}

@@ -17,6 +17,7 @@ import {
   ModalBody,
 } from "reactstrap";
 import TableAnt from 'antd/es/table';
+import { UpCircleOutlined, DownCircleOutlined } from "@ant-design/icons"; // icon antd
 import "react-image-lightbox/style.css";
 import { ActionButton } from "@widget";
 import { useState } from "react";
@@ -67,6 +68,8 @@ function ProductAdd({ noEdit = false, productId = null }) {
   });
   const [save_dateProductPage, setSaveDataProductPage] = useState([]);
   const [itemInterPertPage, setItemInterPertPage] = useState([]);
+  const [event_spin,set_event_spin]=useState(false);
+
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -728,6 +731,17 @@ function ProductAdd({ noEdit = false, productId = null }) {
         expandable={{
           expandedRowRender: (record, index) => _expandableProductPage(index, record.data_child),
           rowExpandable: (record) => record.product_page_id !== null,
+          expandIcon: ({ expanded, onExpand, record }) => record.product_page_id !== null ? (
+            expanded ? (
+              <UpCircleOutlined   rotate={360} className={'custom_icon'}
+                style={{ fontSize: 16 }} onClick={e => onExpand(record, e)} />
+            ) : (
+              <DownCircleOutlined  rotate={360} className={'custom_icon'}
+                style={{ fontSize: 16 }} onClick={e => onExpand(record, e)} />
+            )
+          ) : null,
+
+
         }}
         dataSource={formik.values.product_page}
         pagination={false}
@@ -735,7 +749,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
     )
   }
   const handleShowPopupConfig = async (item, index) => {
-    let itemCl = JSON.parse(JSON.stringify(item));
+    let itemCl = JSON.parse(JSON.stringify(item)); 
     setAttributeGroupSelected(itemCl);
     setShowConfig(true);
   };
