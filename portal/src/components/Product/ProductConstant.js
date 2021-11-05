@@ -272,7 +272,7 @@ export const validationSchema = yup.object().shape({
           return item.product_page_id == null;
         });
         if (checkPageId !== -1) {
-          return new yup.ValidationError("Tên Page là bắt buôc.", null, "product_page");
+          return new yup.ValidationError("Tên Page là bắt buộc.", null, "product_page");
         }
         // check chọn chỉ số
         const checkAttributesGroup = arr.findIndex((item) => {

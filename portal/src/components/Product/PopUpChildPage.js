@@ -13,7 +13,7 @@ import {
     Form,
 
 } from "reactstrap";
-import { Table } from "antd";
+import { Table, ConfigProvider } from "antd";
 import { CircularProgress } from "@material-ui/core";
 import "./style.scss";
 import { columns_child_page_select, columns_page_selected } from "./const_page";
@@ -215,7 +215,8 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
         },
         getCheckboxProps: () => ({
             disabled: noEdit
-        })
+        }),
+
     };
 
     const un_rowSelection = (record) => {
@@ -350,7 +351,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
         pageProduct[detail_page.index_parent].data_child[detail_page.index_child].data_selected = dataSelected;
         formik.setFieldValue("product_page", pageProduct);
         handleClose();
-        
+
     }
 
     return (
@@ -364,10 +365,10 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                     }}
                 >
                     <div className="flex-fill font-weight-bold">CHỌN LUẬN GIẢI CHI TIẾT PAGE {detail_page.name_page} </div>
-                    <Button color="danger" size="md" onClick={()=>{
+                    <Button color="danger" size="md" onClick={() => {
                         handleClose()
-                        formik.setFieldError('error_samekey',false)
-                        
+                        formik.setFieldError('error_samekey', false)
+
                     }}>
                         <i className={`fa fa-remove`} />
                     </Button>
@@ -377,10 +378,10 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                 <CardBody style={{ padding: 8 }} className="px-0 py-0">
                     <div className="MuiPaper-filter__custom">
                         <div className="ml-2 mr-2 mb-2 mt-2">
-                            <span className="title_detail_page">
+                            <span className="title_detail_page font-weight-bold">
                                 Danh sách luận giải chi tiết
                             </span>
-                            <Form autoComplete="nope" className="zoom-scale-9">
+                            <Form autoComplete="nope" className="zoom-scale-9 mt-3">
                                 <Row>
                                     <Col sm={6} xs={12}>
                                         <FormGroup className="mb-2 mb-sm-0">
@@ -480,19 +481,20 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                                         scroll={{ y: 230 }}
 
                                     />
+
                                 </div>
                             )}
                         </Col>
                     </Row>
                 </CardBody>
 
-                <CardBody style={{ padding: 8 }} className="px-0 py-0">
+                <CardBody style={{ padding: 8 }} className="px-0 py-0 mt-3">
                     <div className="MuiPaper-filter__custom">
                         <div className="ml-2 mr-2 mb-3 mt-2">
-                            <span className="title_detail_page">
+                            <span className="title_detail_page font-weight-bold">
                                 Danh sách luận giải chi tiết theo Page
                             </span>
-                            <Form autoComplete="nope" className="zoom-scale-9">
+                            <Form autoComplete="nope" className="zoom-scale-9 mt-3">
                                 <Row>
                                     <Col sm={6} xs={12}>
                                         <FormGroup className="mb-2 mb-sm-0">
@@ -625,7 +627,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
                             className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                             onClick={() => {
                                 handleClose();
-                                formik.setFieldError('error_samekey',false)
+                                formik.setFieldError('error_samekey', false)
                             }}
                             type="button"
                             size="sm"
