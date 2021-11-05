@@ -5,7 +5,7 @@ import { Checkbox } from "antd";
 import { Link } from "react-router-dom";
 import { Button, Input } from "reactstrap";
 const regex = /(<([^>]+)>)/gi;
-export const column = (handleChangeInterpretConfig, handleChangeInterpretChildByInterpert) => {
+export const column = (handleChangeInterpretConfig, handleChangeInterpretChildByInterpert,noEdit) => {
   return [
     {
       title: "STT",
@@ -42,7 +42,7 @@ export const column = (handleChangeInterpretConfig, handleChangeInterpretChildBy
       title: "Vị trí hiển thị",
       dataIndex: "order_index",
       key: "order_index",
-      responsive: ["md"],
+      responsive: ["md"], 
       width: "8%",
       render: (text, record, index) => {
         return <div className="text-center">{text}</div>;
@@ -70,6 +70,7 @@ export const column = (handleChangeInterpretConfig, handleChangeInterpretChildBy
         <div className="text-center">
           <Checkbox
             checked={record.is_show_search_result || false}
+            disabled={noEdit}
             onChange={({ target }) =>
               handleChangeInterpretConfig("is_show_search_result", target.checked, index)
             }
@@ -108,7 +109,7 @@ export const column = (handleChangeInterpretConfig, handleChangeInterpretChildBy
         <div className="text-left">
           <Input
             type="text"
-            placeholder="Text Link"
+            placeholder="Link"
             name="url"
             value={record.url || ""}
             disabled={record.is_show_search_result}
@@ -119,24 +120,24 @@ export const column = (handleChangeInterpretConfig, handleChangeInterpretChildBy
         </div>
       ),
     },
-    {
-      title: "Thao tác",
-      dataIndex: "is_selected",
-      key: "is_selected",
-      width: "8%",
-      responsive: ["md"],
-      render: (text, record, index) => (
-        <div className="text-center">
-          <Checkbox
-            checked={record.is_selected || false}
-            onChange={({ target }) => {
-              handleChangeInterpretConfig("is_selected", target.checked, index);
-              handleChangeInterpretChildByInterpert(target.checked, index);
-              // console.log()
-            }}
-          />
-        </div>
-      ),
-    },
+    // {
+    //   title: "Thao tác",
+    //   dataIndex: "is_selected",
+    //   key: "is_selected",
+    //   width: "8%",
+    //   responsive: ["md"],
+    //   render: (text, record, index) => (
+    //     <div className="text-center">
+    //       <Checkbox
+    //         checked={record.is_selected || false}
+    //         onChange={({ target }) => {
+    //           handleChangeInterpretConfig("is_selected", target.checked, index);
+    //           handleChangeInterpretChildByInterpert(target.checked, index);
+    //           // console.log()
+    //         }}
+    //       />
+    //     </div>
+    //   ),
+    // },
   ];
 };
