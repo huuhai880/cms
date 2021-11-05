@@ -58,11 +58,10 @@ function MainNumberAdd({ noEdit }) {
   });
   //// create Number
   const handleCreateOrNumber = async (values) => {
+
     try {
        _mainNumberModel.check({ main_number: values.main_number }).then((data) => {
-        // console.log(data)
         if (data.MAINNUMBERID && formik.values.main_number != dataNumber.main_number) {
-          // setalert("Email đã tồn tại!");
           formik.setFieldError("main_number", "Giá trị đã tồn tại!");
         } else {
           _mainNumberModel.create(values).then((data) => {

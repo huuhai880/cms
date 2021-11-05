@@ -22,12 +22,14 @@ import { CircularProgress } from "@material-ui/core";
 import CustomPagination from "../../utils/CustomPagination";
 import InterpretTableChild from "./InterpretTableChild";
 import "./style.scss";
+import { UpCircleOutlined, DownCircleOutlined } from "@ant-design/icons"; // icon antd
 
-function InterpertTable({ handleClose, attributeGroup, handleSubmit, callAPIInterPret }) {
+function InterpertTable({ noEdit, handleClose, attributeGroup, handleSubmit, callAPIInterPret }) {
   const [interpert, setInterpert] = useState(attributeGroup);
   const [expandedRowKey, setExpandedRowKey] = useState([]);
   const [isloading, setLoading] = useState(false);
   const [msgError, setMsgError] = useState(null);
+  const [isSelectedRowKeys, setSelectedRowKeys] = useState([]);
   const [keyword, setKeyword] = useState("");
   const handleChangeInterpretConfig = (name, value, index) => {
     let interprets = interpert.interprets;
@@ -39,6 +41,18 @@ function InterpertTable({ handleClose, attributeGroup, handleSubmit, callAPIInte
     setInterpert({ ...interpert, interprets });
     setMsgError(null);
   };
+  useEffect(() => {
+    let interprets = interpert.interprets;
+    const select_key = [];
+    for (let index = 0; index < interprets.length; index++) {
+      const element = interprets[index];
+      if (element.is_selected == true) {
+        select_key.push(element.interpret_id);
+      }
+      setSelectedRowKeys(select_key);
+    }
+  }, [interpert]);
+
   const handleChangeInterpretChildConfig = (name, value, index, indexInterPret) => {
     let interprets = interpert.interprets;
     interprets[indexInterPret].interpret_details[index][name] = value;
@@ -98,12 +112,18 @@ function InterpertTable({ handleClose, attributeGroup, handleSubmit, callAPIInte
   const handleSubmitFillter = () => {
     _handleSubmitFillter(keyword.trim());
   };
+
   const _handleSubmitFillter = (keyword) => {
     setLoading(true);
     let cl = { ...attributeGroup };
-    const searchFilter = cl.interprets.filter((interpert) =>
-      changeAlias(interpert.attribute_name).includes(changeAlias(keyword))
+    const searchFilter = cl.interprets.filter(
+      (interpert) =>
+        changeAlias(interpert.attribute_name).includes(changeAlias(keyword)) ||
+        interpert.interpret_details.some((v) =>
+          changeAlias(v.interpret_detail_name).includes(changeAlias(keyword))
+        )
     );
+
     cl.interprets = searchFilter;
     setInterpert(cl);
 
@@ -111,7 +131,27 @@ function InterpertTable({ handleClose, attributeGroup, handleSubmit, callAPIInte
       setLoading(false);
     }, 1000);
   };
-
+  const rowSelection = {
+    onSelect: (record, selected) => {
+      let interprets = interpert.interprets;
+      const index_select = interprets.findIndex(
+        (item) => item.interpret_id === record.interpret_id
+      );
+      handleChangeInterpretConfig("is_selected", !record.is_selected, index_select);
+      handleChangeInterpretChildByInterpert(record.is_selected, index_select);
+      // console.log(!record.is_selected);
+    },
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      let interprets = interpert.interprets;
+      interprets.map((item, index) => {
+        handleChangeInterpretConfig("is_selected", selected, index);
+        handleChangeInterpretChildByInterpert(selected, index);
+      });
+    },
+    getCheckboxProps: () => ({
+      disabled: noEdit,
+    }),
+  };
   return (
     <div>
       <Card className={`animated fadeIn z-index-222 mb-3 news-header-no-border`}>
@@ -146,7 +186,7 @@ function InterpertTable({ handleClose, attributeGroup, handleSubmit, callAPIInte
                             autoComplete="nope"
                             type="text"
                             name="keyword"
-                            placeholder="Nhập tên thuộc tính  "
+                            placeholder="Nhập tên thuộc tính ,luận giải chi tiết "
                             value={keyword}
                             onChange={(e) => {
                               setKeyword(e.target.value);
@@ -181,18 +221,20 @@ function InterpertTable({ handleClose, attributeGroup, handleSubmit, callAPIInte
                           Làm mới
                         </Button>
                       </FormGroup>
-                      <FormGroup className="mb-2 ml-2 mb-sm-0">
-                        <Button
-                          className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                          onClick={handleSubmitConfig}
-                          color="success"
-                          type="button"
-                          size="sm"
-                        >
-                          <i className="fa fa-plus mr-1" />
-                          Chọn
-                        </Button>
-                      </FormGroup>
+                      {!noEdit ? (
+                        <FormGroup className="mb-2 ml-2 mb-sm-0">
+                          <Button
+                            className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                            onClick={handleSubmitConfig}
+                            color="success"
+                            type="button"
+                            size="sm"
+                          >
+                            <i className="fa fa-plus mr-1" />
+                            Chọn
+                          </Button>
+                        </FormGroup>
+                      ) : null}
                     </Col>
                   </Row>
                 </Form>
@@ -225,20 +267,29 @@ function InterpertTable({ handleClose, attributeGroup, handleSubmit, callAPIInte
                       className="components-table-demo-nested"
                       columns={column(
                         handleChangeInterpretConfig,
-                        handleChangeInterpretChildByInterpert
+                        handleChangeInterpretChildByInterpert,
+                        noEdit
                       )}
                       dataSource={interpert.interprets}
                       bordered={true}
                       pagination={false}
                       scroll={{ y: 370 }}
                       rowKey={"interpret_id"}
+                      rowSelection={{
+                        selectedRowKeys: isSelectedRowKeys,
+                        hideSelectAll: noEdit,
+                        ...rowSelection,
+                      }}
                       expandable={{
                         expandedRowRender: (record, index) => (
+                          // console.log(record)
                           <InterpretTableChild
+                            noEdit={noEdit}
                             data={record.interpret_details}
                             indexParent={index + 1}
                             handleChangeInterpretChildConfig={handleChangeInterpretChildConfig}
                             indexInterPret={index}
+                            selectedParent={record.is_selected}
                           />
                         ),
                         rowExpandable: (record) => record.interpret_details.length > 0,
@@ -249,6 +300,24 @@ function InterpertTable({ handleClose, attributeGroup, handleSubmit, callAPIInte
                         },
                         expandedRowKeys: expandedRowKey,
                         // expandRowByClick: true,
+                        expandIcon: ({ expanded, onExpand, record }) =>
+                          record.interpret_details.length > 1 ? (
+                            expanded ? (
+                              <UpCircleOutlined
+                                rotate={360}
+                                className={"custom_icon"}
+                                style={{ fontSize: 16 }}
+                                onClick={(e) => onExpand(record, e)}
+                              />
+                            ) : (
+                              <DownCircleOutlined
+                                rotate={360}
+                                className={"custom_icon"}
+                                style={{ fontSize: 16 }}
+                                onClick={(e) => onExpand(record, e)}
+                              />
+                            )
+                          ) : null,
                       }}
                     />
                   </div>
