@@ -25,6 +25,10 @@ const template = {
   attribute_gruop_id: '{{#? ATTRIBUTESGROUPID}}',
 
   order_index: '{{#? ORDERINDEX}}',
+  is_total_no_shortened: "{{ISTOTALNOSHORTENED ? 1 : 0}}",
+  is_total_shortened: "{{ISTOTALSHORTENED ? 1 : 0}}",
+  is_total_2digit: "{{ISTOTAL2DIGIT ? 1 : 0}}"
+
 };
 let transform = new Transform(template);
 const list = (users = []) => {
@@ -51,6 +55,9 @@ const detail = (FormulaByDob = []) => {
     'orderid_2',
     'calculation_id',
     'order_index',
+    "is_total_no_shortened",
+    "is_total_shortened",
+    "is_total_2digit"
   ]);
 };
 const listCalculation = (users = []) => {

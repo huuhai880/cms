@@ -120,6 +120,9 @@ const addFormula = async (body = {}) => {
       .input('ISDEFAULT', apiHelper.getValueFromObject(body, 'is_default'))
       .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
       .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
+      .input('ISTOTALNOSHORTENED', apiHelper.getValueFromObject(body, 'is_total_no_shortened', false))
+      .input('ISTOTALSHORTENED', apiHelper.getValueFromObject(body, 'is_total_shortened', false))
+      .input('ISTOTAL2DIGIT', apiHelper.getValueFromObject(body, 'is_total_2digit', false))
       .execute('FOR_FORMULA_CreateOrUpdate_AdminWeb');
     const Formula_id = resultFormula.recordset[0].RESULT;
 
