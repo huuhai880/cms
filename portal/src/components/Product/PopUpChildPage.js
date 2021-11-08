@@ -348,7 +348,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
 
     const _handleSubmitSelectPageProduct = () => {
         let pageProduct = [...formik.values.product_page];
-        pageProduct[detail_page.index_parent].data_child[detail_page.index_child].data_selected = dataSelected;
+        pageProduct[detail_page.index_parent].data_child[detail_page.index_child].data_selected = saveDataSelected;
         formik.setFieldValue("product_page", pageProduct);
         handleClose();
 

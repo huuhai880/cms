@@ -49,7 +49,7 @@ const template = {
   is_selected: '{{ISSELECTED ? 1 : 0}}',
 
   page_id: '{{#? PAGEID}}',
-  title_page: '{{#? TITLEPAGE}}',
+  title_page: '{{#? PAGENAME}}',
   group_name: '{{#? GROUPNAME}}',
   attributes_id: '{{#? ATTRIBUTEID}}',
   attributes_name: '{{#? ATTRIBUTENAME}}',
