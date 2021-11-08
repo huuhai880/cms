@@ -39,7 +39,7 @@ export const columns_product_page = (noEdit, deleteItemPage, optionPageProductGr
                     name={`attribute_group_id_${record.page_name}`}
                     onChange={(value) => handleChangeProductPageGroup(value, record, index)}
                     isSearchable={true}
-                    placeholder={"-- Chọn chỉ số --"}
+                    placeholder={"-- Chọn page --"}
                     value={convertValue(record.product_page_id, optionPageProductGroup() || [])}
                     options={optionPageProductGroup()}
                     isDisabled={noEdit}
@@ -117,7 +117,7 @@ export const columns_page_child = (parent_key,
                         id={`attribute_group_id_${record.attributes_group_id}`}
                         name={`attribute_group_id_${record.attributes_group_id}`}
                         isSearchable={true}
-                        placeholder={"-- Chọn Thuộc tính --"}
+                        placeholder={"-- Chọn chỉ số --"}
                         onChange={(value) => handleChangeAttributesPageProduct(value, record, index, parent_key)}
                         value={convertValue(record.attributes_group_id, optionAttributesGroupProductPage || [])}
                         options={optionAttributesGroupProductPage}
