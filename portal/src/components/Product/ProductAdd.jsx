@@ -68,9 +68,6 @@ function ProductAdd({ noEdit = false, productId = null }) {
   });
   const [save_dateProductPage, setSaveDataProductPage] = useState([]);
   const [itemInterPertPage, setItemInterPertPage] = useState([]);
-  const [event_spin,set_event_spin]=useState(false);
-
-
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: product,
@@ -591,8 +588,8 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const handleAddProductPage = () => { // add new apge
 
     let product_page_add = {
-      id_product_page: null, // page_id
-      product_page_id: null,
+      id_product_page: null, 
+      product_page_id: null, // page_id
       name_page: null,
       data_child: [
         {
@@ -734,10 +731,10 @@ function ProductAdd({ noEdit = false, productId = null }) {
           rowExpandable: (record) => record.product_page_id !== null,
           expandIcon: ({ expanded, onExpand, record }) => record.product_page_id !== null ? (
             expanded ? (
-              <PlusSquareOutlined   rotate={360} className={'custom_icon'}
+              <MinusSquareOutlined   rotate={360} className={'custom_icon'}
                 style={{ fontSize: 16 }} onClick={e => onExpand(record, e)} />
             ) : (
-              <MinusSquareOutlined  rotate={360} className={'custom_icon'}
+              <PlusSquareOutlined  rotate={360} className={'custom_icon'}
                 style={{ fontSize: 16 }} onClick={e => onExpand(record, e)} />
             )
           ) : null,
