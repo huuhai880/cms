@@ -30,7 +30,6 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, no
     const typingTimeOutRef = useRef(null); // even nhập
     const [saveDataSelected, setSaveDataSelected] = useState([]) // lưu interpert đã chọn
 
-
     useEffect(() => {
         let pageProduct = [...formik.values.product_page];
 
