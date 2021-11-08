@@ -2,7 +2,7 @@ const Transform = require('../../common/helpers/transform.helper');
 const config = require('../../../config/config');
 const template = {
   product_page_id: '{{#? PAGEID}}',
-  title_page: '{{#? TITLEPAGE}}',
+  title_page: '{{#? PAGENAME}}',
   interpret_detail_id: '{{#? INTERPRETDETAILID}}',
   attributes_group_id: '{{#? ATTRIBUTESGROUPID}}',
   interpret_id: '{{#? INTERPRETID}}',
