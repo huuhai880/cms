@@ -60,6 +60,18 @@
   padding: 5px !important;
   background-color: white !important;
 }
+.custome_table .ant-table-thead th{
+  background-color: white !important;
+  color: black !important;
+  font-size: 14px !important;
+  font-weight: bolder !important;
+  border-bottom: 2px solid #DDDDDD;
+  
+}
+.custome_table_border .ant-table-thead th{
+  border-top: 2px solid #DDDDDD;
+}
+
 .title_detail_page {
   font-size: 15px;
   color: #20a8d8;
@@ -72,3 +84,23 @@
     margin: 0;
   }
 }
+.emty_data_table_ant{
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: black;
+  padding: 7px;
+  margin: -7px -10px;
+}
+.custom_icon{
+    &:hover{
+      color: #20a8d8;
+    }
+}
+.border_bottom_title{
+  padding-bottom: 4px;
+  border-bottom: 1px solid #20a8d8;
+}
+

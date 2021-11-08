@@ -13,14 +13,12 @@ import {
     Form,
 
 } from "reactstrap";
-import { Table } from "antd";
+import { Table, ConfigProvider } from "antd";
 import { CircularProgress } from "@material-ui/core";
 import "./style.scss";
 import { columns_child_page_select, columns_page_selected } from "./const_page";
-import { useFormik } from "formik";
-import MessageError from "./MessageError";
 
-const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) => {
+const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik, noEdit }) => {
     const [msgError, setMsgError] = useState(null);
     const [dataSelected, set_dataSelected] = useState([])
     const [keyword, setKeyword] = useState('');
@@ -31,7 +29,6 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
     const [isloadingSelected, setLoadingSelected] = useState(false)
     const typingTimeOutRef = useRef(null); // even nhập
     const [saveDataSelected, setSaveDataSelected] = useState([]) // lưu interpert đã chọn
-
 
     useEffect(() => {
         let pageProduct = [...formik.values.product_page];
@@ -86,12 +83,11 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
         return str;
     };
     const rowSelection = {
-        onChange: (selectedRowKeys) => {
-            setSelectedRowKeys(selectedRowKeys);
-        },
         onSelect: (record, selected) => {
-            const data_select = [...dataSelected]
+            const data_selected = [...dataSelected];
+            const selectKeys = [...isSelectedRowKeys];
             if (selected) {
+                selectKeys.push(record.interpret_detail_id);
                 const set_data_selected = {
                     attributes_id: record.attributes_id,
                     attributes_name: record.attributes_name,
@@ -102,71 +98,123 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                     showIndex: 1,
                     isEdit: true,
                 }
-                data_select.map((item, index) => {
+                data_selected.map((item, index) => {
                     if (item.attributes_id === record.attributes_id) {
                         set_data_selected.showIndex = set_data_selected.showIndex + 1;
                         set_data_selected.isEdit = false;
-                        data_select[index].isEdit = false;
+                        data_selected[index].isEdit = false;
                     }
                 })
-                data_select.push(set_data_selected);
-                data_select.sort(function (a, b) {
+                data_selected.push(set_data_selected);
+                data_selected.sort(function (a, b) {
                     return a.attributes_id - b.attributes_id
                 });
             } else {
-                const index_select = data_select.findIndex((item) => item.interpret_detail_id === record.interpret_detail_id);
-                for (let i = 0; i < data_select.length; i++) {
-                    if (data_select[index_select].showIndex < data_select[i].showIndex) {
-                        data_select[i].showIndex = data_select[i].showIndex - 1;
+                const index_select = data_selected.findIndex((item) => item.interpret_detail_id === record.interpret_detail_id);
+                const index_rowKey = selectKeys.findIndex((item) => item == record.interpret_detail_id);
+                for (let i = 0; i < data_selected.length; i++) {
+                    if (data_selected[index_select].showIndex < data_selected[i].showIndex
+                        && data_selected[i].attributes_id == record.attributes_id
+                    ) {
+                        data_selected[i].showIndex = data_selected[i].showIndex - 1;
                     }
                 }
-                data_select.splice(index_select, 1);
-                const length_attributes = data_select.filter(item => item.attributes_id == record.attributes_id).length;
+                data_selected.splice(index_select, 1);
+                selectKeys.splice(index_rowKey, 1);
+                const length_attributes = data_selected.filter(item => item.attributes_id == record.attributes_id).length;
                 if (length_attributes === 1) {
-                    data_select.map((item, index) => {
+                    data_selected.map((item, index) => {
                         if (item.attributes_id == record.attributes_id) {
-                            data_select[index].isEdit = true;
+                            data_selected[index].isEdit = true;
                         }
                     })
                 }
             }
-            set_dataSelected(data_select);
-            setSaveDataSelected(data_select);
+            setSelectedRowKeys(selectKeys);
+            set_dataSelected(data_selected);
+            setSaveDataSelected(data_selected);
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
-            const data_select = []
+            const data_selected = [...dataSelected];
+            const selectAllKeys = [...isSelectedRowKeys];
             if (selected) {
-                selectedRows.map((item) => {
-                    const set_data_selected = {
-                        id_product_page: null,
-                        attributes_id: item.attributes_id,
-                        attributes_name: item.attributes_name,
-                        attributes_group_id: item.attributes_group_id,
-                        interpret_id: item.interpret_id,
-                        interpret_detail_id: item.interpret_detail_id,
-                        interpret_detail_name: item.interpret_detail_name,
-                        showIndex: 1,
-                        isEdit: true,
-                    }
-                    data_select.map((item_select, index) => {
-                        if (item_select.attributes_id === item.attributes_id) {
-                            set_data_selected.showIndex = set_data_selected.showIndex + 1;
-                            set_data_selected.isEdit = false;
-                            data_select[index].isEdit = false;
+                if (data_selected.length > 0) {
+                    selectedRows.map((item) => {
+                        if (item != undefined || item != null) {
+                            const checkexist = data_selected.findIndex((item_child) => item.interpret_detail_id == item_child.interpret_detail_id);
+                            if (checkexist === -1) {
+                                selectAllKeys.push(item.interpret_detail_id);
+                                const set_data_selected = {
+                                    id_product_page: null,
+                                    attributes_id: item.attributes_id,
+                                    attributes_name: item.attributes_name,
+                                    attributes_group_id: item.attributes_group_id,
+                                    interpret_id: item.interpret_id,
+                                    interpret_detail_id: item.interpret_detail_id,
+                                    interpret_detail_name: item.interpret_detail_name,
+                                    showIndex: 1,
+                                    isEdit: true,
+                                }
+                                data_selected.map((item_select, index) => {
+                                    if (item_select.attributes_id === item.attributes_id) {
+                                        set_data_selected.showIndex = set_data_selected.showIndex + 1;
+                                        set_data_selected.isEdit = false;
+                                        data_selected[index].isEdit = false;
+                                    }
+                                })
+                                data_selected.push(set_data_selected);
+                            }
                         }
                     })
-
-                    data_select.push(set_data_selected);
-                })
-                data_select.sort(function (a, b) {
+                } else {
+                    selectedRows.map((item) => {
+                        if (item != undefined || item != null) {
+                            selectAllKeys.push(item.interpret_detail_id);
+                            const set_data_selected = {
+                                id_product_page: null,
+                                attributes_id: item.attributes_id,
+                                attributes_name: item.attributes_name,
+                                attributes_group_id: item.attributes_group_id,
+                                interpret_id: item.interpret_id,
+                                interpret_detail_id: item.interpret_detail_id,
+                                interpret_detail_name: item.interpret_detail_name,
+                                showIndex: 1,
+                                isEdit: true,
+                            }
+                            data_selected.map((item_select, index) => {
+                                if (item_select.attributes_id === item.attributes_id) {
+                                    set_data_selected.showIndex = set_data_selected.showIndex + 1;
+                                    set_data_selected.isEdit = false;
+                                    data_selected[index].isEdit = false;
+                                }
+                            })
+                            data_selected.push(set_data_selected);
+                        }
+                    })
+                }
+                data_selected.sort(function (a, b) {
                     return a.attributes_id - b.attributes_id
                 });
 
-            }
-            set_dataSelected(data_select);
-            setSaveDataSelected(data_select);
-        }
+            } else {
 
+                changeRows.map((item) => {
+                    data_selected.map((item_child, index_child) => {
+                        if (item.interpret_detail_id === item_child.interpret_detail_id) {
+                            data_selected.splice(index_child, 1);
+                            const index_rowKey = selectAllKeys.findIndex((item) => item == item_child.interpret_detail_id);
+                            selectAllKeys.splice(index_rowKey, 1);
+                        }
+                    })
+                })
+            }
+            setSelectedRowKeys(selectAllKeys);
+            set_dataSelected(data_selected);
+            setSaveDataSelected(data_selected);
+        },
+        getCheckboxProps: () => ({
+            disabled: noEdit
+        }),
 
     };
 
@@ -231,8 +279,8 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
         let cl = [...data_interpret];
         const searchFilter = cl.filter(
             (interpert) =>
-                changeAlias(interpert.attributes_name.toLocaleLowerCase()).indexOf(changeAlias(keyword.toLocaleLowerCase())) !== -1
-                || changeAlias(interpert.interpret_detail_name.toLocaleLowerCase()).indexOf(changeAlias(keyword.toLocaleLowerCase())) !== -1
+                changeAlias(interpert.attributes_name).indexOf(changeAlias(keyword)) !== -1
+                || changeAlias(interpert.interpret_detail_name).indexOf(changeAlias(keyword)) !== -1
         );
         cl = searchFilter;
         set_data_select(cl);
@@ -246,8 +294,8 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
         let cl = [...saveDataSelected];
         const searchFilter = cl.filter(
             (interpert) =>
-                changeAlias(interpert.attributes_name.toLocaleLowerCase()).indexOf(changeAlias(keywordSelect.toLocaleLowerCase())) !== -1
-                || changeAlias(interpert.interpret_detail_name.toLocaleLowerCase()).indexOf(changeAlias(keywordSelect.toLocaleLowerCase())) !== -1
+                changeAlias(interpert.attributes_name).indexOf(changeAlias(keywordSelect)) !== -1
+                || changeAlias(interpert.interpret_detail_name).indexOf(changeAlias(keywordSelect)) !== -1
         );
         cl = searchFilter;
         set_dataSelected(cl);
@@ -264,23 +312,19 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
 
     const checkShowIndexSelected = () => {
         let alreadySeen = [];
-        let alreadyIndex = [];
+        //  let alreadyIndex = [];
         let error_samekey = false;
         let error_mostkey = false;
         dataSelected.forEach(function (str) {
-            if (alreadySeen[str.attributes_id]) {
-                if (alreadyIndex[str.showIndex]) {
-                    error_samekey = true;
-                }
+            if (alreadySeen[str.attributes_id + '.' + str.showIndex]) {
+                error_samekey = true;
             } else {
-                alreadySeen[str.attributes_id] = true;
-                alreadyIndex[str.showIndex] = true;
+                alreadySeen[str.attributes_id + '.' + str.showIndex] = true;
+
             };
         });
         const counts = {};
-
         dataSelected.forEach(function (x) { counts[x.attributes_id] = (counts[x.attributes_id] || 0) + 1; });
-
         Object.keys(counts).map(function (objectKey, index) {
             let value = counts[objectKey];
             for (let i = 0; i < dataSelected.length; i++) {
@@ -289,13 +333,12 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                 }
             }
         });
-
-        if (error_samekey === true) {
-            formik.setFieldError("error_samekey", "Thứ tự không thể trùng lặp!");
+        if (dataSelected.findIndex((item) => item.showIndex == null || item.showIndex.length == 0) != -1) {
+            formik.setFieldError("error_samekey", "Thứ tự hiển thị là bắt buộc!");
+        } else if (error_samekey === true) {
+            formik.setFieldError("error_samekey", "Thứ tự hiển thị không thể trùng lặp!");
         } else if (error_mostkey === true) {
             formik.setFieldError("error_samekey", "Thứ tự không lớn hơn số thuộc tính!");
-        }else if(dataSelected.findIndex((item)=>item.showIndex==null||item.showIndex.length==0) !=-1){
-            formik.setFieldError("error_samekey", "Thứ tự hiển thị là bắt buộc!");
         }
         else {
             _handleSubmitSelectPageProduct();
@@ -304,9 +347,10 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
 
     const _handleSubmitSelectPageProduct = () => {
         let pageProduct = [...formik.values.product_page];
-        pageProduct[detail_page.index_parent].data_child[detail_page.index_child].data_selected = dataSelected;
+        pageProduct[detail_page.index_parent].data_child[detail_page.index_child].data_selected = saveDataSelected;
         formik.setFieldValue("product_page", pageProduct);
         handleClose();
+
     }
 
     return (
@@ -320,7 +364,11 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                     }}
                 >
                     <div className="flex-fill font-weight-bold">CHỌN LUẬN GIẢI CHI TIẾT PAGE {detail_page.name_page} </div>
-                    <Button color="danger" size="md" onClick={handleClose}>
+                    <Button color="danger" size="md" onClick={() => {
+                        handleClose();
+                        formik.setFieldError('error_samekey', false);
+
+                    }}>
                         <i className={`fa fa-remove`} />
                     </Button>
                 </CardHeader>
@@ -329,14 +377,12 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                 <CardBody style={{ padding: 8 }} className="px-0 py-0">
                     <div className="MuiPaper-filter__custom">
                         <div className="ml-2 mr-2 mb-2 mt-2">
-                            <span className="title_detail_page">
+                            <span className="title_detail_page font-weight-bold border_bottom_title">
                                 Danh sách luận giải chi tiết
                             </span>
-                            <Form autoComplete="nope" className="zoom-scale-9">
+                            <Form autoComplete="nope" className="zoom-scale-9 mt-3">
                                 <Row>
-
                                     <Col sm={6} xs={12}>
-
                                         <FormGroup className="mb-2 mb-sm-0">
                                             <Label for="inputValue" className="mr-sm-2">
                                                 Từ khóa
@@ -355,7 +401,6 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                                             </Col>
                                         </FormGroup>
                                     </Col>
-
                                     <Col sm={6} xs={12} className={`d-flex align-items-end justify-content-end`}>
                                         <FormGroup className="mb-2 mb-sm-0">
                                             <Button
@@ -374,7 +419,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                                                 className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                                                 onClick={() => {
                                                     searchInterPertDetail("");
-                                                    setKeyword("")
+                                                    setKeyword("");
                                                 }}
                                                 type="button"
                                                 size="sm"
@@ -415,14 +460,18 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                             ) : (
                                 <div>
                                     <Table
+                                        disabled={true}
                                         rowKey={record => record.interpret_detail_id}
                                         className="components-table-demo-nested"
                                         dataSource={data_select}
                                         bordered={true}
+
                                         rowSelection={{
                                             selectedRowKeys: isSelectedRowKeys,
-                                            ...rowSelection
+                                            hideSelectAll: noEdit,
+                                            ...rowSelection,
                                         }}
+
                                         columns={columns_child_page_select()}
                                         locale={{
                                             emptyText: 'Không có dữ liệu',
@@ -431,19 +480,20 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                                         scroll={{ y: 230 }}
 
                                     />
+
                                 </div>
                             )}
                         </Col>
                     </Row>
                 </CardBody>
 
-                <CardBody style={{ padding: 8 }} className="px-0 py-0">
+                <CardBody style={{ padding: 8 }} className="px-0 py-0 mt-3">
                     <div className="MuiPaper-filter__custom">
                         <div className="ml-2 mr-2 mb-3 mt-2">
-                            <span className="title_detail_page">
+                            <span className="title_detail_page font-weight-bold border_bottom_title">
                                 Danh sách luận giải chi tiết theo Page
                             </span>
-                            <Form autoComplete="nope" className="zoom-scale-9">
+                            <Form autoComplete="nope" className="zoom-scale-9 mt-3">
                                 <Row>
                                     <Col sm={6} xs={12}>
                                         <FormGroup className="mb-2 mb-sm-0">
@@ -531,7 +581,8 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                                         }}
                                         columns={columns_page_selected(
                                             un_rowSelection,
-                                            changeRowIndexSelect
+                                            changeRowIndexSelect,
+                                            noEdit
                                         )}
                                         pagination={false}
                                         scroll={{ y: 270 }}
@@ -562,7 +613,7 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                             type="button"
                             size="sm"
                             disabled={
-                                dataSelected.length == 0
+                                dataSelected.length == 0 || noEdit
                             }
                             onClick={() => checkShowIndexSelected()}
                         >
@@ -573,7 +624,10 @@ const PopUpChildConfig = ({ handleClose, detail_page, data_interpret, formik }) 
                     <FormGroup className="mb-2 ml-2 mb-sm-0">
                         <Button
                             className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                            onClick={() => handleClose()}
+                            onClick={() => {
+                                handleClose();
+                                formik.setFieldError('error_samekey', false)
+                            }}
                             type="button"
                             size="sm"
                         >

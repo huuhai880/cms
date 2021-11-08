@@ -13,7 +13,7 @@ export const columns_product_page = (noEdit, deleteItemPage, optionPageProductGr
         title: 'STT',
         dataIndex: 'key',
         key: 'key',
-        width: 80,
+        width: 100,
         render: (text, record, index) => {
             return (
                 <div style={{
@@ -36,10 +36,10 @@ export const columns_product_page = (noEdit, deleteItemPage, optionPageProductGr
                 <Select
                     className="MuiPaper-filter__custom--select"
                     id={`attribute_group_id_${record.product_page_id}`}
-                    name={`attribute_group_id_${record.title_page}`}
+                    name={`attribute_group_id_${record.page_name}`}
                     onChange={(value) => handleChangeProductPageGroup(value, record, index)}
                     isSearchable={true}
-                    placeholder={"-- Chọn Thuộc tính --"}
+                    placeholder={"-- Chọn chỉ số --"}
                     value={convertValue(record.product_page_id, optionPageProductGroup() || [])}
                     options={optionPageProductGroup()}
                     isDisabled={noEdit}
@@ -67,6 +67,7 @@ export const columns_product_page = (noEdit, deleteItemPage, optionPageProductGr
                         color="danger"
                         className="btn-sm ml-2"
                         type="button"
+                        disabled={noEdit}
                         onClick={() => deleteItemPage(index)}
                     >
                         <i className="fa fa-trash" />
@@ -141,7 +142,7 @@ export const columns_page_child = (parent_key,
                         justifyContent: "center"
                     }}>
                         <Button
-                            disabled={record.attributes_group_id == null || noEdit}
+                            disabled={record.attributes_group_id == null}
                             color="primary"
                             className="btn-sm"
                             type="button"
@@ -172,6 +173,8 @@ export const columns_page_child = (parent_key,
                         <Input
                             type="number"
                             name="url"
+                            className={'text-center'}
+                            disabled={noEdit}
                             readOnly={record.isEdit}
                             value={showIndex}
                             placeholder="Thứ tự"
@@ -193,6 +196,7 @@ export const columns_page_child = (parent_key,
                         justifyContent: "center"
                     }}>
                         <Button
+                            disabled={noEdit}
                             color="danger"
                             className="btn-sm ml-2"
                             type="button"
@@ -258,7 +262,7 @@ export const columns_child_page_select = () => [
     },
 ]
 
-export const columns_page_selected = (un_selected, changeRowIndexSelect) => [
+export const columns_page_selected = (un_selected, changeRowIndexSelect,noEdit) => [
     {
         title: 'STT',
         dataIndex: '',
@@ -283,10 +287,7 @@ export const columns_page_selected = (un_selected, changeRowIndexSelect) => [
         key: 'attributes_name',
         render: (attributes_name) => {
             return (
-                <div style={{
-                    display: "flex",
-                    justifyContent: "center"
-                }}>
+                <div>
                     <span>
                         {attributes_name}
                     </span>
@@ -301,7 +302,7 @@ export const columns_page_selected = (un_selected, changeRowIndexSelect) => [
         key: 'interpret_detail_name',
         render: (interpret_detail_name) => {
             return (
-                <div >
+                <div>
                     <span>
                         {interpret_detail_name}
                     </span>
@@ -323,8 +324,10 @@ export const columns_page_selected = (un_selected, changeRowIndexSelect) => [
                         justifyContent: "center"
                     }}>
                     <Input
+                        disabled={noEdit}
                         type="number"
                         name="url"
+                        className={'text-center'}
                         readOnly={record.isEdit}
                         onChange={(e) => changeRowIndexSelect(index, e.target.value)}
                         value={showIndex}
@@ -346,6 +349,7 @@ export const columns_page_selected = (un_selected, changeRowIndexSelect) => [
                     justifyContent: "center"
                 }}>
                     <Button
+                        disabled={noEdit}
                         color="danger"
                         className="btn-sm ml-2"
                         type="button"
