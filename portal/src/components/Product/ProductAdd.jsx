@@ -471,7 +471,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const optionPageProductGroup = () => {
     let { product_page = [] } = formik.values || {};
     if (dataProductPage && dataProductPage.length > 0) {
-      return dataProductPage.map(({ product_page_id: value, title_page: label }) => {
+      return dataProductPage.map(({ product_page_id: value, page_name: label }) => {
         return product_page.find((p) => p.product_page_id == value)
           ? {
             value,

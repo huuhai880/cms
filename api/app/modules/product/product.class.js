@@ -49,7 +49,7 @@ const template = {
   is_selected: '{{ISSELECTED ? 1 : 0}}',
 
   page_id: '{{#? PAGEID}}',
-  title_page: '{{#? PAGENAME}}',
+  page_name: '{{#? PAGENAME}}',
   group_name: '{{#? GROUPNAME}}',
   attributes_id: '{{#? ATTRIBUTEID}}',
   attributes_name: '{{#? ATTRIBUTENAME}}',
@@ -172,7 +172,7 @@ const listInterpretDetail = (users = []) => {
 const list_page_product = (users = []) => {
   return transform.transform(users, [
     'page_id',
-    'title_page',
+    'page_name',
   ]);
 };
 

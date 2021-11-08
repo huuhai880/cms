@@ -36,7 +36,7 @@ export const columns_product_page = (noEdit, deleteItemPage, optionPageProductGr
                 <Select
                     className="MuiPaper-filter__custom--select"
                     id={`attribute_group_id_${record.product_page_id}`}
-                    name={`attribute_group_id_${record.title_page}`}
+                    name={`attribute_group_id_${record.page_name}`}
                     onChange={(value) => handleChangeProductPageGroup(value, record, index)}
                     isSearchable={true}
                     placeholder={"-- Chọn chỉ số --"}

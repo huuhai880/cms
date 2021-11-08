@@ -2,7 +2,7 @@ const Transform = require('../../common/helpers/transform.helper');
 const config = require('../../../config/config');
 const template = {
   product_page_id: '{{#? PAGEID}}',
-  title_page: '{{#? PAGENAME}}',
+  page_name: '{{#? PAGENAME}}',
   interpret_detail_id: '{{#? INTERPRETDETAILID}}',
   attributes_group_id: '{{#? ATTRIBUTESGROUPID}}',
   interpret_id: '{{#? INTERPRETID}}',
@@ -15,7 +15,7 @@ let transform = new Transform(template);
 const list = (users = []) => {
   return transform.transform(users, [
     'product_page_id',
-    'title_page',
+    'page_name',
   ]);
 };
 const list_interpretdetail = (users = []) => {
