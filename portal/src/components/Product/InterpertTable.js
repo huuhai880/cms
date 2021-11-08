@@ -7,22 +7,17 @@ import {
   Col,
   Row,
   Button,
-  CustomInput,
   FormGroup,
   Label,
   Input,
   Form,
-  Modal,
-  ModalBody,
 } from "reactstrap";
 import { Table } from "antd";
-import { Checkbox } from "antd";
 import { column } from "./const";
 import { CircularProgress } from "@material-ui/core";
-import CustomPagination from "../../utils/CustomPagination";
 import InterpretTableChild from "./InterpretTableChild";
 import "./style.scss";
-import { UpCircleOutlined, DownCircleOutlined } from "@ant-design/icons"; // icon antd
+import { PlusSquareOutlined , MinusSquareOutlined  } from "@ant-design/icons"; // icon antd
 
 function InterpertTable({ noEdit, handleClose, attributeGroup, handleSubmit, callAPIInterPret }) {
   const [interpert, setInterpert] = useState(attributeGroup);
@@ -72,12 +67,18 @@ function InterpertTable({ noEdit, handleClose, attributeGroup, handleSubmit, cal
     setMsgError(null);
   };
   const handleSubmitConfig = () => {
+    attributeGroup.interprets.map((item, index) => {
+      let check = interpert.interprets.filter((p) => p.interpret_id == item.interpret_id);
+      if (check && check.length > 0) {
+        attributeGroup.interprets[index] = check[0];
+      }
+    });
     let checkInvalid = interpert.interprets.filter(
       (p) => !p.is_show_search_result && (!p.text_url || !p.url)
     );
     if (checkInvalid && checkInvalid.length > 0) {
       setMsgError("Vui lòng nhập thông tin Text Url/Url cho luận giải");
-    } else handleSubmit(interpert);
+    } else handleSubmit(attributeGroup);
   };
   const changeAlias = (val) => {
     var str = val;
@@ -303,17 +304,15 @@ function InterpertTable({ noEdit, handleClose, attributeGroup, handleSubmit, cal
                         expandIcon: ({ expanded, onExpand, record }) =>
                           record.interpret_details.length > 1 ? (
                             expanded ? (
-                              <UpCircleOutlined
-                                rotate={360}
+                              <MinusSquareOutlined
                                 className={"custom_icon"}
-                                style={{ fontSize: 16 }}
+                                style={{ fontSize: 16, color: "#20a8d8" }}
                                 onClick={(e) => onExpand(record, e)}
                               />
                             ) : (
-                              <DownCircleOutlined
-                                rotate={360}
+                              <PlusSquareOutlined
                                 className={"custom_icon"}
-                                style={{ fontSize: 16 }}
+                                style={{ fontSize: 16, color: "#20a8d8" }}
                                 onClick={(e) => onExpand(record, e)}
                               />
                             )

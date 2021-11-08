@@ -16,8 +16,8 @@ import {
   Modal,
   ModalBody,
 } from "reactstrap";
-import TableAnt from 'antd/es/table';
-import { UpCircleOutlined, DownCircleOutlined } from "@ant-design/icons"; // icon antd
+import TableAnt from "antd/es/table";
+import { PlusSquareOutlined, MinusSquareOutlined } from "@ant-design/icons"; // icon antd
 import "react-image-lightbox/style.css";
 import { ActionButton } from "@widget";
 import { useState } from "react";
@@ -74,8 +74,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
   });
   const [save_dateProductPage, setSaveDataProductPage] = useState([]);
   const [itemInterPertPage, setItemInterPertPage] = useState([]);
-  const [event_spin,set_event_spin]=useState(false);
-
+  const [event_spin, set_event_spin] = useState(false);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -355,17 +354,17 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const renderProductAttributes = () => {
     return (
       <Table size="sm" bordered striped hover className="tb-product-attributes mt-2">
-        <thead >
+        <thead>
           <tr>
             <th className="text-center" style={{ width: 100 }}>
               STT
             </th>
-            <th className="text-center"  >Chỉ số</th>
+            <th className="text-center">Chỉ số</th>
             {/* <th className="text-center">Luận giải chi tiết</th> */}
-            <th className="text-center" style={{ width: 100 }} >
+            <th className="text-center" style={{ width: 100 }}>
               Cấu hình
             </th>
-            <th className="text-center" style={{ width: 100 }} >
+            <th className="text-center" style={{ width: 100 }}>
               Thao tác
             </th>
           </tr>
@@ -399,28 +398,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
                     menuPortalTarget={document.querySelector("body")}
                   />
                 </td>
-                {/* <td>
-                  <Select
-                    className="MuiPaper-filter__custom--select"
-                    name="attribute_group_id"
-                    onChange={(selected) =>
-                      handleChangeInterpretDetail(selected, index)
-                    }
-                    isSearchable={true}
-                    placeholder={"-- Chọn Luận giải --"}
-                    value={convertValue(
-                      (item.interprets || []).map((x) => x.interpret_detail_id),
-                      optionInterpretDetail(item.attributes_group_id) || []
-                    )}
-                    options={optionInterpretDetail(item.attributes_group_id)}
-                    isMulti={true}
-                    isDisabled={noEdit}
-                    styles={{
-                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    }}
-                    menuPortalTarget={document.querySelector("body")}
-                  />
-                </td> */}
+
                 <td
                   style={{
                     verticalAlign: "middle",
@@ -523,14 +501,19 @@ function ProductAdd({ noEdit = false, productId = null }) {
   const handleChangeAttributesPageProduct = (selected, record, index, parent_key) => {
     let pageProduct = [...formik.values.product_page];
     const save_data = [...save_dateProductPage];
-    pageProduct[parent_key].data_child[index].attributes_group_id = selected ? selected.value : null;
+    pageProduct[parent_key].data_child[index].attributes_group_id = selected
+      ? selected.value
+      : null;
     pageProduct[parent_key].data_child[index].show_index = parseInt(index + 1);
 
     if (save_data.length > 0) {
       if (save_data[parent_key] !== undefined) {
-        const checkIndexKey = save_data[parent_key].data_child.findIndex((item) => item.attributes_group_id === selected.value)
+        const checkIndexKey = save_data[parent_key].data_child.findIndex(
+          (item) => item.attributes_group_id === selected.value
+        );
         if (checkIndexKey !== -1) {
-          pageProduct[parent_key].data_child[index].data_selected = save_data[parent_key].data_child[checkIndexKey].data_selected;
+          pageProduct[parent_key].data_child[index].data_selected =
+            save_data[parent_key].data_child[checkIndexKey].data_selected;
         } else {
           pageProduct[parent_key].data_child[index].data_selected = [];
         }
@@ -719,12 +702,12 @@ function ProductAdd({ noEdit = false, productId = null }) {
         rowKey={(record) => record.rowIndex}
         locale={{
           emptyText: (
-            <tr className={'emty_data_table_ant'}>
+            <tr className={"emty_data_table_ant"}>
               <td className="text-center" colSpan={50}>
                 Không có dữ liệu
               </td>
             </tr>
-          )
+          ),
         }}
         bordered={true}
         expandedRowKeys={expandedRowKeys}
@@ -732,17 +715,24 @@ function ProductAdd({ noEdit = false, productId = null }) {
         expandable={{
           expandedRowRender: (record, index) => _expandableProductPage(index, record.data_child),
           rowExpandable: (record) => record.product_page_id !== null,
-          expandIcon: ({ expanded, onExpand, record }) => record.product_page_id !== null ? (
-            expanded ? (
-              <UpCircleOutlined   rotate={360} className={'custom_icon'}
-                style={{ fontSize: 16 }} onClick={e => onExpand(record, e)} />
-            ) : (
-              <DownCircleOutlined  rotate={360} className={'custom_icon'}
-                style={{ fontSize: 16 }} onClick={e => onExpand(record, e)} />
-            )
-          ) : null,
-
-
+          expandIcon: ({ expanded, onExpand, record }) =>
+            record.product_page_id !== null ? (
+              expanded ? (
+                <MinusSquareOutlined
+                  rotate={360}
+                  className={"custom_icon"}
+                  style={{ fontSize: 16 }}
+                  onClick={(e) => onExpand(record, e)}
+                />
+              ) : (
+                <PlusSquareOutlined
+                  rotate={360}
+                  className={"custom_icon"}
+                  style={{ fontSize: 16 }}
+                  onClick={(e) => onExpand(record, e)}
+                />
+              )
+            ) : null,
         }}
         dataSource={formik.values.product_page}
         pagination={false}
@@ -750,7 +740,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
     );
   };
   const handleShowPopupConfig = async (item, index) => {
-    let itemCl = JSON.parse(JSON.stringify(item)); 
+    let itemCl = JSON.parse(JSON.stringify(item));
     setAttributeGroupSelected(itemCl);
     setShowConfig(true);
   };
