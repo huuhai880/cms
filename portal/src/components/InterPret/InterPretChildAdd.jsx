@@ -404,7 +404,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                         <Button
                           color="primary"
                           className="mr-2 btn-block-sm"
-                          onClick={() => window._$g.rdr(`/interpret/interpret-detail/edit/${id}`)}
+                          onClick={() => window._$g.rdr(`/interpret/d-edit/${id}`)}
                           disabled={formik.isSubmitting}
                         >
                           <i className="fa fa-edit mr-1" />

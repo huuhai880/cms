@@ -245,7 +245,7 @@ export const validationSchema = yup.object().shape({
     .max(120, "Tên hiển thị trên web tối đa 120 ký tự."),
   short_description: yup
     .string()
-    .required("Mô tả ngắn gọn sản phẩm là bắt buộc.")
+    .required("Mô tả ngắn gọn là bắt buộc.")
     .max(400, "Mô tả ngắn gọn tối đa 400 ký tự."),
   product_category_id: yup.string().required("Danh mục sản phẩm là bắt buộc.").nullable(),
   product_images: yup.array().nullable().required("Hình ảnh sản phẩm là bắt buộc"),

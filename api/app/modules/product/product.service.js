@@ -362,7 +362,6 @@ const createProduct = async (bodyParams = {}) => {
         }
       }
     }
-
     // tạo product page
     let product_page = apiHelper.getValueFromObject(
       bodyParams,
@@ -553,6 +552,7 @@ const updateProduct = async (bodyParams = {}) => {
           if (interpret.is_selected == true) {
             await reqAttribute
               .input('PRODUCTID', product_id)
+              .input('PROATTRIBUTESID', interpret.product_attribute_id)
               .input('ATTRIBUTESGROUPID', interpret.attributes_group_id)
               .input('INTERPRETID', interpret.interpret_id)
               .input('INTERPRETDETAILID', interpret.interpret_detail_id)
@@ -586,6 +586,7 @@ const updateProduct = async (bodyParams = {}) => {
                 await reqInterPretDertail
                   .input('PRODUCTID', product_id)
                   .input('ATTRIBUTESGROUPID', interpret.attributes_group_id)
+                  .input('PROATTRIBUTESID', element.product_attribute_id)
                   .input('INTERPRETID', interpret.interpret_id)
                   .input('INTERPRETDETAILID', element.interpret_detail_id)
                   .input('ISSHOWSEARCHRESULT', element.is_show_search_result)

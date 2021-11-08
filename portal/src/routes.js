@@ -676,10 +676,12 @@ const FormulaByNameDetail = React.lazy(() =>
 const FormulaByNameEdit = React.lazy(() => import("./components/FormulaByName/FormulaByNameEdit"));
 // end#FormulaByName
 
+//ProductCombo
 const ProductCombo = React.lazy(() => import("./components/ProductCombo/ProductCombo"));
 const ProductComboAdd = React.lazy(() => import("./components/ProductCombo/ProductComboAdd"));
 const ProductComboEdit = React.lazy(() => import("./components/ProductCombo/ProductComboEdit"));
 const ProductComboDetail = React.lazy(() => import("./components/ProductCombo/ProductComboDetail"));
+//end#ProductCombo
 
 const SearchHistory = React.lazy(() => import("./components/SearchHistory/SearchHistory"));
 const SearchHistoryDetail = React.lazy(() =>

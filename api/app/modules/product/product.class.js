@@ -3,6 +3,8 @@ const config = require('../../../config/config');
 const template = {
   product_id: '{{#? PRODUCTID}}',
   product_category_id: '{{#? PRODUCTCATEGORYID}}',
+  product_attribute_id: '{{#? PROATTRIBUTESID}}',
+
   category_name: '{{#? CATEGORYNAME}}',
   product_name: '{{#? PRODUCTNAME}}',
   product_name_show_web: '{{#? PRODUCTNAMESHOWWEB}}',
@@ -115,6 +117,7 @@ const listAttributesGroup = (list = []) => {
 const listInterpret = (list = []) => {
   return transform.transform(list, [
     'attributes_group_id',
+    'product_attribute_id',
     'attribute_id',
     'attribute_name',
     'interpret_id',
@@ -156,6 +159,7 @@ const listInterpretDetail = (users = []) => {
     'interpret_detail_id',
     'interpret_detail_name',
     'interpret_detail_parentname',
+    'product_attribute_id',
     'interpret_detail_short_content',
     'is_active',
     'interpret_id',

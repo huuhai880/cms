@@ -24,6 +24,9 @@ export const initialValues = {
   orderid_1: "",
   orderid_2: "",
   calculation_id: "",
+  is_total_no_shortened: false,
+  is_total_shortened: false,
+  is_total_2digit: false
 };
 ///// validate
 export const validationSchema = yup.object().shape({

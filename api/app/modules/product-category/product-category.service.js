@@ -143,7 +143,6 @@ const createProductCategoryOrUpdates = async (bodyParams) => {
       }
     }
 
-
     await transaction.begin();
 
     const requestProductCategotyCreate = new sql.Request(transaction);

@@ -108,7 +108,6 @@ const detail = (users = []) => {
     'ingredient__child_1_id',
     'ingredient__child_2_id',
     'is_count_tofnum',
-    'is_count_tofnum',
     'is_numletter_2digit',
     'is_numletter_1digit',
     'is_total_value_2digit',
