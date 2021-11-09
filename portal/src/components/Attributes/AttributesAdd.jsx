@@ -279,9 +279,7 @@ export default class AttributesAdd extends PureComponent {
       ready: false,
       alerts: [],
       clearImage: true,
-      OptionGroup: [],
-      OptionMainNumber: [],
-      OptionPartner: [],
+
     }));
     // Get bundle data --> ready data
     (async () => {
