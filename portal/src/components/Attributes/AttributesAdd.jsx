@@ -130,17 +130,14 @@ export default class AttributesAdd extends PureComponent {
     attributes_group_id: Yup.object().required("Chỉ số là bắt buộc."),
 
     list_attributes_image: Yup.array()
-      .of(
-        Yup.object().shape({
-          partner_id: Yup.object()
-            .shape({
-              value: Yup.string(),
-              label: Yup.string(),
-            })
-            .required("Đối tác là bắt buộc."),
-        })
-      )
+     
       .test("list_attributes_image", null, (arr) => {
+        const checkPartnerId = arr.findIndex((item, index) => {
+          return item.partner_id == null;
+        });
+        if (checkPartnerId !== -1) {
+          return new Yup.ValidationError("Đối tác là bắt buộc.", null, "check_is_default");
+        }
         let checkIsDefault = arr.filter((item) => {
           return item.is_default == true;
         });
@@ -151,6 +148,7 @@ export default class AttributesAdd extends PureComponent {
             "check_is_default"
           );
         }
+        
         return true;
       }),
   });
@@ -686,21 +684,21 @@ export default class AttributesAdd extends PureComponent {
                                               >
                                                 <Col>
                                                   <Field
-                                                    name="is_default"
+                                                    name="is_default_famous"
                                                     render={({ field /* _form */ }) => (
                                                       <CustomInput
                                                         {...field}
                                                         onBlur={null}
-                                                        checked={values.related[index].is_default}
+                                                        checked={values.related[index].is_default_famous}
                                                         onChange={(event) => {
                                                           const { target } = event;
                                                           values.related = values.related.map(
                                                             (value) => {
-                                                              value.is_default = false;
+                                                              value.is_default_famous = false;
                                                               return value;
                                                             }
                                                           );
-                                                          values.related[index].is_default = true;
+                                                          values.related[index].is_default_famous = true;
                                                           field.onChange({
                                                             target: {
                                                               name: "related",
@@ -709,7 +707,7 @@ export default class AttributesAdd extends PureComponent {
                                                           });
                                                         }}
                                                         type="checkbox"
-                                                        id={`is_default_${index}`}
+                                                        id={`is_default_famous_${index}`}
                                                         disabled={noEdit}
                                                       />
                                                     )}
@@ -719,7 +717,6 @@ export default class AttributesAdd extends PureComponent {
                                               <td className="text-center">
                                                 <Col>
                                                   <Field
-                                                    name="is_default"
                                                     render={({ field /* _form */ }) => (
                                                       <Button
                                                         color="danger"

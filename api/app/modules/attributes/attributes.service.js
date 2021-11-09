@@ -171,7 +171,7 @@ const createAttributesOrUpdate = async (bodyParams) => {
           .request()
           .input('ATTRIBUTEID', attributeId)
           .input('FAMOUSID', apiHelper.getValueFromObject(item, 'farmous_id'))
-          .input('ISDEFAULT', apiHelper.getValueFromObject(item, 'is_default'))
+          .input('ISDEFAULT', apiHelper.getValueFromObject(item, 'is_default_famous'))
           .input('ORDERINDEX', i + 1)
           .input(
             'CREATEDUSER',
