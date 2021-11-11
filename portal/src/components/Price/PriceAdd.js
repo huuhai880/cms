@@ -334,7 +334,7 @@ function PriceAdd(props) {
         return floatValue >= 0 && floatValue <= (!is_percent || isPrice ? 999999999 : 100);
     }
 
-    console.log(formik.errors)
+    // console.log(formik.errors)
 
     return (
         <div className="animated fadeIn">

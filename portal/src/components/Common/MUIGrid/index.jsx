@@ -406,7 +406,7 @@ export default class CommonMUIGrid extends PureComponent {
         fileDownload(res, `file_${configDate}.csv`);
       })
       .catch((error) => {
-        console.log(error)
+        // console.log(error)
       });
   };
 

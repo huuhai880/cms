@@ -69,7 +69,7 @@ function OrderDetail() {
         formik.setFieldValue("product_list", [...formik.values.product_list, ...data.items]);
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };

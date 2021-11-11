@@ -127,7 +127,7 @@ function TableInterPretChild({ data = [], indexParent, handleDelInterpretDetail 
     },
   ];
   const handleChange = (filters) => {
-    console.log(filters);
+    // console.log(filters);
   };
   return (
     <Table

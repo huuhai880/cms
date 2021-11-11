@@ -68,7 +68,7 @@ function ProductComboAdd({ comboId = null, noEdit = false }) {
           ...initialValues,
           ...combo,
         };
-        console.log(value);
+        // console.log(value);
 
         setCombo(value);
       }

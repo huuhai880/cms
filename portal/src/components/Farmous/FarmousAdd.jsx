@@ -153,7 +153,7 @@ function FarmousAdd({ noEdit }) {
         // console.log()
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
@@ -294,7 +294,7 @@ function FarmousAdd({ noEdit }) {
                               date={formik.values.birthday ? moment(formik.values.birthday) : null}
                               onDateChange={(dates) => {
                                 // setFieldValue("birth_day", dates);
-                                console.log(dates)
+                                // console.log(dates)
                                 formik.setFieldValue("birthday", dates);
                               }}
                               disabled={noEdit}

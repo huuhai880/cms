@@ -92,7 +92,7 @@ const CheckIngredient = async (ingredient_name) => {
 const addIngredient = async (body = {}) => {
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
-  console.log(body);
+  // console.log(body);
   try {
     await transaction.begin();
     /////create or update number

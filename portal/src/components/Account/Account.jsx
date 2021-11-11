@@ -36,10 +36,10 @@ function Account() {
     try {
       await _accountModel.getList(props).then((data) => {
         setDataAccount(data);
-        console.log(data);
+        // console.log(data);
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
     } finally {
       setisLoading(false);
@@ -56,7 +56,7 @@ function Account() {
             _callAPI(query);
           });
         } catch (error) {
-          console.log(error);
+          // console.log(error);
           window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
         } finally {
           setisLoading(false);

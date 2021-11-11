@@ -223,7 +223,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
                               )}
                               options={getOptionInterpretParent()}
                               onChange={(value) => {
-                                console.log(value);
+                                // console.log(value);
                                 formik.setFieldValue("interpret_detail_parent_id", value.value);
                               }}
                             />

@@ -111,7 +111,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
           );
         },
         customBodyRender: (value, tableMeta, updateValue) => {
-          console.log(data[tableMeta["rowIndex"]].news_comment_reply_user)
+          // console.log(data[tableMeta["rowIndex"]].news_comment_reply_user)
           return (
             <div className="text-left">
               {value == 1
