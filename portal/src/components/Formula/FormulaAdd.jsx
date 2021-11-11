@@ -399,7 +399,7 @@ function FormulaAdd({ noEdit }) {
                   <Col xs={12}>
                     <FormGroup row style={{alignItems: 'center'}}>
                       <Label for="ingredient_name" sm={2} className="text-right">
-                        Hình thức
+                        Kết quả cuối cùng
                       </Label>
                       <Col sm={2}>
                         <Checkbox

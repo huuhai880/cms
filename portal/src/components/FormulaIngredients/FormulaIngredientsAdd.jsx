@@ -332,7 +332,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                   </Row>
                   <Row>
                     <Col xs={12}>
-                      <FormGroup row>
+                      <FormGroup row style={{alignItems:'center'}}>
                         <Label for="ingredient_name" sm={2}>
                           Hình thức
                         </Label>
