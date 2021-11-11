@@ -98,7 +98,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
           ...initialValues,
           ...product,
         };
-
+        
         let data_productPage = [...product.product_page];
 
         for (let i = 0; i < data_productPage.length; i++) {
@@ -250,6 +250,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
         }),
       };
     });
+   
     formik.setFieldValue("product_attributes", attrProduct);
   };
   const handleChangeAttributesGroup = (selected, index) => {

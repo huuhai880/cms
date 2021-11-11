@@ -82,9 +82,9 @@ class AttributesFilter extends PureComponent {
   onSubmit = () => {
     const { inputValue, is_active, attributes_group_id, partner_id } = this.state;
     const { handleSubmit } = this.props;
-    if (inputValue) {
-      localStorage.setItem("keywordAttributes", inputValue);
-    }
+
+    localStorage.setItem("keywordAttributes", inputValue);
+
     handleSubmit(
       inputValue ? inputValue.trim() : "",
       attributes_group_id ? attributes_group_id.value : "",
