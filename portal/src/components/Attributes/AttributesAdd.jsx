@@ -281,14 +281,12 @@ export default class AttributesAdd extends PureComponent {
       ready: false,
       alerts: [],
       clearImage: true,
-      OptionGroup: [],
-      OptionMainNumber: [],
-      OptionPartner: [],
+      
     }));
     // Get bundle data --> ready data
     (async () => {
       let bundle = await this._getBundleData();
-      this.setState({ ...bundle, ready: true, clearImage: false });
+      this.setState({ bundle, ready: true, clearImage: false });
     })();
     //.end
   };
@@ -460,6 +458,8 @@ export default class AttributesAdd extends PureComponent {
                                         <Select
                                           {...field}
                                           onBlur={null}
+                                          isSearchable={true}
+
                                           className="text-left"
                                           value={values.attributes_group_id || null}
                                           onChange={(item) => {
@@ -502,6 +502,7 @@ export default class AttributesAdd extends PureComponent {
                                         <Select
                                           {...field}
                                           onBlur={null}
+                                          isSearchable={true}
                                           className="text-left"
                                           value={values.main_number_id || null}
                                           onChange={(item) => {
