@@ -178,6 +178,9 @@ function InterPretAdd({ noEdit }) {
         return value.find((e) => e == item.value);
       });
     }
+    if(!value){
+      value= ""
+    }
     return value;
   };
 
@@ -498,8 +501,7 @@ function InterPretAdd({ noEdit }) {
                                 if (!value) {
                                   formik.setFieldValue("relationship_id", "");
                                   formik.setFieldValue("compare_attribute_id", "");
-                                  setisLoading(true);
-                                  setTimeout(() => setisLoading(false), 100);
+                                 
                                 } else {
                                   formik.setFieldValue("relationship_id", value.value);
                                 }

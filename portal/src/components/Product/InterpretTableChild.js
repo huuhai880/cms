@@ -96,13 +96,13 @@ function InterpretTableChild({
     {
       title: "Text Link",
       dataIndex: "text_url",
-      width: "10%",
+      width: "20%",
       key: "text_url",
       responsive: ["md"],
       render: (text, record, index) => (
         <div className="text-left">
           <Input
-            type="text"
+            type="textarea"
             placeholder="Text Link"
             name="text_url"
             value={record.text_url || ""}

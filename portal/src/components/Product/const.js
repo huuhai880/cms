@@ -81,13 +81,13 @@ export const column = (handleChangeInterpretConfig, handleChangeInterpretChildBy
     {
       title: "Text Link",
       dataIndex: "text_url",
-      width: "15%",
+      width: "20%",
       key: "text_url",
       responsive: ["md"],
       render: (text, record, index) => (
         <div className="text-left">
           <Input
-            type="text"
+            type="textarea"
             placeholder="Text Link"
             name="text_url"
             value={record.text_url || ""}
@@ -102,7 +102,7 @@ export const column = (handleChangeInterpretConfig, handleChangeInterpretChildBy
     {
       title: "Link",
       dataIndex: "url",
-      width: "15%",
+      width: "10%",
       key: "url",
       responsive: ["md"],
       render: (text, record, index) => (

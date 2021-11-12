@@ -14,6 +14,8 @@ const template = {
   is_active: '{{ ISACTIVE? 1: 0}}',
   is_active_image: '{{ ISACTIVEIMAGE? 1: 0}}',
   is_default: '{{ ISDEFAULT? 1: 0}}',
+  is_default_famous: '{{ ISDEFAULT? 1: 0}}',
+
   url_images: [
     {
       '{{#if URLIMAGES}}': `${config.domain_cdn}{{URLIMAGES}}`,
@@ -84,7 +86,7 @@ const detailAttributeFamous = (AttributeFamous = []) => {
     'birthday',
     'gender',
     'order_index',
-    'is_default',
+    'is_default_famous',
     'image_avatar',
   ]);
 };
