@@ -246,7 +246,7 @@ class Candidate extends Component {
       fileDownload(response, `Candidate_${configDate}.csv`);
     })
     .catch((error) => {
-      console.log(error)
+      // console.log(error)
     });
   }
 

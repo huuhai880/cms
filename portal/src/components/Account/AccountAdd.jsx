@@ -166,7 +166,7 @@ function AccountAdd({ noEdit }) {
           }
         });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
       }
     };
@@ -222,7 +222,7 @@ function AccountAdd({ noEdit }) {
         // formik.setFieldValue("customer_code", data.customer_code);
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
@@ -236,7 +236,7 @@ function AccountAdd({ noEdit }) {
         setDataAccount(data);
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
@@ -291,7 +291,7 @@ function AccountAdd({ noEdit }) {
           setIsModalVisible(false);
         });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
       }
     }

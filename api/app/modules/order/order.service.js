@@ -92,7 +92,7 @@ const getListProduct = async (order_id) => {
 ///////delete order
 const deleteOrder = async (order_id, body) => {
   const pool = await mssql.pool;
-  console.log(order_id)
+  // console.log(order_id)
   try {
     await pool
       .request()

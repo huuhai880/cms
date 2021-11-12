@@ -37,7 +37,7 @@ function ViewDetail() {
         setDataInterpret(data);
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
@@ -67,7 +67,7 @@ function ViewDetail() {
       let child = page.querySelector(".bw_content_luangiai");
       //Noi dung
       var pageText = child.innerHTML;
-      console.log(pageText)
+      // console.log(pageText)
       child.innerHTML += html; // saves the text of the last page
       if (page.offsetHeight > 1123) {
         child.innerHTML = pageText; //resets the page-text

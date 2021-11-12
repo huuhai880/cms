@@ -193,7 +193,7 @@ class ProductListComment extends Component {
       fileDownload(response, `Product_${configDate}.csv`);
     })
     .catch((error) => {
-      console.log(error)
+      // console.log(error)
     });
   }
 

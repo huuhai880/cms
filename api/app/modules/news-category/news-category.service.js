@@ -104,7 +104,7 @@ const savePicture = async (base64) => {
 };
 
 const createNewsCategoryOrUpdate = async (bodyParams) => {
-console.log("🚀 ~ file: news-category.service.js ~ line 107 ~ createNewsCategoryOrUpdate ~ bodyParams", bodyParams)
+// console.log("🚀 ~ file: news-category.service.js ~ line 107 ~ createNewsCategoryOrUpdate ~ bodyParams", bodyParams)
   try {
     const pool = await mssql.pool;
 

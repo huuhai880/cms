@@ -82,7 +82,7 @@ class Service extends Component {
           window.location.reload();
         }
       );
-      console.log("error");
+      // console.log("error");
     }
   }
 

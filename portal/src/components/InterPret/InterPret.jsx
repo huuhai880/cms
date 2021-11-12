@@ -68,7 +68,7 @@ function InterPret() {
             _callAPI(query);
           });
         } catch (error) {
-          console.log(error);
+          // console.log(error);
           window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
         } finally {
           setisLoading(false);
@@ -104,7 +104,7 @@ function InterPret() {
       }
     });
   };
-console.log(dataInterpret.items)
+// console.log(dataInterpret.items)
   return (
     <div>
       <Card className="animated fadeIn z-index-222 mb-3 ">

@@ -55,7 +55,7 @@ function ViewDetailSpectial() {
         setDataInterpret(data);
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };

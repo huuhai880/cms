@@ -88,7 +88,7 @@ class SearchHistory extends Component {
       // @TODO:
       this._searchHistoryModel.getList(this.state.query).then((data) => (bundle["data"] = data)),
     ];
-    console.log(this.state.query)
+    // console.log(this.state.query)
     await Promise.all(all).catch((err) => {
       window._$g.dialogs.alert(
         window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),

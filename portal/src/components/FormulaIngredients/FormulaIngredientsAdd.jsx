@@ -112,7 +112,7 @@ function FormulaIngredientsAdd({ noEdit }) {
         // formik.setFieldValue(`is_total`, true);
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
@@ -132,7 +132,7 @@ function FormulaIngredientsAdd({ noEdit }) {
         setDataIngredientChild(data.items);
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
     }
   };
@@ -332,7 +332,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                   </Row>
                   <Row>
                     <Col xs={12}>
-                      <FormGroup row>
+                      <FormGroup row style={{alignItems:'center'}}>
                         <Label for="ingredient_name" sm={2}>
                           Hình thức
                         </Label>

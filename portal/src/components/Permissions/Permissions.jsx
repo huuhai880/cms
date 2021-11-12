@@ -212,7 +212,7 @@ export default class Permissions extends PureComponent {
   }
 
   handleFormSubmit(evt) {
-    console.log({ evt });
+    // console.log({ evt });
     evt.preventDefault();
     //
     let { alerts } = this.state;

@@ -336,7 +336,7 @@ export default class ProductCategoryAdd extends PureComponent {
                       errors,
                     } = (this.formikProps = window._formikProps = formikProps);
                     // Render
-                    console.log(values);
+                    // console.log(values);
                     return (
                       <Form
                         id="form1st"

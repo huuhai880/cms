@@ -114,7 +114,7 @@ function MainNumberAdd({ noEdit }) {
         });
       });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
@@ -129,7 +129,7 @@ function MainNumberAdd({ noEdit }) {
           setDataPartner(res);
         });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
       }
     };
@@ -148,7 +148,7 @@ function MainNumberAdd({ noEdit }) {
 
     _callAPI();
   }, []);
-  console.log(formik.values.main_number_img)
+  // console.log(formik.values.main_number_img)
   //// config table
   const addNewImg = () => {
     let AddRowPro = {

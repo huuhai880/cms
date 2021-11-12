@@ -39,7 +39,7 @@ const getListPosition = async (queryParams = {}) => {
         apiHelper.getFilterBoolean(queryParams, 'selectdActive')
       )
       .execute('MD_POSITION_GetAll_AdminWeb');
-    console.log(queryParams);
+    // console.log(queryParams);
     const result = data.recordset;
 
     return new ServiceResponse(true, '', {

@@ -34,7 +34,7 @@ function UploadImage(props) {
   const handleCancel = () => setPreviewVisible(false);
 
   const handlePreview = async (file) => {
-    console.log(file);
+    // console.log(file);
     if (!file.url && !file.preview) {
       file.preview = await getBase64View(file.originFileObj);
     }

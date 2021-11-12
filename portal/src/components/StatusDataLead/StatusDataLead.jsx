@@ -237,7 +237,7 @@ class StatusDataLead extends Component {
       fileDownload(response, `StatusDataLeads_${configDate}.csv`);
     })
     .catch((error) => {
-      console.log(error)
+      // console.log(error)
     });
   }
 

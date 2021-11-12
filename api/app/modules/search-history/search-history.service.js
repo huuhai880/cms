@@ -53,7 +53,7 @@ const getListSearchHistory = async (queryParams = {}) => {
 };
 
 const deleteSearchHistory = async (member_id, bodyParams) => {
-console.log("🚀 ~ file: search-history.service.js ~ line 56 ~ deleteSearchHistory ~ bodyParams", bodyParams)
+// console.log("🚀 ~ file: search-history.service.js ~ line 56 ~ deleteSearchHistory ~ bodyParams", bodyParams)
   try {
     const pool = await mssql.pool;
     await pool

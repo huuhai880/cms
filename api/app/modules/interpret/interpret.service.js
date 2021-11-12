@@ -38,7 +38,7 @@ const getInterpretsList = async (queryParams = {}) => {
         .input('INTERPRETIDS', interPretIds)
         .input('KEYWORD', keyword)
         .execute('FOR_INTERPRETDETAIL_GetListByIds_AdminWeb');
-      console.log(resDetail);
+      // console.log(resDetail);
       let listInterPretDetail =
         InterpretClass.listInterpretDetail(resDetail.recordset) || [];
       // console.log(resDetail)
