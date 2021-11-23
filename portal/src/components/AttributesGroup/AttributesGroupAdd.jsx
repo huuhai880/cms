@@ -25,7 +25,8 @@ import Loading from "../Common/Loading";
 // Model(s)
 import AttributesGroupModel from "../../models/AttributesGroupModel";
 import AuthorModel from "../../models/AuthorModel";
-
+import Upload from "../Common/Antd/Upload";
+import "./style.scss";
 /**
  * @class AttrubtesGroupAdd
  */
@@ -65,7 +66,11 @@ export default class AttrubtesGroupAdd extends PureComponent {
    */
   getInitialValues = () => {
     let { attributesGroupEnt } = this.props;
-    let values = Object.assign({}, this._attributesGroupModel.fillable(), attributesGroupEnt);
+    let values = Object.assign(
+      {},
+      this._attributesGroupModel.fillable(),
+      attributesGroupEnt
+    );
 
     // Format
     Object.keys(values).forEach((key) => {
@@ -179,7 +184,9 @@ export default class AttrubtesGroupAdd extends PureComponent {
       .catch((apiData) => {
         // NG
         let { errors, statusText, message } = apiData;
-        let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
+        let msg = [`<b>${statusText || message}</b>`]
+          .concat(errors || [])
+          .join("<br/>");
         alerts.push({ color: "danger", msg });
       })
       .finally(() => {
@@ -238,7 +245,8 @@ export default class AttrubtesGroupAdd extends PureComponent {
                       ? "Chi tiết"
                       : "Chỉnh sửa"
                     : "Thêm mới"}{" "}
-                  chỉ số {attributesGroupEnt ? attributesGroupEnt.group_name : ""}
+                  chỉ số{" "}
+                  {attributesGroupEnt ? attributesGroupEnt.group_name : ""}
                 </b>
               </CardHeader>
               <CardBody>
@@ -278,7 +286,11 @@ export default class AttrubtesGroupAdd extends PureComponent {
                     this.handleFormikBeforeRender({ initialValues });
                     // Render
                     return (
-                      <Form id="form1st" onSubmit={handleSubmit} onReset={handleReset}>
+                      <Form
+                        id="form1st"
+                        onSubmit={handleSubmit}
+                        onReset={handleReset}
+                      >
                         <Row className="mb15">
                           <Col xs={12}>
                             <b className="underline">Thông tin chỉ số</b>
@@ -289,9 +301,15 @@ export default class AttrubtesGroupAdd extends PureComponent {
                             <Row>
                               <Col xs={12}>
                                 <FormGroup row>
-                                  <Label for="group_name" className="text-left" sm={3}>
+                                  <Label
+                                    for="group_name"
+                                    className="text-left"
+                                    sm={3}
+                                  >
                                     Tên chỉ số
-                                    <span className="font-weight-bold red-text">*</span>
+                                    <span className="font-weight-bold red-text">
+                                      *
+                                    </span>
                                   </Label>
                                   <Col sm={9}>
                                     <Field
@@ -310,7 +328,10 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                     <ErrorMessage
                                       name="group_name"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -322,7 +343,77 @@ export default class AttrubtesGroupAdd extends PureComponent {
                             <Row>
                               <Col xs={12}>
                                 <FormGroup row>
-                                  <Label for="description" className="text-left" sm={3}>
+                                  <Label
+                                    for="group_name"
+                                    className="text-left"
+                                    sm={3}
+                                  >
+                                    Ký hiệu
+                                  </Label>
+                                  <Col sm={9}>
+                                    <Field
+                                      name="symbol"
+                                      render={({ field /* _form */ }) => (
+                                        <Input
+                                          {...field}
+                                          className="text-left"
+                                          onBlur={null}
+                                          type="text"
+                                          id="symbol"
+                                          disabled={noEdit}
+                                        />
+                                      )}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col xs={12}>
+                                <FormGroup row>
+                                  <Label
+                                    for="icon_image"
+                                    className="text-left"
+                                    sm={3}
+                                  >
+                                    Icon
+                                  </Label>
+                                  <Col sm={9}>
+                                    <Field
+                                      name="icon_image"
+                                      render={({ field }) => {
+                                        return (
+                                          <div className="icon-attributesgroup-upload">
+                                            <Upload
+                                              onChange={(img) =>
+                                                field.onChange({
+                                                  target: {
+                                                    name: field.name,
+                                                    value: img,
+                                                  },
+                                                })
+                                              }
+                                              imageUrl={values.icon_image}
+                                              accept="image/*"
+                                              disabled={noEdit}
+                                              label="Kích thước 72x72"
+                                            />
+                                          </div>
+                                        );
+                                      }}
+                                    />
+                                  </Col>
+                                </FormGroup>
+                              </Col>
+                            </Row>
+                            <Row>
+                              <Col xs={12}>
+                                <FormGroup row>
+                                  <Label
+                                    for="description"
+                                    className="text-left"
+                                    sm={3}
+                                  >
                                     Định nghĩa
                                   </Label>
                                   <Col sm={9}>
@@ -348,20 +439,29 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                               "image imagetools ",
                                               "toc",
                                             ],
-                                            menubar: "file edit view insert format tools table tc help",
+                                            menubar:
+                                              "file edit view insert format tools table tc help",
                                             toolbar1:
                                               "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                                               "alignleft aligncenter alignright alignjustify",
                                             toolbar2:
                                               "bullist numlist outdent indent | removeformat | help | image | toc",
                                             file_picker_types: "image",
-                                            images_dataimg_filter: function (img) {
-                                              return img.hasAttribute("internal-blob");
+                                            images_dataimg_filter: function (
+                                              img
+                                            ) {
+                                              return img.hasAttribute(
+                                                "internal-blob"
+                                              );
                                             },
-                                            images_upload_handler: this.handleUploadImage,
+                                            images_upload_handler:
+                                              this.handleUploadImage,
                                           }}
                                           onEditorChange={(newValue) => {
-                                            this.formikProps.setFieldValue("description", newValue);
+                                            this.formikProps.setFieldValue(
+                                              "description",
+                                              newValue
+                                            );
                                           }}
                                         />
                                       )}
@@ -369,7 +469,10 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                     <ErrorMessage
                                       name="description"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -381,7 +484,11 @@ export default class AttrubtesGroupAdd extends PureComponent {
                             <Row>
                               <Col xs={12}>
                                 <FormGroup row>
-                                  <Label for="instruction" className="text-left" sm={3}>
+                                  <Label
+                                    for="instruction"
+                                    className="text-left"
+                                    sm={3}
+                                  >
                                     Lời dẫn
                                   </Label>
                                   <Col sm={9}>
@@ -407,20 +514,29 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                               "image imagetools ",
                                               "toc",
                                             ],
-                                            menubar: "file edit view insert format tools table tc help",
+                                            menubar:
+                                              "file edit view insert format tools table tc help",
                                             toolbar1:
                                               "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
                                               "alignleft aligncenter alignright alignjustify",
                                             toolbar2:
                                               "bullist numlist outdent indent | removeformat | help | image | toc",
                                             file_picker_types: "image",
-                                            images_dataimg_filter: function (img) {
-                                              return img.hasAttribute("internal-blob");
+                                            images_dataimg_filter: function (
+                                              img
+                                            ) {
+                                              return img.hasAttribute(
+                                                "internal-blob"
+                                              );
                                             },
-                                            images_upload_handler: this.handleUploadImage,
+                                            images_upload_handler:
+                                              this.handleUploadImage,
                                           }}
                                           onEditorChange={(newValue) => {
-                                            this.formikProps.setFieldValue("instruction", newValue);
+                                            this.formikProps.setFieldValue(
+                                              "instruction",
+                                              newValue
+                                            );
                                           }}
                                         />
                                       )}
@@ -428,7 +544,10 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                     <ErrorMessage
                                       name="instruction"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -438,7 +557,11 @@ export default class AttrubtesGroupAdd extends PureComponent {
                               </Col>
                             </Row>
                             <Row>
-                              <Label for="description" className="text-left" sm={3}>
+                              <Label
+                                for="description"
+                                className="text-left"
+                                sm={3}
+                              >
                                 {/* Định nghĩa */}
                               </Label>
                               <Col sm={9}>
@@ -477,7 +600,10 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                     <ErrorMessage
                                       name="is_powerditagram"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -517,7 +643,10 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                     <ErrorMessage
                                       name="is_emptyditagram"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -551,7 +680,10 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                     <ErrorMessage
                                       name="is_active"
                                       component={({ children }) => (
-                                        <Alert color="danger" className="field-validation-error">
+                                        <Alert
+                                          color="danger"
+                                          className="field-validation-error"
+                                        >
                                           {children}
                                         </Alert>
                                       )}
@@ -596,7 +728,9 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                       type="submit"
                                       color="success"
                                       disabled={isSubmitting}
-                                      onClick={() => this.handleSubmit("save_n_close")}
+                                      onClick={() =>
+                                        this.handleSubmit("save_n_close")
+                                      }
                                       className="mr-2 btn-block-sm mt-md-0 mt-sm-2"
                                     >
                                       <i className="fa fa-save mr-2" />
@@ -606,7 +740,9 @@ export default class AttrubtesGroupAdd extends PureComponent {
                                 )}
                                 <Button
                                   disabled={isSubmitting}
-                                  onClick={() => window._$g.rdr("/attributes-group")}
+                                  onClick={() =>
+                                    window._$g.rdr("/attributes-group")
+                                  }
                                   className="btn-block-sm mt-md-0 mt-sm-2"
                                 >
                                   <i className="fa fa-times-circle mr-1" />

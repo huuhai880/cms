@@ -9,7 +9,7 @@ const cacheHelper = require('../../common/helpers/cache.helper');
 const CACHE_CONST = require('../../common/const/cache.const');
 const fileHelper = require('../../common/helpers/file.helper');
 const stringHelper = require('../../common/helpers/string.helper');
-
+const { saveImage } = require('../../common/helpers/saveFile.helper');
 /**
  * Get list MD_CALCULATION
  *
@@ -74,6 +74,19 @@ const removeCacheOptions = () => {
 
 const createAttributesGroupOrUpdate = async (bodyParams) => {
   try {
+
+    let icon_image_url = apiHelper.getValueFromObject(bodyParams, 'icon_image');
+    if (icon_image_url) {
+      const path_icon_image_url = await saveImage('attributesgroup', icon_image_url);
+      if (path_icon_image_url) {
+        icon_image_url = path_icon_image_url;
+      }
+      else {
+        return new ServiceResponse(false, RESPONSE_MSG.NEWS.UPLOAD_FAILED);
+      }
+    }
+
+
     let pool = await mssql.pool;
     let attributes_group_id = apiHelper.getValueFromObject(
       bodyParams,
@@ -87,7 +100,7 @@ const createAttributesGroupOrUpdate = async (bodyParams) => {
         'GROUPNAME',
         apiHelper.getValueFromObject(bodyParams, 'group_name')
       )
-     
+
       .execute(PROCEDURE_NAME.FOR_ATTRIBUTESGROUP_CHECKNAME_ADMINWEB);
     if (!dataCheckName.recordset || dataCheckName.recordset[0].RESULT) {
       return new ServiceResponse(
@@ -124,6 +137,11 @@ const createAttributesGroupOrUpdate = async (bodyParams) => {
         'CREATEDUSER',
         apiHelper.getValueFromObject(bodyParams, 'auth_name')
       )
+      .input(
+        'SYMBOL',
+        apiHelper.getValueFromObject(bodyParams, 'symbol', null)
+      )
+      .input('ICONIMAGE', icon_image_url)
       .execute(PROCEDURE_NAME.FOR_ATTRIBUTESGROUP_CREATEORUPDATE_ADMINWEB);
 
     const attributesgroupID = data.recordset[0].RESULT;

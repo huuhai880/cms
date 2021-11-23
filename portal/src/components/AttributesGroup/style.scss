@@ -1,0 +1,25 @@
+.dropzone-descryption{
+    height: 150px;
+    min-height: 150px;
+    width: 150px;
+}
+
+.icon-attributesgroup-upload {
+    //   width: 100% !important;
+    .ant-upload-list-picture-card-container {
+      height: 150px;
+      width: 150px;
+      .ant-upload-list-item-list-type-picture-card {
+        width: 150px !important;
+      }
+    }
+    .ant-upload-select-picture-card {
+      height: 150px !important;
+      width: 150px !important;
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+    .ant-upload-list-item-image {
+      // object-fit: contain !important;
+    }
+  }

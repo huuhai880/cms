@@ -127,7 +127,8 @@ function MemoizedUploadImageProfile(props) {
         {...props}
       />
     );
-  }, [props.imageUrl, props.onChange, props.id]);
+  // }, [props.imageUrl, props.onChange, props.id]);
+}, [props.imageUrl, props.id]);
 }
 
 export default MemoizedUploadImageProfile;

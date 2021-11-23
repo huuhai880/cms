@@ -10,8 +10,6 @@ const _ = require('lodash');
 // const config = require('../../../config/config');
 ///////get list main number
 const getFormulaList = async (queryParams = {}) => {
-  // console.log('queryParams');
-
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
@@ -32,6 +30,10 @@ const getFormulaList = async (queryParams = {}) => {
       .input(
         'ISACTIVE',
         apiHelper.getFilterBoolean(queryParams, 'selectdActive')
+      )
+      .input(
+        'ATTRIBUTESGROUPID',
+        apiHelper.getValueFromObject(queryParams, 'attributes_group_id', 0)
       )
       .execute('FOR_FORMULA_GetList_AdminWeb');
     const result = data.recordset;

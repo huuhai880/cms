@@ -37,7 +37,9 @@ export default class AttributesGroupModel extends Model {
     instruction:"",
     is_active: 1,
     is_powerditagram: 0,
-    is_emptyditagram: 0
+    is_emptyditagram: 0,
+    symbol: '',
+    icon_image: null
   });
 
   /**
