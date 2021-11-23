@@ -75,7 +75,7 @@ const removeCacheOptions = () => {
 const createAttributesGroupOrUpdate = async (bodyParams) => {
   try {
 
-    let icon_image_url = apiHelper.getValueFromObject(bodyParams, 'icon_image');
+    let icon_image_url = apiHelper.getValueFromObject(bodyParams, 'icon_image', null);
     if (icon_image_url) {
       const path_icon_image_url = await saveImage('attributesgroup', icon_image_url);
       if (path_icon_image_url) {
