@@ -232,6 +232,7 @@ export const initialValues = {
   is_show_menu: false, //co show tren menu hay khong?
   product_page: [],
   product_attributes: [],
+  link_landing_page: null
 };
 
 export const validationSchema = yup.object().shape({

@@ -56,8 +56,8 @@ const template = {
   attributes_id: '{{#? ATTRIBUTEID}}',
   attributes_name: '{{#? ATTRIBUTENAME}}',
   showIndex: '{{#? ORDERINDEXINTERPRET}}',
-  product_page_id:'{{#? PRODUCTPAGEID}}'
-
+  product_page_id:'{{#? PRODUCTPAGEID}}',
+  link_landing_page:'{{#? LINKLANDINGPAGE}}'
 };
 
 let transform = new Transform(template);
@@ -76,6 +76,7 @@ const detail = (product) => {
       'url_product',
       'is_web_view',
       'is_show_menu',
+      'link_landing_page'
     ])
     : null;
 };

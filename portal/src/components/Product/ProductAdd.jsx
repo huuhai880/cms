@@ -918,6 +918,27 @@ function ProductAdd({ noEdit = false, productId = null }) {
                           </Col>
                         </FormGroup>
                       </Col>
+
+                      <Col xs={12} sm={12}>
+                        <FormGroup row>
+                          <Label className="col-sm-4 col-form-label">
+                            Link Landing Page
+                          </Label>
+                          <Col sm={8}>
+                            <Input
+                              type="text"
+                              placeholder="Link Landing Page"
+                              disabled={noEdit}
+                              name="link_landing_page"
+                              value={formik.values.link_landing_page}
+                              onChange={({ target }) => {
+                                formik.setFieldValue("link_landing_page", target.value);
+                              }}
+                            />
+                          </Col>
+                        </FormGroup>
+                      </Col>
+
                     </Row>
                   </Col>
 

@@ -263,6 +263,10 @@ const createProduct = async (bodyParams = {}) => {
         'CREATEDUSER',
         apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator')
       )
+      .input(
+        'LINKLANDINGPAGE',
+        apiHelper.getValueFromObject(bodyParams, 'link_landing_page', null)
+      )
       .execute('MD_PRODUCT_Create_AdminWeb');
 
     let { product_id } = resProduct.recordset[0];
@@ -486,6 +490,10 @@ const updateProduct = async (bodyParams = {}) => {
         'UPDATEDUSER',
         apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator')
       )
+      .input(
+        'LINKLANDINGPAGE',
+        apiHelper.getValueFromObject(bodyParams, 'link_landing_page', null)
+      )
       .execute('MD_PRODUCT_Update_AdminWeb');
 
     let { result } = resProduct.recordset[0];
@@ -629,7 +637,7 @@ const updateProduct = async (bodyParams = {}) => {
         const data_child = product_page[i].data_child;
         for (let j = 0; j < data_child.length; j++) {
           const data_selected = data_child[j].data_selected;
-          
+
           for (let k = 0; k < data_selected.length; k++) {
             await reqProductPage
               .input('PRODUCTPAGEID', data_selected[k].product_page_id)
