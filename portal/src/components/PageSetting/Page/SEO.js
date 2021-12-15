@@ -83,14 +83,13 @@ export default class SEO extends PureComponent {
                 } = this.state;
             let bundle = await this._getBundleData();
             if (bundle['SEO_DEFAULT_IMAGE']) seoDefaultImage = bundle["SEO_DEFAULT_IMAGE"] ? bundle["SEO_DEFAULT_IMAGE"].value : null;
-
-            if (bundle['SEO_PAGE_HOME_IMAGE']) seoPageHomeImage = bundle["SEO_PAGE_HOME_IMAGE"] ? bundle["SEO_PAGE_HOME_IMAGE"].value : null;
-            if (bundle['SEO_PAGE_SEARCH_IMAGE']) seoPageSearchImage = bundle["SEO_PAGE_SEARCH_IMAGE"] ? bundle["SEO_PAGE_SEARCH_IMAGE"].value : null;
-            if (bundle['SEO_PAGE_NEWS_IMAGE']) seoPageNewsImage = bundle["SEO_PAGE_NEWS_IMAGE"] ? bundle["SEO_PAGE_NEWS_IMAGE"].value : null;
-            if (bundle['SEO_PAGE_ABOUT_IMAGE']) seoPageAboutImage = bundle["SEO_PAGE_ABOUT_IMAGE"] ? bundle["SEO_PAGE_ABOUT_IMAGE"].value : null;
-            if (bundle['SEO_PAGE_PRODUCT_IMAGE']) seoPageProductImage = bundle["SEO_PAGE_PRODUCT_IMAGE"] ? bundle["SEO_PAGE_PRODUCT_IMAGE"].value : null;
-            if (bundle['SEO_PAGE_LOGIN_IMAGE']) seoPageLoginImage = bundle["SEO_PAGE_LOGIN_IMAGE"] ? bundle["SEO_PAGE_LOGIN_IMAGE"].value : null;
-            if (bundle['SEO_PAGE_REGISTER_IMAGE']) seoPageRegisterImage = bundle["SEO_PAGE_REGISTER_IMAGE"] ? bundle["SEO_PAGE_REGISTER_IMAGE"].value : null;
+            if (bundle['SEO_HOME_IMAGE']) seoPageHomeImage = bundle["SEO_HOME_IMAGE"] ? bundle["SEO_HOME_IMAGE"].value : null;
+            if (bundle['SEO_SEARCH_IMAGE']) seoPageSearchImage = bundle["SEO_SEARCH_IMAGE"] ? bundle["SEO_SEARCH_IMAGE"].value : null;
+            if (bundle['SEO_NEWS_IMAGE']) seoPageNewsImage = bundle["SEO_NEWS_IMAGE"] ? bundle["SEO_NEWS_IMAGE"].value : null;
+            if (bundle['SEO_ABOUT_IMAGE']) seoPageAboutImage = bundle["SEO_ABOUT_IMAGE"] ? bundle["SEO_ABOUT_IMAGE"].value : null;
+            if (bundle['SEO_PRODUCT_IMAGE']) seoPageProductImage = bundle["SEO_PRODUCT_IMAGE"] ? bundle["SEO_PRODUCT_IMAGE"].value : null;
+            if (bundle['SEO_LOGIN_IMAGE']) seoPageLoginImage = bundle["SEO_LOGIN_IMAGE"] ? bundle["SEO_LOGIN_IMAGE"].value : null;
+            if (bundle['SEO_REGISTER_IMAGE']) seoPageRegisterImage = bundle["SEO_REGISTER_IMAGE"] ? bundle["SEO_REGISTER_IMAGE"].value : null;
 
             
             if (bundle) configEnt = bundle;
@@ -148,155 +147,155 @@ export default class SEO extends PureComponent {
                 },
 
                 //SEO TRANG CHU
-                SEO_PAGE_HOME_TITLE: {
+                SEO_HOME_TITLE: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_HOME_KEYWORDS: {
+                SEO_HOME_KEYWORDS: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_HOME_DESCRIPTION: {
+                SEO_HOME_DESCRIPTION: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_HOME_URL: {
+                SEO_HOME_URL: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_HOME_IMAGE: {
+                SEO_HOME_IMAGE: {
                     value: "",
                     data_type: 'image'
                 },
 
                 //SEO TRA CUU
-                SEO_PAGE_SEARCH_TITLE: {
+                SEO_SEARCH_TITLE: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_SEARCH_KEYWORDS: {
+                SEO_SEARCH_KEYWORDS: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_SEARCH_DESCRIPTION: {
+                SEO_SEARCH_DESCRIPTION: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_SEARCH_URL: {
+                SEO_SEARCH_URL: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_SEARCH_IMAGE: {
+                SEO_SEARCH_IMAGE: {
                     value: "",
                     data_type: 'image'
                 },
 
                 //SEO KIEN THUC
-                SEO_PAGE_NEWS_TITLE: {
+                SEO_NEWS_TITLE: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_NEWS_KEYWORDS: {
+                SEO_NEWS_KEYWORDS: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_NEWS_DESCRIPTION: {
+                SEO_NEWS_DESCRIPTION: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_NEWS_URL: {
+                SEO_NEWS_URL: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_NEWS_IMAGE: {
+                SEO_NEWS_IMAGE: {
                     value: "",
                     data_type: 'image'
                 },
 
                 //SEO VE CHUNG TOI
-                SEO_PAGE_ABOUT_TITLE: {
+                SEO_ABOUT_TITLE: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_ABOUT_KEYWORDS: {
+                SEO_ABOUT_KEYWORDS: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_ABOUT_DESCRIPTION: {
+                SEO_ABOUT_DESCRIPTION: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_ABOUT_URL: {
+                SEO_ABOUT_URL: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_ABOUT_IMAGE: {
+                SEO_ABOUT_IMAGE: {
                     value: "",
                     data_type: 'image'
                 },
 
                 //SEO SAN PHAM
-                SEO_PAGE_PRODUCT_TITLE: {
+                SEO_PRODUCT_TITLE: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_PRODUCT_KEYWORDS: {
+                SEO_PRODUCT_KEYWORDS: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_PRODUCT_DESCRIPTION: {
+                SEO_PRODUCT_DESCRIPTION: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_PRODUCT_URL: {
+                SEO_PRODUCT_URL: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_PRODUCT_IMAGE: {
+                SEO_PRODUCT_IMAGE: {
                     value: "",
                     data_type: 'image'
                 },
 
                 //SEO DANG NHAP
-                SEO_PAGE_LOGIN_TITLE: {
+                SEO_LOGIN_TITLE: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_LOGIN_KEYWORDS: {
+                SEO_LOGIN_KEYWORDS: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_LOGIN_DESCRIPTION: {
+                SEO_LOGIN_DESCRIPTION: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_LOGIN_URL: {
+                SEO_LOGIN_URL: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_LOGIN_IMAGE: {
+                SEO_LOGIN_IMAGE: {
                     value: "",
                     data_type: 'image'
                 },
     
                 //SEO DANG KY
-                SEO_PAGE_REGISTER_TITLE: {
+                SEO_REGISTER_TITLE: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_REGISTER_KEYWORDS: {
+                SEO_REGISTER_KEYWORDS: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_REGISTER_DESCRIPTION: {
+                SEO_REGISTER_DESCRIPTION: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_REGISTER_URL: {
+                SEO_REGISTER_URL: {
                     value: "",
                     data_type: 'string'
                 },
-                SEO_PAGE_REGISTER_IMAGE: {
+                SEO_REGISTER_IMAGE: {
                     value: "",
                     data_type: 'image'
                 },
@@ -516,7 +515,7 @@ export default class SEO extends PureComponent {
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
-                                                                name="SEO_PAGE_HOME_TITLE.value"
+                                                                name="SEO_HOME_TITLE.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -524,7 +523,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Từ khóa"
-                                                                name="SEO_PAGE_HOME_KEYWORDS.value"
+                                                                name="SEO_HOME_KEYWORDS.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -532,7 +531,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Link SEO"
-                                                                name="SEO_PAGE_HOME_URL.value"
+                                                                name="SEO_HOME_URL.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -541,7 +540,7 @@ export default class SEO extends PureComponent {
                                                             <FormInput
                                                                 label="Mô tả ngắn gọn"
                                                                 type="textarea"
-                                                                name="SEO_PAGE_HOME_DESCRIPTION.value"
+                                                                name="SEO_HOME_DESCRIPTION.value"
                                                                 isEdit={!noEdit}
                                                                 labelSm={3}
                                                                 inputSm={9}
@@ -552,7 +551,7 @@ export default class SEO extends PureComponent {
                                                                 urlImageEdit={seoPageHomeImage}
                                                                 clearImage={clearSeoPageHomeImage}
                                                                 isEdit={!noEdit}
-                                                                name="SEO_PAGE_HOME_IMAGE.value"
+                                                                name="SEO_HOME_IMAGE.value"
                                                                 title="Ảnh SEO"
                                                                 isHorizontal={true}
                                                                 textColor=""
@@ -578,7 +577,7 @@ export default class SEO extends PureComponent {
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
-                                                                name="SEO_PAGE_SEARCH_TITLE.value"
+                                                                name="SEO_SEARCH_TITLE.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -586,7 +585,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Từ khóa"
-                                                                name="SEO_PAGE_SEARCH_KEYWORDS.value"
+                                                                name="SEO_SEARCH_KEYWORDS.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -594,7 +593,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Link SEO"
-                                                                name="SEO_PAGE_SEARCH_URL.value"
+                                                                name="SEO_SEARCH_URL.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -603,7 +602,7 @@ export default class SEO extends PureComponent {
                                                             <FormInput
                                                                 label="Mô tả ngắn gọn"
                                                                 type="textarea"
-                                                                name="SEO_PAGE_SEARCH_DESCRIPTION.value"
+                                                                name="SEO_SEARCH_DESCRIPTION.value"
                                                                 isEdit={!noEdit}
                                                                 labelSm={3}
                                                                 inputSm={9}
@@ -614,7 +613,7 @@ export default class SEO extends PureComponent {
                                                                 urlImageEdit={seoPageSearchImage}
                                                                 clearImage={clearSeoPageSearchImage}
                                                                 isEdit={!noEdit}
-                                                                name="SEO_PAGE_SEARCH_IMAGE.value"
+                                                                name="SEO_SEARCH_IMAGE.value"
                                                                 title="Ảnh SEO"
                                                                 isHorizontal={true}
                                                                 textColor=""
@@ -640,7 +639,7 @@ export default class SEO extends PureComponent {
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
-                                                                name="SEO_PAGE_NEWS_TITLE.value"
+                                                                name="SEO_NEWS_TITLE.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -648,7 +647,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Từ khóa"
-                                                                name="SEO_PAGE_NEWS_KEYWORDS.value"
+                                                                name="SEO_NEWS_KEYWORDS.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -656,7 +655,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Link SEO"
-                                                                name="SEO_PAGE_NEWS_URL.value"
+                                                                name="SEO_NEWS_URL.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -665,7 +664,7 @@ export default class SEO extends PureComponent {
                                                             <FormInput
                                                                 label="Mô tả ngắn gọn"
                                                                 type="textarea"
-                                                                name="SEO_PAGE_NEWS_DESCRIPTION.value"
+                                                                name="SEO_NEWS_DESCRIPTION.value"
                                                                 isEdit={!noEdit}
                                                                 labelSm={3}
                                                                 inputSm={9}
@@ -673,10 +672,10 @@ export default class SEO extends PureComponent {
                                                                 isRequired={false}
                                                             />
                                                             <UploadImage
-                                                                urlImageEdit={seoPageHomeImage}
-                                                                clearImage={clearSeoPageHomeImage}
+                                                                urlImageEdit={seoPageNewsImage}
+                                                                clearImage={clearSeoPageNewsImage}
                                                                 isEdit={!noEdit}
-                                                                name="SEO_PAGE_NEWS_IMAGE.value"
+                                                                name="SEO_NEWS_IMAGE.value"
                                                                 title="Ảnh SEO"
                                                                 isHorizontal={true}
                                                                 textColor=""
@@ -702,7 +701,7 @@ export default class SEO extends PureComponent {
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
-                                                                name="SEO_PAGE_ABOUT_TITLE.value"
+                                                                name="SEO_ABOUT_TITLE.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -710,7 +709,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Từ khóa"
-                                                                name="SEO_PAGE_ABOUT_KEYWORDS.value"
+                                                                name="SEO_ABOUT_KEYWORDS.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -718,7 +717,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Link SEO"
-                                                                name="SEO_PAGE_ABOUT_URL.value"
+                                                                name="SEO_ABOUT_URL.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -727,7 +726,7 @@ export default class SEO extends PureComponent {
                                                             <FormInput
                                                                 label="Mô tả ngắn gọn"
                                                                 type="textarea"
-                                                                name="SEO_PAGE_ABOUT_DESCRIPTION.value"
+                                                                name="SEO_ABOUT_DESCRIPTION.value"
                                                                 isEdit={!noEdit}
                                                                 labelSm={3}
                                                                 inputSm={9}
@@ -738,7 +737,7 @@ export default class SEO extends PureComponent {
                                                                 urlImageEdit={seoPageAboutImage}
                                                                 clearImage={clearSeoPageAboutImage}
                                                                 isEdit={!noEdit}
-                                                                name="SEO_PAGE_ABOUT_IMAGE.value"
+                                                                name="SEO_ABOUT_IMAGE.value"
                                                                 title="Ảnh SEO"
                                                                 isHorizontal={true}
                                                                 textColor=""
@@ -764,7 +763,7 @@ export default class SEO extends PureComponent {
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
-                                                                name="SEO_PAGE_PRODUCT_TITLE.value"
+                                                                name="SEO_PRODUCT_TITLE.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -772,7 +771,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Từ khóa"
-                                                                name="SEO_PAGE_PRODUCT_KEYWORDS.value"
+                                                                name="SEO_PRODUCT_KEYWORDS.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -780,7 +779,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Link SEO"
-                                                                name="SEO_PAGE_PRODUCT_URL.value"
+                                                                name="SEO_PRODUCT_URL.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -789,7 +788,7 @@ export default class SEO extends PureComponent {
                                                             <FormInput
                                                                 label="Mô tả ngắn gọn"
                                                                 type="textarea"
-                                                                name="SEO_PAGE_PRODUCT_DESCRIPTION.value"
+                                                                name="SEO_PRODUCT_DESCRIPTION.value"
                                                                 isEdit={!noEdit}
                                                                 labelSm={3}
                                                                 inputSm={9}
@@ -800,7 +799,7 @@ export default class SEO extends PureComponent {
                                                                 urlImageEdit={seoPageProductImage}
                                                                 clearImage={clearSeoPageProductImage}
                                                                 isEdit={!noEdit}
-                                                                name="SEO_PAGE_PRODUCT_IMAGE.value"
+                                                                name="SEO_PRODUCT_IMAGE.value"
                                                                 title="Ảnh SEO"
                                                                 isHorizontal={true}
                                                                 textColor=""
@@ -826,7 +825,7 @@ export default class SEO extends PureComponent {
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
-                                                                name="SEO_PAGE_LOGIN_TITLE.value"
+                                                                name="SEO_LOGIN_TITLE.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -834,7 +833,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Từ khóa"
-                                                                name="SEO_PAGE_LOGIN_KEYWORDS.value"
+                                                                name="SEO_LOGIN_KEYWORDS.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -842,7 +841,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Link SEO"
-                                                                name="SEO_PAGE_LOGIN_URL.value"
+                                                                name="SEO_LOGIN_URL.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -851,7 +850,7 @@ export default class SEO extends PureComponent {
                                                             <FormInput
                                                                 label="Mô tả ngắn gọn"
                                                                 type="textarea"
-                                                                name="SEO_PAGE_LOGIN_DESCRIPTION.value"
+                                                                name="SEO_LOGIN_DESCRIPTION.value"
                                                                 isEdit={!noEdit}
                                                                 labelSm={3}
                                                                 inputSm={9}
@@ -862,7 +861,7 @@ export default class SEO extends PureComponent {
                                                                 urlImageEdit={seoPageLoginImage}
                                                                 clearImage={clearSeoPageLoginImage}
                                                                 isEdit={!noEdit}
-                                                                name="SEO_PAGE_LOGIN_IMAGE.value"
+                                                                name="SEO_LOGIN_IMAGE.value"
                                                                 title="Ảnh SEO"
                                                                 isHorizontal={true}
                                                                 textColor=""
@@ -888,7 +887,7 @@ export default class SEO extends PureComponent {
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
-                                                                name="SEO_PAGE_REGISTER_TITLE.value"
+                                                                name="SEO_REGISTER_TITLE.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -896,7 +895,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Từ khóa"
-                                                                name="SEO_PAGE_REGISTER_KEYWORDS.value"
+                                                                name="SEO_REGISTER_KEYWORDS.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -904,7 +903,7 @@ export default class SEO extends PureComponent {
                                                             />
                                                             <FormInput
                                                                 label="Link SEO"
-                                                                name="SEO_PAGE_REGISTER_URL.value"
+                                                                name="SEO_REGISTER_URL.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 isEdit={!noEdit}
@@ -913,7 +912,7 @@ export default class SEO extends PureComponent {
                                                             <FormInput
                                                                 label="Mô tả ngắn gọn"
                                                                 type="textarea"
-                                                                name="SEO_PAGE_REGISTER_DESCRIPTION.value"
+                                                                name="SEO_REGISTER_DESCRIPTION.value"
                                                                 isEdit={!noEdit}
                                                                 labelSm={3}
                                                                 inputSm={9}
@@ -924,7 +923,7 @@ export default class SEO extends PureComponent {
                                                                 urlImageEdit={seoPageRegisterImage}
                                                                 clearImage={clearSeoPageRegisterImage}
                                                                 isEdit={!noEdit}
-                                                                name="SEO_PAGE_REGISTER_IMAGE.value"
+                                                                name="SEO_REGISTER_IMAGE.value"
                                                                 title="Ảnh SEO"
                                                                 isHorizontal={true}
                                                                 textColor=""
