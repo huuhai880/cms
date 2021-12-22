@@ -53,7 +53,7 @@ const getOrderList = async (queryParams = {}) => {
                 let item = orders[i];
                 let _details = listDetail.filter(p => p.order_id == item.order_id) || [];
                 let product_name = _details.map(p => {
-                    return `<span>- ${p.product_name}</span>`
+                    return `<span>${p.product_name}</span>`
                 }).join("");
                 item.product_name = product_name
             }

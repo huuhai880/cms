@@ -60,3 +60,34 @@
 .order-product-name span{
     margin-bottom: 5px;
 }
+
+
+.DateRangePicker_picker, .css-26l3qy-menu{
+    z-index: 9999;
+}
+.se-container{
+    z-index: 0 !important;
+}
+
+.hove-color:hover hove-color{
+    color: #F6D049 !important;
+    background-color: #F6D049 !important;
+}
+
+.hover:hover {
+    background: #e4e7e7;
+    color: black;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.bl {
+    border-left: 1px solid #e4e7e7;
+}
+
+.focus {
+    background-color: #00a699;
+    color: white;
+}

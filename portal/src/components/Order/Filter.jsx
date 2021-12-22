@@ -30,6 +30,7 @@ function Filter({ handleSubmitFillter, report = {} }) {
   const [dateToDate, setDateToDate] = useState("");
   const [dateFromDate, setDateFromDate] = useState("");
   const [productOption, setProductOption] = useState([]);
+  //   const [ nameTag, setNameTag] = useState('Chọn ngày')
 
   const [orderStatusOption] = useState([
     { label: "Tất cả", value: 2 },
@@ -59,6 +60,7 @@ function Filter({ handleSubmitFillter, report = {} }) {
     fromPrice: 0,
     toPrice: 0,
     orderTypeSelected: { label: "Tất cả", value: 2 },
+    nameTag: "Chọn ngày",
   });
 
   let { total_quantity = 0, total_order = 0, total_amount = 0 } = report || {};
@@ -232,6 +234,94 @@ function Filter({ handleSubmitFillter, report = {} }) {
     return floatValue >= 0 && floatValue <= 999999999;
   };
 
+  const renderCalendarInfo = () => {
+    let data = [
+      "Hôm nay",
+      "Hôm qua",
+      "Tuần này",
+      "Tuần trước",
+      "Tháng này",
+      "Tháng trước",
+      "Chọn ngày",
+    ];
+    return (
+      <Col style={{ width: "150px" }} sm={12} className="pl-0 pr-0 bl">
+        {data.map((item) => {
+          return (
+            <Col
+              sm={12}
+              onClick={() => {
+                calendar(item);
+              }}
+              className={`pt-3 pb-1 hover cursor-pointer ${
+                searchValue.nameTag == item ? "focus" : ""
+              }`}
+            >
+              <Label className="cursor-pointer">{item}</Label>
+            </Col>
+          );
+        })}
+      </Col>
+    );
+  };
+
+  const calendar = (key) => {
+    switch (key) {
+      case "Hôm nay":
+        setSearchValue((pre) => ({
+          ...searchValue,
+          startDate: moment(),
+          endDate: moment(),
+          nameTag: "Hôm nay",
+        }));
+        break;
+      case "Hôm qua":
+        setSearchValue((pre) => ({
+          ...searchValue,
+          startDate: moment().subtract(1, "days"),
+          endDate: moment().subtract(1, "days"),
+          nameTag: "Hôm qua",
+        }));
+        break;
+      case "Tuần này":
+        setSearchValue((pre) => ({
+          ...searchValue,
+          startDate: moment().startOf("week").add(1, "days"),
+          endDate: moment(),
+          nameTag: "Tuần này",
+        }));
+        break;
+      case "Tuần trước":
+        setSearchValue((pre) => ({
+          ...searchValue,
+          startDate: moment()
+            .subtract(1, "week")
+            .startOf("week")
+            .add(1, "days"),
+          endDate: moment().subtract(1, "week").endOf("week").add(1, "days"),
+          nameTag: "Tuần trước",
+        }));
+
+        break;
+      case "Tháng này":
+        setSearchValue((pre) => ({
+          ...searchValue,
+          startDate: moment().startOf("month"),
+          endDate: moment(),
+          nameTag: "Tháng này",
+        }));
+        break;
+      case "Tháng trước":
+        setSearchValue((pre) => ({
+          ...searchValue,
+          startDate: moment().subtract(1, "month").startOf("month"),
+          endDate: moment().subtract(1, "month").endOf("month"),
+          nameTag: "Tháng trước",
+        }));
+        break;
+    }
+  };
+
   return (
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
@@ -349,6 +439,8 @@ function Filter({ handleSubmitFillter, report = {} }) {
                       endDateId="your_unique_end_date_id"
                       onDatesChange={handleChangeDate}
                       isMultiple
+                      calendarInfoPosition="before"
+                      renderCalendarInfo={renderCalendarInfo}
                     />
                   </Col>
                 </Col>

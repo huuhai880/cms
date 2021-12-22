@@ -171,7 +171,8 @@ function Order() {
                       dataOrder.items,
                       dataOrder.totalItems,
                       query,
-                      handleDelete
+                      handleDelete,
+                      dataOrder.items.find(p => p.status == 0) ? false : true
                     )}
                     options={configTableOptions(
                       dataOrder.totalItems,

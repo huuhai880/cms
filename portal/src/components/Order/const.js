@@ -24,7 +24,7 @@ export const initialValues = {
     total_discount: 0
 };
 
-export const getColumTable = (data, total, query, handleDelete) => {
+export const getColumTable = (data, total, query, handleDelete, isCenter) => {
     return [
         configIDRowTable("order_id", "/order/detail/", query),
         {
@@ -178,7 +178,7 @@ export const getColumTable = (data, total, query, handleDelete) => {
                 customBodyRender: (value, tableMeta, updateValue) => {
                     let {status = false} = data[tableMeta["rowIndex"]]
                     return (
-                        <div className="text-right">
+                        <div className={`text-${isCenter ? 'center' : 'right'}`}>
                             {
                                status == 0 && <CheckAccess permission="SL_ORDER_EDIT">
                                     <Button
