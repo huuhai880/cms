@@ -35,6 +35,7 @@ export default function ActionButton(props) {
               </CheckAccess>
             ) : (
               <Button
+                key={`aciton-button-${i}`}
                 color={e.color}
                 onClick={e.onClick}
                 className="mr-2 btn-block-sm"
