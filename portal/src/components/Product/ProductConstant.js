@@ -174,6 +174,22 @@ export const getColumnTable = (
           } else
             return (
               <div className="text-center">
+                <CheckAccess permission="PRO_COMMENT_VIEW">
+                  <Button
+                    color="warning"
+                    title="Bình luận"
+                    className="mr-1"
+                    onClick={(evt) =>
+                      handleActionItemClick(
+                        "comment",
+                        data[tableMeta["rowIndex"]].product_id,
+                        tableMeta["rowIndex"]
+                      )
+                    }>
+                    <i className="fa fa-comment" />
+                  </Button>
+                </CheckAccess>
+
                 <CheckAccess permission="MD_PRODUCT_EDIT">
                   <Button
                     color="primary"

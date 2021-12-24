@@ -497,30 +497,14 @@ const ContractTypeAdd = React.lazy(() => import("./components/ContractTypes/Cont
 const TimekeepingUsers = React.lazy(() => import("./components/Timekeeping/TimekeepingUsers"));
 //.end#User Time Keeping
 
-//ProductComment
-const ProductListComment = React.lazy(() =>
-  import("./components/ProductComment/ProductListComment")
-);
-const ProductComment = React.lazy(() => import("./components/ProductComment/ProductComment"));
-const ProductCommentDetail = React.lazy(() =>
-  import("./components/ProductComment/ProductCommentDetail")
-);
-const ProductCommentEdit = React.lazy(() =>
-  import("./components/ProductComment/ProductCommentEdit")
-);
-const ProductCommentReplyAdd = React.lazy(() =>
-  import("./components/ProductComment/ProductCommentReplyAdd")
-);
-//.end#ProductComment
-
-//ProductComment
+//SetupServices
 const SetupServices = React.lazy(() => import("./components/SetupServices/SetupServices"));
 const SetupServicesAdd = React.lazy(() => import("./components/SetupServices/SetupServicesAdd"));
 const SetupServicesDetail = React.lazy(() =>
   import("./components/SetupServices/SetupServicesDetail")
 );
 const SetupServicesEdit = React.lazy(() => import("./components/SetupServices/SetupServicesEdit"));
-//.end#ProductComment
+//.end#SetupServices
 
 // Author
 const Author = React.lazy(() => import("./components/Author/Author"));
@@ -693,6 +677,13 @@ const FarmousAdd = React.lazy(() => import("./components/Farmous/FarmousAdd"));
 const FarmousDetail = React.lazy(() => import("./components/Farmous/FarmousDetail"));
 const FarmousEdit = React.lazy(() => import("./components/Farmous/FarmousEdit"));
 // end#Farmous
+
+//ProductComment
+const CommentProduct = React.lazy(() => import("./components/ProductComment/CommentProduct"));
+const CommentCombo = React.lazy(() => import("./components/ProductComment/CommentCombo"));
+//.end#ProductComment
+
+
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   // dashboard
@@ -2295,43 +2286,6 @@ const routes = [
   },
   //.end#User Time Keeping
 
-  //ProductComment
-  {
-    path: "/product-list-comment",
-    exact: true,
-    name: "Danh sách sản phẩm bình luận",
-    function: "MD_PRODUCT_LIST_COMMENT_VIEW",
-    component: ProductListComment,
-  },
-  {
-    path: "/product-comment/:id",
-    exact: true,
-    name: "Danh sách bình luận",
-    function: "PRO_COMMENT_VIEW",
-    component: ProductComment,
-  },
-  {
-    path: "/product-comment/detail/:id",
-    exact: true,
-    name: "Chi tiết",
-    function: "PRO_COMMENT_VIEW",
-    component: ProductCommentDetail,
-  },
-  {
-    path: "/product-comment/edit/:id",
-    exact: true,
-    name: "Chi tiết",
-    function: "PRO_COMMENT_EDIT",
-    component: ProductCommentEdit,
-  },
-  {
-    path: "/product-comment/add/:id",
-    exact: true,
-    name: "Chi tiết",
-    function: "PRO_COMMENT_REPLY",
-    component: ProductCommentReplyAdd,
-  },
-  //.end#ProductComment
   // SetupServiceRegister
   {
     path: "/setup-service",
@@ -3250,6 +3204,24 @@ const routes = [
     component: FarmousEdit,
   },
   // end#Farmous
+
+  //ProductComment
+  {
+    path: "/product/comment/:id",
+    exact: true,
+    name: "Danh sách bình luận",
+    function: "PRO_COMMENT_VIEW",
+    component: CommentProduct,
+  },
+
+  {
+    path: "/product-combo/comment/:id",
+    exact: true,
+    name: "Danh sách bình luận",
+    function: "PRO_COMMENT_VIEW",
+    component: CommentCombo,
+  },
+  //.end#ProductComment
 ];
 
 export default routes;

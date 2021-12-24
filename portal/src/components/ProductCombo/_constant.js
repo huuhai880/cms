@@ -150,6 +150,22 @@ export const getColumnTable = (data, query, handleActionItemClick, handlePick = 
                else
                   return (
                      <div className="text-center">
+                        <CheckAccess permission="PRO_COMMENT_VIEW">
+                           <Button
+                              color="warning"
+                              title="Bình luận"
+                              className="mr-1"
+                              onClick={(evt) =>
+                                 handleActionItemClick(
+                                    "comment",
+                                    data[tableMeta["rowIndex"]].combo_id,
+                                    tableMeta["rowIndex"]
+                                 )
+                              }>
+                              <i className="fa fa-comment" />
+                           </Button>
+                        </CheckAccess>
+
                         <CheckAccess permission="PRO_COMBOS_EDIT">
                            <Button
                               color="primary"
@@ -195,7 +211,7 @@ export const initialValues = {
    combo_id: null,
    combo_name: '',
    description: '',
-   content_detail:'',
+   content_detail: '',
    is_active: true,
    is_web_view: true,
    combo_image_url: null,
@@ -206,9 +222,9 @@ export const validationSchema = yup.object().shape({
    combo_name: yup.string()
       .required("Tên Combo là bắt buộc.")
       .max(400, "Tên Combo tối đa 400 ký tự."),
-      description: yup.string()
+   description: yup.string()
       .required("Mô tả là bắt buộc."),
-      content_detail: yup.string()
+   content_detail: yup.string()
       .required("Mô tả chi tiết là bắt buộc."),
    combo_products: yup.array().nullable()
       .test(

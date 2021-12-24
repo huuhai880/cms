@@ -51,7 +51,7 @@ const createPrice = async (req, res, next) => {
         return res.json(
             new SingleResponse(
                 serviceRes.getData(),
-                RESPONSE_MSG.PRODUCT.CREATE_SUCCESS
+                'Làm giá sản phẩm thành công.'
             )
         );
     } catch (error) {
@@ -81,7 +81,7 @@ const deletePrice = async (req, res, next) => {
             return next(serviceRes);
         }
         return res.json(
-            new SingleResponse(null, RESPONSE_MSG.PRODUCT.DELETE_SUCCESS)
+            new SingleResponse(null, 'Xoá giá sản phẩm thành công.')
         );
     } catch (error) {
         return next(error);
@@ -100,7 +100,7 @@ const updatePrice = async (req, res, next) => {
         return res.json(
             new SingleResponse(
                 serviceRes.getData(),
-                RESPONSE_MSG.PRODUCT.UPDATE_SUCCESS
+                'Cập nhật giá sản phẩm thành công.'
             )
         );
     } catch (error) {

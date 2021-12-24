@@ -90,10 +90,11 @@ function Product({ handlePick = null, isOpenModal = false, products = [] }) {
       detail: "/product/detail/",
       delete: "/product/delete/",
       edit: "/product/edit/",
+      comment: "/product/comment/"
     };
     const route = routes[type];
 
-    if (type.match(/detail|edit/i)) {
+    if (type.match(/detail|edit|comment/i)) {
       window._$g.rdr(`${route}${id}`);
     } else {
       window._$g.dialogs.prompt(

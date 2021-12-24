@@ -31,7 +31,7 @@ const createCombo = async (req, res, next) => {
         return res.json(
             new SingleResponse(
                 serviceRes.getData(),
-                RESPONSE_MSG.PRODUCT.CREATE_SUCCESS
+                'Tạo Combo thành công.'
             )
         );
     } catch (error) {
@@ -52,7 +52,7 @@ const updateCombo = async (req, res, next) => {
         return res.json(
             new SingleResponse(
                 serviceRes.getData(),
-                RESPONSE_MSG.PRODUCT.UPDATE_SUCCESS
+                'Cập nhật Combo thành công'
             )
         );
     } catch (error) {
@@ -69,7 +69,7 @@ const deleteCombo = async (req, res, next) => {
             return next(serviceRes);
         }
         return res.json(
-            new SingleResponse(null, RESPONSE_MSG.PRODUCT.DELETE_SUCCESS)
+            new SingleResponse(null, 'Xoá Combo thành công')
         );
     } catch (error) {
         return next(error);

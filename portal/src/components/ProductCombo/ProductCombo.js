@@ -90,10 +90,11 @@ export default function ProductCombo({ handlePick = null, isOpenModal = false, c
             detail: "/product-combo/detail/",
             delete: "/product-combo/delete/",
             edit: "/product-combo/edit/",
+            comment: "/product-combo/comment/",
         };
         const route = routes[type];
 
-        if (type.match(/detail|edit/i)) {
+        if (type.match(/detail|edit|comment/i)) {
             window._$g.rdr(`${route}${id}`);
         } else {
             window._$g.dialogs.prompt(
