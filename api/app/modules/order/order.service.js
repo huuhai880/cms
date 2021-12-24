@@ -217,7 +217,7 @@ const createOrUpdateOrder = async (bodyParams = {}) => {
             }
 
             //NEU LA THANH TOAN THI TAO RECEIPT
-            if (status == 2) {
+            if (status == 1) {
                 const reqReceipt = new sql.Request(transaction);
                 await reqReceipt
                     .input('ORDERID', order_id_result)

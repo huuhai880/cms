@@ -1,4 +1,8 @@
-ALTER PROCEDURE SL_ORDER_GetList_AdminWeb
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[SL_ORDER_GetList_AdminWeb]
     @KEYWORD NVARCHAR(1000) = NULL,
     @PRODUCTID BIGINT = NULL,
     @COMBOID BIGINT = NULL,
@@ -118,8 +122,8 @@ BEGIN
                             OR SL_ORDER.ORDERNO LIKE '%' + LTRIM(RTRIM(@KEYWORD)) + '%'
                             OR UPPER(CRM_ACCOUNT.FULLNAME) LIKE '%' + UPPER(LTRIM(RTRIM(@KEYWORD))) + '%'
                         )
-            AND         (@ISDELETED = 2 OR SL_ORDER.ISDELETED = @ISDELETED)
-            AND         (@ORDERSTATUS = 2 OR SL_ORDER.[STATUS] = @ORDERSTATUS)
+            AND         SL_ORDER.ISDELETED = 0
+            AND         SL_ORDER.[STATUS] = 1
             AND         (
                             @ORDERTYPE = 2 
                             OR (@ORDERTYPE = 0  AND  ISNULL(SL_ORDER.ORDERTYPE, 1) = 1) 
@@ -141,3 +145,4 @@ BEGIN
                         SL_ORDER.TOTALMONEY
         ) AS REPORT
 END
+GO
