@@ -26,7 +26,7 @@ const template = {
     is_web_view: "{{ISSHOWWEB ? 1 : 0}}",
     is_show_menu: "{{ISSHOWMENU ? 1 : 0}}",
     content_detail: "{{#? COMBOCONTENTDETAIL}}",
-
+    is_new_comment: '{{ISNEWCOMMENT ? 1 : 0}}'
 }
 
 let transform = new Transform(template);
@@ -40,7 +40,8 @@ const listCombo = (list = []) => {
         'created_user',
         'created_date',
         'created_user_full_name',
-        'is_web_view'
+        'is_web_view',
+        'is_new_comment'
     ]);
 };
 

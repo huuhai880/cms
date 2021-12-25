@@ -57,7 +57,8 @@ const template = {
   attributes_name: '{{#? ATTRIBUTENAME}}',
   showIndex: '{{#? ORDERINDEXINTERPRET}}',
   product_page_id:'{{#? PRODUCTPAGEID}}',
-  link_landing_page:'{{#? LINKLANDINGPAGE}}'
+  link_landing_page:'{{#? LINKLANDINGPAGE}}',
+  is_new_comment: '{{ISNEWCOMMENT ? 1 : 0}}'
 };
 
 let transform = new Transform(template);
@@ -93,6 +94,7 @@ const list = (products = []) => {
     'is_active',
     'is_show_menu',
     'is_web_view',
+    'is_new_comment'
   ]);
 };
 

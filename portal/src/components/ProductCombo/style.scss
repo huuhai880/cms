@@ -43,8 +43,18 @@
   //   left: -1.4rem !important;
   // }
 }
-.pick-product.custom-checkbox.custom-control{
-  &::before{
+.pick-product.custom-checkbox.custom-control {
+  &::before {
     background: none !important;
   }
+}
+
+.new-comment {
+  background-color: red;
+  top: 0;
+  right: 0;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50px;
 }

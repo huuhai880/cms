@@ -20,6 +20,8 @@ import { getColumnTable } from "./ProductConstant";
 import ProductModel from "../../models/ProductModel/index";
 import { useEffect } from "react";
 
+import './style.scss'
+
 // Set layout full-wh
 layoutFullWidthHeight();
 

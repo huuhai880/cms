@@ -11,14 +11,14 @@ const getListComment = async (queryParams = {}) => {
     try {
         const currentPage = apiHelper.getCurrentPage(queryParams);
         const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
-        const keyword = apiHelper.getSearch(queryParams);
+        const keyword = apiHelper.getValueFromObject(queryParams, 'keyword', '');
         const is_review = apiHelper.getValueFromObject(queryParams, 'is_review', 2);
         const start_date = apiHelper.getValueFromObject(queryParams, 'start_date', null);
         const end_date = apiHelper.getValueFromObject(queryParams, 'end_date', null);
         const product_id = apiHelper.getValueFromObject(queryParams, 'product_id', 0);
         const is_combo = apiHelper.getValueFromObject(queryParams, 'is_combo', 0);
         const is_deleted = apiHelper.getValueFromObject(queryParams, 'is_deleted', 2);
-
+        
         const pool = await mssql.pool;
         const res = await pool.request()
             .input('PRODUCTID', product_id)

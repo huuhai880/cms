@@ -176,6 +176,7 @@ export const getColumnTable = (
               <div className="text-center">
                 <CheckAccess permission="PRO_COMMENT_VIEW">
                   <Button
+                   style={{ position: 'relative' }}
                     color="warning"
                     title="Bình luận"
                     className="mr-1"
@@ -187,6 +188,7 @@ export const getColumnTable = (
                       )
                     }>
                     <i className="fa fa-comment" />
+                    {data[tableMeta["rowIndex"]].is_new_comment ? <span className='new-comment'></span> : null}
                   </Button>
                 </CheckAccess>
 

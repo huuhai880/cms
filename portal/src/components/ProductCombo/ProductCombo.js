@@ -17,6 +17,7 @@ import ProductComboFilter from "./ProductComboFilter";
 import { getColumnTable } from "./_constant";
 
 import ProductComboModel from "../../models/ProductComboModel/index";
+import './style.scss'
 
 // Set layout full-wh
 layoutFullWidthHeight();

@@ -55,6 +55,16 @@ BEGIN
                         OR @KEYWORD = ''
                         OR UPPER(PRO_COMMENT.CONTENTCOMMENT) LIKE '%' + UPPER(LTRIM(RTRIM(@KEYWORD))) + '%'
                         OR UPPER(PRO_COMMENT.FULLNAME) LIKE '%' + UPPER(LTRIM(RTRIM(@KEYWORD))) + '%'
+                        OR EXISTS (
+                                        SELECT  1 
+                                        FROM    PRO_COMMENT REPLY
+                                        WHERE   (@ISDELETED = 2 OR REPLY.ISDELETED = @ISDELETED)
+                                        AND     REPLY.COMMENTREPLYID = PRO_COMMENT.PRODUCTCOMMENTID
+                                        AND     (
+                                                    UPPER(REPLY.CONTENTCOMMENT) LIKE '%' + UPPER(LTRIM(RTRIM(@KEYWORD))) + '%'
+                                                    OR UPPER(REPLY.FULLNAME) LIKE '%' + UPPER(LTRIM(RTRIM(@KEYWORD))) + '%'
+                                                )
+                                    )
                     )
 
         AND         (
@@ -66,10 +76,11 @@ BEGIN
         AND         (@TODATE_S IS NULL OR PRO_COMMENT.CREATEDDATE < @TODATE_S + 1)
         AND         (
                         @ISREVIEW = 2 --TAT CA
-                        OR (PRO_COMMENT.ISREVIEW = NULL AND @ISREVIEW = 3) --CHUA DUYET
+                        OR (PRO_COMMENT.ISREVIEW IS NULL AND @ISREVIEW = 3) --CHUA DUYET
                         OR (PRO_COMMENT.ISREVIEW = 0 AND @ISREVIEW = 0) -- KHONG DUYET
                         OR (PRO_COMMENT.ISREVIEW = 1 AND @ISREVIEW = 1) -- DA DUYET
                     )
+
         ORDER BY    PRO_COMMENT.CREATEDDATE DESC 
         OFFSET      (@PAGEINDEX -1)* @PAGESIZE ROWS
         FETCH NEXT  @PAGESIZE ROWS ONLY;

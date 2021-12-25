@@ -104,3 +104,12 @@
   border-bottom: 1px solid #20a8d8;
 }
 
+.new-comment {
+  background-color: red;
+  top: 0;
+  right: 0;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50px;
+}

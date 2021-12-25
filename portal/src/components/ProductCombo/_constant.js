@@ -129,6 +129,7 @@ export const getColumnTable = (data, query, handleActionItemClick, handlePick = 
             sort: false,
             empty: true,
             customBodyRender: (value, tableMeta, updateValue) => {
+
                if (handlePick) {
                   let item = data[tableMeta["rowIndex"]];
                   return (
@@ -151,7 +152,9 @@ export const getColumnTable = (data, query, handleActionItemClick, handlePick = 
                   return (
                      <div className="text-center">
                         <CheckAccess permission="PRO_COMMENT_VIEW">
+
                            <Button
+                              style={{ position: 'relative' }}
                               color="warning"
                               title="Bình luận"
                               className="mr-1"
@@ -163,7 +166,9 @@ export const getColumnTable = (data, query, handleActionItemClick, handlePick = 
                                  )
                               }>
                               <i className="fa fa-comment" />
+                              {data[tableMeta["rowIndex"]].is_new_comment ? <span className='new-comment'></span> : null}
                            </Button>
+
                         </CheckAccess>
 
                         <CheckAccess permission="PRO_COMBOS_EDIT">

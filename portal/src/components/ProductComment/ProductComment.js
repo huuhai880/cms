@@ -35,7 +35,7 @@ function ProductComment({ product_id = 0, is_combo = false }) {
     const [query, setQuery] = useState({
         itemsPerPage: 25,
         page: 1,
-        is_review: 2,
+        is_review: 3,
         keyword: "",
         start_date: null,
         end_date: null,

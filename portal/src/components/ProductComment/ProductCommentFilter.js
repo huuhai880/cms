@@ -7,7 +7,7 @@ import DatePicker from "../Common/DatePicker";
 function ProductCommentFilter({ handleSubmitFilter }) {
     const [filter, setFilter] = useState({
         keyword: "",
-        isReviewSelected: { label: "Tất cả", value: 2 },
+        isReviewSelected: { label: "Chưa duyệt", value: "3" },
         startDate: null,
         endDate: null,
     });
@@ -75,7 +75,7 @@ function ProductCommentFilter({ handleSubmitFilter }) {
 
         handleSubmitFilter({
             keyword: "",
-            is_review: 2,
+            is_review: 3,
             start_date: null,
             end_date: null
         });
