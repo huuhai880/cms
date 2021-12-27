@@ -1,80 +1,73 @@
 import React, { useState, useEffect } from "react";
 import {
-  Alert,
   Card,
   CardBody,
   CardHeader,
   Col,
   Row,
-  Button,
   Form,
   FormGroup,
   Label,
   Input,
-  CustomInput,
-  Media,
-  Nav,
-  NavItem,
-  NavLink,
-  TabPane,
-  TabContent,
-  Table,
-  InputGroup,
-  InputGroupAddon,
+  CustomInput
 } from "reactstrap";
 import { useParams } from "react-router";
 import { layoutFullWidthHeight } from "../../utils/html";
-import { useFormik } from "formik";
 import { initialValues } from "./const";
-import { readFileAsBase64 } from "../../utils/html";
 import OrderModel from "../../models/OrderModel";
-import DatePicker from "../Common/DatePicker";
-import moment from "moment";
-import Upload from "../Common/Antd/Upload";
-import NumberFormat from "../Common/NumberFormat";
-import Select from "react-select";
-import { Radio, Space, Checkbox } from "antd";
-import { CheckAccess } from "../../navigation/VerifyAccess";
-
+import { formatPrice } from "utils/index";
+import Loading from "components/Common/Loading";
 layoutFullWidthHeight();
 
 function OrderDetail() {
   let { id } = useParams();
   const _orderModel = new OrderModel();
-  const [dataOrder, setDataOrder] = useState(initialValues);
-  const [dataPartner, setDataPartner] = useState([]);
-  const [noEdit, setNoEdit] = useState(true);
-  const [btnType, setbtnType] = useState("");
+  const [order, setOrder] = useState(initialValues);
+  const [loading, setLoading] = useState(false);
 
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: dataOrder,
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
-
-  //////get data detail
   useEffect(() => {
-    _initDataDetail();
+    _initData();
   }, []);
 
-  //// data detail
-  const _initDataDetail = async () => {
+  const _initData = async () => {
+    setLoading(true);
     try {
-      await _orderModel.detail(id).then((data) => {
-        setDataOrder(data);
-        // console.log(data);
-      });
-      await _orderModel.listProduct(id).then((data) => {
-        formik.setFieldValue("product_list", [...formik.values.product_list, ...data.items]);
-      });
+      let _order = await _orderModel.detail(id);
+      setOrder(_order);
     } catch (error) {
-      // console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
+      window._$g.dialogs.alert(
+        window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
+      );
+    } finally {
+      setLoading(false);
     }
   };
-  //   console.log(formik.values)
-  return (
+
+  const renderOrderDetails = () => {
+    let { order_details = [] } = order || {};
+    if (order_details.length > 0) {
+      return order_details.map((item, index) => {
+        return (
+          <tr key={index}>
+            <td className="text-center text-middle">{index + 1}</td>
+            <td className="text-middle">{item.product_name}</td>
+            <td className="text-middle text-center">{item.quantity}</td>
+            <td className="text-middle text-center">
+              {formatPrice(item.price)} đ
+            </td>
+            <td className="text-middle text-center">
+              {formatPrice(item.sub_total)} đ
+            </td>
+          </tr>
+        );
+      });
+    }
+    return null;
+  };
+
+  return loading ? (
+    <Loading />
+  ) : (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
         <Col xs={12}>
@@ -85,8 +78,10 @@ function OrderDetail() {
             <CardBody>
               <Form id="formInfo">
                 <Row>
-                  <Col className="mb15">
-                    <b className="underline">Đơn hàng</b>
+                  <Col xs={12} className="mb15">
+                    <b className="underline title_page_h1 text-primary">
+                      Thông tin đơn hàng
+                    </b>
                   </Col>
                   <Col xs={12} sm={12}>
                     <Row>
@@ -100,8 +95,8 @@ function OrderDetail() {
                               name="order_no"
                               id="order_no"
                               type="text"
-                              disabled={noEdit}
-                              value={formik.values.order_no}
+                              disabled={true}
+                              value={order.order_no || ""}
                             />
                           </Col>
                         </FormGroup>
@@ -109,7 +104,7 @@ function OrderDetail() {
                       <Col xs={6}>
                         <FormGroup row>
                           <Label for="relationship_id" sm={3}>
-                          Ngày tạo đơn hàng 
+                            Ngày tạo đơn hàng
                           </Label>
                           <Col sm={9}>
                             <Input
@@ -117,7 +112,7 @@ function OrderDetail() {
                               id="order_date"
                               type="text"
                               disabled={true}
-                              value={formik.values.order_date}
+                              value={order.order_date || ""}
                             />
                           </Col>
                         </FormGroup>
@@ -136,12 +131,10 @@ function OrderDetail() {
                               name="order_id"
                               id="order_id"
                               type="text"
-                              disabled={noEdit}
+                              disabled={true}
                               value={
-                                formik.values.status == 1
+                                order.status == 1
                                   ? "Đã thanh toán"
-                                  : formik.values.status == 0
-                                  ? "Chưa thanh toán"
                                   : "Chưa thanh toán"
                               }
                             />
@@ -150,9 +143,13 @@ function OrderDetail() {
                       </Col>
                     </Row>
                   </Col>
-                  <Col className="mb15">
-                    <b className="underline">Thông tin khách hàng</b>
+
+                  <Col xs={12} className="mb15">
+                    <b className="underline title_page_h1 text-primary">
+                      Thông tin khách hàng
+                    </b>
                   </Col>
+
                   <Col xs={12} sm={12}>
                     <Row>
                       <Col xs={6}>
@@ -162,27 +159,27 @@ function OrderDetail() {
                           </Label>
                           <Col sm={9}>
                             <Input
-                              name="full_name"
-                              id="full_name"
+                              name="customer_name"
+                              id="customer_name"
                               type="text"
-                              disabled={noEdit}
-                              value={formik.values.full_name}
+                              disabled={true}
+                              value={order.customer_name || ""}
                             />
                           </Col>
                         </FormGroup>
                       </Col>
                       <Col xs={6}>
                         <FormGroup row>
-                          <Label for="relationship_id" sm={3}>
-                            Số điện thoại 
+                          <Label for="attribute_id" sm={3}>
+                            Email
                           </Label>
                           <Col sm={9}>
                             <Input
-                              name="phone_number"
-                              id="phone_number"
+                              name="email"
+                              id="email"
                               type="text"
                               disabled={true}
-                              value={formik.values.phone_number}
+                              value={order.email || ""}
                             />
                           </Col>
                         </FormGroup>
@@ -193,24 +190,25 @@ function OrderDetail() {
                     <Row>
                       <Col xs={6}>
                         <FormGroup row>
-                          <Label for="attribute_id" sm={3}>
-                            Email 
+                          <Label for="relationship_id" sm={3}>
+                            Số điện thoại
                           </Label>
                           <Col sm={9}>
                             <Input
-                              name="email"
-                              id="email"
+                              name="phone_number"
+                              id="phone_number"
                               type="text"
-                              disabled={noEdit}
-                              value={formik.values.email}
+                              disabled={true}
+                              value={order.phone_number || ""}
                             />
                           </Col>
                         </FormGroup>
                       </Col>
+
                       <Col xs={6}>
                         <FormGroup row>
                           <Label for="relationship_id" sm={3}>
-                            Địa chỉ 
+                            Địa chỉ
                           </Label>
                           <Col sm={9}>
                             <Input
@@ -218,123 +216,99 @@ function OrderDetail() {
                               id="address"
                               type="text"
                               disabled={true}
-                              value={formik.values.address}
+                              value={order.address || ""}
                             />
                           </Col>
                         </FormGroup>
                       </Col>
                     </Row>
                   </Col>
-                  <Col className="mb15">
-                    <b className="underline">Danh sách sản phẩm</b>
+
+                  <Col xs={12} className="mb15">
+                    <b className="underline title_page_h1 text-primary">
+                      Danh sách sản phẩm
+                    </b>
                   </Col>
-                  <Col
-                    xs={12}
-                    // style={{ maxHeight: 351, overflowY: "auto" }}
-                    className="border-secondary align-middle"
-                  >
-                    <div
-                      className="col-xs-12 col-sm-12 col-md-12 col-lg-12 border align-middle"
-                      style={{ padding: 5 }}
-                    >
-                      <table className="table table-bordered table-hover ">
-                        <thead className="bg-light">
-                          <td className="align-middle text-center" width="10%">
+
+                  <Col xs={12} className="border-secondary align-middle">
+                    <table className="table table-bordered table-hover ">
+                      <thead className="bg-light">
+                        <tr>
+                          <th className="align-middle text-center" width="5%">
                             <b>STT</b>
-                          </td>
-
-                          <td className=" align-middle text-center" width="25%">
-                            <b>Tên sản phẩm / combo</b>
-                          </td>
-                          <td className=" align-middle text-center" width="15%">
+                          </th>
+                          <th className=" align-middle text-center">
+                            <b>Tên Sản phẩm/Combo</b>
+                          </th>
+                          <th className=" align-middle text-center" width="15%">
                             <b>Số lượng</b>
+                          </th>
+                          <th className=" align-middle text-center" width="15%">
+                            <b>Đơn giá(VNĐ)</b>
+                          </th>
+                          <th className=" align-middle text-center" width="15%">
+                            {" "}
+                            <b>Tổng tiền(VNĐ)</b>{" "}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>{renderOrderDetails()}</tbody>
+
+                      <tfoot>
+                        <tr>
+                          <td className=" align-middle text-left" colSpan={4}>
+                            <b>Tổng cộng</b>
                           </td>
-                          <td className=" align-middle text-center" width="20%">
-                            <b>Giá</b>
+                          <td className="font-weight-bold align-middle text-right">
+                            {formatPrice(order.sub_total)} đ
                           </td>
-                          <td className=" align-middle text-center" width="20%">
-                            <b>Tổng tiền</b>
+                        </tr>
+                        <tr>
+                          <td className=" align-middle text-left" colSpan={4}>
+                            <b className=" title_page_h1 text-primary">
+                              Khuyến mãi
+                            </b>
                           </td>
-                        </thead>
-
-                        {formik.values.product_list &&
-                          formik.values.product_list.map((item, index) => {
-                            // console.log(item)
-                            return (
-                              <tbody>
-                                <tr key={index}>
-                                  <td className="align-middle text-center" width="10%">
-                                    {index + 1}
-                                  </td>
-
-                                  <td className=" align-middle text-left" width="25%">
-                                    {item.product_name?item.product_name:item.combo_name}
-                                  </td>
-                                  <td className=" align-middle text-center" width="15%">
-                                    {item.order_detail_quantity}
-                                  </td>
-                                  <td className=" align-middle text-right" width="20%">
-                                    {new Intl.NumberFormat("de-DE", {
-                                      style: "currency",
-                                      currency: "VND",
-                                    }).format(item.product_price)}
-                                  </td>
-                                  <td className=" align-middle text-right" width="20%">
-                                    {new Intl.NumberFormat("de-DE", {
-                                      style: "currency",
-                                      currency: "VND",
-                                    }).format(item.order_detail_total)}
-                                  </td>
-                                </tr>
-                              </tbody>
-                            );
-                          })}
-                        <tfoot>
-                          <tr>
-                            <td className=" align-middle text-left" width="20%">
-                              <b>Tổng cộng</b>
-                            </td>
-                            <td className=" align-middle text-left" colspan="3" width="20%"></td>
-
-                            <td className=" align-middle text-right" width="20%">
-                              {" "}
-                              {new Intl.NumberFormat("de-DE", {
-                                style: "currency",
-                                currency: "VND",
-                              }).format(formik.values.order_total_money)}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className=" align-middle text-left" width="20%">
-                              <b>Giá trị khuyến mãi</b>
-                            </td>
-                            <td className=" align-middle text-left" colspan="3" width="20%"></td>
-
-                            <td className=" align-middle text-right" width="20%">
-                              {new Intl.NumberFormat("de-DE", {
-                                style: "currency",
-                                currency: "VND",
-                              }).format(formik.values.order_total_discount)}
-                            </td>
-                          </tr>{" "}
-                          <tr>
-                            <td className=" align-middle text-left" width="20%">
-                              <b>Tổng tiền thanh toán</b>
-                            </td>
-                            <td className=" align-middle text-left" colspan="3" width="20%"></td>
-
-                            <td className=" align-middle text-right" width="20%">
-                              {new Intl.NumberFormat("de-DE", {
-                                style: "currency",
-                                currency: "VND",
-                              }).format(formik.values.order_total_sub)}
-                            </td>
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
+                          <td className=" align-middle text-right"></td>
+                        </tr>
+                        <tr>
+                          <td className=" align-middle text-left" colSpan={4}>
+                            <b>Tổng tiền giảm giá</b>{" "}
+                          </td>
+                          <td className="font-weight-bold align-middle text-right">
+                            {formatPrice(order.total_discount)} đ
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className=" align-middle text-left" colSpan={4}>
+                            <b>Tổng tiền thanh toán</b>
+                          </td>
+                          <td className="font-weight-bold align-middle text-right">
+                            {formatPrice(order.total)} đ
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
                   </Col>
                 </Row>
+                <Row>
+                  <Col xs={12} className="m-t-10 mb-2">
+                    <FormGroup row>
+                      <Col sm={2} xs={12}>
+                        <CustomInput
+                          className="pull-left"
+                          onBlur={null}
+                          checked={order.is_grow_revenue}
+                          type="checkbox"
+                          id="is_grow_revenue"
+                          label="Có tính doanh thu"
+                          disabled={true}
+                        />
+                      </Col>
+                    </FormGroup>
+                  </Col>
+                </Row>
+
                 <div className="text-right mb-2 mt-2">
                   <button
                     className=" btn-block-sm btn btn-secondary"

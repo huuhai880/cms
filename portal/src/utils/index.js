@@ -225,3 +225,8 @@ export const convertValueSelect = (value, options) => {
 };
 
 
+export function formatPrice(price) {
+    if (!price) return 0;
+    return new Intl.NumberFormat('de-DE',).format(price || 0)
+}
+

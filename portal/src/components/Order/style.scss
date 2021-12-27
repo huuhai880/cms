@@ -1,0 +1,93 @@
+.bw_quantity_button {
+  display: inline-block;
+//   color: #333;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border: 1px solid #ddd;
+//   font-size: 20px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 300ms;
+  background: #fff;
+}
+
+.bw_quantity input {
+  height: 40px;
+  border: 1px solid #ddd;
+  outline: none;
+  border-radius: 7px;
+  margin: 0 3px;
+  padding: 0 10px;
+  text-align: center;
+  max-width: 80px;
+}
+
+.bw_quantity_button .disabled{
+    background: #fafafa;
+}
+
+.bw_flex {
+  display: flex;
+  align-items: stretch;
+}
+
+.text-middle{
+    vertical-align: middle !important;
+}
+
+.rp-number-order{
+    background-color: #81d3f8;
+    width: 100%;
+    text-align: center;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+}
+
+.rp-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+.order-product-name{
+    display: flex;
+    flex-direction: column;
+}
+.order-product-name span{
+    margin-bottom: 5px;
+}
+
+
+.DateRangePicker_picker, .css-26l3qy-menu{
+    z-index: 9999;
+}
+.se-container{
+    z-index: 0 !important;
+}
+
+.hove-color:hover hove-color{
+    color: #F6D049 !important;
+    background-color: #F6D049 !important;
+}
+
+.hover:hover {
+    background: #e4e7e7;
+    color: black;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.bl {
+    border-left: 1px solid #e4e7e7;
+}
+
+.focus {
+    background-color: #00a699;
+    color: white;
+}

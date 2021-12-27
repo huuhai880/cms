@@ -134,6 +134,8 @@ const AreaEdit = React.lazy(() => import("./components/Area/AreaEdit"));
 // Order
 const Order = React.lazy(() => import("./components/Order/Order"));
 const OrderDetail = React.lazy(() => import("./components/Order/OrderDetail"));
+const OrderAdd = React.lazy(() => import("./components/Order/OrderAdd"));
+const OrderEdit = React.lazy(() => import("./components/Order/OrderEdit"));
 //.end#Order
 
 // Manufacturer
@@ -3094,6 +3096,20 @@ const routes = [
     name: "Chi tiết",
     function: "SL_ORDER_VIEW",
     component: OrderDetail,
+  },
+  {
+    path: "/order/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "SL_ORDER_ADD",
+    component: OrderAdd,
+  },
+  {
+    path: "/order/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "SL_ORDER_EDIT",
+    component: OrderEdit,
   },
 
   // end#order
