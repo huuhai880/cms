@@ -31,7 +31,7 @@ function Order() {
     itemsPerPage: 25,
     page: 1,
     keyword: null,
-    order_status: 2,
+    order_status: 1,
     is_deleted: 0,
     start_date: moment().startOf("month").format("DD/MM/YYYY"),
     end_date: moment().format("DD/MM/YYYY"),
