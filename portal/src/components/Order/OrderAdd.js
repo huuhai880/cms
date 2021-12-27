@@ -514,6 +514,7 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
                                                             type="text"
                                                             disabled={noEdit}
                                                             {...formik.getFieldProps('email')}
+                                                            disabled={true}
                                                         />
                                                         <MessageError formik={formik} name="email" />
                                                     </Col>
@@ -537,6 +538,7 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
                                                             type="text"
                                                             disabled={noEdit}
                                                             {...formik.getFieldProps('phone_number')}
+                                                            disabled={true}
                                                         />
                                                         {/* <MessageError formik={formik} name="phone_number" /> */}
                                                     </Col>
@@ -555,6 +557,7 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
                                                             type="text"
                                                             disabled={noEdit}
                                                             {...formik.getFieldProps('address')}
+                                                            disabled={true}
                                                         />
                                                         {/* <MessageError formik={formik} name="address" /> */}
                                                     </Col>

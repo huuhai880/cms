@@ -53,14 +53,14 @@ function Filter({ handleSubmitFillter, report = {} }) {
   const [searchValue, setSearchValue] = useState({
     keyword: "",
     isDeletedSelected: { value: "0", label: "Không" },
-    orderStatusSelected: { value: "2", label: "Tất cả" },
+    orderStatusSelected: { label: "Đã thanh toán", value: 1 },
     startDate: null,
     endDate: null,
     productSelected: null,
     fromPrice: 0,
     toPrice: 0,
     orderTypeSelected: { label: "Tất cả", value: 2 },
-    nameTag: "Chọn ngày",
+    nameTag: "Tháng này",
   });
 
   let { total_quantity = 0, total_order = 0, total_amount = 0 } = report || {};
@@ -93,7 +93,7 @@ function Filter({ handleSubmitFillter, report = {} }) {
 
     setSearchValue({
       ...searchValue,
-      startDate: moment(),
+      startDate: moment().startOf("month"),
       endDate: moment(),
     });
 
@@ -169,19 +169,20 @@ function Filter({ handleSubmitFillter, report = {} }) {
       keyword: "",
       orderStatusSelected: { value: "2", label: "Tất cả" },
       isDeletedSelected: { value: "0", label: "Không" },
-      startDate: moment(),
+      startDate: moment().startOf("month"),
       endDate: moment(),
       productSelected: null,
       fromPrice: 0,
       toPrice: 0,
       orderTypeSelected: { label: "Tất cả", value: 2 },
+      nameTag: "Tháng này",
     });
 
     let value = {
       keyword: null,
       order_status: 2,
       is_deleted: 0,
-      start_date: moment().format("DD/MM/YYYY"),
+      start_date: moment().startOf("month").format("DD/MM/YYYY"),
       end_date: moment().format("DD/MM/YYYY"),
       product_id: null,
       combo_id: null,
@@ -267,7 +268,7 @@ function Filter({ handleSubmitFillter, report = {} }) {
 
   const calendar = (key) => {
     switch (key) {
-      case "Hôm nay":
+      case "Hôm nay": {
         setSearchValue((pre) => ({
           ...searchValue,
           startDate: moment(),
@@ -275,7 +276,9 @@ function Filter({ handleSubmitFillter, report = {} }) {
           nameTag: "Hôm nay",
         }));
         break;
-      case "Hôm qua":
+      }
+
+      case "Hôm qua": {
         setSearchValue((pre) => ({
           ...searchValue,
           startDate: moment().subtract(1, "days"),
@@ -283,7 +286,9 @@ function Filter({ handleSubmitFillter, report = {} }) {
           nameTag: "Hôm qua",
         }));
         break;
-      case "Tuần này":
+      }
+
+      case "Tuần này": {
         setSearchValue((pre) => ({
           ...searchValue,
           startDate: moment().startOf("week").add(1, "days"),
@@ -291,7 +296,9 @@ function Filter({ handleSubmitFillter, report = {} }) {
           nameTag: "Tuần này",
         }));
         break;
-      case "Tuần trước":
+      }
+
+      case "Tuần trước": {
         setSearchValue((pre) => ({
           ...searchValue,
           startDate: moment()
@@ -303,7 +310,9 @@ function Filter({ handleSubmitFillter, report = {} }) {
         }));
 
         break;
-      case "Tháng này":
+      }
+
+      case "Tháng này": {
         setSearchValue((pre) => ({
           ...searchValue,
           startDate: moment().startOf("month"),
@@ -311,7 +320,9 @@ function Filter({ handleSubmitFillter, report = {} }) {
           nameTag: "Tháng này",
         }));
         break;
-      case "Tháng trước":
+      }
+
+      case "Tháng trước": {
         setSearchValue((pre) => ({
           ...searchValue,
           startDate: moment().subtract(1, "month").startOf("month"),
@@ -319,6 +330,17 @@ function Filter({ handleSubmitFillter, report = {} }) {
           nameTag: "Tháng trước",
         }));
         break;
+      }
+
+      case "Chọn ngày": {
+        setSearchValue((pre) => ({
+          ...searchValue,
+          startDate: moment(),
+          endDate: moment(),
+          nameTag: "Chọn ngày",
+        }));
+        break;
+      }
     }
   };
 
@@ -339,7 +361,9 @@ function Filter({ handleSubmitFillter, report = {} }) {
                     <span className="font-weight-bold">Tổng đơn hàng</span>
                   </Col>
                   <Col xs={6}>
-                    <div className="rp-number-order">{total_order}</div>
+                    <div className="rp-number-order">
+                      {total_order ? total_order : 0}
+                    </div>
                   </Col>
                 </Row>
                 <Row className="mb-2" style={{ alignItems: "center" }}>
@@ -347,7 +371,9 @@ function Filter({ handleSubmitFillter, report = {} }) {
                     <span className="font-weight-bold">Tổng sản phẩm</span>
                   </Col>
                   <Col xs={6}>
-                    <div className="rp-number-order">{total_quantity}</div>
+                    <div className="rp-number-order">
+                      {total_quantity ? total_quantity : 0}
+                    </div>
                   </Col>
                 </Row>
                 <Row className="mb-2" style={{ alignItems: "center" }}>

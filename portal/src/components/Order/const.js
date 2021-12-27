@@ -145,6 +145,28 @@ export const getColumTable = (data, total, query, handleDelete, isCenter) => {
                 },
             },
         },
+        {
+            name: "is_grow_revenue",
+            label: "Có tính doanh thu",
+            options: {
+                filter: false,
+                sort: true,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-center">
+                            {value ? "Có" : "Không"}
+                        </div>
+                    );
+                },
+            },
+        },
 
         {
             name: "order_type",

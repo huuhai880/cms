@@ -46,7 +46,8 @@ const list = (data = []) => {
         'phone_number',
         'combo_name',
         'order_type',
-        'customer_name'
+        'customer_name',
+        'is_grow_revenue'
     ]);
 };
 

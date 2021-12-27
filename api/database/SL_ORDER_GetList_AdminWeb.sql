@@ -35,6 +35,7 @@ BEGIN
                     SL_ORDER.[STATUS],
                     SL_ORDER.TOTALMONEY,
                     SL_ORDER.SUBTOTAL,
+                    SL_ORDER.ISGROWREVENUE,
                     CONCAT(CRM_ACCOUNT.CUSTOMERCODE,' - ', CRM_ACCOUNT.FULLNAME) AS CUSTOMERNAME,
                     COUNT(1) OVER() AS TOTALITEMS
 
@@ -84,9 +85,9 @@ BEGIN
 		FETCH NEXT @PAGESIZE ROWS ONLY;
 
         SELECT 
-                SUM(TOTALMONEY) TOTALAMOUNT,
-                COUNT(1) AS TOTALORDER,
-                SUM(TOTALQUANTITY) AS TOTALQUANTITY
+                IIF(@ORDERSTATUS = 0, 0, SUM(TOTALMONEY)) TOTALAMOUNT,
+                IIF(@ORDERSTATUS = 0, 0, COUNT(1)) AS TOTALORDER,
+                IIF(@ORDERSTATUS = 0, 0, SUM(TOTALQUANTITY)) AS TOTALQUANTITY
         FROM 
         (
             SELECT 

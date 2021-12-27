@@ -9,6 +9,7 @@ import {
   FormGroup,
   Label,
   Input,
+  CustomInput
 } from "reactstrap";
 import { useParams } from "react-router";
 import { layoutFullWidthHeight } from "../../utils/html";
@@ -288,6 +289,23 @@ function OrderDetail() {
                         </tr>
                       </tfoot>
                     </table>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={12} className="m-t-10 mb-2">
+                    <FormGroup row>
+                      <Col sm={2} xs={12}>
+                        <CustomInput
+                          className="pull-left"
+                          onBlur={null}
+                          checked={order.is_grow_revenue}
+                          type="checkbox"
+                          id="is_grow_revenue"
+                          label="Có tính doanh thu"
+                          disabled={true}
+                        />
+                      </Col>
+                    </FormGroup>
                   </Col>
                 </Row>
 

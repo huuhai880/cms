@@ -33,7 +33,7 @@ function Order() {
     keyword: null,
     order_status: 2,
     is_deleted: 0,
-    start_date: moment().format("DD/MM/YYYY"),
+    start_date: moment().startOf("month").format("DD/MM/YYYY"),
     end_date: moment().format("DD/MM/YYYY"),
     product_id: null,
     combo_id: null,
