@@ -106,18 +106,18 @@ export default class AuthorAdd extends PureComponent {
     // Init validator
     this.formikValidationSchema = Yup.object().shape({
       author_name: Yup.string().trim().required("ID nhân viên là bắt buộc."),
-      password: authorEnt
-        ? undefined
-        : Yup.string()
-            .trim()
-            .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
-            .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!")
-            .required("Mật khẩu là bắt buộc."),
+    //   password: authorEnt
+    //     ? undefined
+    //     : Yup.string()
+    //         .trim()
+    //         .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
+    //         .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!")
+    //         .required("Mật khẩu là bắt buộc."),
       gender: Yup.string().required("Giới tính là bắt buộc."),
-      email: Yup.string()
-        .trim()
-        .email("Email không hợp lệ")
-        .required("Email là bắt buộc."),
+    //   email: Yup.string()
+    //     .trim()
+    //     .email("Email không hợp lệ")
+    //     .required("Email là bắt buộc."),
       // birthday: Yup.date()
       //   .typeError("Ngày sinh không hợp lệ.")
       //   .required("Ngày sinh là bắt buộc."),
@@ -145,22 +145,22 @@ export default class AuthorAdd extends PureComponent {
       //     /^[a-zA-Z0-9\s\/ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+$/,
       //     "Địa chỉ cụ thể không chứa kí tự đặc biệt."
       //   ),
-      phone_number: Yup.string()
-        .trim()
-        .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ")
-        .required("Điện thoại là bắt buộc."),
-      banner_image: Yup.string().required("Hình ảnh banner là bắt buộc."),
-      introduce: Yup.string().required("Giới thiệu bản thân là bắt buộc."),
-      education_career: Yup.string().required(
-        "Học vấn và sự nghiệp là bắt buộc."
-      ),
+    //   phone_number: Yup.string()
+    //     .trim()
+    //     .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ")
+    //     .required("Điện thoại là bắt buộc."),
+    //   banner_image: Yup.string().required("Hình ảnh banner là bắt buộc."),
+    //   introduce: Yup.string().required("Giới thiệu bản thân là bắt buộc."),
+    //   education_career: Yup.string().required(
+    //     "Học vấn và sự nghiệp là bắt buộc."
+    //   ),
       // news_category: Yup.string().required("Danh mục bài viết là bắt buộc."),
-      order_index: Yup.number()
-        .typeError("Thứ tự hiển thị phải là số.")
-        .positive("Thứ tự hiển thị phải lớn hơn 0.")
-        .required("Thứ tự hiển thị là bắt buộc."),
-      nickname: Yup.string().required("Biệt danh là bắt buộc."),
-      identity_number: Yup.string().matches(/^[0-9\b]+$/, "Số CMND/ Thẻ căn cước bắt buộc nhập là số."),
+    //   order_index: Yup.number()
+    //     .typeError("Thứ tự hiển thị phải là số.")
+    //     .positive("Thứ tự hiển thị phải lớn hơn 0.")
+    //     .required("Thứ tự hiển thị là bắt buộc."),
+    //   nickname: Yup.string().required("Biệt danh là bắt buộc."),
+    //   identity_number: Yup.string().matches(/^[0-9\b]+$/, "Số CMND/ Thẻ căn cước bắt buộc nhập là số."),
     });
   }
 
@@ -650,9 +650,9 @@ export default class AuthorAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="nickname" sm={4}>
                                     Biệt danh
-                                    <span className="font-weight-bold red-text">
+                                    {/* <span className="font-weight-bold red-text">
                                       *
-                                    </span>
+                                    </span> */}
                                   </Label>
                                   <Col sm={8}>
                                     <InputGroup>
@@ -821,9 +821,9 @@ export default class AuthorAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="email" sm={4}>
                                     Email
-                                    <span className="font-weight-bold red-text">
+                                    {/* <span className="font-weight-bold red-text">
                                       *
-                                    </span>
+                                    </span> */}
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -913,9 +913,9 @@ export default class AuthorAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="phone_number" sm={4}>
                                     Điện thoại
-                                    <span className="font-weight-bold red-text">
+                                    {/* <span className="font-weight-bold red-text">
                                       *
-                                    </span>
+                                    </span> */}
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -955,9 +955,9 @@ export default class AuthorAdd extends PureComponent {
                                 <FormGroup row>
                                   <Label for="order_index" sm={4}>
                                     Thứ tự hiển thị{" "}
-                                    <span className="font-weight-bold red-text">
+                                    {/* <span className="font-weight-bold red-text">
                                       *
-                                    </span>
+                                    </span> */}
                                   </Label>
                                   <Col sm={8}>
                                     <Field
@@ -1032,6 +1032,7 @@ export default class AuthorAdd extends PureComponent {
                                           name="about_me"
                                           id="about_me"
                                           disabled={noEdit}
+                                          rows={5}
                                         />
                                       )}
                                     />
@@ -1055,7 +1056,7 @@ export default class AuthorAdd extends PureComponent {
                               <Row className="my-3 mb15">
                                 <Col sm={2}></Col>
                                 <Col sm={10} xs={12}>
-                                  <Link
+                                  {/* <Link
                                     to={`/products?author_id=${authorEnt.author_id}`}
                                     component={this.FancyLink}
                                   >
@@ -1067,7 +1068,7 @@ export default class AuthorAdd extends PureComponent {
                                       ></i>{" "}
                                       Sách của tác giả
                                     </b>
-                                  </Link>
+                                  </Link> */}
                                   <Link
                                     to={`/news?author_id=${authorEnt.author_id}`}
                                     component={this.FancyLink}
@@ -1084,14 +1085,16 @@ export default class AuthorAdd extends PureComponent {
                                 </Col>
                               </Row>
                             ) : null}
-                            <Row className="mb15">
+                            
+                            {/* <Row className="mb15">
                               <Col xs={12}>
                                 <b className="underline">
                                   Chứng minh nhân dân/ Thẻ căn cước
                                 </b>
                               </Col>
-                            </Row>
-                            <Row>
+                            </Row> */}
+                            
+                            {/* <Row>
                               <Col xs={12} sm={6}>
                                 <FormGroup row>
                                   <Label for="identity_number" sm={4}>
@@ -1100,7 +1103,7 @@ export default class AuthorAdd extends PureComponent {
                                   <Col sm={8}>
                                     <Field
                                       name="identity_number"
-                                      render={({ field /* _form */ }) => (
+                                      render={({ field }) => (
                                         <Input
                                           {...field}
                                           onBlur={null}
@@ -1156,12 +1159,13 @@ export default class AuthorAdd extends PureComponent {
                                         );
                                       }}
                                     />
-                                    {/* <ErrorMessage name="identity_date" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} /> */}
+                                    <ErrorMessage name="identity_date" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            </Row>
-                            <Row>
+                            </Row> */}
+
+                            {/* <Row>
                               <Col xs={12} sm={12}>
                                 <FormGroup row>
                                   <Label for="identity_place" sm={2}>
@@ -1170,7 +1174,7 @@ export default class AuthorAdd extends PureComponent {
                                   <Col sm={10}>
                                     <Field
                                       name="identity_place"
-                                      render={({ field /* _form */ }) => (
+                                      render={({ field }) => (
                                         <Input
                                           {...field}
                                           onBlur={null}
@@ -1182,12 +1186,14 @@ export default class AuthorAdd extends PureComponent {
                                         />
                                       )}
                                     />
-                                    {/* <ErrorMessage name="identity_place" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} /> */}
+                                    <ErrorMessage name="identity_place" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            </Row>
-                            <Row>
+                            </Row> */}
+
+
+                            {/* <Row>
                               <Col xs={12} sm={2}>
                                 <FormGroup row>
                                   <Label sm={12}>
@@ -1201,7 +1207,7 @@ export default class AuthorAdd extends PureComponent {
                                 <FormGroup row>
                                   <Col xs={12} sm={6}>
                                     <FormGroup row>
-                                      {/* <Label sm={4}></Label> */}
+                                     
                                       <Col xs={12} sm={12}>
                                         <Col xs={12} sm={12}>
                                           <FormGroup row>
@@ -1285,15 +1291,15 @@ export default class AuthorAdd extends PureComponent {
                                             }}
                                           />
                                         )}
-                                        {/* <ErrorMessage name="identity_back_image" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} /> */}
+                                        <ErrorMessage name="identity_back_image" component={({ children }) => <Alert color="danger" className="field-validation-error">{children}</Alert>} />
                                       </Col>
                                     </FormGroup>
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            </Row>
+                            </Row> */}
 
-                            <Address className="row">
+                            {/* <Address className="row">
                               {(addrProps) => {
                                 let {
                                   CountryComponent,
@@ -1307,9 +1313,9 @@ export default class AuthorAdd extends PureComponent {
                                       <Label sm={2}>
                                         <b className="underline">
                                           Địa chỉ
-                                          {/* <span className="font-weight-bold red-text">
+                                          <span className="font-weight-bold red-text">
                                             *
-                                          </span> */}
+                                          </span>
                                         </b>
                                       </Label>
                                       <Col sm={10}>
@@ -1323,7 +1329,6 @@ export default class AuthorAdd extends PureComponent {
                                                     id={field.name}
                                                     name={field.name}
                                                     onChange={({ value }) => {
-                                                      // change?
                                                       if (
                                                         "" +
                                                           values[field.name] !==
@@ -1372,13 +1377,11 @@ export default class AuthorAdd extends PureComponent {
                                               key={`province_of_${values.country_id}`}
                                               name="province_id"
                                               render={({ field, form }) => {
-                                                // console.log(values[field.name])
                                                 return (
                                                   <ProvinceComponent
                                                     id={field.name}
                                                     name={field.name}
                                                     onChange={({ value }) => {
-                                                      // change?
                                                       if (
                                                         "" +
                                                           values[field.name] !==
@@ -1436,7 +1439,6 @@ export default class AuthorAdd extends PureComponent {
                                                     id={field.name}
                                                     name={field.name}
                                                     onChange={({ value }) => {
-                                                      // change?
                                                       if (
                                                         "" +
                                                           values[field.name] !==
@@ -1486,7 +1488,7 @@ export default class AuthorAdd extends PureComponent {
                                               key={`ward_of_${values.district_id}`}
                                               name="ward_id"
                                               render={({
-                                                field /*, form*/,
+                                                field ,
                                               }) => {
                                                 return (
                                                   <WardComponent
@@ -1527,20 +1529,21 @@ export default class AuthorAdd extends PureComponent {
                                   </Col>
                                 );
                               }}
-                            </Address>
-                            <Row>
+                            </Address> */}
+
+                            {/* <Row>
                               <Col xs={12}>
                                 <FormGroup row>
                                   <Label for="address" sm={2}>
                                     Địa chỉ cụ thể
-                                    {/* <span className="font-weight-bold red-text">
+                                    <span className="font-weight-bold red-text">
                                       *
-                                    </span> */}
+                                    </span>
                                   </Label>
                                   <Col sm={10}>
                                     <Field
                                       name="address"
-                                      render={({ field /* _form */ }) => (
+                                      render={({ field }) => (
                                         <Input
                                           {...field}
                                           onBlur={null}
@@ -1566,16 +1569,16 @@ export default class AuthorAdd extends PureComponent {
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            </Row>
+                            </Row> */}
 
                             <Row>
                               <Col sm={12} xs={12}>
                                 <FormGroup row>
                                   <Label for="banner_image" sm={2}>
                                     <b className="underline">Banner</b>
-                                    <span className="font-weight-bold red-text">
+                                    {/* <span className="font-weight-bold red-text">
                                       *
-                                    </span>
+                                    </span> */}
                                   </Label>
                                   <Col sm={5} xs={12}>
                                     <label className="text-center mb-0 mt-3 w-100">
@@ -1687,7 +1690,7 @@ export default class AuthorAdd extends PureComponent {
                             </Row> */}
                           </Col>
                           <Col xs={12} md={12}>
-                            <Row>
+                            {/* <Row>
                               <Col sm={12}>
                                 <FormGroup >
                                   <Label for="introduce" sm={4}>
@@ -1755,9 +1758,9 @@ export default class AuthorAdd extends PureComponent {
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            </Row>
+                            </Row> */}
 
-                            <Row>
+                            {/* <Row>
                               <Col sm={12}>
                                 <FormGroup >
                                   <Label for="education_career" sm={4}>
@@ -1825,8 +1828,9 @@ export default class AuthorAdd extends PureComponent {
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            </Row>
-                            <Row>
+                            </Row> */}
+
+                            {/* <Row>
                               <Col sm={12}>
                                 <FormGroup >
                                   <Label for="author_quote" sm={4}>
@@ -1837,7 +1841,7 @@ export default class AuthorAdd extends PureComponent {
                                   <Col sm={12} xs={12}>
                                     <Field
                                       name="author_quote"
-                                      render={({ field /* _form */ }) => (
+                                      render={({ field  }) => (
                                         <Input
                                           {...field}
                                           onBlur={null}
@@ -1852,13 +1856,13 @@ export default class AuthorAdd extends PureComponent {
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            </Row>
-                            <Row>
+                            </Row> */}
+
+                            {/* <Row>
                               <Col xs={12}>
                                 <FormGroup row>
                                   <Label sm={2}></Label>
                                   <Col sm={4}>
-                                    {/* <Label for="is_review_news" sm={4}></Label> */}
                                     <Col sm={12} className="px-0">
                                       <Field
                                         name="is_review_news"
@@ -1887,7 +1891,6 @@ export default class AuthorAdd extends PureComponent {
                                     </Col>
                                   </Col>
                                   <Col sm={4}>
-                                    {/* <Label for="is_active" sm={4}></Label> */}
                                     <Col sm={12} className="px-0">
                                       <Field
                                         name="is_active"
@@ -1917,7 +1920,8 @@ export default class AuthorAdd extends PureComponent {
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            </Row>
+                            </Row> */}
+                            
                             <Row>
                               <Col sm={12} className="text-right">
                                 {noEdit ? (
@@ -1937,25 +1941,25 @@ export default class AuthorAdd extends PureComponent {
                                   </CheckAccess>
                                 ) : (
                                   [
-                                    authorEnt && authorEnt.author_id && (
-                                      <CheckAccess
-                                        key="buttonAuthorPassword"
-                                        permission="CRM_AUTHOR_PASSWORD"
-                                      >
-                                        <Button
-                                          color="warning text-white"
-                                          className="mr-2 btn-block-sm"
-                                          onClick={() =>
-                                            window._$g.rdr(
-                                              `/author/change-password/${authorEnt.author_id}`
-                                            )
-                                          }
-                                        >
-                                          <i className="fa fa-lock mr-1"></i>
-                                          Thay đổi mật khẩu
-                                        </Button>
-                                      </CheckAccess>
-                                    ),
+                                    // authorEnt && authorEnt.author_id && (
+                                    //   <CheckAccess
+                                    //     key="buttonAuthorPassword"
+                                    //     permission="CRM_AUTHOR_PASSWORD"
+                                    //   >
+                                    //     <Button
+                                    //       color="warning text-white"
+                                    //       className="mr-2 btn-block-sm"
+                                    //       onClick={() =>
+                                    //         window._$g.rdr(
+                                    //           `/author/change-password/${authorEnt.author_id}`
+                                    //         )
+                                    //       }
+                                    //     >
+                                    //       <i className="fa fa-lock mr-1"></i>
+                                    //       Thay đổi mật khẩu
+                                    //     </Button>
+                                    //   </CheckAccess>
+                                    // ),
                                     <Button
                                       key="buttonSave"
                                       type="submit"

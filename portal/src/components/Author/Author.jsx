@@ -381,7 +381,7 @@ class Author extends PureComponent {
                     <i className="fa fa-edit" />
                   </Button>
                 </CheckAccess>
-                <CheckAccess permission="CRM_AUTHOR_PASSWORD">
+                {/* <CheckAccess permission="CRM_AUTHOR_PASSWORD">
                   <Button
                     color="success"
                     title="Thay đổi mật khẩu"
@@ -396,7 +396,7 @@ class Author extends PureComponent {
                   >
                     <i className="fa fa-lock"></i>
                   </Button>
-                </CheckAccess>
+                </CheckAccess> */}
                 <CheckAccess permission="CRM_AUTHOR_DEL">
                   <Button
                     color="danger"
