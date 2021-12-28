@@ -10,6 +10,21 @@ import Loading from "../../Common/Loading";
 import ConfigModel from "../../../models/ConfigModel";
 import '../styles.scss';
 
+let initValue = {
+    SEARCH_RESULTS_CONTENT: {
+        value: "",
+        data_type: "string",
+    },
+    SEARCH_RESULTS_LINK: {
+        value: "",
+        data_type: "string",
+    },
+    SEARCH_RESULTS_LIMIT: {
+        value: 0,
+        data_type: "number",
+    },
+}
+
 const SearchResults = () => {
     const [_id, _setid] = useState(0);
     const [isSubmitting, setSubmitting] = useState(false)
@@ -17,22 +32,8 @@ const SearchResults = () => {
     const [configEnt, set_configEnt] = useState(null)
     const [ready, set_ready] = useState(false);
 
-    const [initialValues, set_initialValues] = useState(
-        Object.assign(
-            {},
-            {
-                SEARCH_RESULTS_CONTENT: {
-                    value: "",
-                    data_type: "string",
-                },
-                SEARCH_RESULTS_LINK: {
-                    value: "",
-                    data_type: "string",
-                },
-
-            }
-        )
-    )
+    const [initialValues, set_initialValues] = useState(initValue)
+    
 
     const validationSchema = yup.object().shape({
         SEARCH_RESULTS_CONTENT: yup.object().shape({
@@ -75,7 +76,11 @@ const SearchResults = () => {
             )
         );
         if (Object.keys(bundle).length > 0) {
-            set_initialValues(bundle);
+            let value = {
+                ...initValue,
+                ...bundle
+            }
+            set_initialValues(value);
         }
         set_ready(true);
     }
@@ -138,6 +143,14 @@ const SearchResults = () => {
                                                 {formik.errors.SEARCH_RESULTS_LINK.value}
                                             </div>
                                         ) : null}
+                                    </Col>
+                                </FormGroup>
+                                <FormGroup row>
+                                    <Label for="limit_result" sm={3} >Số lượt tra cứu miễn phí</Label>
+                                    <Col sm={9}>
+                                        <Input value={formik.values.SEARCH_RESULTS_LIMIT.value} onChange={formik.handleChange}
+                                            type="number" name="SEARCH_RESULTS_LIMIT.value" id="limit_result" placeholder="Số lượt tra cứu" 
+                                            min={0} max={999999}/>
                                     </Col>
                                 </FormGroup>
                             </Col>
