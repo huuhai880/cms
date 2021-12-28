@@ -33,7 +33,7 @@ import {
   readFileAsBase64,
   readImageAsBase64,
   mapDataOptions4Select,
-validateDimession,
+  validateDimession,
 } from "../../utils/html";
 import { isHaveChild } from "@utils/arrayHelper";
 // Model(s)
@@ -106,18 +106,18 @@ export default class AuthorAdd extends PureComponent {
     // Init validator
     this.formikValidationSchema = Yup.object().shape({
       author_name: Yup.string().trim().required("ID nhân viên là bắt buộc."),
-    //   password: authorEnt
-    //     ? undefined
-    //     : Yup.string()
-    //         .trim()
-    //         .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
-    //         .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!")
-    //         .required("Mật khẩu là bắt buộc."),
+      //   password: authorEnt
+      //     ? undefined
+      //     : Yup.string()
+      //         .trim()
+      //         .min(8, "Mật khẩu quá ngắn, ít nhất 8 ký tự!")
+      //         .max(25, "Mật khẩu quá dài, tối đa 25 ký tự!")
+      //         .required("Mật khẩu là bắt buộc."),
       gender: Yup.string().required("Giới tính là bắt buộc."),
-    //   email: Yup.string()
-    //     .trim()
-    //     .email("Email không hợp lệ")
-    //     .required("Email là bắt buộc."),
+      //   email: Yup.string()
+      //     .trim()
+      //     .email("Email không hợp lệ")
+      //     .required("Email là bắt buộc."),
       // birthday: Yup.date()
       //   .typeError("Ngày sinh không hợp lệ.")
       //   .required("Ngày sinh là bắt buộc."),
@@ -145,22 +145,22 @@ export default class AuthorAdd extends PureComponent {
       //     /^[a-zA-Z0-9\s\/ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]+$/,
       //     "Địa chỉ cụ thể không chứa kí tự đặc biệt."
       //   ),
-    //   phone_number: Yup.string()
-    //     .trim()
-    //     .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ")
-    //     .required("Điện thoại là bắt buộc."),
-    //   banner_image: Yup.string().required("Hình ảnh banner là bắt buộc."),
-    //   introduce: Yup.string().required("Giới thiệu bản thân là bắt buộc."),
-    //   education_career: Yup.string().required(
-    //     "Học vấn và sự nghiệp là bắt buộc."
-    //   ),
+      //   phone_number: Yup.string()
+      //     .trim()
+      //     .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ")
+      //     .required("Điện thoại là bắt buộc."),
+      //   banner_image: Yup.string().required("Hình ảnh banner là bắt buộc."),
+      //   introduce: Yup.string().required("Giới thiệu bản thân là bắt buộc."),
+      //   education_career: Yup.string().required(
+      //     "Học vấn và sự nghiệp là bắt buộc."
+      //   ),
       // news_category: Yup.string().required("Danh mục bài viết là bắt buộc."),
-    //   order_index: Yup.number()
-    //     .typeError("Thứ tự hiển thị phải là số.")
-    //     .positive("Thứ tự hiển thị phải lớn hơn 0.")
-    //     .required("Thứ tự hiển thị là bắt buộc."),
-    //   nickname: Yup.string().required("Biệt danh là bắt buộc."),
-    //   identity_number: Yup.string().matches(/^[0-9\b]+$/, "Số CMND/ Thẻ căn cước bắt buộc nhập là số."),
+      //   order_index: Yup.number()
+      //     .typeError("Thứ tự hiển thị phải là số.")
+      //     .positive("Thứ tự hiển thị phải lớn hơn 0.")
+      //     .required("Thứ tự hiển thị là bắt buộc."),
+      //   nickname: Yup.string().required("Biệt danh là bắt buộc."),
+      //   identity_number: Yup.string().matches(/^[0-9\b]+$/, "Số CMND/ Thẻ căn cước bắt buộc nhập là số."),
     });
   }
 
@@ -1085,7 +1085,37 @@ export default class AuthorAdd extends PureComponent {
                                 </Col>
                               </Row>
                             ) : null}
-                            
+
+                            <Row className="my-3 mb15">
+                              <Col sm={2}></Col>
+                              <Col sm={10} xs={12}>
+                                <Field
+                                  name="is_active"
+                                  render={({ field }) => (
+                                    <CustomInput
+                                      {...field}
+                                      className="pull-left"
+                                      onBlur={null}
+                                      checked={values.is_active}
+                                      type="checkbox"
+                                      id="is_active"
+                                      label="Kích hoạt"
+                                      onChange={(event) => {
+                                        const { target } = event;
+                                        field.onChange({
+                                          target: {
+                                            name: field.name,
+                                            value: target.checked,
+                                          },
+                                        });
+                                      }}
+                                      disabled={noEdit}
+                                    />
+                                  )}
+                                />
+                              </Col>
+                            </Row>
+
                             {/* <Row className="mb15">
                               <Col xs={12}>
                                 <b className="underline">
@@ -1093,7 +1123,7 @@ export default class AuthorAdd extends PureComponent {
                                 </b>
                               </Col>
                             </Row> */}
-                            
+
                             {/* <Row>
                               <Col xs={12} sm={6}>
                                 <FormGroup row>
@@ -1191,7 +1221,6 @@ export default class AuthorAdd extends PureComponent {
                                 </FormGroup>
                               </Col>
                             </Row> */}
-
 
                             {/* <Row>
                               <Col xs={12} sm={2}>
@@ -1571,14 +1600,11 @@ export default class AuthorAdd extends PureComponent {
                               </Col>
                             </Row> */}
 
-                            <Row>
+                            {/* <Row>
                               <Col sm={12} xs={12}>
                                 <FormGroup row>
                                   <Label for="banner_image" sm={2}>
                                     <b className="underline">Banner</b>
-                                    {/* <span className="font-weight-bold red-text">
-                                      *
-                                    </span> */}
                                   </Label>
                                   <Col sm={5} xs={12}>
                                     <label className="text-center mb-0 mt-3 w-100">
@@ -1602,9 +1628,6 @@ export default class AuthorAdd extends PureComponent {
                                               accept="image/*"
                                               disabled={noEdit}
                                               label="Upload (Ưu tiên ảnh có chiều ngang 1600px)"
-                                              // beforeUpload={
-                                              //   this.beforeUploadBannerImage
-                                              // }
                                             />
                                           </div>
                                         );
@@ -1647,9 +1670,6 @@ export default class AuthorAdd extends PureComponent {
                                                 accept="image/*"
                                                 disabled={noEdit}
                                                 label="Upload (Ưu tiên ảnh có kích thước 450px * 965px)"
-                                                // beforeUpload={
-                                                //   this.beforeUploadBannerImage
-                                                // }
                                               />
                                             </div>
                                           );
@@ -1670,7 +1690,7 @@ export default class AuthorAdd extends PureComponent {
                                   </Col>
                                 </FormGroup>
                               </Col>
-                            </Row>
+                            </Row> */}
                             {/* <Row>
                               <FormSelectGroup
                                 isRequired
@@ -1921,7 +1941,7 @@ export default class AuthorAdd extends PureComponent {
                                 </FormGroup>
                               </Col>
                             </Row> */}
-                            
+
                             <Row>
                               <Col sm={12} className="text-right">
                                 {noEdit ? (

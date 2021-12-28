@@ -304,24 +304,24 @@ class Author extends PureComponent {
           },
         },
       },
-      {
-        name: "address_full",
-        label: "Địa chỉ",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-        },
-      },
+    //   {
+    //     name: "address_full",
+    //     label: "Địa chỉ",
+    //     options: {
+    //       filter: false,
+    //       sort: false,
+    //       customHeadRender: (columnMeta, handleToggleColumn) => {
+    //         return (
+    //           <th
+    //             key={`head-th-${columnMeta.label}`}
+    //             className="MuiTableCell-root MuiTableCell-head"
+    //           >
+    //             <div className="text-center">{columnMeta.label}</div>
+    //           </th>
+    //         );
+    //       },
+    //     },
+    //   },
       {
         name: "is_active",
         label: "Kích hoạt",
