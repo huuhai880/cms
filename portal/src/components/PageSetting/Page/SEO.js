@@ -65,22 +65,27 @@ export default class SEO extends PureComponent {
             //Dang ky
             seoPageRegisterImage: "",
             clearSeoPageRegisterImage: false,
+            //Ket qua tra cuu
+            seoPageResultSearchImage: "",
+            clearSeoPageResultSearchImage: false,
         };
     }
 
     componentDidMount() {
         (async () => {
-            let { 
-                    seoDefaultImage = "", 
-                    configEnt,
-                    seoPageHomeImage,
-                    seoPageSearchImage,
-                    seoPageNewsImage,
-                    seoPageAboutImage,
-                    seoPageProductImage,
-                    seoPageLoginImage,
-                    seoPageRegisterImage
-                } = this.state;
+            let {
+                seoDefaultImage = "",
+                configEnt,
+                seoPageHomeImage,
+                seoPageSearchImage,
+                seoPageNewsImage,
+                seoPageAboutImage,
+                seoPageProductImage,
+                seoPageLoginImage,
+                seoPageRegisterImage,
+                seoPageResultSearchImage
+            } = this.state;
+
             let bundle = await this._getBundleData();
             if (bundle['SEO_DEFAULT_IMAGE']) seoDefaultImage = bundle["SEO_DEFAULT_IMAGE"] ? bundle["SEO_DEFAULT_IMAGE"].value : null;
             if (bundle['SEO_HOME_IMAGE']) seoPageHomeImage = bundle["SEO_HOME_IMAGE"] ? bundle["SEO_HOME_IMAGE"].value : null;
@@ -90,10 +95,23 @@ export default class SEO extends PureComponent {
             if (bundle['SEO_PRODUCT_IMAGE']) seoPageProductImage = bundle["SEO_PRODUCT_IMAGE"] ? bundle["SEO_PRODUCT_IMAGE"].value : null;
             if (bundle['SEO_LOGIN_IMAGE']) seoPageLoginImage = bundle["SEO_LOGIN_IMAGE"] ? bundle["SEO_LOGIN_IMAGE"].value : null;
             if (bundle['SEO_REGISTER_IMAGE']) seoPageRegisterImage = bundle["SEO_REGISTER_IMAGE"] ? bundle["SEO_REGISTER_IMAGE"].value : null;
+            if (bundle['SEO_RESULTSEARCH_IMAGE']) seoPageResultSearchImage = bundle["SEO_RESULTSEARCH_IMAGE"] ? bundle["SEO_RESULTSEARCH_IMAGE"].value : null;
 
-            
             if (bundle) configEnt = bundle;
-            this.setState({ ...bundle, configEnt, ready: true, seoDefaultImage });
+            this.setState({
+                ...bundle,
+                configEnt,
+                ready: true,
+                seoDefaultImage,
+                seoPageHomeImage,
+                seoPageSearchImage,
+                seoPageNewsImage,
+                seoPageAboutImage,
+                seoPageProductImage,
+                seoPageLoginImage,
+                seoPageRegisterImage,
+                seoPageResultSearchImage
+            });
         })();
     }
 
@@ -277,7 +295,7 @@ export default class SEO extends PureComponent {
                     value: "",
                     data_type: 'image'
                 },
-    
+
                 //SEO DANG KY
                 SEO_REGISTER_TITLE: {
                     value: "",
@@ -296,6 +314,28 @@ export default class SEO extends PureComponent {
                     data_type: 'string'
                 },
                 SEO_REGISTER_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
+                //SEO KET QUA TRA CUU
+                SEO_RESULTSEARCH_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCH_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCH_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCH_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCH_IMAGE: {
                     value: "",
                     data_type: 'image'
                 },
@@ -388,7 +428,9 @@ export default class SEO extends PureComponent {
             seoPageLoginImage,
             clearSeoPageLoginImage,
             seoPageRegisterImage,
-            clearSeoPageRegisterImage
+            clearSeoPageRegisterImage,
+            seoPageResultSearchImage,
+            clearSeoPageResultSearchImage
         } = this.state;
         let { noEdit } = this.props;
         let initialValues = this.getInitialValues();
@@ -924,6 +966,68 @@ export default class SEO extends PureComponent {
                                                                 clearImage={clearSeoPageRegisterImage}
                                                                 isEdit={!noEdit}
                                                                 name="SEO_REGISTER_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+                                            <Col xs={12}>
+                                                <Row className="mb-4">
+                                                    <Col xs={8} className="mx-auto">
+                                                        <b className="title_page_h1 text-primary underline">SEO Kết quả tra cứu</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={8} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_RESULTSEARCH_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_RESULTSEARCH_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_RESULTSEARCH_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_RESULTSEARCH_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageResultSearchImage}
+                                                                clearImage={clearSeoPageResultSearchImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_RESULTSEARCH_IMAGE.value"
                                                                 title="Ảnh SEO"
                                                                 isHorizontal={true}
                                                                 textColor=""
