@@ -19,7 +19,11 @@ let initValue = {
         value: "",
         data_type: "string",
     },
-    SEARCH_RESULTS_LIMIT: {
+    SEARCH_RESULTS_LIMIT_NOT_LOGIN: {
+        value: 0,
+        data_type: "number",
+    },
+    SEARCH_RESULTS_LIMIT_LOGIN: {
         value: 0,
         data_type: "number",
     },
@@ -115,8 +119,8 @@ const SearchResults = () => {
 
                             <Col xs={12}>
                                 <FormGroup row>
-                                    <Label for="content_result" sm={3} >Nội dung <span className="font-weight-bold red-text">*</span></Label>
-                                    <Col sm={9}>
+                                    <Label for="content_result" sm={4} >Nội dung <span className="font-weight-bold red-text">*</span></Label>
+                                    <Col sm={8}>
                                         <Input value={formik.values.SEARCH_RESULTS_CONTENT.value} onChange={formik.handleChange}
                                             type="text" name="SEARCH_RESULTS_CONTENT.value" id="content_result" placeholder="Nội dung" />
 
@@ -131,8 +135,8 @@ const SearchResults = () => {
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
-                                    <Label for="link_result" sm={3} >Link <span className="font-weight-bold red-text">*</span></Label>
-                                    <Col sm={9}>
+                                    <Label for="link_result" sm={4} >Link <span className="font-weight-bold red-text">*</span></Label>
+                                    <Col sm={8}>
                                         <Input value={formik.values.SEARCH_RESULTS_LINK.value} onChange={formik.handleChange}
                                             type="text" name="SEARCH_RESULTS_LINK.value" id="link_result" placeholder="Link" />
                                         {formik.errors.SEARCH_RESULTS_LINK && formik.touched.SEARCH_RESULTS_LINK ? (
@@ -146,10 +150,18 @@ const SearchResults = () => {
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
-                                    <Label for="limit_result" sm={3} >Số lượt tra cứu miễn phí</Label>
-                                    <Col sm={9}>
-                                        <Input value={formik.values.SEARCH_RESULTS_LIMIT.value} onChange={formik.handleChange}
-                                            type="number" name="SEARCH_RESULTS_LIMIT.value" id="limit_result" placeholder="Số lượt tra cứu" 
+                                    <Label for="limit_result" sm={4}>Số lần tra cứu free chưa đăng nhập</Label>
+                                    <Col sm={8}>
+                                        <Input value={formik.values.SEARCH_RESULTS_LIMIT_NOT_LOGIN.value} onChange={formik.handleChange}
+                                            type="number" name="SEARCH_RESULTS_LIMIT_NOT_LOGIN.value" id="limit_result" placeholder="Số lượt tra cứu" 
+                                            min={0} max={999999}/>
+                                    </Col>
+                                </FormGroup>
+                                <FormGroup row>
+                                    <Label for="limit_result" sm={4}>Số lần tra cứu free đã đăng nhập</Label>
+                                    <Col sm={8}>
+                                        <Input value={formik.values.SEARCH_RESULTS_LIMIT_LOGIN.value} onChange={formik.handleChange}
+                                            type="number" name="SEARCH_RESULTS_LIMIT_LOGIN.value" id="limit_result" placeholder="Số lượt tra cứu" 
                                             min={0} max={999999}/>
                                     </Col>
                                 </FormGroup>
