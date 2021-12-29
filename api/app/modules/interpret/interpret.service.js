@@ -335,6 +335,10 @@ const addIntergret = async (body = {}) => {
           'ISINTERPRETSPECIAL',
           apiHelper.getValueFromObject(body, 'is_interpretspectial', null)
         )
+        .input(
+            'ISCONDITIONOR',
+            apiHelper.getValueFromObject(body, 'is_condition_or', false)
+          )
 
         .execute('FOR_INTERPRET_CreateOrUpdate_AdminWeb');
 

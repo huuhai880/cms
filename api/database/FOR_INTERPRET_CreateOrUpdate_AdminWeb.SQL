@@ -1,0 +1,100 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<locnd>
+-- Create date: <09/09/2021>
+-- Description:	<Thêm hoặc thay đổi luận giải>
+-- =============================================
+ALTER PROCEDURE [dbo].[FOR_INTERPRET_CreateOrUpdate_AdminWeb]
+    @INTERPRETID AS BIGINT  = NULL,
+    @ATTRIBUTEID AS BIGINT  = NULL,
+    @MAINNUMBERID AS BIGINT  = NULL,
+    @FORMULAID AS BIGINT  = NULL,
+    @RELATIONSHIPID AS BIGINT  = NULL,
+    @COMPARENUM AS BIGINT  = NULL,
+    @DESCRIPTION AS nvarchar(MAX) = NULL,
+    @ORDERINDEX as int =null,
+    @BRIEFDESCRIPTION AS nvarchar(MAX) = NULL,
+    @NOTE AS nvarchar(2000) = NULL,
+    @ISACTIVE AS bit = NULL,
+    @ISMASTER AS bit = NULL,
+    @CREATEDUSER AS nvarchar(100) = NULL,
+    @ISFORPOWERDIAGRAM AS BIT = 0,
+	@ISINTERPRETSPECIAL AS BIT = 0,
+    @COMPAREATTRIBUTEID BIGINT = 0,
+    @ISCONDITIONOR BIT = 0
+AS
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM dbo.FOR_INTERPRET  WHERE INTERPRETID = @INTERPRETID)
+	BEGIN
+        INSERT INTO [dbo].[FOR_INTERPRET]
+        (
+            ATTRIBUTEID,
+            MAINNUMBERID,
+            RELATIONSHIPID,
+            COMPARENUM,
+            FORMULAID,
+            ISMASTER,
+            ISACTIVE,
+            ORDERINDEX,
+            DESCRIPTION,
+            BRIEFDESCRIPTION,
+            NOTICE,
+            CREATEDUSER,
+            CREATEDDATE,
+            ISDELETED,
+            ISFORPOWERDIAGRAM,
+            COMPAREATTRIBUTEID,
+			ISINTERPRETSPECIAL,
+            ISCONDITIONOR
+        )
+        VALUES
+        (
+            @ATTRIBUTEID,
+            @MAINNUMBERID,
+            @RELATIONSHIPID,
+            @COMPARENUM,
+            1,
+            @ISMASTER,
+            @ISACTIVE,
+            @ORDERINDEX,
+            @DESCRIPTION,
+            @BRIEFDESCRIPTION,
+			@NOTE,
+            @CREATEDUSER,
+            GETDATE(),
+            0,
+            @ISFORPOWERDIAGRAM,
+            @COMPAREATTRIBUTEID,
+			@ISINTERPRETSPECIAL,
+            @ISCONDITIONOR
+        )
+        SELECT SCOPE_IDENTITY() AS RESULT
+    END
+	ELSE
+	BEGIN
+        UPDATE  FOR_INTERPRET
+		SET     ATTRIBUTEID = @ATTRIBUTEID,
+				MAINNUMBERID = @MAINNUMBERID,
+				RELATIONSHIPID = @RELATIONSHIPID,
+				COMPARENUM = @COMPARENUM,
+				ISMASTER = @ISMASTER,
+				ISACTIVE = @ISACTIVE,
+				ORDERINDEX = @ORDERINDEX,
+				DESCRIPTION = @DESCRIPTION,
+			    BRIEFDESCRIPTION = @BRIEFDESCRIPTION,
+				NOTICE = @NOTE,
+			    UPDATEDUSER = @CREATEDUSER,
+			    UPDATEDDATE = GETDATE(),
+                ISFORPOWERDIAGRAM = @ISFORPOWERDIAGRAM,
+                COMPAREATTRIBUTEID = @COMPAREATTRIBUTEID,
+				ISINTERPRETSPECIAL = @ISINTERPRETSPECIAL,
+                ISCONDITIONOR = @ISCONDITIONOR
+		WHERE   INTERPRETID = @INTERPRETID
+
+        SELECT @INTERPRETID AS RESULT
+    END
+END
+GO

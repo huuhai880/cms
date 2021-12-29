@@ -42,6 +42,7 @@ const template = {
   attributes_name: '{{#? ATTRIBUTESNAME}}',
   desc_attributes_gruop: '{{#? DESCRIPTIONATTRIBUTESGRUOP}}',
   introduction: '{{#? INTRODUCTION}}',
+  is_condition_or: '{{ISCONDITIONOR ? 1: 0}}'
 };
 
 let transform = new Transform(template);
@@ -84,6 +85,7 @@ const listInterpret = (users = []) => {
     'order_index',
     'attributes_name',
     'is_interpretspectial',
+    'is_condition_or'
   ]);
 };
 
@@ -129,6 +131,7 @@ const detailInterpret = (users = []) => {
     'group_name',
     'compare_attribute_id',
     'is_interpretspectial',
+    'is_condition_or'
   ]);
 };
 const detailInterpretWeb = (users = []) => {
