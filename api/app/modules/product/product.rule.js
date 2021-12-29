@@ -20,7 +20,7 @@ const ruleCreateOrUpdate = Joi.object().keys({
   product_attributes: Joi.array().items(
     Joi.object({
       attributes_group_id: Joi.number().required(),
-      interprets: Joi.array().required()
+    //   interprets: Joi.array().required()
     })
   ).required(),
 });
