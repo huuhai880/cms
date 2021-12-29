@@ -59,7 +59,7 @@ function ProductCommentFilter({ handleSubmitFilter }) {
 
         handleSubmitFilter({
             keyword: keyword ? keyword.trim() : null,
-            is_review: isReviewSelected ? isReviewSelected.value : 1,
+            is_review: isReviewSelected ? isReviewSelected.value : 3,
             start_date: startDate ? startDate.format("DD/MM/YYYY") : null,
             end_date: endDate ? endDate.format("DD/MM/YYYY") : null
         });
@@ -68,7 +68,7 @@ function ProductCommentFilter({ handleSubmitFilter }) {
     const handleClear = () => {
         setFilter({
             keyword: "",
-            isReviewSelected: { label: "Tất cả", value: 2 },
+            isReviewSelected: { label: "Chưa duyệt", value: "3" },
             startDate: null,
             endDate: null,
         });
