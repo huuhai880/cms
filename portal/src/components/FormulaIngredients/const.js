@@ -118,6 +118,28 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
       },
     },
     {
+        name: "is_apply_other",
+        label: "Áp dụng biến số khác",
+        options: {
+          filter: false,
+          sort: true,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return (
+              <div className="text-center">
+                <Checkbox checked={value == 1}></Checkbox>
+              </div>
+            );
+          },
+        },
+      },
+    {
       name: "is_active",
       label: "Kích hoạt",
       options: {
