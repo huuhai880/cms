@@ -203,7 +203,7 @@ function ProductComment({ product_id = 0, is_combo = false }) {
             <Card className="animated fadeIn">
                 <CardBody className={`py-0 px-0`}>
                     <div className="MuiPaper-root__custom MuiPaper-user">
-                        {1 == 0 ? (
+                        {isLoading? (
                             <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
                                 <CircularProgress />
                             </div>

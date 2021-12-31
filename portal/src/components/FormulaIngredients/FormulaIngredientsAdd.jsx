@@ -21,8 +21,11 @@ import { CheckAccess } from "../../navigation/VerifyAccess";
 import { Checkbox } from "antd";
 import Select from "react-select";
 import * as yup from "yup";
+import ParamOtherModel from "models/ParamOtherModel/index";
 
 layoutFullWidthHeight();
+
+const _paramOtherModel = new ParamOtherModel();
 function FormulaIngredientsAdd({ noEdit }) {
   const _ingredientModel = new IngredientModel();
   const [dataIngredient, setDataIngredient] = useState(initialValues);
@@ -33,10 +36,15 @@ function FormulaIngredientsAdd({ noEdit }) {
   const [dataParamName, setDataParamName] = useState([]);
   const [dataCalculation, setDataCalculation] = useState([]);
   const [dataIngredientChild, setDataIngredientChild] = useState([]);
+  const [dataParamOther, setDataParamOther] = useState([]);
 
   const validationSchema = yup.object().shape({
-    ingredient_name: yup.string().required("Tên thành phần không được để trống .").nullable(),
+    ingredient_name: yup
+      .string()
+      .required("Tên thành phần không được để trống .")
+      .nullable(),
   });
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: dataIngredient,
@@ -48,46 +56,50 @@ function FormulaIngredientsAdd({ noEdit }) {
     },
   });
 
-  //// create letter
   const handleCreateOrUpdate = (values) => {
     try {
-      _ingredientModel.checkIngredient({ ingredient_name: values.ingredient_name }).then((data) => {
-        if (data.INGREDIENTID && formik.values.ingredient_name != dataIngredient.ingredient_name) {
-          // setalert("Email đã tồn tại!");
-          formik.setFieldError("ingredient_name", "Tên thành phần đã tồn tại!");
-          // window.scrollTo(0, 0);
-        } else {
-          _ingredientModel.create(values).then((data) => {
-            if (btnType == "save") {
-              if (id) {
-                _initDataDetail();
-              } else {
-                formik.resetForm();
-                _callAPI()
+      _ingredientModel
+        .checkIngredient({ ingredient_name: values.ingredient_name })
+        .then((data) => {
+          if (
+            data.INGREDIENTID &&
+            formik.values.ingredient_name != dataIngredient.ingredient_name
+          ) {
+            formik.setFieldError(
+              "ingredient_name",
+              "Tên thành phần đã tồn tại!"
+            );
+          } else {
+            _ingredientModel.create(values).then((data) => {
+              if (btnType == "save") {
+                if (id) {
+                  _initDataDetail();
+                } else {
+                  formik.resetForm();
+                  _callAPI();
+                }
+                window._$g.toastr.show("Lưu thành công!", "success");
+              } else if (btnType == "save&quit") {
+                window._$g.toastr.show("Lưu thành công!", "success");
+                // setDataInterpret(initialValues);
+                return window._$g.rdr("/formula-ingredients");
               }
-              window._$g.toastr.show("Lưu thành công!", "success");
-            } else if (btnType == "save&quit") {
-              window._$g.toastr.show("Lưu thành công!", "success");
-              // setDataInterpret(initialValues);
-              return window._$g.rdr("/formula-ingredients");
-            }
-          });
-        }
-      });
+            });
+          }
+        });
     } catch (error) {
     } finally {
       formik.setSubmitting(false);
       window.scrollTo(0, 0);
     }
   };
-  //////get data detail
+
   useEffect(() => {
     if (id) {
       _initDataDetail();
     }
   }, [id]);
 
-  //// data detail
   const _initDataDetail = async () => {
     try {
       _ingredientModel.detail(id).then((data) => {
@@ -108,15 +120,14 @@ function FormulaIngredientsAdd({ noEdit }) {
           data.is_total_letter_digit = data.is_total_letter_noshort;
         }
         setDataIngredient(data);
-        // formik.setFieldValue(`type`, true);
-        // formik.setFieldValue(`is_total`, true);
       });
     } catch (error) {
-      // console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
+      window._$g.dialogs.alert(
+        window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
+      );
     }
   };
-  // call api option
+
   const _callAPI = () => {
     try {
       _ingredientModel.getListCalculation().then((data) => {
@@ -131,17 +142,21 @@ function FormulaIngredientsAdd({ noEdit }) {
       _ingredientModel.getListIngredientChild().then((data) => {
         setDataIngredientChild(data.items);
       });
+      _paramOtherModel.option().then((data) => {
+        setDataParamOther(data);
+      });
     } catch (error) {
-      // console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+      window._$g.dialogs.alert(
+        window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+      );
     }
   };
+
   useEffect(() => {
     _callAPI();
   }, []);
-  ////config select
+
   const convertValue = (value, options) => {
-    // console.log(value)
     if (!(typeof value === "object") && options && options.length) {
       value = ((_val) => {
         return options.find((item) => "" + item.value === "" + _val);
@@ -151,10 +166,9 @@ function FormulaIngredientsAdd({ noEdit }) {
         return value.find((e) => e == item.value);
       });
     }
-    // console.log(value)
     return value;
   };
-  ///////// option Relationship
+
   const getOptionCalculation = () => {
     if (dataCalculation && dataCalculation.length) {
       return dataCalculation.map((item) => {
@@ -172,7 +186,7 @@ function FormulaIngredientsAdd({ noEdit }) {
     }
     return [];
   };
-  ///////// option Relationship
+
   const getOptionName = () => {
     if (dataParamName && dataParamName.length) {
       return dataParamName.map((item) => {
@@ -189,7 +203,7 @@ function FormulaIngredientsAdd({ noEdit }) {
     }
     return [];
   };
-  ///////// option Relationship
+
   const getOptionIngredientChild2 = () => {
     if (dataIngredientChild && dataIngredientChild.length) {
       return dataIngredientChild.map((item) => {
@@ -208,11 +222,10 @@ function FormulaIngredientsAdd({ noEdit }) {
     }
     return [];
   };
-  ///////// option Relationship
+
   const getOptionIngredientChild1 = () => {
     if (dataIngredientChild && dataIngredientChild.length) {
       return dataIngredientChild.map((item) => {
-        // console.log(dataPartner);
         return formik.values.ingredient__child_1_id == item.ingredient_id ||
           formik.values.ingredient__child_2_id == item.ingredient_id
           ? {
@@ -228,11 +241,10 @@ function FormulaIngredientsAdd({ noEdit }) {
     }
     return [];
   };
-  ///////// option Mainnumber
+
   const getOptionDob = () => {
     if (dataParamDob && dataParamDob.length) {
       return dataParamDob.map((item) => {
-        // console.log(dataPartner);
         return formik.values.param_dob_id == item.param_dob_id
           ? {
               value: item.param_dob_id,
@@ -247,14 +259,17 @@ function FormulaIngredientsAdd({ noEdit }) {
     }
     return [];
   };
-  // console.log(formik.values)
+
   return (
     <div key={`view`} className="animated fadeIn news">
       <Row className="d-flex justify-content-center">
         <Col xs={12}>
           <Card>
             <CardHeader>
-              <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} thành phần </b>
+              <b>
+                {id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} thành
+                phần{" "}
+              </b>
             </CardHeader>
             <CardBody>
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
@@ -268,7 +283,8 @@ function FormulaIngredientsAdd({ noEdit }) {
                     <Col xs={12}>
                       <FormGroup row>
                         <Label for="ingredient_name" sm={2}>
-                          Tên thành phần <span className="font-weight-bold red-text">*</span>
+                          Tên thành phần{" "}
+                          <span className="font-weight-bold red-text">*</span>
                         </Label>
                         <Col sm={10}>
                           <Input
@@ -280,7 +296,8 @@ function FormulaIngredientsAdd({ noEdit }) {
                             value={formik.values.ingredient_name}
                             onChange={formik.handleChange}
                           />
-                          {formik.errors.ingredient_name && formik.touched.ingredient_name ? (
+                          {formik.errors.ingredient_name &&
+                          formik.touched.ingredient_name ? (
                             <div
                               className="field-validation-error alert alert-danger fade show"
                               role="alert"
@@ -320,7 +337,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_active`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_active`,
+                                e.target.checked ? 1 : 0
+                              );
                             }}
                             checked={formik.values.is_active}
                           >
@@ -332,7 +352,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                   </Row>
                   <Row>
                     <Col xs={12}>
-                      <FormGroup row style={{alignItems:'center'}}>
+                      <FormGroup row style={{ alignItems: "center" }}>
                         <Label for="ingredient_name" sm={2}>
                           Hình thức
                         </Label>
@@ -359,9 +379,15 @@ function FormulaIngredientsAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_total_shortened`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_total_shortened`,
+                                e.target.checked ? 1 : 0
+                              );
                               if (e.target.checked == 1) {
-                                formik.setFieldValue(`is_no_total_shortened`, 0);
+                                formik.setFieldValue(
+                                  `is_no_total_shortened`,
+                                  0
+                                );
                                 formik.setFieldValue(`is_total_2_digit`, 0);
                                 // formik.setFieldValue(`is_total`, true);
                               }
@@ -375,9 +401,15 @@ function FormulaIngredientsAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_total_2_digit`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_total_2_digit`,
+                                e.target.checked ? 1 : 0
+                              );
                               if (e.target.checked == 1) {
-                                formik.setFieldValue(`is_no_total_shortened`, 0);
+                                formik.setFieldValue(
+                                  `is_no_total_shortened`,
+                                  0
+                                );
                                 formik.setFieldValue(`is_total_shortened`, 0);
                                 // formik.setFieldValue(`is_total`, true);
                               }
@@ -399,7 +431,9 @@ function FormulaIngredientsAdd({ noEdit }) {
                         </Label>
                         <Col sm={3}>
                           <Select
-                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
                             menuPortalTarget={document.querySelector("body")}
                             isDisabled={noEdit}
                             isClearable={true}
@@ -415,16 +449,24 @@ function FormulaIngredientsAdd({ noEdit }) {
                             onChange={(value) => {
                               // formik.setFieldValue("ingredient__child_1_id", value.value);
                               if (!value) {
-                                formik.setFieldValue("ingredient__child_1_id", "");
+                                formik.setFieldValue(
+                                  "ingredient__child_1_id",
+                                  ""
+                                );
                               } else {
-                                formik.setFieldValue("ingredient__child_1_id", value.value);
+                                formik.setFieldValue(
+                                  "ingredient__child_1_id",
+                                  value.value
+                                );
                               }
                             }}
                           />
                         </Col>
                         <Col sm={2}>
                           <Select
-                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
                             menuPortalTarget={document.querySelector("body")}
                             isDisabled={noEdit}
                             isClearable={true}
@@ -433,13 +475,19 @@ function FormulaIngredientsAdd({ noEdit }) {
                               formik.values.calculation_id,
                               getOptionCalculation()
                             )}
-                            options={getOptionCalculation(formik.values.calculation_id, true)}
+                            options={getOptionCalculation(
+                              formik.values.calculation_id,
+                              true
+                            )}
                             onChange={(value) => {
                               // formik.setFieldValue("calculation_id", value.value);
                               if (!value) {
                                 formik.setFieldValue("calculation_id", "");
                               } else {
-                                formik.setFieldValue("calculation_id", value.value);
+                                formik.setFieldValue(
+                                  "calculation_id",
+                                  value.value
+                                );
                               }
                             }}
                           />
@@ -449,7 +497,9 @@ function FormulaIngredientsAdd({ noEdit }) {
                         </Label>
                         <Col sm={3}>
                           <Select
-                            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
                             menuPortalTarget={document.querySelector("body")}
                             isDisabled={noEdit}
                             isClearable={true}
@@ -465,9 +515,15 @@ function FormulaIngredientsAdd({ noEdit }) {
                             onChange={(value) => {
                               // formik.setFieldValue("ingredient__child_2_id", value.value);
                               if (!value) {
-                                formik.setFieldValue("ingredient__child_2_id", "");
+                                formik.setFieldValue(
+                                  "ingredient__child_2_id",
+                                  ""
+                                );
                               } else {
-                                formik.setFieldValue("ingredient__child_2_id", value.value);
+                                formik.setFieldValue(
+                                  "ingredient__child_2_id",
+                                  value.value
+                                );
                               }
                             }}
                           />
@@ -485,7 +541,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_gender`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_gender`,
+                                e.target.checked ? 1 : 0
+                              );
                             }}
                             checked={formik.values.is_gender}
                           >
@@ -496,7 +555,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_crrent_age`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_crrent_age`,
+                                e.target.checked ? 1 : 0
+                              );
                             }}
                             checked={formik.values.is_crrent_age}
                           >
@@ -507,7 +569,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_crrent_year`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_crrent_year`,
+                                e.target.checked ? 1 : 0
+                              );
                             }}
                             checked={formik.values.is_crrent_year}
                           >
@@ -518,7 +583,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_value`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_value`,
+                                e.target.checked ? 1 : 0
+                              );
                             }}
                             checked={formik.values.is_value}
                           >
@@ -557,17 +625,21 @@ function FormulaIngredientsAdd({ noEdit }) {
                     </Col>
                   </Row> */}
 
-                  <Row>
+                  <Row className="mb5">
                     <Col xs={12}>
                       <FormGroup row>
                         <Col sm={3} className="align-self-center">
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_apply_dob`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_apply_dob`,
+                                e.target.checked ? 1 : 0
+                              );
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_apply_name`, 0);
-                                // formik.setFieldValue(`type`, true);
+                                formik.setFieldValue(`is_apply_other`, 0);
+                                formik.setFieldValue(`param_other_id`, null);
                               }
                             }}
                             checked={formik.values.is_apply_dob}
@@ -584,30 +656,40 @@ function FormulaIngredientsAdd({ noEdit }) {
                                 </Label>
                                 <Col sm={8}>
                                   <Select
-                                    styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                                    menuPortalTarget={document.querySelector("body")}
+                                    styles={{
+                                      menuPortal: (base) => ({
+                                        ...base,
+                                        zIndex: 9999,
+                                      }),
+                                    }}
+                                    menuPortalTarget={document.querySelector(
+                                      "body"
+                                    )}
                                     isDisabled={noEdit}
                                     isClearable={true}
                                     placeholder={"--Chọn biến số--"}
-                                    value={convertValue(formik.values.param_dob_id, getOptionDob())}
-                                    options={getOptionDob(formik.values.param_dob_id, true)}
+                                    value={convertValue(
+                                      formik.values.param_dob_id,
+                                      getOptionDob()
+                                    )}
+                                    options={getOptionDob(
+                                      formik.values.param_dob_id,
+                                      true
+                                    )}
                                     onChange={(value) => {
-                                      // formik.setFieldValue("param_dob_id", value.value);
                                       if (!value) {
-                                        formik.setFieldValue("param_dob_id", "");
+                                        formik.setFieldValue(
+                                          "param_dob_id",
+                                          ""
+                                        );
                                       } else {
-                                        formik.setFieldValue("param_dob_id", value.value);
+                                        formik.setFieldValue(
+                                          "param_dob_id",
+                                          value.value
+                                        );
                                       }
                                     }}
                                   />
-                                  {formik.errors.param_dob_id && formik.touched.param_dob_id ? (
-                                    <div
-                                      className="field-validation-error alert alert-danger fade show"
-                                      role="alert"
-                                    >
-                                      {formik.errors.param_dob_id}
-                                    </div>
-                                  ) : null}
                                 </Col>
                               </Row>
                             </Col>
@@ -631,17 +713,21 @@ function FormulaIngredientsAdd({ noEdit }) {
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Row className="mb15">
+                  <Row className={formik.values.is_apply_name ? "mb15" : "mb5"}>
                     <Col xs={12}>
                       <FormGroup row>
                         <Col sm={3} className="align-self-center">
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
-                              formik.setFieldValue(`is_apply_name`, e.target.checked ? 1 : 0);
+                              formik.setFieldValue(
+                                `is_apply_name`,
+                                e.target.checked ? 1 : 0
+                              );
                               if (e.target.checked == 1) {
                                 formik.setFieldValue(`is_apply_dob`, 0);
-                                // formik.setFieldValue(`type`, true);
+                                formik.setFieldValue(`is_apply_other`, 0);
+                                formik.setFieldValue(`param_other_id`, null);
                               }
                             }}
                             checked={formik.values.is_apply_name}
@@ -655,49 +741,67 @@ function FormulaIngredientsAdd({ noEdit }) {
                       <>
                         <Col xs={12}>
                           <Row>
-                            <Label for="ingredient_name" sm={2} style={{ paddingLeft: "35px" }}>
+                            <Label
+                              for="ingredient_name"
+                              sm={2}
+                              style={{ paddingLeft: "35px" }}
+                            >
                               Biến số tên
                             </Label>
                             <Col sm={4}>
                               <Select
-                                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                                menuPortalTarget={document.querySelector("body")}
+                                styles={{
+                                  menuPortal: (base) => ({
+                                    ...base,
+                                    zIndex: 9999,
+                                  }),
+                                }}
+                                menuPortalTarget={document.querySelector(
+                                  "body"
+                                )}
                                 isClearable={true}
                                 isDisabled={noEdit}
                                 placeholder={"--Chọn biến số--"}
-                                value={convertValue(formik.values.param_name_id, getOptionName())}
-                                options={getOptionName(formik.values.param_name_id, true)}
+                                value={convertValue(
+                                  formik.values.param_name_id,
+                                  getOptionName()
+                                )}
+                                options={getOptionName(
+                                  formik.values.param_name_id,
+                                  true
+                                )}
                                 onChange={(value) => {
                                   if (!value) {
                                     formik.setFieldValue("param_name_id", "");
                                   } else {
-                                    formik.setFieldValue("param_name_id", value.value);
+                                    formik.setFieldValue(
+                                      "param_name_id",
+                                      value.value
+                                    );
                                   }
-                                  // formik.setFieldValue("param_name_id", value.value);
                                 }}
                               />
-                              {formik.errors.param_name_id && formik.touched.param_name_id ? (
-                                <div
-                                  className="field-validation-error alert alert-danger fade show"
-                                  role="alert"
-                                >
-                                  {formik.errors.param_name_id}
-                                </div>
-                              ) : null}
                             </Col>
                           </Row>
                         </Col>
 
                         <Col xs={12}>
                           <Row style={{ paddingTop: "15px" }}>
-                            <Label for="ingredient_name" sm={2} style={{ paddingLeft: "35px" }}>
+                            <Label
+                              for="ingredient_name"
+                              sm={2}
+                              style={{ paddingLeft: "35px" }}
+                            >
                               Hình thức
                             </Label>
                             <Col sm={2} className="align-self-center">
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_vowel`, e.target.checked ? 1 : 0);
+                                  formik.setFieldValue(
+                                    `is_vowel`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_vowel}
                               >
@@ -708,7 +812,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_consonant`, e.target.checked ? 1 : 0);
+                                  formik.setFieldValue(
+                                    `is_consonant`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_consonant}
                               >
@@ -719,7 +826,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_last_letter`, e.target.checked ? 1 : 0);
+                                  formik.setFieldValue(
+                                    `is_last_letter`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_last_letter}
                               >
@@ -754,7 +864,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_show_3_time`, e.target.checked ? 1 : 0);
+                                  formik.setFieldValue(
+                                    `is_show_3_time`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_show_3_time}
                               >
@@ -765,7 +878,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_show_0_time`, e.target.checked ? 1 : 0);
+                                  formik.setFieldValue(
+                                    `is_show_0_time`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_show_0_time}
                               >
@@ -776,7 +892,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_first_letter`, e.target.checked ? 1 : 0);
+                                  formik.setFieldValue(
+                                    `is_first_letter`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_first_letter}
                               >
@@ -829,7 +948,9 @@ function FormulaIngredientsAdd({ noEdit }) {
                                     e.target.checked ? 1 : 0
                                   );
                                 }}
-                                checked={formik.values.is_total_letter_first_digit}
+                                checked={
+                                  formik.values.is_total_letter_first_digit
+                                }
                               >
                                 Tổng chữ cái đầu tiên
                               </Checkbox>
@@ -852,7 +973,10 @@ function FormulaIngredientsAdd({ noEdit }) {
                               <Checkbox
                                 disabled={noEdit}
                                 onChange={(e) => {
-                                  formik.setFieldValue(`is_count_tofnum`, e.target.checked ? 1 : 0);
+                                  formik.setFieldValue(
+                                    `is_count_tofnum`,
+                                    e.target.checked ? 1 : 0
+                                  );
                                 }}
                                 checked={formik.values.is_count_tofnum}
                               >
@@ -864,6 +988,72 @@ function FormulaIngredientsAdd({ noEdit }) {
                       </>
                     ) : null}
                   </Row>
+
+                  <Row className="mb5">
+                    <Col xs={12}>
+                      <FormGroup row>
+                        <Col sm={3} className="align-self-center">
+                          <Checkbox
+                            disabled={noEdit}
+                            onChange={(e) => {
+                              formik.setFieldValue(
+                                `is_apply_other`,
+                                e.target.checked ? 1 : 0
+                              );
+                              if (e.target.checked == 1) {
+                                formik.setFieldValue(`is_apply_name`, 0);
+                                formik.setFieldValue(`is_apply_dob`, 0);
+                              }
+                            }}
+                            checked={formik.values.is_apply_other}
+                          >
+                            Áp dụng cho biến số khác
+                          </Checkbox>
+                        </Col>
+                        {formik.values.is_apply_other == 1 ? (
+                          <>
+                            <Col sm={5}>
+                              <Row>
+                                <Label for="ingredient_name" sm={4}>
+                                  Biến số khác
+                                </Label>
+                                <Col sm={8}>
+                                  <Select
+                                    styles={{
+                                      menuPortal: (base) => ({
+                                        ...base,
+                                        zIndex: 9999,
+                                      }),
+                                    }}
+                                    menuPortalTarget={document.querySelector(
+                                      "body"
+                                    )}
+                                    isDisabled={noEdit}
+                                    isClearable={true}
+                                    placeholder={"--Chọn biến số khác--"}
+                                    value={convertValue(
+                                      formik.values.param_other_id,
+                                      dataParamOther
+                                    )}
+                                    options={dataParamOther}
+                                    onChange={(select) => {
+                                      let param_other_id = select
+                                        ? select.value
+                                        : null;
+                                      formik.setFieldValue(
+                                        "param_other_id",
+                                        param_other_id
+                                      );
+                                    }}
+                                  />
+                                </Col>
+                              </Row>
+                            </Col>
+                          </>
+                        ) : null}
+                      </FormGroup>
+                    </Col>
+                  </Row>
                 </Col>
                 <div className="text-right mb-2">
                   <div>
@@ -872,7 +1062,9 @@ function FormulaIngredientsAdd({ noEdit }) {
                         <Button
                           color="primary"
                           className="mr-2 btn-block-sm"
-                          onClick={() => window._$g.rdr(`/formula-ingredients/edit/${id}`)}
+                          onClick={() =>
+                            window._$g.rdr(`/formula-ingredients/edit/${id}`)
+                          }
                         >
                           <i className="fa fa-edit mr-1" />
                           Chỉnh sửa
@@ -882,7 +1074,9 @@ function FormulaIngredientsAdd({ noEdit }) {
                       <>
                         <CheckAccess
                           permission={
-                            id ? `FOR_FORMULAINGREDIENTS_EDIT` : `FOR_FORMULAINGREDIENTS_ADD`
+                            id
+                              ? `FOR_FORMULAINGREDIENTS_EDIT`
+                              : `FOR_FORMULAINGREDIENTS_ADD`
                           }
                         >
                           <button
@@ -898,7 +1092,9 @@ function FormulaIngredientsAdd({ noEdit }) {
                         </CheckAccess>
                         <CheckAccess
                           permission={
-                            id ? `FOR_FORMULAINGREDIENTS_EDIT` : `FOR_FORMULAINGREDIENTS_ADD`
+                            id
+                              ? `FOR_FORMULAINGREDIENTS_EDIT`
+                              : `FOR_FORMULAINGREDIENTS_ADD`
                           }
                         >
                           <button

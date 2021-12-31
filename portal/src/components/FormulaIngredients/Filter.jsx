@@ -13,7 +13,8 @@ function Filter({ handleSubmitFillter }) {
   const [isType, setisType] = useState([
     { name: "Tất cả", id: "2" },
     { name: "Áp dụng cho tên", id: "0" },
-    { name: "Áp dung cho ngày sinh", id: "1" },
+    { name: "Áp dụng cho ngày sinh", id: "1" },
+    { name: "Áp dụng biến số khác", id: "3" },
   ]);
   const [isActive, setisActive] = useState([
     { name: "Tất cả", id: "2" },

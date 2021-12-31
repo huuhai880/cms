@@ -685,6 +685,13 @@ const CommentProduct = React.lazy(() => import("./components/ProductComment/Comm
 const CommentCombo = React.lazy(() => import("./components/ProductComment/CommentCombo"));
 //.end#ProductComment
 
+//ParamOther
+const ParamOther = React.lazy(() => import("./components/ParamOther/ParamOther"));
+const ParamOtherAdd = React.lazy(() => import("./components/ParamOther/ParamOtherAdd"));
+const ParamOtherEdit = React.lazy(() => import("./components/ParamOther/ParamOtherEdit"));
+const ParamOtherDetail = React.lazy(() => import("./components/ParamOther/ParamOtherDetail"));
+//.end#ParamOther
+
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -3238,6 +3245,38 @@ const routes = [
     component: CommentCombo,
   },
   //.end#ProductComment
+
+  //ParamOther
+  {
+    path: "/param-other",
+    exact: true,
+    name: "Danh sách biến số khác",
+    function: "MD_PARAMOTHER_VIEW",
+    component: ParamOther,
+  },
+  {
+    path: "/param-other/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "MD_PARAMOTHER_ADD",
+    component: ParamOtherAdd,
+  },
+  {
+    path: "/param-other/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "MD_PARAMOTHER_VIEW",
+    component: ParamOtherDetail,
+  },
+  {
+    path: "/param-other/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "MD_PARAMOTHER_EDIT",
+    component: ParamOtherEdit,
+  },
+  // end#ParamOther
+
 ];
 
 export default routes;

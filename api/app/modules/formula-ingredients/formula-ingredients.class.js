@@ -53,6 +53,8 @@ const template = {
   is_gender: '{{ISGENDER	 ? 1 : 0}}',
 
   ingredient_value: '{{#? VALUEINGREDIENTS}}',
+  is_apply_other: '{{ISAPPLYOTHER ? 1 : 0}}',
+  param_other_id: '{{#? PARAMOTHERID}}'
 };
 let transform = new Transform(template);
 const list = (users = []) => {
@@ -63,6 +65,8 @@ const list = (users = []) => {
     'is_apply_name',
     'is_active',
     'created_date',
+    'is_apply_other',
+    'param_other_id'
   ]);
 };
 const listParamDob = (users = []) => {
@@ -119,6 +123,8 @@ const detail = (users = []) => {
     'ingredient_value',
     'is_gender',
     'desc',
+    'is_apply_other',
+    'param_other_id'
   ]);
 };
 module.exports = {
