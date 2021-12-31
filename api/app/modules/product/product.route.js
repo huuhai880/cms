@@ -7,25 +7,21 @@ const prefix = '/product';
 
 
 routes.route('/')
-  .get(productController.getListProduct)
-  .post(validate(rules.createProduct), productController.createProduct);
-
+    .get(productController.getListProduct)
+    .post(validate(rules.createProduct), productController.createProduct);
+    
 routes
-  .route('')
-  .post(validate(rules.createProduct), productController.createProduct);
-
+    .route('/:product_id(\\d+)')
+    .get(productController.detailProduct)
+    .put(validate(rules.updateProduct), productController.updateProduct)
+    .delete(productController.deleteProduct);
 routes
-  .route('/:product_id(\\d+)')
-  .get(productController.detailProduct)
-  .put(validate(rules.updateProduct), productController.updateProduct)
-  .delete(productController.deleteProduct);
-  routes
-  .route('/interpret')
-  .get(productController.getListInterPretAttributesGroup)
+    .route('/interpret')
+    .get(productController.getListInterPretAttributesGroup)
 routes.route('/get-options').get(productController.getOptions);
 routes.route('/attributes-group').get(productController.getListAttributesGroup);
 
 module.exports = {
-  prefix,
-  routes,
+    prefix,
+    routes,
 };
