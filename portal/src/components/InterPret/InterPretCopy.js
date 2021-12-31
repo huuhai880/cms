@@ -390,6 +390,7 @@ export default function InterPretCopy(props) {
                     </FormGroup>
                   </Col>
                   <Col sm={6} xs={12}>
+                  {!formik.values.is_interpretspectial ? (
                     <FormGroup row>
                       <Label for="relationship_id" sm={4}>
                         Mối quan hệ{" "}
@@ -415,7 +416,25 @@ export default function InterPretCopy(props) {
                           }}
                         />{" "}
                       </Col>
+                    </FormGroup>) : (
+                    <FormGroup row>
+                        <Label for="is_condition_or" sm={4}></Label>
+                        <Col sm={8}>
+                            <Checkbox
+                                disabled={false}
+                                onChange={(e) => {
+                                formik.setFieldValue(
+                                    `is_condition_or`,
+                                    e.target.checked
+                                );
+                                }}
+                                checked={formik.values.is_condition_or}
+                            >
+                                Điều kiện hoặc
+                            </Checkbox>
+                        </Col>
                     </FormGroup>
+                    )}
                   </Col>
                 </Row>
                 {formik.values.is_interpretspectial == 1 ? (

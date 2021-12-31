@@ -435,10 +435,9 @@ const getAttributesListDetail = async (queryParams = {}) => {
       .execute('FOR_INTERPRET_ATTRIBUTES_GetListAttribute_AdminWeb');
     const result = data.recordset;
     //   console.log(result);
-
-    return new ServiceResponse(true, '', {
-      data: InterpretClass.listAttributeDetail(result),
-    });
+    let attributes = InterpretClass.listAttributeDetail(result) || [];
+    attributes = (attributes || []).map(item => ({...item, ...{value: item.attribute_id, label: item.attribute_name}}))
+    return new ServiceResponse(true, '', {data: attributes});
   } catch (e) {
     logger.error(e, {
       function: 'MainNumberService.getAttributesListDetail',
@@ -620,6 +619,10 @@ const copyIntergret = async (body = {}) => {
         'COMPAREATTRIBUTEID',
         apiHelper.getValueFromObject(body, 'compare_attribute_id', null)
       )
+      .input(
+        'ISCONDITIONOR',
+        apiHelper.getValueFromObject(body, 'is_condition_or', false)
+      )
       .execute('FOR_INTERPRET_Copy_AdminWeb');
 
     const interpret_id = resultIntergret.recordset[0].interpret_id;
@@ -669,6 +672,7 @@ const copyIntergret = async (body = {}) => {
     await transaction.commit();
     return new ServiceResponse(true, '', interpret_id);
   } catch (error) {
+    await transaction.rollback();
     logger.error(error, {
       function: 'Interpret.Service.copyIntergret',
     });
