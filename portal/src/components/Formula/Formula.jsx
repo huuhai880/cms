@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { layoutFullWidthHeight } from "../../utils/html";
 import Filter from "./Filter";
-import { Alert, Card, CardBody, CardHeader, Col, Input, FormGroup, Button } from "reactstrap";
+import {
+  Alert,
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Input,
+  FormGroup,
+  Button,
+} from "reactstrap";
 import { CircularProgress } from "@material-ui/core";
 import { getColumTable } from "./const.js";
 import MUIDataTable from "mui-datatables";
@@ -13,7 +22,7 @@ import InterpretModel from "../../models/InterpretModel";
 layoutFullWidthHeight();
 
 function Formula() {
-  const _formulaModel= new FormulaModel();
+  const _formulaModel = new FormulaModel();
   const [dataFormula, setDataFormula] = useState([]);
   const [toggleSearch, settoggleSearch] = useState(true);
   const [isLoading, setisLoading] = useState(true);
@@ -21,49 +30,55 @@ function Formula() {
     itemsPerPage: 25,
     page: 1,
     selectdActive: 1,
+    type_formula: 0,
   });
-  //// init data
+
   useEffect(() => {
     _callAPI(query);
   }, []);
-  ////search
+
   const handleSubmitFillter = async (value) => {
     let searchQuery = Object.assign(query, value);
-    // console.log(searchQuery);
     _callAPI(searchQuery);
   };
-  ////call API
+
   const _callAPI = async (props) => {
     try {
       await _formulaModel.getListFormula(props).then((data) => {
         setDataFormula(data);
-        // console.log(data);
       });
     } catch (error) {
-      // console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+      window._$g.dialogs.alert(
+        window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+      );
     } finally {
       setisLoading(false);
     }
   };
-  ///// delete letter
+
   const handleDelete = (id) => {
-    window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "xóa", (confirm) => {
-      if (confirm) {
-        try {
-          _formulaModel.delete(id).then((data) => {
-            window._$g.toastr.show("Xóa thành công", "success");
-            _callAPI(query);
-          });
-        } catch (error) {
-          // console.log(error);
-          window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
-        } finally {
-          setisLoading(false);
+    window._$g.dialogs.prompt(
+      "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
+      "xóa",
+      (confirm) => {
+        if (confirm) {
+          try {
+            _formulaModel.delete(id).then((data) => {
+              window._$g.toastr.show("Xóa thành công", "success");
+              _callAPI(query);
+            });
+          } catch (error) {
+            window._$g.dialogs.alert(
+              window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+            );
+          } finally {
+            setisLoading(false);
+          }
         }
       }
-    });
+    );
   };
+
   const handleChangeRowsPerPage = (event) => {
     query.itemsPerPage = event.target.value;
     query.page = 1;
@@ -74,12 +89,16 @@ function Formula() {
     query.page = newPage + 1;
     _callAPI(query);
   };
+
   return (
     <div>
       <Card className="animated fadeIn z-index-222 mb-3 ">
         <CardHeader className="d-flex">
           <div className="flex-fill font-weight-bold">Thông tin tìm kiếm</div>
-          <div className="minimize-icon cur-pointer" onClick={() => settoggleSearch(!toggleSearch)}>
+          <div
+            className="minimize-icon cur-pointer"
+            onClick={() => settoggleSearch(!toggleSearch)}
+          >
             <i className={`fa ${toggleSearch ? "fa-minus" : "fa-plus"}`} />
           </div>
         </CardHeader>
@@ -91,7 +110,12 @@ function Formula() {
           </CardBody>
         )}
       </Card>
-      <Col xs={12} sm={4} className="d-flex align-items-end mb-3" style={{ padding: 0 }}>
+      <Col
+        xs={12}
+        sm={4}
+        className="d-flex align-items-end mb-3"
+        style={{ padding: 0 }}
+      >
         <FormGroup className="mb-2 mb-sm-0">
           <Button
             color="success"
@@ -123,12 +147,14 @@ function Formula() {
                       dataFormula.totalItems,
                       query,
                       handleDelete
-                      // handleReply,
-                      // handleReview
                     )}
-                    options={configTableOptions(dataFormula.totalItems, query.page, {
-                      itemsPerPage: query.itemsPerPage,
-                    })}
+                    options={configTableOptions(
+                      dataFormula.totalItems,
+                      query.page,
+                      {
+                        itemsPerPage: query.itemsPerPage,
+                      }
+                    )}
                   />
                   <CustomPagination
                     count={dataFormula.totalItems}

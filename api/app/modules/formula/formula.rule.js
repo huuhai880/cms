@@ -11,7 +11,7 @@ const ruleCreateOrUpdate = {
   type2: Joi.number().valid(0, 1).required(),
   orderid_1: Joi.number().required(),
   orderid_2: Joi.number().required(),
-  calculation_id: Joi.number().required(),
+  calculation_id: Joi.number().required()
 };
 
 const validateRules = {

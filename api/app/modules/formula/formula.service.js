@@ -5,14 +5,13 @@ const sql = require('mssql');
 const ServiceResponse = require('../../common/responses/service.response');
 const logger = require('../../common/classes/logger.class');
 const _ = require('lodash');
-// const fileHelper = require('../../common/helpers/file.helper');
-// const folderName = 'mainNumber';
-// const config = require('../../../config/config');
-///////get list main number
+
 const getFormulaList = async (queryParams = {}) => {
   try {
     const currentPage = apiHelper.getCurrentPage(queryParams);
     const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
+    const type_formula = apiHelper.getValueFromObject(queryParams, 'type_formula', 0)
+
     const pool = await mssql.pool;
     const data = await pool
       .request()
@@ -35,9 +34,9 @@ const getFormulaList = async (queryParams = {}) => {
         'ATTRIBUTESGROUPID',
         apiHelper.getValueFromObject(queryParams, 'attributes_group_id', 0)
       )
+      .input('TYPEFORMULA', type_formula)
       .execute('FOR_FORMULA_GetList_AdminWeb');
     const result = data.recordset;
-    // console.log(result);
 
     return new ServiceResponse(true, '', {
       data: FormulaClass.list(result),
@@ -53,7 +52,7 @@ const getFormulaList = async (queryParams = {}) => {
     return new ServiceResponse(true, '', {});
   }
 };
-///////delete Formula
+
 const deleteFormula = async (formula_id, body) => {
   const pool = await mssql.pool;
   try {
@@ -67,43 +66,40 @@ const deleteFormula = async (formula_id, body) => {
     logger.error(e, {
       function: 'Formulaervice.deleteFormula',
     });
-
-    // Return failed
     return new ServiceResponse(false, e.message);
   }
 };
-// /////check Formula
-// const CheckFormula = async (Formula) => {
-//   // console.log(email)
-//   try {
-//     const pool = await mssql.pool;
-//     const data = await pool
-//       .request()
-//       .input('Formula', Formula)
-//       .execute('MD_Formula_CheckFormula_AdminWeb');
-//     const res = data.recordset[0];
-//     if (res) {
-//       return new ServiceResponse(true, '', res);
-//     }
-//     return new ServiceResponse(true, '', '');
-//   } catch (error) {
-//     return new ServiceResponse(false, error.message);
-//   }
-// };
-// /// add or update Formula
-const addFormula = async (body = {}) => {
-  // console.log(body);
 
-  // console.log(body)
+const addFormula = async (body = {}) => {
   const pool = await mssql.pool;
   const transaction = await new sql.Transaction(pool);
   try {
+
+    let is_couple_formula = apiHelper.getValueFromObject(body, 'is_couple_formula', false);
+    let is_condition_formula = apiHelper.getValueFromObject(body, 'is_condition_formula', false);
+    let ref_formula_id = apiHelper.getValueFromObject(body, 'ref_formula_id', null);
+    let ref_condition_id = apiHelper.getValueFromObject(body, 'ref_condition_id', null);
+    let interpret_formula_id = apiHelper.getValueFromObject(body, 'interpret_formula_id', null);
+    let list_condition_formula = apiHelper.getValueFromObject(body, 'list_condition_formula', []);
+    let is_default = apiHelper.getValueFromObject(body, 'is_default', false);
+    let formula_id = apiHelper.getValueFromObject(body, 'formula_id', null)
+
+    if (!is_couple_formula) {
+      ref_formula_id = null;
+      ref_condition_id = null;
+      interpret_formula_id = null;
+      is_default = false
+    }
+    if (!is_condition_formula) {
+      list_condition_formula = [];
+      is_default = false;
+    }
+
     await transaction.begin();
 
-    /////create or update number
-    const requestFormula = new sql.Request(transaction);
-    const resultFormula = await requestFormula
-      .input('FORMULAID', apiHelper.getValueFromObject(body, 'formula_id'))
+    const reqFormula = new sql.Request(transaction);
+    const resFormula = await reqFormula
+      .input('FORMULAID', formula_id)
       .input('FORMULANAME', apiHelper.getValueFromObject(body, 'formula_name'))
       .input(
         'ATTRIBUTESGROUPID',
@@ -115,25 +111,50 @@ const addFormula = async (body = {}) => {
       .input('ISFOMULAORTHERID2', apiHelper.getValueFromObject(body, 'type2'))
       .input('ORTHERID1', apiHelper.getValueFromObject(body, 'orderid_1'))
       .input('ORTHERID2', apiHelper.getValueFromObject(body, 'orderid_2'))
-      .input(
-        'CALCULATIONID',
-        apiHelper.getValueFromObject(body, 'calculation_id')
-      )
-      .input('ISDEFAULT', apiHelper.getValueFromObject(body, 'is_default'))
+      .input('CALCULATIONID', apiHelper.getValueFromObject(body, 'calculation_id'))
+      .input('ISDEFAULT', is_default)
       .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
       .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
       .input('ISTOTALNOSHORTENED', apiHelper.getValueFromObject(body, 'is_total_no_shortened', false))
       .input('ISTOTALSHORTENED', apiHelper.getValueFromObject(body, 'is_total_shortened', false))
       .input('ISTOTAL2DIGIT', apiHelper.getValueFromObject(body, 'is_total_2digit', false))
+      .input('ISCONDITIONFORMULA', apiHelper.getValueFromObject(body, 'is_condition_formula', false))
+      .input('ISCOUPLEFORMULA', apiHelper.getValueFromObject(body, 'is_couple_formula', false))
+      .input('REFFORMULAID', apiHelper.getValueFromObject(body, 'ref_formula_id', false))
+      .input('REFCONDITIONID', apiHelper.getValueFromObject(body, 'ref_condition_id', false))
+      .input('INTERPRETFORMULAID', apiHelper.getValueFromObject(body, 'interpret_formula_id', false))
       .execute('FOR_FORMULA_CreateOrUpdate_AdminWeb');
-    const Formula_id = resultFormula.recordset[0].RESULT;
 
-    if (Formula_id > 0) {
-      // removeCacheOptions();
-      await transaction.commit();
+    const formula_result_id = resFormula.recordset[0].RESULT;
+
+    if (formula_id && is_condition_formula) {
+      const reqDelConditionFormula = new sql.Request(transaction);
+      await reqDelConditionFormula
+        .input('formulaid', formula_id)
+        .input('deleteduser', apiHelper.getValueFromObject(body, 'auth_name'))
+        .execute('FOR_FORMULA_CONDITION_Delete_AdminWeb')
     }
-    return new ServiceResponse(true, '', Formula_id);
+
+    if (is_condition_formula) {
+      const reqConditionFormula = new sql.Request(transaction);
+      for (let index = 0; index < list_condition_formula.length; index++) {
+        let item = list_condition_formula[index];
+        await reqConditionFormula
+          .input('FORMULARID', formula_result_id)
+          .input('ATTRIBUTESGROUPID', item.attributes_group_id)
+          .input('VALUE', item.value)
+          .input('ISFOMULAORTHERID', item.is_fomula_orther_id)
+          .input('ORTHERID', item.orther_id)
+          .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
+          .execute('FOR_FORMULA_CONDITION_Create_AdminWeb')
+      }
+    }
+
+    await transaction.commit();
+
+    return new ServiceResponse(true, '', formula_result_id);
   } catch (error) {
+    await transaction.rollback();
     logger.error(error, {
       function: 'Formulaervice.addFormula',
     });
@@ -141,21 +162,31 @@ const addFormula = async (body = {}) => {
     return new ServiceResponse(false, e.message);
   }
 };
-///////detail list Formula
+
+
 const detailFormula = async (formula_id) => {
   try {
     const pool = await mssql.pool;
-
-    const data = await pool
+    const resFormula = await pool
       .request()
       .input('FORMULAID', formula_id)
       .execute('FOR_FORMULA_GetById_AdminWeb');
-    const Formula = data.recordset[0];
-    // console.log(Formula)
-    if (Formula) {
-      return new ServiceResponse(true, '', FormulaClass.detail(Formula));
+
+    let formula = FormulaClass.detail(resFormula.recordset[0])
+
+    let { is_condition_formula = false } = formula || {};
+    if (is_condition_formula) {
+      const resConditionFormula = await pool.request()
+        .input('formulaid', formula_id)
+        .execute('FOR_FORMULA_CONDITION_GetList_AdminWeb');
+
+      let list_condition_formula = FormulaClass.listConditionFormula(resConditionFormula.recordset)
+      formula.list_condition_formula = list_condition_formula || []
     }
-    return new ServiceResponse(false, '', null);
+    else {
+      formula.list_condition_formula = []
+    }
+    return new ServiceResponse(true, '', formula);
   } catch (e) {
     logger.error(e, {
       function: 'Formulaervice.detailFormula',
@@ -164,7 +195,7 @@ const detailFormula = async (formula_id) => {
     return new ServiceResponse(false, e.message);
   }
 };
-///////get list Ingredient
+
 const getIngredientList = async (queryParams = {}) => {
   try {
     const pool = await mssql.pool;
@@ -172,8 +203,6 @@ const getIngredientList = async (queryParams = {}) => {
       .request()
       .execute('FOR_FORMULAINGREDIENTS_GetListIngredient_AdminWeb');
     const result = data.recordset;
-    // console.log(result);
-
     return new ServiceResponse(true, '', {
       data: FormulaClass.listIngredient(result),
     });
@@ -185,7 +214,7 @@ const getIngredientList = async (queryParams = {}) => {
     return new ServiceResponse(true, '', {});
   }
 };
-///////get list Calculation
+
 const GetListCalculation = async (queryParams = {}) => {
   try {
     const pool = await mssql.pool;
@@ -193,7 +222,6 @@ const GetListCalculation = async (queryParams = {}) => {
       .request()
       .execute('FOR_FORMULAINGREDIENTS_GetListCalculation_AdminWeb');
     const result = data.recordset;
-    // console.log(result);
 
     return new ServiceResponse(true, '', {
       data: FormulaClass.listCalculation(result),
@@ -206,7 +234,8 @@ const GetListCalculation = async (queryParams = {}) => {
     return new ServiceResponse(true, '', {});
   }
 };
-///////get list Calculation
+
+
 const GetListFormulaParent = async (queryParams = {}) => {
   try {
     const pool = await mssql.pool;
@@ -214,7 +243,6 @@ const GetListFormulaParent = async (queryParams = {}) => {
       .request()
       .execute('FOR_FORMULA_GetListFormulaParent_AdminWeb');
     const result = data.recordset;
-    // console.log(result);
 
     return new ServiceResponse(true, '', {
       data: FormulaClass.listFormulaParent(result),
@@ -227,7 +255,7 @@ const GetListFormulaParent = async (queryParams = {}) => {
     return new ServiceResponse(true, '', {});
   }
 };
-///////get list Calculation
+
 const GetListAttributeGruop = async (queryParams = {}) => {
   try {
     const pool = await mssql.pool;
@@ -235,7 +263,6 @@ const GetListAttributeGruop = async (queryParams = {}) => {
       .request()
       .execute('FOR_FORMULA_GetListAttributeGruop_AdminWeb');
     const result = data.recordset;
-    // console.log(result);
 
     return new ServiceResponse(true, '', {
       data: FormulaClass.listAttributeGruop(result),
@@ -248,6 +275,7 @@ const GetListAttributeGruop = async (queryParams = {}) => {
     return new ServiceResponse(true, '', {});
   }
 };
+
 module.exports = {
   getFormulaList,
   GetListCalculation,
@@ -256,6 +284,5 @@ module.exports = {
   GetListAttributeGruop,
   deleteFormula,
   addFormula,
-  detailFormula,
-  // CheckFormula,
+  detailFormula
 };

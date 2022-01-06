@@ -278,7 +278,7 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
         calculaOrder(_order_details)
     }
 
-    console.log(formik.values)
+ 
 
     const getProductComboOption = () => {
         let { order_details = [] } = formik.values || {};

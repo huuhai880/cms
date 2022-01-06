@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardBody, CardHeader, Col, Row, Form, FormGroup, Label, Input } from "reactstrap";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Row,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Table,
+  Button,
+  Alert,
+} from "reactstrap";
 import { useParams } from "react-router";
 import { layoutFullWidthHeight } from "../../utils/html";
 import { useFormik } from "formik";
@@ -12,6 +25,7 @@ import InterpretModel from "../../models/InterpretModel";
 import Select from "react-select";
 import { CircularProgress } from "@material-ui/core";
 import Loading from "../Common/Loading";
+import { convertValueSelect } from "utils/index";
 
 layoutFullWidthHeight();
 
@@ -26,15 +40,28 @@ function FormulaAdd({ noEdit }) {
   const [dataCalculation, setDataCalculation] = useState([]);
   const [dataFormulaParent, setDataFormulaParent] = useState([]);
   let { id } = useParams();
+
   const [btnType, setbtnType] = useState("");
-  const [isType1, setType1] = useState([
+  const [isType1] = useState([
     { name: "Công thức", id: "1" },
     { name: "Thành phần", id: "0" },
   ]);
-  const [isType2, setType2] = useState([
+
+  const [isType2] = useState([
     { name: "Công thức", id: "1" },
     { name: "Thành phần", id: "0" },
   ]);
+
+  const [optionTypeConditionFormula] = useState([
+    { label: "Công thức", value: 1 },
+    { label: "Thành phần", value: 0 },
+  ]);
+
+  const [optionAttributesGroup, setOptionAttributesGroup] = useState([]);
+  const [optionFormula, setOptionFormula] = useState([]);
+  const [optionIngredient, setOptionIngredient] = useState([]);
+  const [alerts, setAlerts] = useState([]);
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: dataFormula,
@@ -45,35 +72,55 @@ function FormulaAdd({ noEdit }) {
       handleCreateOrUpdate(values);
     },
   });
-  ///// get data option
+
   const _callAPI = async () => {
     try {
-      _formulaModel.getAttributeGruop().then((data) => {
-        setDataAttribute(data.items);
-        //   console.log(setDataPartner);
-      });
-      _formulaModel.getListCalculation().then((data) => {
-        setDataCalculation(data.items);
-        //   console.log(setDataPartner);
-      });
-      _formulaModel.getListFormulaParent().then((data) => {
-        setDataFormulaParent(data.items);
-        //   console.log(setDataPartner);
-      });
-      _formulaModel.getListIngredient().then((data) => {
-        setDataIngredient(data.items);
-        //   console.log(setDataPartner);
-      });
+      //Chỉ số
+      let dataAttributesGroup = await _formulaModel.getAttributeGruop();
+      let { items: itemsAttributesGroup = [] } = dataAttributesGroup || {};
+      setDataAttribute(itemsAttributesGroup);
+      let optionAttrGroup = itemsAttributesGroup.map(
+        ({ attribute_gruop_id: value, gruop_name: label }) => ({
+          value,
+          label,
+        })
+      );
+      setOptionAttributesGroup(optionAttrGroup);
+
+      //Phép tính
+      let dataCalculation = await _formulaModel.getListCalculation();
+      let { items: itemsCalulation = [] } = dataCalculation || {};
+      setDataCalculation(itemsCalulation);
+
+      //Công thức
+      let dataFormular = await _formulaModel.getListFormulaParent();
+      let { items: itemsFormula = [] } = dataFormular || {};
+      setDataFormulaParent(itemsFormula);
+      let optionFormula = itemsFormula.map(
+        ({ formula_id: value, formula_name: label }) => ({ value, label })
+      );
+      setOptionFormula(optionFormula);
+
+      //Thành phần
+      let dataIngredient = await _formulaModel.getListIngredient();
+      let { items: itemsIngredient = [] } = dataIngredient || {};
+      setDataIngredient(itemsIngredient);
+      let optionIngredient = itemsIngredient.map(
+        ({ ingredient_id: value, ingredient_name: label }) => ({ value, label })
+      );
+      setOptionIngredient(optionIngredient);
     } catch (error) {
-      console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+      window._$g.dialogs.alert(
+        window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+      );
     }
   };
+
   useEffect(() => {
     setTimeout(() => setisLoading(false), 500);
     _callAPI();
   }, []);
-  //// create letter
+
   const handleCreateOrUpdate = async (values) => {
     try {
       _formulaModel.create(values).then((data) => {
@@ -89,39 +136,41 @@ function FormulaAdd({ noEdit }) {
           window._$g.toastr.show("Lưu thành công!", "success");
         } else if (btnType == "save&quit") {
           window._$g.toastr.show("Lưu thành công!", "success");
-          // setDataInterpret(initialValues);
           return window._$g.rdr("/formula");
         }
       });
     } catch (error) {
+      let { errors, statusText, message } = error;
+      let msg = [`<b>${statusText || message}</b>`]
+        .concat(errors || [])
+        .join("<br/>");
+      setAlerts([{ color: "danger", msg }]);
+      window.scrollTo(0, 0);
     } finally {
       formik.setSubmitting(false);
-      window.scrollTo(0, 0);
+      // window.scrollTo(0, 0);
     }
   };
-  //////get data detail
+
   useEffect(() => {
     if (id) {
       _initDataDetail();
     }
   }, [id]);
 
-  //// data detail
   const _initDataDetail = async () => {
     try {
       _formulaModel.detail(id).then((data) => {
-        // console.log(data);
         setDataFormula(data);
-        // console.log()
       });
     } catch (error) {
-      console.log(error);
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
+      window._$g.dialogs.alert(
+        window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
+      );
     }
   };
-  ////config select
+
   const convertValue = (value, options) => {
-    // console.log(value)
     if (!(typeof value === "object") && options && options.length) {
       value = ((_val) => {
         return options.find((item) => "" + item.value === "" + _val);
@@ -136,16 +185,14 @@ function FormulaAdd({ noEdit }) {
     }
     return value;
   };
-  ///////// option Relationship
+
   const getOptionAttribute = () => {
     if (dataAttribute && dataAttribute.length) {
       return dataAttribute.map((item) => {
-        // console.log(dataPartner);
         return formik.values.attribute_gruop_id == item.attribute_gruop_id
           ? {
               value: item.attribute_gruop_id,
               label: item.gruop_name,
-              // isDisabled: true,
             }
           : {
               value: item.attribute_gruop_id,
@@ -155,10 +202,10 @@ function FormulaAdd({ noEdit }) {
     }
     return [];
   };
+
   const getOptionFormula = () => {
     if (dataFormulaParent && dataFormulaParent.length) {
       return dataFormulaParent.map((item) => {
-        // console.log(dataPartner);
         return formik.values.orderid_1 == item.formula_id ||
           formik.values.orderid_2 == item.formula_id
           ? {
@@ -174,10 +221,10 @@ function FormulaAdd({ noEdit }) {
     }
     return [];
   };
+
   const getOptionIngdient = () => {
     if (dataIngredient && dataIngredient.length) {
       return dataIngredient.map((item) => {
-        // console.log(dataPartner);
         return formik.values.orderid_1 == item.ingredient_id ||
           formik.values.orderid_2 == item.ingredient_id
           ? {
@@ -193,10 +240,10 @@ function FormulaAdd({ noEdit }) {
     }
     return [];
   };
+
   const getOptionType1 = () => {
     if (isType1 && isType1.length) {
       return isType1.map((item) => {
-        // console.log(dataPartner);
         return formik.values.type1 == item.id
           ? {
               value: item.id,
@@ -211,10 +258,10 @@ function FormulaAdd({ noEdit }) {
     }
     return [];
   };
+
   const getOptionType2 = () => {
     if (isType2 && isType2.length) {
       return isType2.map((item) => {
-        // console.log(dataPartner);
         return formik.values.type2 == item.id
           ? {
               value: item.id,
@@ -229,15 +276,14 @@ function FormulaAdd({ noEdit }) {
     }
     return [];
   };
+
   const getOptionCalculation = () => {
     if (dataCalculation && dataCalculation.length) {
       return dataCalculation.map((item) => {
-        // console.log(dataPartner);
         return formik.values.calculation_id == item.calculation_id
           ? {
               value: item.calculation_id,
               label: item.calculation,
-              // isDisabled: true,
             }
           : {
               value: item.calculation_id,
@@ -247,7 +293,223 @@ function FormulaAdd({ noEdit }) {
     }
     return [];
   };
-  // console.log(formik.values);
+
+  const renderTableConditionFormular = () => {
+    return (
+      <Table
+        size="sm"
+        bordered
+        striped
+        hover
+        className="tb-product-attributes mt-2"
+        style={{ marginBottom: 0 }}
+      >
+        <thead>
+          <tr>
+            <th className="text-center" style={{ width: "25%" }}>
+              Chỉ số
+            </th>
+            <th className="text-center" style={{ width: "20%" }}>
+              Giá trị
+            </th>
+            <th className="text-center" style={{ width: "20%" }}>
+              Loại
+            </th>
+            <th className="text-center" style={{ width: "25%" }}>
+              Công thức/Thành phần
+            </th>
+            <th className="text-center" style={{ width: "10%" }}>
+              Thao tác
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {formik.values.list_condition_formula &&
+          formik.values.list_condition_formula.length > 0 ? (
+            formik.values.list_condition_formula.map((item, index) => (
+              <tr key={index}>
+                <td>
+                  <Select
+                    className="MuiPaper-filter__custom--select"
+                    id={`attributes_group_id_${index}`}
+                    name={`attributes_group_id_${index}`}
+                    onChange={(e) =>
+                      handleChangeRowConditionFormula(
+                        "attributes_group_id",
+                        index,
+                        e ? e.value : null
+                      )
+                    }
+                    isSearchable={true}
+                    placeholder={"-- Chọn --"}
+                    value={convertValueSelect(
+                      item.attributes_group_id,
+                      optionAttributesGroup
+                    )}
+                    options={optionAttributesGroup}
+                    isClearable={true}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                    menuPortalTarget={document.querySelector("body")}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={item.value}
+                    id={`value_${index}`}
+                    name={`value_${index}`}
+                    className="form-control"
+                    onChange={({target}) =>
+                      handleChangeRowConditionFormula(
+                        "value",
+                        index,
+                        target.value
+                      )
+                    }
+                  />
+                </td>
+                <td>
+                  <Select
+                    className="MuiPaper-filter__custom--select"
+                    id={`type_condition_formula${index}`}
+                    name={`type_condition_formula${index}`}
+                    onChange={(e) =>
+                      handleChangeRowConditionFormula(
+                        "is_fomula_orther_id",
+                        index,
+                        e ? e.value : null
+                      )
+                    }
+                    isSearchable={true}
+                    placeholder={"-- Chọn CT/TP --"}
+                    value={convertValueSelect(
+                      item.is_fomula_orther_id,
+                      optionTypeConditionFormula
+                    )}
+                    options={optionTypeConditionFormula}
+                    isClearable={true}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                    menuPortalTarget={document.querySelector("body")}
+                  />
+                </td>
+                <td>
+                  <Select
+                    className="MuiPaper-filter__custom--select"
+                    id={`orther_id_${index}`}
+                    name={`orther_id_${index}`}
+                    onChange={(e) =>
+                      handleChangeRowConditionFormula(
+                        "orther_id",
+                        index,
+                        e ? e.value : null
+                      )
+                    }
+                    isSearchable={true}
+                    placeholder={`-- Chọn ${
+                      item.is_fomula_orther_id ? "Công thức" : "Thành phần"
+                    } --`}
+                    value={convertValueSelect(
+                      item.orther_id,
+                      item.is_fomula_orther_id
+                        ? optionFormula
+                        : optionIngredient
+                    )}
+                    options={
+                      item.is_fomula_orther_id
+                        ? optionFormula
+                        : optionIngredient
+                    }
+                    isClearable={true}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                    menuPortalTarget={document.querySelector("body")}
+                  />
+                </td>
+
+                <td style={{ verticalAlign: "middle" }} className="text-center">
+                  <Button
+                    color="danger"
+                    onClick={() => handleRemoveConditionFormula(index)}
+                    className="btn-sm"
+                    disabled={noEdit}
+                  >
+                    {" "}
+                    <i className="fa fa-trash" />
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td className="text-center" colSpan={50}>
+                Không có dữ liệu
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
+    );
+  };
+
+  const handleRemoveConditionFormula = (index) => {
+    let _list_condition_formula = [...formik.values.list_condition_formula];
+    _list_condition_formula.splice(index, 1);
+    formik.setFieldValue("list_condition_formula", _list_condition_formula);
+  };
+
+  const handleChangeInputValue = (index, e) => {
+    let _list_condition_formula = [...formik.values.list_condition_formula];
+    _list_condition_formula[index].value = e.target.value;
+    formik.setFieldValue("list_condition_formula", _list_condition_formula);
+  };
+
+  const handleChangeAttrGroup = (index, val) => {
+    let _list_condition_formula = [...formik.values.list_condition_formula];
+    _list_condition_formula[index].attributes_group_id = val ? val.value : null;
+    formik.setFieldValue("list_condition_formula", _list_condition_formula);
+  };
+
+  const handleChangeTypeCondition = (index, val) => {
+    let _list_condition_formula = [...formik.values.list_condition_formula];
+    _list_condition_formula[index].is_fomula_orther_id = val ? val.value : null;
+    _list_condition_formula[index].orther_id = null;
+    formik.setFieldValue("list_condition_formula", _list_condition_formula);
+  };
+
+  const handleChangeFormularOrInterpret = (index, val) => {
+    let _list_condition_formula = [...formik.values.list_condition_formula];
+    _list_condition_formula[index].orther_id = val ? val.value : null;
+    formik.setFieldValue("list_condition_formula", _list_condition_formula);
+  };
+
+  const handleChangeRowConditionFormula = (name, index, value) => {
+    let _list_condition_formula = [...formik.values.list_condition_formula];
+    _list_condition_formula[index][name] = value;
+    if (name == "is_fomula_orther_id") {
+      _list_condition_formula[index].orther_id = null;
+    }
+    formik.setFieldValue("list_condition_formula", _list_condition_formula);
+  };
+
+  const handleAddConditionFormula = () => {
+    let conditionFormula = {
+      formula_id: null,
+      attributes_group_id: null,
+      value: "",
+      is_fomula_orther_id: 1,
+      orther_id: null,
+    };
+    let __list_condition_formula =
+      [...formik.values.list_condition_formula] || [];
+    __list_condition_formula.push(conditionFormula);
+    formik.setFieldValue("list_condition_formula", __list_condition_formula);
+  };
+
   return isLoading ? (
     <Loading />
   ) : (
@@ -256,17 +518,83 @@ function FormulaAdd({ noEdit }) {
         <Col xs={12}>
           <Card>
             <CardHeader>
-              {/* <b>{id ? "Chỉnh sửa" : "Thêm mới"} công thức </b> */}
-              <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} công thức </b>
+              <b>
+                {id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} công
+                thức{" "}
+              </b>
             </CardHeader>
             <CardBody>
+              {alerts.map(({ color, msg }, idx) => {
+                return (
+                  <Alert
+                    key={`alert-${idx}`}
+                    color={color}
+                    isOpen={true}
+                    toggle={() => setAlerts([])}
+                  >
+                    <span dangerouslySetInnerHTML={{ __html: msg }} />
+                  </Alert>
+                );
+              })}
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
-                {/* <Col xs={12} sm={12}> */}
+                <Row>
+                  <Col xs={6} sm={12}>
+                    <FormGroup row>
+                      <Label sm={2} className="text-right"></Label>
+                      <Col sm={10} xs={12}>
+                        <Checkbox
+                          disabled={id ? true : false}
+                          onChange={(e) => {
+                            formik.setFieldValue(
+                              `is_condition_formula`,
+                              e.target.checked
+                            );
+                            if (e.target.checked) {
+                              formik.setFieldValue(`is_couple_formula`, false);
+                            }
+                          }}
+                          checked={formik.values.is_condition_formula}
+                        >
+                          Công thức điều kiện
+                        </Checkbox>
+                      </Col>
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={6} sm={12}>
+                    <FormGroup row>
+                      <Label sm={2} className="text-right"></Label>
+                      <Col sm={10} xs={12}>
+                        <Checkbox
+                          disabled={id ? true : false}
+                          onChange={(e) => {
+                            formik.setFieldValue(
+                              `is_couple_formula`,
+                              e.target.checked
+                            );
+                            if (e.target.checked) {
+                              formik.setFieldValue(
+                                `is_condition_formula`,
+                                false
+                              );
+                            }
+                          }}
+                          checked={formik.values.is_couple_formula}
+                        >
+                          Công thức cặp
+                        </Checkbox>
+                      </Col>
+                    </FormGroup>
+                  </Col>
+                </Row>
+
                 <Row>
                   <Col xs={6}>
                     <FormGroup row>
                       <Label for="formula_name" sm={4} className="text-right">
-                        Tên công thức <span className="font-weight-bold red-text">*</span>
+                        Tên công thức{" "}
+                        <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={8}>
                         <Input
@@ -278,7 +606,8 @@ function FormulaAdd({ noEdit }) {
                           value={formik.values.formula_name}
                           onChange={formik.handleChange}
                         />
-                        {formik.errors.formula_name && formik.touched.formula_name ? (
+                        {formik.errors.formula_name &&
+                        formik.touched.formula_name ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
@@ -291,15 +620,15 @@ function FormulaAdd({ noEdit }) {
                   </Col>
                   <Col xs={6}>
                     <FormGroup row>
-                      <Label for="attribute_gruop_id" sm={4} className="text-right">
-                        Chỉ số <span className="font-weight-bold red-text">*</span>
+                      <Label
+                        for="attribute_gruop_id"
+                        sm={4}
+                        className="text-right"
+                      >
+                        Chỉ số{" "}
+                        <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={8}>
-                        {/* {isLoading ? (
-                          <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
-                            <CircularProgress />
-                          </div>
-                        ) : ( */}
                         <Select
                           className="MuiPaper-filter__custom--select"
                           id={`attribute_gruop_id`}
@@ -315,18 +644,24 @@ function FormulaAdd({ noEdit }) {
                             formik.values.attribute_gruop_id,
                             getOptionAttribute()
                           )}
-                          options={getOptionAttribute(formik.values.attribute_gruop_id, true)}
+                          options={getOptionAttribute(
+                            formik.values.attribute_gruop_id,
+                            true
+                          )}
                           onChange={(value) => {
-                            // formik.setFieldValue("attribute_gruop_id", value.value);
                             if (!value) {
                               formik.setFieldValue("attribute_gruop_id", "");
                             } else {
-                              formik.setFieldValue("attribute_gruop_id", value.value);
+                              formik.setFieldValue(
+                                "attribute_gruop_id",
+                                value.value
+                              );
                             }
                           }}
                         />
-                        {/* )} */}
-                        {formik.errors.attribute_gruop_id && formik.touched.attribute_gruop_id ? (
+
+                        {formik.errors.attribute_gruop_id &&
+                        formik.touched.attribute_gruop_id ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
@@ -342,7 +677,8 @@ function FormulaAdd({ noEdit }) {
                   <Col xs={12}>
                     <FormGroup row>
                       <Label for="formula_name" sm={2} className="text-right">
-                        Mô tả <span className="font-weight-bold red-text">*</span>
+                        Mô tả{" "}
+                        <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={10}>
                         <Input
@@ -367,66 +703,94 @@ function FormulaAdd({ noEdit }) {
                   </Col>
                 </Row>
 
-                <Row>
-                  <Col xs={12}>
-                    <FormGroup row style={{ alignItems: "center" }}>
-                      <Label for="ingredient_name" sm={2} className="text-right">
-                        Kết quả cuối cùng
-                      </Label>
-                      <Col sm={2}>
-                        <Checkbox
-                          disabled={noEdit}
-                          onChange={(e) => {
-                            formik.setFieldValue(`is_total_no_shortened`, e.target.checked);
-                            if (e.target.checked) {
-                              formik.setFieldValue(`is_total_shortened`, false);
-                              formik.setFieldValue(`is_total_2digit`, false);
-                            }
-                          }}
-                          checked={formik.values.is_total_no_shortened}
+                {formik.values.is_couple_formula ? null : (
+                  <Row>
+                    <Col xs={12}>
+                      <FormGroup row style={{ alignItems: "center" }}>
+                        <Label
+                          for="ingredient_name"
+                          sm={2}
+                          className="text-right"
                         >
-                          Tổng không rút gọn
-                        </Checkbox>
-                      </Col>
-                      <Col sm={2}>
-                        <Checkbox
-                          disabled={noEdit}
-                          onChange={(e) => {
-                            formik.setFieldValue(`is_total_shortened`, e.target.checked);
-                            if (e.target.checked) {
-                              formik.setFieldValue(`is_total_no_shortened`, false);
-                              formik.setFieldValue(`is_total_2digit`, false);
-                            }
-                          }}
-                          checked={formik.values.is_total_shortened}
-                        >
-                          Tổng 1 chữ số
-                        </Checkbox>
-                      </Col>
-                      <Col sm={2}>
-                        <Checkbox
-                          disabled={noEdit}
-                          onChange={(e) => {
-                            formik.setFieldValue(`is_total_2digit`, e.target.checked);
-                            if (e.target.checked) {
-                              formik.setFieldValue(`is_total_no_shortened`, false);
-                              formik.setFieldValue(`is_total_shortened`, false);
-                            }
-                          }}
-                          checked={formik.values.is_total_2digit}
-                        >
-                          Tổng 2 chữ số
-                        </Checkbox>
-                      </Col>
-                    </FormGroup>
-                  </Col>
-                </Row>
+                          Kết quả cuối cùng
+                        </Label>
+                        <Col sm={2}>
+                          <Checkbox
+                            disabled={noEdit}
+                            onChange={(e) => {
+                              formik.setFieldValue(
+                                `is_total_no_shortened`,
+                                e.target.checked
+                              );
+                              if (e.target.checked) {
+                                formik.setFieldValue(
+                                  `is_total_shortened`,
+                                  false
+                                );
+                                formik.setFieldValue(`is_total_2digit`, false);
+                              }
+                            }}
+                            checked={formik.values.is_total_no_shortened}
+                          >
+                            Tổng không rút gọn
+                          </Checkbox>
+                        </Col>
+                        <Col sm={2}>
+                          <Checkbox
+                            disabled={noEdit}
+                            onChange={(e) => {
+                              formik.setFieldValue(
+                                `is_total_shortened`,
+                                e.target.checked
+                              );
+                              if (e.target.checked) {
+                                formik.setFieldValue(
+                                  `is_total_no_shortened`,
+                                  false
+                                );
+                                formik.setFieldValue(`is_total_2digit`, false);
+                              }
+                            }}
+                            checked={formik.values.is_total_shortened}
+                          >
+                            Tổng 1 chữ số
+                          </Checkbox>
+                        </Col>
+                        <Col sm={2}>
+                          <Checkbox
+                            disabled={noEdit}
+                            onChange={(e) => {
+                              formik.setFieldValue(
+                                `is_total_2digit`,
+                                e.target.checked
+                              );
+                              if (e.target.checked) {
+                                formik.setFieldValue(
+                                  `is_total_no_shortened`,
+                                  false
+                                );
+                                formik.setFieldValue(
+                                  `is_total_shortened`,
+                                  false
+                                );
+                              }
+                            }}
+                            checked={formik.values.is_total_2digit}
+                          >
+                            Tổng 2 chữ số
+                          </Checkbox>
+                        </Col>
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                )}
 
                 <Row>
                   <Col xs={6}>
                     <FormGroup row>
                       <Label for="order_index" sm={4} className="text-right">
-                        Thứ tự sắp xếp <span className="font-weight-bold red-text">*</span>
+                        Thứ tự sắp xếp{" "}
+                        <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={8}>
                         <NumberFormat
@@ -434,12 +798,15 @@ function FormulaAdd({ noEdit }) {
                           id="order_index"
                           disabled={noEdit}
                           onChange={(value) => {
-                            formik.setFieldValue("order_index", value.target.value);
-                            // console.log(value)
+                            formik.setFieldValue(
+                              "order_index",
+                              value.target.value
+                            );
                           }}
                           value={formik.values.order_index}
                         />
-                        {formik.errors.order_index && formik.touched.order_index ? (
+                        {formik.errors.order_index &&
+                        formik.touched.order_index ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
@@ -451,191 +818,299 @@ function FormulaAdd({ noEdit }) {
                     </FormGroup>
                   </Col>
                 </Row>
-                {/* {isLoading ? (
-                  <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
-                    <CircularProgress />
-                  </div>
-                ) : ( */}
-                <Row>
-                  <Col xs={12}>
-                    <FormGroup row>
-                      <Label for="formula_name" sm={2} className="text-right">
-                        Công thức
-                      </Label>
-                      <Col sm={2}>
-                        <Select
-                          className="MuiPaper-filter__custom--select"
-                          id={`type1`}
-                          name={`type1`}
-                          styles={{
-                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          }}
-                          menuPortalTarget={document.querySelector("body")}
-                          isDisabled={noEdit}
-                          isClearable={true}
-                          placeholder={"Chọn CT/TP 1"}
-                          value={convertValue(formik.values.type1, getOptionType1())}
-                          options={getOptionType1(formik.values.type1, true)}
-                          onChange={(value) => {
-                            if (!value) {
-                              formik.setFieldValue("type1", "");
-                              formik.setFieldValue("orderid_1", "");
-                            } else {
-                              formik.setFieldValue("type1", value.value);
-                            }
-                          }}
-                        />
-                      </Col>
-                      <Col sm={2}>
-                        {/* {id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} */}
-                        {formik.values.type1 !== "" ? (
-                          formik.values.type1 == 0 ? (
-                            <Select
-                              className="MuiPaper-filter__custom--select"
-                              id={`orderid_1`}
-                              isClearable={true}
-                              name={`orderid_1`}
-                              styles={{
-                                menuPortal: (base) => ({
-                                  ...base,
-                                  zIndex: 9999,
-                                }),
-                              }}
-                              menuPortalTarget={document.querySelector("body")}
-                              isDisabled={noEdit}
-                              placeholder={"Chọn thành phần"}
-                              value={convertValue(formik.values.orderid_1, getOptionIngdient())}
-                              options={getOptionIngdient(formik.values.orderid_1, true)}
-                              onChange={(value) => {
-                                // formik.setFieldValue("orderid_1", value.value);
-                                if (!value) {
-                                  formik.setFieldValue("orderid_1", "");
-                                } else {
-                                  formik.setFieldValue("orderid_1", value.value);
-                                }
-                              }}
-                            />
+
+                {formik.values.is_condition_formula ||
+                formik.values.is_couple_formula ? null : (
+                  <Row>
+                    <Col xs={12}>
+                      <FormGroup row>
+                        <Label for="formula_name" sm={2} className="text-right">
+                          Công thức
+                        </Label>
+                        <Col sm={2}>
+                          <Select
+                            className="MuiPaper-filter__custom--select"
+                            id={`type1`}
+                            name={`type1`}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
+                            menuPortalTarget={document.querySelector("body")}
+                            isDisabled={noEdit}
+                            isClearable={true}
+                            placeholder={"Chọn CT/TP 1"}
+                            value={convertValue(
+                              formik.values.type1,
+                              getOptionType1()
+                            )}
+                            options={getOptionType1(formik.values.type1, true)}
+                            onChange={(value) => {
+                              if (!value) {
+                                formik.setFieldValue("type1", "");
+                                formik.setFieldValue("orderid_1", "");
+                              } else {
+                                formik.setFieldValue("type1", value.value);
+                              }
+                            }}
+                          />
+                        </Col>
+                        <Col sm={2}>
+                          {formik.values.type1 !== "" ? (
+                            formik.values.type1 == 0 ? (
+                              <Select
+                                className="MuiPaper-filter__custom--select"
+                                id={`orderid_1`}
+                                isClearable={true}
+                                name={`orderid_1`}
+                                styles={{
+                                  menuPortal: (base) => ({
+                                    ...base,
+                                    zIndex: 9999,
+                                  }),
+                                }}
+                                menuPortalTarget={document.querySelector(
+                                  "body"
+                                )}
+                                isDisabled={noEdit}
+                                placeholder={"Chọn thành phần"}
+                                value={convertValue(
+                                  formik.values.orderid_1,
+                                  getOptionIngdient()
+                                )}
+                                options={getOptionIngdient(
+                                  formik.values.orderid_1,
+                                  true
+                                )}
+                                onChange={(value) => {
+                                  if (!value) {
+                                    formik.setFieldValue("orderid_1", "");
+                                  } else {
+                                    formik.setFieldValue(
+                                      "orderid_1",
+                                      value.value
+                                    );
+                                  }
+                                }}
+                              />
+                            ) : (
+                              <Select
+                                className="MuiPaper-filter__custom--select"
+                                id={`orderid_1`}
+                                isClearable={true}
+                                name={`orderid_1`}
+                                styles={{
+                                  menuPortal: (base) => ({
+                                    ...base,
+                                    zIndex: 9999,
+                                  }),
+                                }}
+                                menuPortalTarget={document.querySelector(
+                                  "body"
+                                )}
+                                isDisabled={noEdit}
+                                placeholder={"Chọn công thức"}
+                                value={convertValue(
+                                  formik.values.orderid_1,
+                                  getOptionFormula()
+                                )}
+                                options={getOptionFormula(
+                                  formik.values.orderid_1,
+                                  true
+                                )}
+                                onChange={(value) => {
+                                  if (!value) {
+                                    formik.setFieldValue("orderid_1", "");
+                                  } else {
+                                    formik.setFieldValue(
+                                      "orderid_1",
+                                      value.value
+                                    );
+                                  }
+                                }}
+                              />
+                            )
                           ) : (
                             <Select
                               className="MuiPaper-filter__custom--select"
-                              id={`orderid_1`}
-                              isClearable={true}
-                              name={`orderid_1`}
-                              styles={{
-                                menuPortal: (base) => ({
-                                  ...base,
-                                  zIndex: 9999,
-                                }),
-                              }}
+                              value={convertValue(
+                                formik.values.orderid_1,
+                                getOptionFormula()
+                              )}
                               menuPortalTarget={document.querySelector("body")}
                               isDisabled={noEdit}
-                              placeholder={"Chọn công thức"}
-                              value={convertValue(formik.values.orderid_1, getOptionFormula())}
-                              options={getOptionFormula(formik.values.orderid_1, true)}
-                              onChange={(value) => {
-                                // formik.setFieldValue("orderid_1", value.value);
-                                if (!value) {
-                                  formik.setFieldValue("orderid_1", "");
-                                } else {
-                                  formik.setFieldValue("orderid_1", value.value);
-                                }
-                              }}
+                              placeholder={"Chọn"}
                             />
-                          )
-                        ) : (
+                          )}
+                        </Col>
+                        <Col sm={2}>
                           <Select
                             className="MuiPaper-filter__custom--select"
-                            value={convertValue(formik.values.orderid_1, getOptionFormula())}
+                            id={`calculation_id`}
+                            isClearable={true}
+                            name={`calculation_id`}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
                             menuPortalTarget={document.querySelector("body")}
                             isDisabled={noEdit}
-                            placeholder={"Chọn"}
+                            placeholder={"Chọn phép tính"}
+                            value={convertValue(
+                              formik.values.calculation_id,
+                              getOptionCalculation()
+                            )}
+                            options={getOptionCalculation(
+                              formik.values.calculation_id,
+                              true
+                            )}
+                            onChange={(value) => {
+                              if (!value) {
+                                formik.setFieldValue("calculation_id", "");
+                              } else {
+                                formik.setFieldValue(
+                                  "calculation_id",
+                                  value.value
+                                );
+                              }
+                            }}
                           />
-                        )}
-                      </Col>
-                      <Col sm={2}>
-                        <Select
-                          className="MuiPaper-filter__custom--select"
-                          id={`calculation_id`}
-                          isClearable={true}
-                          name={`calculation_id`}
-                          styles={{
-                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          }}
-                          menuPortalTarget={document.querySelector("body")}
-                          isDisabled={noEdit}
-                          placeholder={"Chọn phép tính"}
-                          value={convertValue(formik.values.calculation_id, getOptionCalculation())}
-                          options={getOptionCalculation(formik.values.calculation_id, true)}
-                          onChange={(value) => {
-                            // formik.setFieldValue("calculation_id", value.value);
-                            if (!value) {
-                              formik.setFieldValue("calculation_id", "");
-                            } else {
-                              formik.setFieldValue("calculation_id", value.value);
-                            }
-                          }}
-                        />
-                      </Col>
-                      <Col sm={2}>
-                        <Select
-                          className="MuiPaper-filter__custom--select"
-                          id={`orderid_1`}
-                          isClearable={true}
-                          name={`orderid_2`}
-                          styles={{
-                            menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                          }}
-                          menuPortalTarget={document.querySelector("body")}
-                          isDisabled={noEdit}
-                          placeholder={"Chọn CT/TP 2"}
-                          value={convertValue(formik.values.type2, getOptionType2())}
-                          options={getOptionType2(formik.values.type2, true)}
-                          onChange={(value) => {
-                            // formik.setFieldValue("type2", value.value);
-                            // formik.setFieldValue("orderid_2", "");
-                            if (!value) {
-                              formik.setFieldValue("type2", "");
-                              formik.setFieldValue("orderid_2", "");
-                            } else {
-                              formik.setFieldValue("type2", value.value);
-                            }
-                          }}
-                        />
-                      </Col>
-                      <Col sm={2}>
-                        {formik.values.type2 !== "" ? (
-                          formik.values.type2 == 0 ? (
-                            <Select
-                              className="MuiPaper-filter__custom--select"
-                              id={`orderid_2`}
-                              isClearable={true}
-                              name={`orderid_2`}
-                              styles={{
-                                menuPortal: (base) => ({
-                                  ...base,
-                                  zIndex: 9999,
-                                }),
-                              }}
-                              menuPortalTarget={document.querySelector("body")}
-                              isDisabled={noEdit}
-                              placeholder={"Chọn thành phần"}
-                              value={convertValue(formik.values.orderid_2, getOptionIngdient())}
-                              options={getOptionIngdient(formik.values.orderid_2, true)}
-                              onChange={(value) => {
-                                // formik.setFieldValue("orderid_2", value.value);
-                                if (!value) {
-                                  formik.setFieldValue("orderid_2", "");
-                                } else {
-                                  formik.setFieldValue("orderid_2", value.value);
-                                }
-                              }}
-                            />
+                        </Col>
+                        <Col sm={2}>
+                          <Select
+                            className="MuiPaper-filter__custom--select"
+                            id={`orderid_1`}
+                            isClearable={true}
+                            name={`orderid_2`}
+                            styles={{
+                              menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                            }}
+                            menuPortalTarget={document.querySelector("body")}
+                            isDisabled={noEdit}
+                            placeholder={"Chọn CT/TP 2"}
+                            value={convertValue(
+                              formik.values.type2,
+                              getOptionType2()
+                            )}
+                            options={getOptionType2(formik.values.type2, true)}
+                            onChange={(value) => {
+                              if (!value) {
+                                formik.setFieldValue("type2", "");
+                                formik.setFieldValue("orderid_2", "");
+                              } else {
+                                formik.setFieldValue("type2", value.value);
+                              }
+                            }}
+                          />
+                        </Col>
+                        <Col sm={2}>
+                          {formik.values.type2 !== "" ? (
+                            formik.values.type2 == 0 ? (
+                              <Select
+                                className="MuiPaper-filter__custom--select"
+                                id={`orderid_2`}
+                                isClearable={true}
+                                name={`orderid_2`}
+                                styles={{
+                                  menuPortal: (base) => ({
+                                    ...base,
+                                    zIndex: 9999,
+                                  }),
+                                }}
+                                menuPortalTarget={document.querySelector(
+                                  "body"
+                                )}
+                                isDisabled={noEdit}
+                                placeholder={"Chọn thành phần"}
+                                value={convertValue(
+                                  formik.values.orderid_2,
+                                  getOptionIngdient()
+                                )}
+                                options={getOptionIngdient(
+                                  formik.values.orderid_2,
+                                  true
+                                )}
+                                onChange={(value) => {
+                                  if (!value) {
+                                    formik.setFieldValue("orderid_2", "");
+                                  } else {
+                                    formik.setFieldValue(
+                                      "orderid_2",
+                                      value.value
+                                    );
+                                  }
+                                }}
+                              />
+                            ) : (
+                              <Select
+                                className="MuiPaper-filter__custom--select"
+                                isClearable={true}
+                                id={`orderid_2`}
+                                name={`orderid_2`}
+                                styles={{
+                                  menuPortal: (base) => ({
+                                    ...base,
+                                    zIndex: 9999,
+                                  }),
+                                }}
+                                menuPortalTarget={document.querySelector(
+                                  "body"
+                                )}
+                                isDisabled={noEdit}
+                                placeholder={"Chọn công thức"}
+                                value={convertValue(
+                                  formik.values.orderid_2,
+                                  getOptionFormula()
+                                )}
+                                options={getOptionFormula(
+                                  formik.values.orderid_2,
+                                  true
+                                )}
+                                onChange={(value) => {
+                                  if (!value) {
+                                    formik.setFieldValue("orderid_2", "");
+                                  } else {
+                                    formik.setFieldValue(
+                                      "orderid_2",
+                                      value.value
+                                    );
+                                  }
+                                }}
+                              />
+                            )
                           ) : (
                             <Select
                               className="MuiPaper-filter__custom--select"
-                              isClearable={true}
-                              id={`orderid_2`}
-                              name={`orderid_2`}
+                              value={convertValue(
+                                formik.values.orderid_2,
+                                getOptionFormula()
+                              )}
+                              menuPortalTarget={document.querySelector("body")}
+                              isDisabled={noEdit}
+                              placeholder={"Chọn"}
+                            />
+                          )}
+                        </Col>
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                )}
+
+                {formik.values.is_couple_formula ? (
+                  <>
+                    <Row>
+                      <Col sm={6} xs={12}>
+                        <FormGroup row>
+                          <Label
+                            for="attribute_gruop_id"
+                            sm={4}
+                            className="text-right"
+                          >
+                            Công thức tham chiếu{" "}
+                          </Label>
+                          <Col sm={8}>
+                            <Select
+                              className="MuiPaper-filter__custom--select"
+                              id={`ref_formula_id`}
+                              name={`ref_formula_id`}
                               styles={{
                                 menuPortal: (base) => ({
                                   ...base,
@@ -644,55 +1119,185 @@ function FormulaAdd({ noEdit }) {
                               }}
                               menuPortalTarget={document.querySelector("body")}
                               isDisabled={noEdit}
-                              placeholder={"Chọn công thức"}
-                              value={convertValue(formik.values.orderid_2, getOptionFormula())}
-                              options={getOptionFormula(formik.values.orderid_2, true)}
-                              onChange={(value) => {
-                                // formik.setFieldValue("orderid_2", value.value);
-                                if (!value) {
-                                  formik.setFieldValue("orderid_2", "");
-                                } else {
-                                  formik.setFieldValue("orderid_2", value.value);
-                                }
+                              isClearable={true}
+                              placeholder={"-- Chọn --"}
+                              value={convertValueSelect(
+                                formik.values.ref_formula_id,
+                                optionFormula
+                              )}
+                              options={optionFormula}
+                              onChange={(e) => {
+                                formik.setFieldValue(
+                                  "ref_formula_id",
+                                  e ? e.value : null
+                                );
                               }}
                             />
-                          )
-                        ) : (
-                          <Select
-                            className="MuiPaper-filter__custom--select"
-                            value={convertValue(formik.values.orderid_2, getOptionFormula())}
-                            menuPortalTarget={document.querySelector("body")}
-                            isDisabled={noEdit}
-                            placeholder={"Chọn"}
-                          />
-                        )}
+                          </Col>
+                        </FormGroup>
                       </Col>
-                    </FormGroup>
-                  </Col>
-                </Row>
-                {/* )} */}
+                      <Col sm={6} xs={12}>
+                        <FormGroup row>
+                          <Label
+                            for="ref_condition_id"
+                            sm={4}
+                            className="text-right"
+                          >
+                            Điều kiện tham chiếu{" "}
+                          </Label>
+                          <Col sm={8}>
+                            <Select
+                              className="MuiPaper-filter__custom--select"
+                              id={`ref_condition_id`}
+                              name={`ref_condition_id`}
+                              styles={{
+                                menuPortal: (base) => ({
+                                  ...base,
+                                  zIndex: 9999,
+                                }),
+                              }}
+                              menuPortalTarget={document.querySelector("body")}
+                              isDisabled={noEdit}
+                              isClearable={true}
+                              placeholder={"-- Chọn --"}
+                              value={convertValueSelect(
+                                formik.values.ref_condition_id,
+                                optionAttributesGroup
+                              )}
+                              options={optionAttributesGroup}
+                              onChange={(e) => {
+                                formik.setFieldValue(
+                                  "ref_condition_id",
+                                  e ? e.value : null
+                                );
+                              }}
+                            />
+                          </Col>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+
+                    <Row>
+                      <Col sm={6} xs={12}>
+                        <FormGroup row>
+                          <Label
+                            for="interpret_formula_id"
+                            sm={4}
+                            className="text-right"
+                          >
+                            Công thức lấy luận giải{" "}
+                          </Label>
+                          <Col sm={8}>
+                            <Select
+                              className="MuiPaper-filter__custom--select"
+                              id={`interpret_formula_id`}
+                              name={`interpret_formula_id`}
+                              styles={{
+                                menuPortal: (base) => ({
+                                  ...base,
+                                  zIndex: 9999,
+                                }),
+                              }}
+                              menuPortalTarget={document.querySelector("body")}
+                              isDisabled={noEdit}
+                              isClearable={true}
+                              placeholder={"-- Chọn --"}
+                              value={convertValueSelect(
+                                formik.values.interpret_formula_id,
+                                optionFormula
+                              )}
+                              options={optionFormula}
+                              onChange={(e) => {
+                                formik.setFieldValue(
+                                  "interpret_formula_id",
+                                  e ? e.value : null
+                                );
+                              }}
+                            />
+                          </Col>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </>
+                ) : null}
+
+                {formik.values.is_condition_formula ? (
+                  <>
+                    <Row>
+                      <Col xs={12} sm={12}>
+                        <Row>
+                          <Label
+                            for="condition_formula"
+                            sm={2}
+                            className="text-right"
+                          >
+                            Điều kiện
+                          </Label>
+                          <Col sm={10} xs={12}>
+                            {renderTableConditionFormular()}
+                          </Col>
+                        </Row>
+                      </Col>
+
+                      <Col xs={12}>
+                        <FormGroup row style={{ marginBottom: "2rem" }}>
+                          <Label
+                            for="condition_formula"
+                            sm={2}
+                            className="text-right"
+                          ></Label>
+                          <Col sm={10} xs={12}>
+                            {!noEdit && (
+                              <Button
+                                className="btn-sm mt-1"
+                                color="success"
+                                onClick={handleAddConditionFormula}
+                              >
+                                <i className="fa fa-plus mr-2" />
+                                Thêm dòng
+                              </Button>
+                            )}
+                          </Col>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </>
+                ) : null}
+
                 <Row>
                   <Col xs={12}>
                     <FormGroup row>
-                      <Label for="formula_name" sm={2} className="text-right">
-                        {/* Công thức */}
-                      </Label>
+                      <Label
+                        for="formula_name"
+                        sm={2}
+                        className="text-right"
+                      ></Label>
+                      {!formik.values.is_condition_formula &&
+                      !formik.values.is_couple_formula ? (
+                        <Col xs={2}>
+                          <Checkbox
+                            disabled={noEdit}
+                            onChange={(e) => {
+                              formik.setFieldValue(
+                                `is_default`,
+                                e.target.checked ? 1 : 0
+                              );
+                            }}
+                            checked={formik.values.is_default}
+                          >
+                            Ưu tiên
+                          </Checkbox>
+                        </Col>
+                      ) : null}
+
                       <Col xs={2}>
                         <Checkbox
                           disabled={noEdit}
                           onChange={(e) => {
-                            formik.setFieldValue(`is_default`, e.target.checked ? 1 : 0);
-                          }}
-                          checked={formik.values.is_default}
-                        >
-                          Ưu tiên
-                        </Checkbox>
-                      </Col>
-                      <Col xs={2}>
-                        <Checkbox
-                          disabled={noEdit}
-                          onChange={(e) => {
-                            formik.setFieldValue(`is_active`, e.target.checked ? 1 : 0);
+                            formik.setFieldValue(
+                              `is_active`,
+                              e.target.checked ? 1 : 0
+                            );
                           }}
                           checked={formik.values.is_active}
                         >
@@ -717,7 +1322,11 @@ function FormulaAdd({ noEdit }) {
                       </CheckAccess>
                     ) : (
                       <>
-                        <CheckAccess permission={id ? `FOR_FORMULA_EDIT` : `FOR_FORMULA_ADD`}>
+                        <CheckAccess
+                          permission={
+                            id ? `FOR_FORMULA_EDIT` : `FOR_FORMULA_ADD`
+                          }
+                        >
                           <button
                             className="mr-2 btn-block-sm btn btn-primary"
                             onClick={() => {
@@ -729,7 +1338,11 @@ function FormulaAdd({ noEdit }) {
                             Lưu
                           </button>
                         </CheckAccess>
-                        <CheckAccess permission={id ? `FOR_FORMULA_EDIT` : `FOR_FORMULA_ADD`}>
+                        <CheckAccess
+                          permission={
+                            id ? `FOR_FORMULA_EDIT` : `FOR_FORMULA_ADD`
+                          }
+                        >
                           <button
                             className="mr-2 btn-block-sm btn btn-success"
                             onClick={() => {

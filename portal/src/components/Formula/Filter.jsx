@@ -23,9 +23,17 @@ function Filter({ handleSubmitFillter }) {
     startDate: null,
     endDate: null,
     attributesGroupSelected: null,
+    typeFormulaSelected: null,
   });
 
   const [optionAttributesGroup, setOptionAttributesGroup] = useState([]);
+
+  const [optionTypeFormular] = useState([
+    { label: "Tất cả", value: 0 },
+    { label: "Công thức thông thường", value: 1 },
+    { label: "Công thức điều kiện", value: 2 },
+    { label: "Công thức cặp", value: 3 },
+  ]);
 
   useEffect(() => {
     document
@@ -58,7 +66,6 @@ function Filter({ handleSubmitFillter }) {
       }
       setCheckEndDate(checkEndDate);
       setDateToDate(e.target.value);
-      
     });
     loadAttributesGroup();
   }, []);
@@ -66,11 +73,11 @@ function Filter({ handleSubmitFillter }) {
   const loadAttributesGroup = async () => {
     try {
       let { items = [] } = await _formulaModel.getAttributeGruop();
-      let optionAttributesGroup = items.map(p => {
-          return {
-              value: p.attribute_gruop_id,
-              label: p.gruop_name
-          }
+      let optionAttributesGroup = items.map((p) => {
+        return {
+          value: p.attribute_gruop_id,
+          label: p.gruop_name,
+        };
       });
       setOptionAttributesGroup(optionAttributesGroup);
     } catch (error) {
@@ -81,7 +88,14 @@ function Filter({ handleSubmitFillter }) {
   };
 
   const _handleSubmitFillter = () => {
-    let { keyword, selectdActive, startDate, endDate, attributesGroupSelected } = searchValue;
+    let {
+      keyword,
+      selectdActive,
+      startDate,
+      endDate,
+      attributesGroupSelected,
+      typeFormulaSelected,
+    } = searchValue;
     var mydate = moment(dateToDate, "DD/MM/YYYY");
     var myStartDate = startDate ? startDate.format("DD/MM/YYYY") : "";
     if (myStartDate) {
@@ -104,29 +118,36 @@ function Filter({ handleSubmitFillter }) {
       selectdActive: selectdActive ? selectdActive.value : null,
       startDate: startDate ? startDate.format("DD/MM/YYYY") : null,
       endDate: endDate ? endDate.format("DD/MM/YYYY") : null,
-      attributes_group_id: attributesGroupSelected ? attributesGroupSelected.value : null
+      attributes_group_id: attributesGroupSelected
+        ? attributesGroupSelected.value
+        : null,
+      type_formula: typeFormulaSelected ? typeFormulaSelected.value : 0,
     };
 
     handleSubmitFillter(value);
   };
+
   const handleClear = () => {
     setSearchValue({
       keyword: "",
       selectdActive: { value: "1", label: "Có" },
       startDate: null,
       endDate: null,
-      attributesGroupSelected: null
+      attributesGroupSelected: null,
+      typeFormulaSelected: { label: "Tất cả", value: 0 },
     });
     let value = {
       keyword: null,
       selectdActive: 1,
       startDate: null,
       endDate: null,
-      attributes_group_id: null
+      attributes_group_id: null,
+      type_formula: 0,
     };
 
     handleSubmitFillter(value);
   };
+
   const handleKeyDown = (event) => {
     if (1 * event.keyCode === 13) {
       event.preventDefault();
@@ -138,133 +159,121 @@ function Filter({ handleSubmitFillter }) {
     <div className="ml-3 mr-3 mb-3 mt-3">
       <Form autoComplete="nope" className="zoom-scale-9">
         <Row>
-          <Col xs={3} style={{ padding: 0 }}>
-            <Col
-              xs={12}
-              style={{
-                alignItems: "center",
-              }}
-            >
+          <Col xs={12} sm={3}>
+            <FormGroup>
               <Label for="inputValue" className="mr-sm-2">
                 Từ khóa
               </Label>
-              <Col className="pl-0 pr-0">
-                <Input
-                  className="MuiPaper-filter__custom--input pr-0"
-                  autoComplete="nope"
-                  type="text"
-                  name="keyword"
-                  placeholder="Nhập tên công thức"
-                  value={searchValue.keyword}
-                  onKeyDown={handleKeyDown}
-                  onChange={(e) => {
-                    setSearchValue({
-                      ...searchValue,
-                      keyword: e.target.value,
-                    });
-                  }}
-                />
-              </Col>
-            </Col>
+              <Input
+                className="MuiPaper-filter__custom--input pr-0"
+                autoComplete="nope"
+                type="text"
+                name="keyword"
+                placeholder="Nhập tên công thức"
+                value={searchValue.keyword}
+                onKeyDown={handleKeyDown}
+                onChange={(e) => {
+                  setSearchValue({
+                    ...searchValue,
+                    keyword: e.target.value,
+                  });
+                }}
+              />
+            </FormGroup>
           </Col>
 
-          <Col xs={3} style={{ padding: 0 }}>
-            <Col
-              xs={12}
-              style={{
-                alignItems: "center",
-              }}
-            >
-              <Label for="" className="mr-sm-2">
+          <Col xs={12} sm={2}>
+            <FormGroup>
+              <Label for="inputValue" className="mr-sm-2">
                 Chỉ số
               </Label>
-              <Col className="pl-0 pr-0">
-                <Select
-                  className="MuiPaper-filter__custom--select"
-                  id={`attribute_gruop_id`}
-                  name={`attribute_gruop_id`}
-                //   styles={{
-                //     menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                //   }}
-                //   menuPortalTarget={document.querySelector("body")}
-                  isClearable={true}
-                  placeholder={"-- Chọn --"}
-                  value={searchValue.attributesGroupSelected}
-                  options={optionAttributesGroup}
-                  onChange={(value) => {
-                    setSearchValue((t) => ({
-                      ...t,
-                      attributesGroupSelected: value,
-                    }));
-                  }}
-                />
-              </Col>
-            </Col>
+              <Select
+                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                className="MuiPaper-filter__custom--select"
+                id={`attribute_gruop_id`}
+                name={`attribute_gruop_id`}
+                isClearable={true}
+                placeholder={"-- Chọn --"}
+                value={searchValue.attributesGroupSelected}
+                options={optionAttributesGroup}
+                onChange={(value) => {
+                  setSearchValue((t) => ({
+                    ...t,
+                    attributesGroupSelected: value,
+                  }));
+                }}
+              />
+            </FormGroup>
           </Col>
 
-          <Col xs={3} style={{ padding: 0 }}>
-            <Col
-              xs={12}
-              style={{
-                alignItems: "center",
-              }}
-            >
-              <Label for="" className="mr-sm-2">
+          <Col xs={12} sm={3}>
+            <FormGroup>
+              <Label for="inputValue" className="mr-sm-2">
                 Ngày tạo
               </Label>
-              <Col className="pl-0 pr-0">
-                <DatePicker
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                  startDate={searchValue.startDate}
-                  startDateId="your_unique_start_date_id"
-                  endDate={searchValue.endDate}
-                  endDateId="your_unique_end_date_id"
-                  onDatesChange={({ startDate, endDate }) => {
-                    setSearchValue({
-                      ...searchValue,
-                      startDate,
-                      endDate,
-                    });
-                  }}
-                  // onkeydown={(event) => {
-                  //   event.preventDefault();
-                  // }}
-                  isMultiple
-                />
-              </Col>
-            </Col>
+              <DatePicker
+                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                startDate={searchValue.startDate}
+                startDateId="your_unique_start_date_id"
+                endDate={searchValue.endDate}
+                endDateId="your_unique_end_date_id"
+                onDatesChange={({ startDate, endDate }) => {
+                  setSearchValue({
+                    ...searchValue,
+                    startDate,
+                    endDate,
+                  });
+                }}
+                isMultiple
+              />
+            </FormGroup>
           </Col>
-          <Col xs={3} style={{ padding: 0 }}>
-            <Col
-              xs={12}
-              style={{
-                alignItems: "center",
-              }}
-            >
-              <Label for="" className="mr-sm-2">
+
+          <Col xs={12} sm={2}>
+            <FormGroup>
+              <Label for="inputValue" className="mr-sm-2">
+                Loại công thức
+              </Label>
+              <Select
+                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                placeholder={"-- Chọn --"}
+                onChange={(value) => {
+                  setSearchValue((t) => ({
+                    ...t,
+                    typeFormulaSelected: value,
+                  }));
+                }}
+                value={searchValue.typeFormulaSelected}
+                options={optionTypeFormular}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col xs={12} sm={2}>
+            <FormGroup>
+              <Label for="inputValue" className="mr-sm-2">
                 Kích hoạt
               </Label>
-              <Col className="pl-0 pr-0">
-                <Select
-                  styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                  placeholder={"-- Chọn --"}
-                  onChange={(e) => {
-                    setSearchValue({
-                      ...searchValue,
-                      selectdActive: e,
-                    });
-                  }}
-                  value={searchValue.selectdActive}
-                  options={isActive.map(({ name: label, id: value }) => ({
-                    value,
-                    label,
-                  }))}
-                />
-              </Col>
-            </Col>
+              <Select
+                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                placeholder={"-- Chọn --"}
+                onChange={(e) => {
+                  setSearchValue({
+                    ...searchValue,
+                    selectdActive: e,
+                  });
+                }}
+                value={searchValue.selectdActive}
+                options={isActive.map(({ name: label, id: value }) => ({
+                  value,
+                  label,
+                }))}
+              />
+            </FormGroup>
           </Col>
         </Row>
-        <div className="d-flex align-items-center mt-3">
+
+        <div className="d-flex align-items-center">
           <div className="d-flex flex-fill justify-content-end">
             <FormGroup className="mb-2 ml-2 mb-sm-0">
               <Button

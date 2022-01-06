@@ -26,7 +26,13 @@ export const initialValues = {
   calculation_id: "",
   is_total_no_shortened: false,
   is_total_shortened: false,
-  is_total_2digit: false
+  is_total_2digit: false,
+  list_condition_formula: [],
+  is_couple_formula: false, //Cong thuc cap
+  is_condition_formula: false, //Cong thuc dieu kien
+  ref_formula_id: null, //Cong thuc tham chieu
+  ref_condition_id: null, //Chi so dieu kien tham chieu
+  interpret_formula_id: null, //Cong thuc tham chieu de lay luan giai 
 };
 ///// validate
 export const validationSchema = yup.object().shape({
@@ -76,6 +82,34 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
         },
       },
     },
+
+    {
+      name: "#",
+      label: "Loại công thức",
+      options: {
+        filter: false,
+        sort: true,
+        customHeadRender: (columnMeta, handleToggleColumn) => {
+          return (
+            <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head" style={{width:'15%'}}>
+              <div className="text-center">{columnMeta.label}</div>
+            </th>
+          );
+        },
+        customBodyRender: (value, tableMeta, updateValue) => {
+          let {is_condition_formula = false, is_couple_formula = false} = data[tableMeta["rowIndex"]] || {};
+          let type_formula = 'Công thức thông thường';
+          if(is_condition_formula){
+            type_formula = 'Công thức điều kiện'
+          }
+          else if(is_couple_formula){
+            type_formula = 'Công thức cặp'
+          }
+          return <div className="text-left">{type_formula}</div>;
+        },
+      },
+    },
+    
     {
       name: "order_index",
       label: "Thứ tự sắp xếp ",
