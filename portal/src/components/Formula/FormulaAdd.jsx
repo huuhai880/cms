@@ -462,31 +462,6 @@ function FormulaAdd({ noEdit }) {
     formik.setFieldValue("list_condition_formula", _list_condition_formula);
   };
 
-  const handleChangeInputValue = (index, e) => {
-    let _list_condition_formula = [...formik.values.list_condition_formula];
-    _list_condition_formula[index].value = e.target.value;
-    formik.setFieldValue("list_condition_formula", _list_condition_formula);
-  };
-
-  const handleChangeAttrGroup = (index, val) => {
-    let _list_condition_formula = [...formik.values.list_condition_formula];
-    _list_condition_formula[index].attributes_group_id = val ? val.value : null;
-    formik.setFieldValue("list_condition_formula", _list_condition_formula);
-  };
-
-  const handleChangeTypeCondition = (index, val) => {
-    let _list_condition_formula = [...formik.values.list_condition_formula];
-    _list_condition_formula[index].is_fomula_orther_id = val ? val.value : null;
-    _list_condition_formula[index].orther_id = null;
-    formik.setFieldValue("list_condition_formula", _list_condition_formula);
-  };
-
-  const handleChangeFormularOrInterpret = (index, val) => {
-    let _list_condition_formula = [...formik.values.list_condition_formula];
-    _list_condition_formula[index].orther_id = val ? val.value : null;
-    formik.setFieldValue("list_condition_formula", _list_condition_formula);
-  };
-
   const handleChangeRowConditionFormula = (name, index, value) => {
     let _list_condition_formula = [...formik.values.list_condition_formula];
     _list_condition_formula[index][name] = value;
