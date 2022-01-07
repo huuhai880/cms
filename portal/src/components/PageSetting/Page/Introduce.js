@@ -100,19 +100,19 @@ export default class IntroducePage extends PureComponent {
         let values = Object.assign(
             {}, {
                 INTRODUCE_TITLE: {
-                    value: "BẢO TÀNG TRI THỨC DI ĐỘNG",
+                    value: "",
                     data_type: 'string'
                 },
                 INTRODUCE_DESCRIPTION: {
-                    value: "Khi chết bạn không mang theo được tiền bạc, vật chất… Nhưng bạn lại mang theo thứ mà nên để lại, đó là tri thức! Thứ mà cả đời bạn lăn lộn để có được. Tri thức của bạn cần một nơi “quy hoạch”, “bảo tồn” để lan toả giá trị cho thế hệ sau, đó chính là “Bảo tàng Tri thức Di động”.",
+                    value: "",
                     data_type: 'string'
                 },
                 INTRODUCE_VISION_TITLE: {
-                    value: "Tầm nhìn - Sứ mệnh",
+                    value: "",
                     data_type: 'string'
                 },
                 INTRODUCE_VISION_DESCRIPTION:{
-                    value:  `<p>Trở thành người bạn đồng hàng đáng<b class="text-gray-200 font-bold"> tin cậy</b> , trên hành trình lan toả<b class="text-gray-200 font-bold"> tri thức Việt</b> của các<b class="text-gray-200 font-bold"> cá nhân, tổ chức.</b></p>`,
+                    value:  ``,
                     data_type: 'string'
                 },
                 INTRODUCE_VISION_IMAGE: {
@@ -120,11 +120,11 @@ export default class IntroducePage extends PureComponent {
                     data_type: 'image'
                 },
                 INTRODUCE_PUREVALUE_TITLE: {
-                    value: "Giá trị cốt lõi",
+                    value: "",
                     data_type: 'string'
                 },
                 INTRODUCE_PUREVALUE_DESCRIPTION: {
-                    value:  `<p><b class="text-gray-300 font-bold"># Dũng cảm</b> để dám<b class="text-gray-300 font-bold"> nghĩ</b>, dám<b class="text-gray-300 font-bold"> làm</b>, dám<b class="text-gray-300 font-bold"> tiên phong</b>.</p>`,
+                    value:  ``,
                     data_type: 'string'
                 },
                 INTRODUCE_PUREVALUE_IMAGE: {
@@ -134,19 +134,19 @@ export default class IntroducePage extends PureComponent {
                 INTRODUCE_FOUNDING_TEAM_LIST: {
                     value: [
                         {
-                            name: 'Mr. Lê Đọp',
+                            name: '',
                             image: '',
-                            note: 'Nỗi đau lớn nhất của các bậc trí thức là không có nơi nào ghi nhận và công nhận họ cũng như cùng họ lan toả giá trị cho các thế hệ. Nơi này sẽ giải quyết nỗi đau đó.'
+                            note: ''
                         },
                         {
-                            name: 'Mr. Mã Thanh Danh',
+                            name: '',
                             image: '',
-                            note: 'Nỗi đau lớn nhất của các bậc trí thức là không có nơi nào ghi nhận và công nhận họ cũng như cùng họ lan toả giá trị cho các thế hệ. Nơi này sẽ giải quyết nỗi đau đó.'
+                            note: ''
                         },
                         {
-                            name: 'Mrs. Võ Thị Phương Thảo',
+                            name: '',
                             image: '',
-                            note: 'Nỗi đau lớn nhất của các bậc trí thức là không có nơi nào ghi nhận và công nhận họ cũng như cùng họ lan toả giá trị cho các thế hệ. Nơi này sẽ giải quyết nỗi đau đó.'
+                            note: ''
                         },
                     ],
                     data_type: 'json'
