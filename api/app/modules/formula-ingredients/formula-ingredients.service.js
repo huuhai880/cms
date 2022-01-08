@@ -209,6 +209,10 @@ const addIngredient = async (body = {}) => {
                     'PARAMOTHERID',
                     apiHelper.getValueFromObject(body, 'param_other_id')
                 )
+                .input(
+                    'ISYEARVIEWING',
+                    apiHelper.getValueFromObject(body, 'is_year_viewing', false)
+                )
                 .execute('FOR_FORMULAINGREDIENTS_CreateOrupdate_AdminWeb');
 
             return new ServiceResponse(true, '', resultIngredient.recordset[0].RESULT);
@@ -335,6 +339,10 @@ const addIngredient = async (body = {}) => {
                     'PARAMOTHERID',
                     apiHelper.getValueFromObject(body, 'param_other_id')
                 )
+                .input(
+                    'ISYEARVIEWING',
+                    apiHelper.getValueFromObject(body, 'is_year_viewing', false)
+                )
                 .execute('FOR_FORMULAINGREDIENTS_CreateOrupdate_AdminWeb');
 
             return new ServiceResponse(true, '', resultIngredient.recordset[0].RESULT);
@@ -459,6 +467,10 @@ const addIngredient = async (body = {}) => {
                 .input(
                     'PARAMOTHERID',
                     apiHelper.getValueFromObject(body, 'param_other_id')
+                )
+                .input(
+                    'ISYEARVIEWING',
+                    apiHelper.getValueFromObject(body, 'is_year_viewing', false)
                 )
                 .execute('FOR_FORMULAINGREDIENTS_CreateOrupdate_AdminWeb');
 

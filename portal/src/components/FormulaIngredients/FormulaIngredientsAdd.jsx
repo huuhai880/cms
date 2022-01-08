@@ -537,7 +537,7 @@ function FormulaIngredientsAdd({ noEdit }) {
                         <Label for="ingredient_name" sm={2}>
                           {/* Hình thức <span className="font-weight-bold red-text">*</span> */}
                         </Label>
-                        <Col sm={2} className="align-self-center">
+                        {/* <Col sm={2} className="align-self-center">
                           <Checkbox
                             disabled={noEdit}
                             onChange={(e) => {
@@ -603,6 +603,106 @@ function FormulaIngredientsAdd({ noEdit }) {
                             value={formik.values.ingredient_value}
                             onChange={formik.handleChange}
                           />
+                        </Col> */}
+
+                        <Col sm={10} xs={12}>
+                          <Row style={{alignItems:'center'}}>
+                            <Col sm={8}>
+                              <Row>
+                                <Col sm={3} className="align-self-center">
+                                  <Checkbox
+                                    disabled={noEdit}
+                                    onChange={(e) => {
+                                      formik.setFieldValue(
+                                        `is_gender`,
+                                        e.target.checked ? 1 : 0
+                                      );
+                                    }}
+                                    checked={formik.values.is_gender}
+                                  >
+                                    Giới tính
+                                  </Checkbox>
+                                </Col>
+
+                                <Col sm={3} className="align-self-center">
+                                  <Checkbox
+                                    disabled={noEdit}
+                                    onChange={(e) => {
+                                      formik.setFieldValue(
+                                        `is_crrent_age`,
+                                        e.target.checked ? 1 : 0
+                                      );
+                                    }}
+                                    checked={formik.values.is_crrent_age}
+                                  >
+                                    Tuổi hiện tại
+                                  </Checkbox>
+                                </Col>
+
+                                <Col sm={3} className="align-self-center">
+                                  <Checkbox
+                                    disabled={noEdit}
+                                    onChange={(e) => {
+                                      formik.setFieldValue(
+                                        `is_crrent_year`,
+                                        e.target.checked ? 1 : 0
+                                      );
+                                    }}
+                                    checked={formik.values.is_crrent_year}
+                                  >
+                                    Năm hiện tại
+                                  </Checkbox>
+                                </Col>
+
+                                <Col sm={3} className="align-self-center">
+                                  <Checkbox
+                                    disabled={noEdit}
+                                    onChange={(e) => {
+                                      formik.setFieldValue(
+                                        `is_year_viewing`,
+                                        e.target.checked ? 1 : 0
+                                      );
+                                    }}
+                                    checked={formik.values.is_year_viewing}
+                                  >
+                                    Năm đang xem
+                                  </Checkbox>
+                                </Col>
+                              </Row>
+                            </Col>
+
+                            <Col sm={4}>
+                              <Row>
+                                <Col sm={6} className="align-self-center">
+                                  <Checkbox
+                                    disabled={noEdit}
+                                    onChange={(e) => {
+                                      formik.setFieldValue(
+                                        `is_value`,
+                                        e.target.checked ? 1 : 0
+                                      );
+                                    }}
+                                    checked={formik.values.is_value}
+                                  >
+                                    Thành phần giá trị
+                                  </Checkbox>
+                                </Col>
+
+                                <Col sm={6}>
+                                  <Input
+                                    name="ingredient_value"
+                                    id="ingredient_value"
+                                    type="text"
+                                    placeholder="Nhập giá trị"
+                                    disabled={noEdit}
+                                    value={formik.values.ingredient_value}
+                                    onChange={formik.handleChange}
+                                  />
+                                </Col>
+                              </Row>
+                            </Col>
+
+                          </Row>
                         </Col>
                       </FormGroup>
                     </Col>

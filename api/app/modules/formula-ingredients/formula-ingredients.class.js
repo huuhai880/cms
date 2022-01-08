@@ -54,7 +54,8 @@ const template = {
 
   ingredient_value: '{{#? VALUEINGREDIENTS}}',
   is_apply_other: '{{ISAPPLYOTHER ? 1 : 0}}',
-  param_other_id: '{{#? PARAMOTHERID}}'
+  param_other_id: '{{#? PARAMOTHERID}}',
+  is_year_viewing: '{{ISYEARVIEWING ? 1 : 0}}'
 };
 let transform = new Transform(template);
 const list = (users = []) => {
@@ -124,7 +125,8 @@ const detail = (users = []) => {
     'is_gender',
     'desc',
     'is_apply_other',
-    'param_other_id'
+    'param_other_id',
+    'is_year_viewing'
   ]);
 };
 module.exports = {

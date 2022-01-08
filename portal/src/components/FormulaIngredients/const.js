@@ -48,7 +48,8 @@ export const initialValues = {
   is_gender: "",
   type: "",
   is_apply_other:false,
-  param_other_id :null
+  param_other_id :null,
+  is_year_viewing: false
 };
 
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
