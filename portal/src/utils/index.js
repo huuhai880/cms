@@ -7,8 +7,8 @@ import { Label } from "reactstrap";
  * @return {bool|mixed}
  */
 export function isString(data, rtnData) {
-  let rs = "[object String]" === Object.prototype.toString.call(data);
-  return undefined !== rtnData ? (rs ? data : rtnData) : rs;
+    let rs = "[object String]" === Object.prototype.toString.call(data);
+    return undefined !== rtnData ? (rs ? data : rtnData) : rs;
 }
 
 /**
@@ -16,8 +16,8 @@ export function isString(data, rtnData) {
  * @return {bool|mixed}
  */
 export function isPlainObject(data, rtnData) {
-  let rs = "[object Object]" === Object.prototype.toString.call(data);
-  return undefined !== rtnData ? (rs ? data : rtnData) : rs;
+    let rs = "[object Object]" === Object.prototype.toString.call(data);
+    return undefined !== rtnData ? (rs ? data : rtnData) : rs;
 }
 
 /**
@@ -25,11 +25,11 @@ export function isPlainObject(data, rtnData) {
  * @return {bool|mixed}
  */
 export function isBoolean(data, rtnData) {
-  let rs = "[object Boolean]" === Object.prototype.toString.call(data);
-  return undefined !== rtnData ? (rs ? data : rtnData) : rs;
+    let rs = "[object Boolean]" === Object.prototype.toString.call(data);
+    return undefined !== rtnData ? (rs ? data : rtnData) : rs;
 }
 export function isBool(data, rtnData) {
-  return isBoolean(data, rtnData);
+    return isBoolean(data, rtnData);
 }
 
 /**
@@ -37,8 +37,8 @@ export function isBool(data, rtnData) {
  * @return {bool}
  */
 export function isVoid(data, rtnData) {
-  let rs = data === null || data === undefined;
-  return undefined !== rtnData ? (rs ? data : rtnData) : rs;
+    let rs = data === null || data === undefined;
+    return undefined !== rtnData ? (rs ? data : rtnData) : rs;
 }
 
 /**
@@ -46,7 +46,7 @@ export function isVoid(data, rtnData) {
  * @return {String}
  */
 export function uniqueID() {
-  return (new Date().getTime() + Math.random()).toString();
+    return (new Date().getTime() + Math.random()).toString();
 }
 
 /**
@@ -70,16 +70,16 @@ encryptPassword.salt = '123-456-789';
  * @param {Object} b An object containing indexes mapping.
  */
 export function shuffle(a, b) {
-  var j, x, i;
-  b = typeof b === "object" ? b : {};
-  for (i = a.length - 1; i >= 0; i--) {
-    j = Math.floor(Math.random() * (i + 1));
-    b[i] = j;
-    x = a[i];
-    a[i] = a[j];
-    a[j] = x;
-  }
-  return a;
+    var j, x, i;
+    b = typeof b === "object" ? b : {};
+    for (i = a.length - 1; i >= 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        b[i] = j;
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
 }
 
 /**
@@ -87,34 +87,34 @@ export function shuffle(a, b) {
  * @return {Object}
  */
 export function configTableOptions(count, page, query) {
-  return {
-    fixedHeader: true,
-    filterType: "dropdown",
-    selectableRows: "single",
-    responsive: "stacked",
-    count: count,
-    page: 0,
-    rowsPerPage: query.itemsPerPage,
-    rowsPerPageOptions: [25, 50, 75, 100],
-    download: false,
-    print: false,
-    viewColumns: false,
-    search: false,
-    filter: false,
-    pagination: false,
-    textLabels: {
-      body: {
-        noMatch: "Không tìm thấy dữ liệu.",
-        toolTip: "Sắp xếp",
-      },
-      pagination: {
-        next: "Trang tiếp theo",
-        previous: "Trang trước đó",
-        rowsPerPage: "Số dòng trên trang:",
-        displayRows: "của",
-      },
-    },
-  };
+    return {
+        fixedHeader: true,
+        filterType: "dropdown",
+        selectableRows: "single",
+        responsive: "stacked",
+        count: count,
+        page: 0,
+        rowsPerPage: query.itemsPerPage,
+        rowsPerPageOptions: [25, 50, 75, 100],
+        download: false,
+        print: false,
+        viewColumns: false,
+        search: false,
+        filter: false,
+        pagination: false,
+        textLabels: {
+            body: {
+                noMatch: "Không tìm thấy dữ liệu.",
+                toolTip: "Sắp xếp",
+            },
+            pagination: {
+                next: "Trang tiếp theo",
+                previous: "Trang trước đó",
+                rowsPerPage: "Số dòng trên trang:",
+                displayRows: "của",
+            },
+        },
+    };
 }
 
 /**
@@ -122,106 +122,106 @@ export function configTableOptions(count, page, query) {
  * @return {Object}
  */
 export function configIDRowTable(
-  fied = "",
-  url = "",
-  query = {},
-  customSTT = null,
-  target
+    fied = "",
+    url = "",
+    query = {},
+    customSTT = null,
+    target
 ) {
-  return {
-    name: fied,
-    label: "STT",
-    options: {
-      filter: false,
-      sort: false,
-      customHeadRender: (columnMeta, handleToggleColumn) => {
-        return (
-          <th
-            key={`head-th-${columnMeta.label}`}
-            className="MuiTableCell-root MuiTableCell-head"
-            style={{ width: "20px" }}
-          >
-            <div className="text-center">{columnMeta.label}</div>
-          </th>
-        );
-      },
-      customBodyRender: (value, tableMeta, updateValue) => {
-        let stt =
-          query.page > 1
-            ? (query.page - 1) * query.itemsPerPage + (tableMeta.rowIndex + 1)
-            : tableMeta.rowIndex + 1;
-        stt = customSTT ? tableMeta.rowData[customSTT] : stt;
-        return (
-          <div
-            // className={!customSTT ? "text-center" : ""}
-            className="text-center"
-            style={{
-              width: "40px",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {url ? (
-              <Link to={`${url}${value}`} target={target || "_self"}>
-                {stt}
-              </Link>
-            ) : (
-              <Label>{stt}</Label>
-            )}
-          </div>
-        );
-      },
-    },
-  };
+    return {
+        name: fied,
+        label: "STT",
+        options: {
+            filter: false,
+            sort: false,
+            customHeadRender: (columnMeta, handleToggleColumn) => {
+                return (
+                    <th
+                        key={`head-th-${columnMeta.label}`}
+                        className="MuiTableCell-root MuiTableCell-head"
+                        style={{ width: "20px" }}
+                    >
+                        <div className="text-center">{columnMeta.label}</div>
+                    </th>
+                );
+            },
+            customBodyRender: (value, tableMeta, updateValue) => {
+                let stt =
+                    query.page > 1
+                        ? (query.page - 1) * query.itemsPerPage + (tableMeta.rowIndex + 1)
+                        : tableMeta.rowIndex + 1;
+                stt = customSTT ? tableMeta.rowData[customSTT] : stt;
+                return (
+                    <div
+                        // className={!customSTT ? "text-center" : ""}
+                        className="text-center"
+                        style={{
+                            width: "40px",
+                            textOverflow: "ellipsis",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                        }}
+                    >
+                        {url ? (
+                            <Link to={`${url}${value}`} target={target || "_self"}>
+                                {stt}
+                            </Link>
+                        ) : (
+                            <Label>{stt}</Label>
+                        )}
+                    </div>
+                );
+            },
+        },
+    };
 }
 
 // @var {Intl.NumberFormat}
 const numberFormatIntl = new Intl.NumberFormat("vi-VN", {
-  style: "currency",
-  currency: "VND",
+    style: "currency",
+    currency: "VND",
 });
 /**
  * Number format
  * @param {Number|String} val
  * @return {String}
  */
-export function   numberFormat(val) {
-  return numberFormatIntl.format(val);
+export function numberFormat(val) {
+    return numberFormatIntl.format(val);
 }
 
 export function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+    });
 }
 
 export function splitString(str, n, useWordBoundary = true) {
-  if (str.length <= n) {
-    return str;
-  }
-  const subString = str.substr(0, n - 1);
-  return (
-    (useWordBoundary
-      ? subString.substr(0, subString.lastIndexOf(" "))
-      : subString) + "..."
-  );
+    if (str.length <= n) {
+        return str;
+    }
+    const subString = str.substr(0, n - 1);
+    return (
+        (useWordBoundary
+            ? subString.substr(0, subString.lastIndexOf(" "))
+            : subString) + "..."
+    );
 }
 
 export const convertValueSelect = (value, options) => {
-  if (!(typeof value === "object") && options && options.length) {
-    value = ((_val) => {
-      return options.find((item) => "" + item.value === "" + _val);
-    })(value);
-  } else if (Array.isArray(value) && options && options.length) {
-    return options.filter((item) => {
-      return value.find((e) => e == item.value);
-    });
-  }
-  return value;
+    if (!(typeof value === "object") && options && options.length) {
+        value = ((_val) => {
+            return options.find((item) => "" + item.value === "" + _val);
+        })(value);
+    } else if (Array.isArray(value) && options && options.length) {
+        return options.filter((item) => {
+            return value.find((e) => e == item.value);
+        });
+    }
+    return value;
 };
 
 
@@ -230,3 +230,25 @@ export function formatPrice(price) {
     return new Intl.NumberFormat('de-DE',).format(price || 0)
 }
 
+
+
+export const changeAlias = (val) => {
+    var str = val;
+    str = str.trim();
+    str = str.toLowerCase();
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(
+        /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+        " "
+    );
+    str = str.replace(/ + /g, "-");
+    str = str.replace(/[ ]/g, "-");
+    str = str.trim();
+    return str;
+};

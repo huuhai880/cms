@@ -318,7 +318,7 @@ export const validationSchema = yup.object().shape({
           return (
             item.data_child.findIndex(
               (item_child) =>
-                item_child.data_selected == null || item_child.data_selected.length == 0
+                (item_child.data_selected == null || item_child.data_selected.length == 0) && item_child.attributes_group_id != -1
             ) != -1
           );
         });

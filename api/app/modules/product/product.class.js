@@ -58,7 +58,8 @@ const template = {
   showIndex: '{{#? ORDERINDEXINTERPRET}}',
   product_page_id:'{{#? PRODUCTPAGEID}}',
   link_landing_page:'{{#? LINKLANDINGPAGE}}',
-  is_new_comment: '{{ISNEWCOMMENT ? 1 : 0}}'
+  is_new_comment: '{{ISNEWCOMMENT ? 1 : 0}}',
+  date_sort: '{{#? CREATEDDATE}}'
 };
 
 let transform = new Transform(template);
@@ -132,7 +133,8 @@ const listInterpret = (list = []) => {
     'text_url',
     'url',
     'is_show_search_result',
-    'is_selected'
+    'is_selected',
+    'date_sort'
   ]);
 };
 
@@ -203,7 +205,7 @@ const listInterPertPage = (users = []) => {
     'attributes_name',
     'interpret_detail_name',
     'showIndex',
-
+    'page_id'
   ]);
 }
 
@@ -217,6 +219,17 @@ const list_Interpert = (users = []) => {
     'interpret_detail_name',
   ]);
 }
+
+const listInterpretSpecialOfPage = (list = []) => {
+    return transform.transform(list, [
+      'interpret_detail_id',
+      'interpret_id',
+      'attributes_group_id',
+      'attributes_id',
+      'page_id',
+      'product_id',
+    ]);
+  }
 
 module.exports = {
   options,
@@ -232,4 +245,5 @@ module.exports = {
   listAttGroupProductPage,
   listInterPertPage,
   list_Interpert,
+  listInterpretSpecialOfPage
 };

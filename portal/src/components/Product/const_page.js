@@ -147,7 +147,7 @@ export const columns_page_child = (parent_key,
                             className="btn-sm"
                             type="button"
                             onClick={() => {
-                                setShowProductConfig(record.data_interpret, index, parent_key);
+                                setShowProductConfig(record.data_interpret, index, parent_key, record);
 
                             }}
                         >
