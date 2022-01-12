@@ -478,8 +478,6 @@ function FormulaAdd({noEdit}) {
     formik.setFieldValue('list_condition_formula', _list_condition_formula);
   };
 
-  console.log(formik.values.list_condition_formula);
-
   const handleAddConditionFormula = () => {
     let conditionFormula = {
       formula_id: null,
