@@ -7,8 +7,10 @@ const prefix = '/discount';
 // List
 routes.route('/getOption')
   .get(discountController.getOptions);
-
-
+routes.route('')
+  .get(discountController.getListDiscount);
+routes.route('')
+  .post(discountController.createOrUpdateDiscount);
 
 
 module.exports = {

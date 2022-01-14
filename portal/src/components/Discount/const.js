@@ -8,7 +8,7 @@ import { Checkbox } from "antd";
 
 import * as yup from "yup";
 export const initialValues = {
-  discount_id: '',
+  discount_id: null,
   discount_code: "",
   is_percent_discount: true,
   is_money_discount: false,
@@ -20,20 +20,23 @@ export const initialValues = {
   is_apply_orther_discount: true,
   is_none_requirement: true,
   is_mintotal_money: false,
-  value_mintotal_money: "",
+  value_mintotal_money: null,
   is_min_product: false,
-  is_value_min_product: "",
-  discount_status: "",
+  is_value_min_product: null,
+  discount_status: 1,
   product_list: [],
   customer_type_list: [],
   is_active: 1,
+  start_date: null,
+  end_date: null,
+  description: '',
 
 };
 ///// validate
 export const validationSchema = yup.object().shape({
   discount_code: yup.string().required("Mã code là bắt buộc."),
   discount_value: yup.string().required("Giá trị là bắt buộc."),
-
+  start_date: yup.string().required("Thời gian bắt đầu áp dụng là bắt buộc.")
 });
 export const getColumTable = (data, total, query, handleDelete, handleReply, handleReview) => {
   // console.log(data);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Card,
   CardBody,
   CardHeader,
@@ -11,6 +12,7 @@ import {
   Input,
   Button,
 } from "reactstrap";
+import moment from 'moment'
 import { Radio, Checkbox, Space, Table } from 'antd';
 import { useParams } from "react-router";
 import { useFormik } from "formik";
@@ -21,34 +23,23 @@ import { CheckAccess } from "../../navigation/VerifyAccess";
 import Select from "react-select";
 import { columns_customer_type, columns_product } from "./colums";
 import DatePicker from "../Common/DatePicker";
-import {
-  mapDataOptions4Select
-} from '../../utils/html';
-
-
 
 function DiscountAdd({ noEdit }) {
   const _discountModel = new DiscountModel();
   const [dataDiscount, setDataDiscount] = useState(initialValues);
   let { id } = useParams();
+  const [alerts, setAlerts] = useState([])
   const [btnType, setbtnType] = useState("");
   const [dataOption, setDataOption] = useState({
     product: [],
     customerType: [],
   })
-  const [isActive, setIsActive] = useState([
-    { name: "Không", id: "0" },
-    { name: "Có", id: "1" },
-    { name: "Tất cả", id: "2" },
-  ]);
   const [dataStatus, setDataStaus] = useState([
     { name: "Chưa áp dụng", id: "1" },
     { name: "Đang áp dụng", id: "2" },
     { name: "Đã kết thúc", id: "3" },
   ]);
 
-
-  const [dataProduct, setDataProduct] = useState([]);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: dataDiscount,
@@ -56,13 +47,12 @@ function DiscountAdd({ noEdit }) {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: (values) => {
-      console.log(values);
-      // handleCreateOrUpdate(values);
+      handleCreateOrUpdate(values);
     },
   });
   //// create discount
   const handleCreateOrUpdate = async (values) => {
-
+    let alerts = [];
     try {
       _discountModel.create(values).then((data) => {
         if (btnType == "save") {
@@ -75,17 +65,33 @@ function DiscountAdd({ noEdit }) {
         } else if (btnType == "save&quit") {
           window._$g.toastr.show("Lưu thành công!", "success");
           setDataDiscount(initialValues);
-          return window._$g.rdr("/letter");
+          return window._$g.rdr("/discount");
         }
+        setAlerts([]);
+      }).catch((error) => {
+        let { errors, statusText, message } = error;
 
+        let msg = [`<b>${statusText || message}</b>`]
+          .concat(errors || [])
+          .join("<br/>");
+
+        alerts.push({ color: "danger", msg });
+        setAlerts(alerts);
       });
-    } catch (error) { } finally {
+    } catch (error) {
+
+
+    } finally {
+      
       formik.setSubmitting(false);
       window.scrollTo(0, 0);
 
     }
 
   };
+
+
+
   //////get data detail
   useEffect(() => {
     if (id) {
@@ -114,7 +120,6 @@ function DiscountAdd({ noEdit }) {
 
 
   const _getBundleData = async () => {
-
     let bundle = {};
     let all = [
       _discountModel.getOptions()
@@ -123,8 +128,6 @@ function DiscountAdd({ noEdit }) {
           bundle['customerType'] = data.resCustomer
         }),
     ];
-
-
     await Promise.all(all)
       .catch(err => window._$g.dialogs.alert(
         window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
@@ -244,7 +247,15 @@ function DiscountAdd({ noEdit }) {
     customer_type_list.splice(findIndex, 1)
     formik.setFieldValue('customer_type_list', customer_type_list)
   }
+  function disabledDate(current) {
 
+    return current && current.valueOf() < moment().add(-1, 'days');
+  }
+
+  const handleChangeDate = (startDate, endDate) => {
+    formik.setFieldValue('start_date', startDate ? moment(startDate).format('DD/MM/YYYY') : '');
+    formik.setFieldValue('end_date', endDate ? moment(endDate).format('DD/MM/YYYY') : '');
+  }
 
   return (
     <div key={`view`} className="animated fadeIn news">
@@ -255,7 +266,20 @@ function DiscountAdd({ noEdit }) {
               {/* <b>{id ? "Chỉnh sửa" : "Thêm mới"}  </b> */}
               <b>{id ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} mã khuyến mãi </b>
             </CardHeader>
+
             <CardBody>
+              {alerts.map(({ color, msg }, idx) => {
+                return (
+                  <Alert
+                    key={`alert-${idx}`}
+                    color={color}
+                    isOpen={true}
+                    toggle={() => setAlerts({ alerts: [] })}
+                  >
+                    <span dangerouslySetInnerHTML={{ __html: msg }} />
+                  </Alert>
+                );
+              })}
               <Form id="formInfo" onSubmit={formik.handleSubmit}>
                 <Row xs={12} sm={12}>
                   <Col xs={6} sm={6}>
@@ -284,7 +308,7 @@ function DiscountAdd({ noEdit }) {
                       </Col>
                     </FormGroup>
                     <FormGroup>
-                      <Label for="letter" sm={12}>
+                      <Label for="is_discount" sm={12}>
                         Hình thức khuyến mãi <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={12}>
@@ -294,18 +318,18 @@ function DiscountAdd({ noEdit }) {
                             <Radio checked={formik.values.is_money_discount} value={1}>Tiền cố định</Radio>
                           </Space>
                         </Radio.Group>
-                        {formik.errors.letter_name && formik.touched.letter_name ? (
+                        {formik.errors.is_discount && formik.touched.is_discount ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
                           >
-                            {formik.errors.letter_name}
+                            {formik.errors.is_discount}
                           </div>
                         ) : null}
                       </Col>
                     </FormGroup>
                     <FormGroup>
-                      <Label for="letter" sm={12}>
+                      <Label for="is_appoint_product" sm={12}>
                         Áp dụng cho <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={12}>
@@ -342,12 +366,12 @@ function DiscountAdd({ noEdit }) {
                         </div>
 
 
-                        {formik.errors.letter_name && formik.touched.letter_name ? (
+                        {formik.errors.is_appoint_product && formik.touched.is_appoint_product ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
                           >
-                            {formik.errors.letter_name}
+                            {formik.errors.is_appoint_product}
                           </div>
                         ) : null}
                       </Col>
@@ -359,7 +383,7 @@ function DiscountAdd({ noEdit }) {
                     </FormGroup>
 
                     <FormGroup>
-                      <Label for="letter" sm={12}>
+                      <Label for="is_none_requirement" sm={12}>
                         Yêu cầu được áp dụng khuyến mãi<span className="font-weight-bold red-text">*</span>
                       </Label>
 
@@ -378,8 +402,8 @@ function DiscountAdd({ noEdit }) {
                           </div>
                           <Input
                             style={{ marginTop: 8, display: 'block' }}
-                            name="letter_name"
-                            id="letter_name"
+                            name="is_mintotal_money"
+                            id="is_mintotal_money"
                             type="text"
                             placeholder="Đơn giá tối thiểu"
                             disabled={noEdit ? noEdit : !formik.values.is_mintotal_money}
@@ -393,8 +417,8 @@ function DiscountAdd({ noEdit }) {
                           </div>
                           <Input
                             style={{ marginTop: 8, display: 'block' }}
-                            name="letter_name"
-                            id="letter_name"
+                            name="is_value_min_product"
+                            id="is_value_min_product"
                             type="text"
                             placeholder="Sản phẩm tối thiểu"
                             disabled={noEdit ? noEdit : !formik.values.is_min_product}
@@ -413,14 +437,11 @@ function DiscountAdd({ noEdit }) {
                           </div>
                         ) : null}
                       </Col>
-
                     </FormGroup>
-
-
                   </Col>
                   <Col xs={6} sm={6}>
                     <FormGroup>
-                      <Label for="letter" sm={12}>
+                      <Label for="discount_status" sm={12}>
                         Trạng thái <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={12}>
@@ -437,18 +458,18 @@ function DiscountAdd({ noEdit }) {
                             label,
                           }))}
                         />
-                        {formik.errors.letter_name && formik.touched.letter_name ? (
+                        {formik.errors.discount_status && formik.touched.discount_status ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
                           >
-                            {formik.errors.letter_name}
+                            {formik.errors.discount_status}
                           </div>
                         ) : null}
                       </Col>
                     </FormGroup>
                     <FormGroup>
-                      <Label for="letter" sm={12}>
+                      <Label for="discount_value" sm={12}>
                         Giá trị <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={12}>
@@ -459,7 +480,7 @@ function DiscountAdd({ noEdit }) {
                           placeholder="Giá trị"
                           min={0}
                           disabled={noEdit}
-                          value={formik.values.letter_name}
+                          value={formik.values.discount_value}
                           onChange={formik.handleChange}
                         >
                         </Input>
@@ -475,7 +496,7 @@ function DiscountAdd({ noEdit }) {
                       </Col>
                     </FormGroup>
                     <FormGroup>
-                      <Label for="letter" sm={12}>
+                      <Label for="is_app_point_customer_type" sm={12}>
                         Đối tượng khách hàng áp dụng <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={12}>
@@ -514,63 +535,63 @@ function DiscountAdd({ noEdit }) {
                         </div>
 
 
-                        {formik.errors.letter_name && formik.touched.letter_name ? (
+                        {formik.errors.is_app_point_customer_type && formik.touched.is_app_point_customer_type ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
                           >
-                            {formik.errors.letter_name}
+                            {formik.errors.is_app_point_customer_type}
                           </div>
                         ) : null}
                       </Col>
                     </FormGroup>
                     <FormGroup>
-                      <Label for="letter" sm={12}>
+                      <Label for="date_apply" sm={12}>
                         Thời gian áp dụng <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={12}>
                         <DatePicker
-
                           styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-                          startDate={''}
+                          startDate={formik.values.start_date ? moment(formik.values.start_date, "DD/MM/YYYY") : ""}
                           startDateId="your_unique_start_date_id"
-                          endDate={''}
+                          endDate={formik.values.end_date ? moment(formik.values.end_date, "DD/MM/YYYY") : ""}
                           endDateId="your_unique_end_date_id"
                           onDatesChange={({ startDate, endDate }) => {
-
+                            handleChangeDate(startDate, endDate)
                           }}
                           isMultiple
+                          minToday={disabledDate}
                         />
-                        {formik.errors.letter_name && formik.touched.letter_name ? (
+                        {formik.errors.start_date && formik.touched.start_date ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
                           >
-                            {formik.errors.letter_name}
+                            {formik.errors.start_date}
                           </div>
                         ) : null}
                       </Col>
                     </FormGroup>
                     <FormGroup>
-                      <Label for="letter" sm={12}>
+                      <Label for="description" sm={12}>
                         Ghi chú
                       </Label>
                       <Col sm={12}>
                         <Input
-                          name="letter_name"
-                          id="letter_name"
+                          name="description"
+                          id="description"
                           type="textarea"
                           placeholder="Ghi chú"
                           disabled={noEdit}
-                          value={formik.values.letter_name}
+                          value={formik.values.description}
                           onChange={formik.handleChange}
                         />
-                        {formik.errors.letter_name && formik.touched.letter_name ? (
+                        {formik.errors.description && formik.touched.description ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
                           >
-                            {formik.errors.letter_name}
+                            {formik.errors.description}
                           </div>
                         ) : null}
                       </Col>
@@ -605,7 +626,7 @@ function DiscountAdd({ noEdit }) {
                 <div className="text-right mb-2">
                   <div>
                     {noEdit ? (
-                      <CheckAccess permission="MD_LETTER_VIEW">
+                      <CheckAccess permission="MD_DISCOUNT_VIEW">
                         <Button
                           color="primary"
                           className="mr-2 btn-block-sm"
@@ -617,7 +638,7 @@ function DiscountAdd({ noEdit }) {
                       </CheckAccess>
                     ) : (
                       <>
-                        <CheckAccess permission={id ? `MD_LETTER_EDIT` : `MD_LETTER_ADD`}>
+                        <CheckAccess permission={id ? `MD_DISCOUNT_EDIT` : `MD_DISCOUNT_ADD`}>
                           <button
                             className="mr-2 btn-block-sm btn btn-primary"
                             onClick={() => {
@@ -629,7 +650,7 @@ function DiscountAdd({ noEdit }) {
                             Lưu
                           </button>
                         </CheckAccess>
-                        <CheckAccess permission={id ? `MD_LETTER_EDIT` : `MD_LETTER_ADD`}>
+                        <CheckAccess permission={id ? `MD_DISCOUNT_EDIT` : `MD_DISCOUNT_ADD`}>
                           <button
                             className="mr-2 btn-block-sm btn btn-success"
                             onClick={() => {
