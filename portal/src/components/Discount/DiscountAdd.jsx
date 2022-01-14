@@ -11,11 +11,16 @@ import {
   Label,
   Input,
   Button,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText
 } from "reactstrap";
 import moment from 'moment'
+
 import { Radio, Checkbox, Space, Table } from 'antd';
 import { useParams } from "react-router";
 import { useFormik } from "formik";
+import { layoutFullWidthHeight } from "../../utils/html";
 import { initialValues, validationSchema } from "./const";
 import DiscountModel from "../../models/DiscountModel";
 import NumberFormat from "../Common/NumberFormat";
@@ -23,7 +28,7 @@ import { CheckAccess } from "../../navigation/VerifyAccess";
 import Select from "react-select";
 import { columns_customer_type, columns_product } from "./colums";
 import DatePicker from "../Common/DatePicker";
-
+layoutFullWidthHeight();
 function DiscountAdd({ noEdit }) {
   const _discountModel = new DiscountModel();
   const [dataDiscount, setDataDiscount] = useState(initialValues);
@@ -44,16 +49,23 @@ function DiscountAdd({ noEdit }) {
     enableReinitialize: true,
     initialValues: dataDiscount,
     validationSchema,
+    validate: (values) => {
+      handleCheckValidate(values)
+    },
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: (values) => {
-      handleCreateOrUpdate(values);
+      //handleCreateOrUpdate(values);
     },
   });
   //// create discount
   const handleCreateOrUpdate = async (values) => {
     let alerts = [];
     try {
+
+      values.product_list = values.is_all_product ? [] : values.product_list;
+      values.customer_type_list = values.is_all_customer_type ? [] : values.customer_type_list
+
       _discountModel.create(values).then((data) => {
         if (btnType == "save") {
           if (id) {
@@ -82,7 +94,7 @@ function DiscountAdd({ noEdit }) {
 
 
     } finally {
-      
+
       formik.setSubmitting(false);
       window.scrollTo(0, 0);
 
@@ -101,8 +113,6 @@ function DiscountAdd({ noEdit }) {
       await _getBundleData();
 
     })();
-
-
   }, [id]);
 
   //// data detail
@@ -110,7 +120,28 @@ function DiscountAdd({ noEdit }) {
     try {
       await _discountModel.detail(id).then((data) => {
 
-        setDataDiscount(data);
+        const now = moment(new Date()).format('YYYY-MM-DD')
+        let discount_status = 1;
+
+        if (data.end_date) {
+          if (moment(data.end_date + "").isAfter(now + "")) {
+            discount_status = 3
+          } else {
+            discount_status = 2
+          }
+        } else {
+          if (moment(data.start_date + "").isAfter(now + "")) {
+            discount_status = 2
+          } else {
+            discount_status = 1
+          }
+        }
+        setDataDiscount({
+          ...data,
+          discount_status: discount_status
+        });
+
+
       });
     } catch (error) {
 
@@ -118,6 +149,26 @@ function DiscountAdd({ noEdit }) {
     }
   };
 
+
+  const handleCheckValidate = (value) => {
+    let errors = {}
+    if (value.is_min_product && !value.is_value_min_product) {
+      errors.is_none_requirement = 'Số lượng sản phẩm tối thiểu là bắt buộc.'
+    } else if (value.is_mintotal_money && !value.value_mintotal_money) {
+      errors.is_none_requirement = 'Giá trị đơn hàng tối thiểu là bắt buộc.'
+    }
+    if (value.is_appoint_product && value.product_list.length == 0) {
+      errors.is_none_requirement = 'Sản phẩm chỉ định là bắt buộc.'
+    }
+    if (value.is_app_point_customer_type && value.customer_type_list.length == 0) {
+      errors.is_app_point_customer_type = 'Loại khách hàng chỉ định là bắt buộc.'
+    }
+
+    if(value.is_percent_discount && value.discount_value>100){
+      errors.discount_value = 'Giá trị không lớn hơn 100.'
+    }
+    return errors;
+  }
 
   const _getBundleData = async () => {
     let bundle = {};
@@ -169,9 +220,13 @@ function DiscountAdd({ noEdit }) {
     }
     return []
   }
-
+  const defaultValueStatus = () => {
+    let newData = dataStatus.filter((x) => x.id == formik.values.discount_status);
+    return { value: newData[0].id, label: newData[0].name }
+  }
 
   const handleChangeDiscountType = (value) => {
+
     formik.setFieldValue('is_percent_discount', value ? false : true);
     formik.setFieldValue('is_money_discount', value ? true : false)
 
@@ -180,9 +235,7 @@ function DiscountAdd({ noEdit }) {
   const handleChangeApplyProduct = (value) => {
     formik.setFieldValue('is_all_product', value ? false : true)
     formik.setFieldValue('is_appoint_product', value ? true : false)
-
   }
-
   const handleChangeCustomer = (value) => {
     formik.setFieldValue('is_all_customer_type', value ? false : true)
     formik.setFieldValue('is_app_point_customer_type', value ? true : false)
@@ -216,7 +269,6 @@ function DiscountAdd({ noEdit }) {
 
   const handleSelectCustomerType = (e) => {
     let { customer_type_list = [] } = formik.values || {};
-
     customer_type_list.push({
       customer_type_id: e.value,
       customer_type_name: e.label,
@@ -312,12 +364,14 @@ function DiscountAdd({ noEdit }) {
                         Hình thức khuyến mãi <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={12}>
-                        <Radio.Group onChange={(e) => handleChangeDiscountType(e.target.value)}>
-                          <Space direction="vertical">
-                            <Radio checked={formik.values.is_percent_discount} value={0}>%</Radio>
-                            <Radio checked={formik.values.is_money_discount} value={1}>Tiền cố định</Radio>
-                          </Space>
-                        </Radio.Group>
+                        <Space direction="vertical">
+                          <Radio onChange={(e) => handleChangeDiscountType(e.target.value)}
+                            disabled={noEdit} checked={formik.values.is_percent_discount}
+                            value={0}>%</Radio>
+                          <Radio onChange={(e) => handleChangeDiscountType(e.target.value)}
+                            disabled={noEdit} checked={formik.values.is_money_discount}
+                            value={1}>Tiền cố định</Radio>
+                        </Space>
                         {formik.errors.is_discount && formik.touched.is_discount ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
@@ -334,9 +388,9 @@ function DiscountAdd({ noEdit }) {
                       </Label>
                       <Col sm={12}>
                         <Space direction="vertical">
-                          <Radio onChange={(e) => handleChangeApplyProduct(e.target.value)}
+                          <Radio disabled={noEdit} onChange={(e) => handleChangeApplyProduct(e.target.value)}
                             checked={formik.values.is_all_product} value={0}>Toàn bộ sản phẩm</Radio>
-                          <Radio checked={formik.values.is_appoint_product}
+                          <Radio disabled={noEdit} checked={formik.values.is_appoint_product}
                             onChange={(e) => handleChangeApplyProduct(e.target.value)}
                             value={1}>Sản phẩm chỉ định</Radio>
                         </Space>
@@ -378,7 +432,7 @@ function DiscountAdd({ noEdit }) {
                     </FormGroup>
                     <FormGroup>
                       <Col sm={12}>
-                        <Checkbox checked={formik.values.is_apply_orther_discount} >Không áp dụng đồng thời với các CT khuyến mãi khác</Checkbox>
+                        <Checkbox disabled={noEdit} checked={formik.values.is_apply_orther_discount} >Không áp dụng đồng thời với các CT khuyến mãi khác</Checkbox>
                       </Col>
                     </FormGroup>
 
@@ -391,12 +445,12 @@ function DiscountAdd({ noEdit }) {
 
                         <div style={{ display: "flex", flexDirection: "column" }}>
                           <div>
-                            <Radio onChange={(e) => handleRequetDiscount(e.target.value)}
+                            <Radio disabled={noEdit} onChange={(e) => handleRequetDiscount(e.target.value)}
                               checked={formik.values.is_none_requirement}
                               value={1}>Không yêu cầu</Radio>
                           </div>
                           <div style={{ marginTop: 8 }}>
-                            <Radio onChange={(e) => handleRequetDiscount(e.target.value)}
+                            <Radio disabled={noEdit} onChange={(e) => handleRequetDiscount(e.target.value)}
                               checked={formik.values.is_mintotal_money}
                               value={2}>Giá trị đơn hàng tối thiểu</Radio>
                           </div>
@@ -407,11 +461,11 @@ function DiscountAdd({ noEdit }) {
                             type="text"
                             placeholder="Đơn giá tối thiểu"
                             disabled={noEdit ? noEdit : !formik.values.is_mintotal_money}
-                            value={formik.values.letter_name}
+                            value={formik.values.value_mintotal_money}
                             onChange={formik.handleChange}
                           />
                           <div style={{ marginTop: 8 }}>
-                            <Radio onChange={(e) => handleRequetDiscount(e.target.value)}
+                            <Radio disabled={noEdit} onChange={(e) => handleRequetDiscount(e.target.value)}
                               checked={formik.values.is_min_product}
                               value={3}>Số lượng sản phẩm mua tối thiểu</Radio>
                           </div>
@@ -422,18 +476,18 @@ function DiscountAdd({ noEdit }) {
                             type="text"
                             placeholder="Sản phẩm tối thiểu"
                             disabled={noEdit ? noEdit : !formik.values.is_min_product}
-                            value={formik.values.letter_name}
+                            value={formik.values.is_value_min_product}
                             onChange={formik.handleChange}
                           />
                         </div>
 
 
-                        {formik.errors.letter_name && formik.touched.letter_name ? (
+                        {formik.errors.is_none_requirement && formik.touched.is_none_requirement ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
                             role="alert"
                           >
-                            {formik.errors.letter_name}
+                            {formik.errors.is_none_requirement}
                           </div>
                         ) : null}
                       </Col>
@@ -450,9 +504,9 @@ function DiscountAdd({ noEdit }) {
                           placeholder={"-- Chọn --"}
                           isDisabled={true}
                           onChange={(e) => {
-
+                            formik.setFieldValue('discount_status', e.value)
                           }}
-                          value={''}
+                          value={defaultValueStatus()}
                           options={dataStatus.map(({ name: label, id: value }) => ({
                             value,
                             label,
@@ -473,18 +527,29 @@ function DiscountAdd({ noEdit }) {
                         Giá trị <span className="font-weight-bold red-text">*</span>
                       </Label>
                       <Col sm={12}>
-                        <Input
-                          name="discount_value"
-                          id="discount_value"
-                          type="number"
-                          placeholder="Giá trị"
-                          min={0}
-                          disabled={noEdit}
-                          value={formik.values.discount_value}
-                          onChange={formik.handleChange}
-                        >
-                        </Input>
 
+                        <InputGroup>
+                          <NumberFormat
+                            type="number"
+                            name="discount_value"
+                            min={0}
+                            disabled={false}
+                            allowNegative={false}
+                            thousandSeparator=","
+                            decimalSeparator="."
+                            disabled={noEdit}
+                            value={formik.values.discount_value ? formik.values.discount_value : ''}
+                            onValueChange={({ value }) => {
+                              let price = 1 * value.replace(/,/g, "");
+                              formik.setFieldValue('discount_value', price)
+                            }}
+                            
+                          />
+                          <InputGroupAddon addonType="append">
+                            <InputGroupText>{formik.values.is_percent_discount?'%':"VNĐ"}</InputGroupText>
+                          </InputGroupAddon>
+
+                        </InputGroup>
                         {formik.errors.discount_value && formik.touched.discount_value ? (
                           <div
                             className="field-validation-error alert alert-danger fade show"
@@ -502,10 +567,10 @@ function DiscountAdd({ noEdit }) {
                       <Col sm={12}>
 
                         <Space direction="vertical">
-                          <Radio checked={formik.values.is_all_customer_type}
+                          <Radio disabled={noEdit} checked={formik.values.is_all_customer_type}
                             onChange={(e) => handleChangeCustomer(e.target.value)}
                             value={0}>Tất cả khách hàng</Radio>
-                          <Radio checked={formik.values.is_app_point_customer_type}
+                          <Radio disabled={noEdit} checked={formik.values.is_app_point_customer_type}
                             onChange={(e) => handleChangeCustomer(e.target.value)}
                             value={1}>Khách hàng chỉ định</Radio>
                         </Space>
@@ -551,6 +616,7 @@ function DiscountAdd({ noEdit }) {
                       </Label>
                       <Col sm={12}>
                         <DatePicker
+                          disabled={noEdit}
                           styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
                           startDate={formik.values.start_date ? moment(formik.values.start_date, "DD/MM/YYYY") : ""}
                           startDateId="your_unique_start_date_id"
@@ -630,7 +696,7 @@ function DiscountAdd({ noEdit }) {
                         <Button
                           color="primary"
                           className="mr-2 btn-block-sm"
-                          onClick={() => window._$g.rdr(`/discount/edit/${dataDiscount.letter_id}`)}
+                          onClick={() => window._$g.rdr(`/discount/edit/${dataDiscount.discount_id}`)}
                         >
                           <i className="fa fa-edit mr-1" />
                           Chỉnh sửa

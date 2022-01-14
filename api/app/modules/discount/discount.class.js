@@ -24,10 +24,11 @@ const template = {
   discount_status: '{{#? DISCOUNTSTATUS}}',
   customertype_id: '{{#? CUSTOMERTYPEID}}',
   start_date: '{{#? STARTDATE}}',
-  end_date:'{{#? ENDDATE}}',
-  create_date:'{{#? CREATEDDATE}}',
-  is_active:'{{#? ISACTIVE}}',
-  
+  end_date: '{{#? ENDDATE}}',
+  create_date: '{{#? CREATEDDATE}}',
+  is_active: '{{ISACTIVE ? 1 : 0}}',
+  description: '{{#? NOTE}}',
+
 };
 
 
@@ -49,9 +50,38 @@ const list = (data = []) => {
     'is_percent_discount',
     'is_money_discount',
     'discount_value',
+    'discount_status',
     'start_date',
     'end_date',
     'create_date',
+    'is_active',
+
+  ]);
+};
+
+const detail = (data = []) => {
+  let transform = new Transform(template);
+  return transform.transform(data, [
+    "discount_id",
+    "discount_code",
+    "is_percent_discount",
+    'is_money_discount',
+    "discount_value",
+    "is_all_product",
+    "is_appoint_product",
+    "is_all_customer_type",
+    "is_app_point_customer_type",
+    "is_apply_orther_discount",
+    "is_none_requirement",
+    "is_mintotal_money",
+    "value_mintotal_money",
+    "is_min_product",
+    "is_value_min_product",
+    "discount_status",
+    'start_date',
+    "end_date",
+    'is_active',
+    'description',
 
   ]);
 };
@@ -60,6 +90,7 @@ const list = (data = []) => {
 module.exports = {
   optionsProduct,
   optionsCustomer,
-  list
+  list,
+  detail
 
 };

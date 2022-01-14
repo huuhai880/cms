@@ -696,7 +696,7 @@ const ParamOtherDetail = React.lazy(() => import("./components/ParamOther/ParamO
 const Discount = React.lazy(() => import("./components/Discount/Discount"));
 const DiscountAdd = React.lazy(() => import("./components/Discount/DiscountAdd"));
 const DiscountDetail = React.lazy(() => import("./components/Discount/DiscountDetail"));
-//const DiscountEdit = React.lazy(() => import("./components/Discount/DiscountEdit"));
+const DiscountEdit = React.lazy(() => import("./components/Discount/DiscountEdit"));
 //.end#Discount
 
 
@@ -3307,13 +3307,13 @@ const routes = [
     function: "PRO_DISCOUNT_VIEW",
     component: DiscountDetail,
   },
-  // {
-  //   path: "/discount/edit/:id",
-  //   exact: true,
-  //   name: "Chỉnh sửa",
-  //   function: "PRO_DISCOUNT_EDIT",
-  //   component: DiscountEdit,
-  // },
+  {
+    path: "/discount/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "PRO_DISCOUNT_EDIT",
+    component: DiscountEdit,
+  },
 
   // end#DisCount
 

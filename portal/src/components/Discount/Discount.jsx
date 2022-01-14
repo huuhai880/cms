@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardBody, CardHeader, Col, FormGroup, Button } from "reactstrap";
-//import Filter from "./Filter";
 import { layoutFullWidthHeight } from "../../utils/html";
 import MUIDataTable from "mui-datatables";
 import { configTableOptions } from "../../utils/index";
 import CustomPagination from "../../utils/CustomPagination";
 import { CircularProgress } from "@material-ui/core";
 import DiscountModel from "../../models/DiscountModel";
-import { getColumTable } from "./const";
+import { getColumTable } from "./colums";
 import { CheckAccess } from "../../navigation/VerifyAccess";
+import Filter from "./Filter";
 
 layoutFullWidthHeight();
 
@@ -21,6 +21,7 @@ function Discount() {
         itemsPerPage: 25,
         page: 1,
         selectdActive: 1,
+        selectdDelete:0,
     });
     //// init data
     useEffect(() => {
@@ -29,18 +30,18 @@ function Discount() {
     ////search
     const handleSubmitFillter = async (value) => {
         let searchQuery = Object.assign(query, value);
-        // console.log(searchQuery);
+        console.log(searchQuery);
         _callAPI(searchQuery);
     };
     ////call API
     const _callAPI = async (props) => {
         try {
-            await _discountModel.getListLetter(props).then((data) => {
+            await _discountModel.getListDiscount(props).then((data) => {
                 setDataDiscount(data);
-                // console.log(data);
+               
             });
         } catch (error) {
-            // console.log(error);
+            
             window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
         } finally {
             setisLoading(false);
@@ -86,7 +87,7 @@ function Discount() {
                 {toggleSearch && (
                     <CardBody className="px-0 py-0">
                         <div className="MuiPaper-filter__custom">
-                            {/* <Filter handleSubmit={handleSubmitFillter} /> */}
+                            <Filter handleSubmit={handleSubmitFillter} />
                         </div>
                     </CardBody>
                 )}

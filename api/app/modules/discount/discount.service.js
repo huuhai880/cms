@@ -31,11 +31,11 @@ const createOrUpdateDiscount = async (body = {}) => {
   try {
     await transaction.begin();
     // check mã code đã tồn tại hay chưa
-    const res=   await pool.request()
+    const res = await pool.request()
       .input('DISCOUNTID', apiHelper.getValueFromObject(body, 'discount_id'))
       .input('DISCOUNTCODE', apiHelper.getValueFromObject(body, 'discount_code'))
       .execute(PROCEDURE_NAME.PRO_DISCOUNT_CHECKDISCOUNT_ADMINWEB);
-    if(res.recordset[0].RESULT == 1){
+    if (res.recordset[0].RESULT == 1) {
       await transaction.rollback();
       return new ServiceResponse(false, 'Code khuyễn mãi đã tồn tại.');
     }
@@ -69,11 +69,15 @@ const createOrUpdateDiscount = async (body = {}) => {
       return new ServiceResponse(false, 'Lỗi khởi tạo mã khuyến mãi');
     }
 
+
+
+
     const product_list = apiHelper.getValueFromObject(body, 'product_list');
     const customer_type_list = apiHelper.getValueFromObject(body, 'customer_type_list');
-
+    const is_appoint_product = apiHelper.getValueFromObject(body, 'is_appoint_product');
+    const is_app_point_customer_type = apiHelper.getValueFromObject(body, 'is_app_point_customer_type');
     // delete sản phẩm theo mã khuyễn mãi
-    
+
     await pool.request()
       .input('DISCOUNTID', discount_id)
       .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
@@ -84,7 +88,9 @@ const createOrUpdateDiscount = async (body = {}) => {
       .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
       .execute(PROCEDURE_NAME.PRO_DISCOUNT_CUSTOMERTYPE_DELETE_ADMINWEB);
 
-    if (product_list && product_list.length) {
+
+    if (product_list && product_list.length && is_appoint_product) {
+     
       const requestDiscountProduct = new sql.Request(transaction);
       for (let i = 0; i < product_list.length; i++) {
         let item = product_list[i]
@@ -94,6 +100,8 @@ const createOrUpdateDiscount = async (body = {}) => {
           .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
           .execute(PROCEDURE_NAME.PRO_DISCOUNT_PRODUCT_CREATEORUPDATE_ADMINWEB);
         const discount_product_id = resuestDiscountProduct.recordset[0].RESULT;
+
+
         if (discount_product_id <= 0) {
           await transaction.rollback();
           return new ServiceResponse(false, 'Lỗi khởi tạo sản phẩm áp dụng mã khuyễn mãi.');
@@ -101,12 +109,12 @@ const createOrUpdateDiscount = async (body = {}) => {
       }
     }
 
-    if (customer_type_list && customer_type_list.length) {
+    if (customer_type_list && customer_type_list.length && is_app_point_customer_type) {
       const requestDcCutomerType = new sql.Request(transaction);
       for (let i = 0; i < customer_type_list.length; i++) {
         let item = customer_type_list[i]
         const resuestDcCutomerType = await requestDcCutomerType
-          .input('DISCOUNTID',discount_id)
+          .input('DISCOUNTID', discount_id)
           .input('CUSTOMERTYPEID', apiHelper.getValueFromObject(item, 'customer_type_id'))
           .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
           .execute(PROCEDURE_NAME.PRO_DISCOUNT_CUSTOMERTYPE_CREATEORUPDATE_ADMINWEB);
@@ -140,33 +148,80 @@ const getListDiscount = async (queryParams = {}) => {
       .input('PAGESIZE', itemsPerPage)
       .input('PAGEINDEX', currentPage)
       .input('KEYWORD', apiHelper.getValueFromObject(queryParams, 'keyword'))
-      .input('CREATEDDATEFROM',apiHelper.getValueFromObject(queryParams, 'start_date'))
-      .input('CREATEDDATETO',apiHelper.getValueFromObject(queryParams, 'end_date'))
-      .input('DISCOUNTSTATUS',apiHelper.getValueFromObject(queryParams, 'discount_status'))
-      .input('ISACTIVE',apiHelper.getFilterBoolean(queryParams, 'is_active'))
-      .input('ISDELETED',apiHelper.getFilterBoolean(queryParams, 'is_delete'))
+      .input('CREATEDDATEFROM', apiHelper.getValueFromObject(queryParams, 'startDate'))
+      .input('CREATEDDATETO', apiHelper.getValueFromObject(queryParams, 'endDate'))
+      .input('DISCOUNTSTATUS', apiHelper.getValueFromObject(queryParams, 'selectdStaus'))
+      .input('ISACTIVE', apiHelper.getFilterBoolean(queryParams, 'selectdActive'))
+      .input('ISDELETED', apiHelper.getFilterBoolean(queryParams, 'selectdDelete'))
       .execute(PROCEDURE_NAME.PRO_DISCOUNT_GETLIST_AdminWeb);
-    const result = data.recordset;
-  
+    const result = data.recordsets[0];
+
 
     return new ServiceResponse(true, '', {
       data: discountClass.list(result),
       page: currentPage,
       limit: itemsPerPage,
-      total: apiHelper.getTotalData(result),
+      total: apiHelper.getTotalData(data.recordsets[1]),
     });
   } catch (e) {
     logger.error(e, {
-      function: 'letterService.getLettersList',
+      function: 'discountService.getListDiscount',
     });
 
-    return new ServiceResponse(true, '', {});
+    return new ServiceResponse(false, '', {});
   }
 };
+
+const getDiscountDetail = async (discount_id) => {
+  try {
+    const pool = await mssql.pool;
+    const data = await pool
+      .request()
+      .input('DISCOUNTID', discount_id)
+      .execute(PROCEDURE_NAME.PRO_DISCOUNT_GETDETAILBYID_ADMINWEB);
+    const result = {
+      ...discountClass.detail(data.recordsets[0][0]),
+      customer_type_list: discountClass.optionsCustomer(data.recordsets[1]),
+      product_list: discountClass.optionsProduct(data.recordsets[2])
+    };
+    return new ServiceResponse(true, '', result);
+  } catch (e) {
+    logger.error(e, {
+      function: 'discountService.getDiscountDetail',
+    });
+
+    return new ServiceResponse(false, '', {});
+  }
+}
+
+const deleteDiscount = async (discount_id, body = {}) => {
+  try {
+    const pool = await mssql.pool;
+    await pool
+      .request()
+      .input('DISCOUNTID', discount_id)
+      .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
+      .execute(PROCEDURE_NAME.PRO_DISCOUNT_DELETE_ADMINWEB);
+
+    return new ServiceResponse(true, '');
+  } catch (e) {
+    logger.error(e, {
+      function: 'discountService.deleteDiscount',
+    });
+
+    return new ServiceResponse(false, '', {});
+  }
+}
+
+
+
+
 
 
 module.exports = {
   getOptions,
   createOrUpdateDiscount,
-  getListDiscount
+  getListDiscount,
+  getDiscountDetail,
+  deleteDiscount
 };

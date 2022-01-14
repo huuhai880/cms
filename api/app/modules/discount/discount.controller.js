@@ -48,10 +48,51 @@ const getListDiscount = async (req, res, next) => {
     if (serviceRes.isFailed()) {
       return next(serviceRes);
     }
-    console.log(serviceRes.getData());
     const { data, total, page, limit } = serviceRes.getData();
     return res.json(new ListResponse(data, total, page, limit));
   } catch (error) {
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+}
+
+const getDiscountDetail = async (req, res, next) => {
+  try {
+    const discount_id = req.params.discount_id
+
+    const serviceRes = await discountService.getDiscountDetail(discount_id);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    console.log(error);
+    return next(
+      new ErrorResponse(
+        httpStatus.NOT_IMPLEMENTED,
+        error,
+        RESPONSE_MSG.REQUEST_FAILED
+      )
+    );
+  }
+}
+
+const deleteDiscount = async (req, res, next) => {
+
+  try {
+    const discount_id = req.params.discount_id
+    const serviceRes = await discountService.deleteDiscount(discount_id);
+    if (serviceRes.isFailed()) {
+      return next(serviceRes);
+    }
+    return res.json(new SingleResponse(serviceRes.getData()));
+  } catch (error) {
+    console.log(error);
     return next(
       new ErrorResponse(
         httpStatus.NOT_IMPLEMENTED,
@@ -66,5 +107,8 @@ const getListDiscount = async (req, res, next) => {
 module.exports = {
   getOptions,
   createOrUpdateDiscount,
-  getListDiscount
+  getListDiscount,
+  getDiscountDetail,
+  deleteDiscount
+
 };

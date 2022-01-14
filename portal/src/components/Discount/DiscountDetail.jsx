@@ -2,7 +2,7 @@ import React from "react";
 import DiscountAdd from "./DiscountAdd";
 
 function DiscountDetail() {
-    return <DiscountAdd />;
+    return <DiscountAdd noEdit={true} />;
 }
 
 export default DiscountDetail;
