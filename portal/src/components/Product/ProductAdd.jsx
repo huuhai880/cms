@@ -142,7 +142,7 @@ function ProductAdd({ noEdit = false, productId = null }) {
         })
       );
       //Thêm 1 chỉ số gọi là Chỉ Số: LUẬN GIẢI ĐẶC BIỆT áp dụng cho Vận số năm
-      lstAttributesGroupPage.push({
+      lstAttributesGroupPage.unshift({
         attributes_group_id: -1,
         attributes_group_name: "LUẬN GIẢI ĐẶC BIỆT",
       });

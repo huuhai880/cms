@@ -37,6 +37,7 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
     const [loading, setLoading] = useState(false)
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [expandedRowKey, setExpandedRowKey] = useState([]);
+    const [isSubmitSearch, setIsSubmitSearch] = useState(false)
 
     useEffect(() => {
         let _selectedRowKeys = dataInterpretSpecial.filter(p => p.is_selected).map(k => k.interpret_id);
@@ -127,6 +128,7 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
             keyword: '',
             conditionSelected: { label: 'Tất cả', value: 2 }
         })
+        setIsSubmitSearch(false)
         _handleSubmitFillter({ keyword: '', conditionSelected: null })
     }
 
@@ -138,20 +140,25 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
     }
 
     const handleSubmitFillter = () => {
+        setIsSubmitSearch(true)
         _handleSubmitFillter(query)
     }
 
     const _handleSubmitFillter = (filter) => {
         setLoading(true)
         try {
-            let _interpretSpecialCl = [...dataInterpretSpecial];
+            let _interpretSpecialCl = JSON.parse(JSON.stringify([...interpretSpecial]));
 
             if (filter.keyword != '') {
                 _interpretSpecialCl = _interpretSpecialCl.filter(p => changeAlias(p.interpret_view_name).includes(changeAlias(filter.keyword)) ||
+                    changeAlias(p.brief_description).includes(changeAlias(filter.keyword)) ||
                     p.interpret_details.some(x => changeAlias(x.interpret_detail_name).includes(changeAlias(filter.keyword)))
                 )
             }
+
+
             if (filter.conditionSelected != null) {
+                console.log(filter.conditionSelected)
                 let { value = 2 } = filter.conditionSelected;
                 _interpretSpecialCl = _interpretSpecialCl.filter(p => (p.is_condition_or && value == 1) ||
                     (!p.is_condition_or && value == 0) || value == 2
@@ -165,7 +172,7 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
         finally {
             setTimeout(() => {
                 setLoading(false)
-            }, 1000)
+            }, 500)
         }
     }
 
@@ -266,7 +273,7 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
                                                         autoComplete="nope"
                                                         type="text"
                                                         name="keyword"
-                                                        placeholder="Nhập tên thuộc tính ,luận giải đặc biệt "
+                                                        placeholder="Nhập tên thuộc tính, tên luận giải con, tóm tắt"
                                                         value={query.keyword}
                                                         onChange={(e) => handleChangeQuery('keyword', e.target.value)}
                                                         onKeyDown={handleKeyDown}
@@ -338,7 +345,7 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
                         </div>
                     </CardBody>
                 </Card>
-
+                {isSubmitSearch && !loading ? <label style={{ color: 'red', fontWeight: 'bold' }}>{dataInterpretSpecial.length} bản ghi được tìm kiếm</label> : null}
                 <Card className={`animated fadeIn mb-3 `}>
                     <CardBody className="px-0 py-0">
                         <Row>
@@ -349,6 +356,7 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
                                     </div>
                                 ) : (
                                     <div>
+
                                         <Table
                                             className="components-table-demo-nested"
                                             columns={column}
