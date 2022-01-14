@@ -688,12 +688,12 @@ export default function InterPretCopy(props) {
                         <Editor
                           apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                           scriptLoading={{
-                            delay: 500,
+                            delay: 0,
                           }}
                           value={formik.values.brief_decs}
                           // disabled={noEdit}
                           init={{
-                            height: "300px",
+                            height: "500px",
                             width: "100%",
                             menubar: false,
                             branding: false,
@@ -748,12 +748,12 @@ export default function InterPretCopy(props) {
                         <Editor
                           apiKey={"3dx8ac4fg9km3bt155plm3k8bndvml7o1n4uqzpssh9owdku"}
                           scriptLoading={{
-                            delay: 500,
+                            delay: 0,
                           }}
                           value={formik.values.decs}
                           // disabled={noEdit}
                           init={{
-                            height: "300px",
+                            height: "600px",
                             width: "100%",
                             menubar: false,
                             branding: false,
