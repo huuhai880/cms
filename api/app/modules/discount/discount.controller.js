@@ -12,7 +12,6 @@ const ErrorResponse = require('../../common/responses/error.response');
 const getOptions = async (req, res, next) => {
   try {
     const serviceRes = await discountService.getOptions(req.query);
-
     return res.json(new SingleResponse(serviceRes.getData()));
   } catch (error) {
     return next(error);
@@ -110,5 +109,4 @@ module.exports = {
   getListDiscount,
   getDiscountDetail,
   deleteDiscount
-
 };

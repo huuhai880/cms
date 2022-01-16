@@ -2,7 +2,7 @@ import React from "react";
 import { CheckAccess } from "../../navigation/VerifyAccess";
 import { Button } from "reactstrap";
 import {
-    configIDRowTable,
+    configIDRowTable, formatPrice,
 } from "../../utils/index";
 import moment from 'moment'
 
@@ -43,7 +43,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
                     const is_percent_discount = data[tableMeta["rowIndex"]].is_percent_discount;
-                    return <div className="text-right">{value}{is_percent_discount ? '%' : null}</div>;
+                    return <div className="text-center">{is_percent_discount ? value + '%' : formatPrice(value) + ' VNĐ'}</div>;
                 },
             },
         },
@@ -55,7 +55,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                 sort: true,
                 customHeadRender: (columnMeta, handleToggleColumn) => {
                     return (
-                        <th style={{ width: '20%' }} key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+                        <th style={{ width: '15%' }} key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );
@@ -63,7 +63,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                 customBodyRender: (value, tableMeta, updateValue) => {
                     const end_date = data[tableMeta["rowIndex"]].end_date;
                     return (
-                        <div className="text-center">{value} - {end_date ? end_date : "Vô thời hạn"}</div>
+                        <div className="text-left">{value} - {end_date ? end_date : "Không thời hạn"}</div>
                     );
                 },
             },
@@ -76,7 +76,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                 sort: true,
                 customHeadRender: (columnMeta, handleToggleColumn) => {
                     return (
-                        <th style={{ width: '20%' }} key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+                        <th style={{ width: '13%' }} key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );
@@ -94,31 +94,33 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                 sort: false,
                 customHeadRender: (columnMeta, handleToggleColumn) => {
                     return (
-                        <th style={{ width: '15%' }} key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+                        <th style={{ width: '13%' }} key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    const now = moment(new Date()).format('YYYY-MM-DD')
-                    let discount_status = 1;
                     const end_date = data[tableMeta["rowIndex"]].end_date;
                     const start_date = data[tableMeta["rowIndex"]].start_date;
+                    var _now = moment();
+                    let discount_status = 1;
                     if (end_date) {
-                        if (moment(end_date + "").isAfter(now + "")) {
-                            discount_status = 3
+                        var _end_date = moment(end_date, 'DD/MM/YYYY');
+                        if (_end_date < _now) {
+                            discount_status = 3;
                         } else {
-                            discount_status = 2
+                            discount_status = 2;
                         }
                     } else {
-                        if (moment(start_date + "").isAfter(now + "")) {
-                            discount_status = 2
+                        var _start_date = moment(start_date, 'DD/MM/YYYY');
+                        if (_now >= _start_date) {
+                            discount_status = 2;
                         } else {
-                            discount_status = 1
+                            discount_status = 1;
                         }
                     }
                     return (
-                        <div className="text-center">{discount_status == 1 ? "Chưa áp dụng" : discount_status == 2 ? "Đang áp dụng" : "Đã kết thúc"}</div>
+                        <div className="text-left">{discount_status == 1 ? "Chưa áp dụng" : discount_status == 2 ? "Đang áp dụng" : "Đã kết thúc"}</div>
                     );
                 },
             },
@@ -199,7 +201,7 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
     ];
 };
 
-export const columns_product = (handleDeleteProduct) => [
+export const columns_product = (handleDeleteProduct, noEdit) => [
     {
         title: 'STT',
         dataIndex: '',
@@ -207,7 +209,7 @@ export const columns_product = (handleDeleteProduct) => [
         width: 80,
         render: (value, record, index) => {
             return (
-                <span>{index + 1}</span>
+                <div className="text-center">{index + 1}</div>
             )
         },
     },
@@ -237,7 +239,7 @@ export const columns_product = (handleDeleteProduct) => [
                             onClick={(evt) =>
                                 handleDeleteProduct(record)
                             }
-                        >
+                            disabled={noEdit}>
                             <i className="fa fa-trash" />
                         </Button>
                     </CheckAccess>
@@ -247,7 +249,7 @@ export const columns_product = (handleDeleteProduct) => [
     },
 
 ];
-export const columns_customer_type = (handleDeleteCustomerType) => [
+export const columns_customer_type = (handleDeleteCustomerType, noEdit) => [
     {
         title: 'STT',
         dataIndex: '',
@@ -255,7 +257,7 @@ export const columns_customer_type = (handleDeleteCustomerType) => [
         width: 80,
         render: (value, record, index) => {
             return (
-                <span>{index + 1}</span>
+                <div className="text-center">{index + 1}</div>
             )
         },
     },
@@ -285,7 +287,7 @@ export const columns_customer_type = (handleDeleteCustomerType) => [
                             onClick={(evt) =>
                                 handleDeleteCustomerType(record)
                             }
-                        >
+                            disabled={noEdit}>
                             <i className="fa fa-trash" />
                         </Button>
                     </CheckAccess>
