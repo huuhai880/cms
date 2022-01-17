@@ -135,6 +135,7 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
     const handleKeyDown = (e) => {
         if (1 * e.keyCode === 13) {
             e.preventDefault();
+            setIsSubmitSearch(true)
             _handleSubmitFillter(query);
         }
     }
