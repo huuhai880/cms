@@ -6,6 +6,8 @@ import {initialValues} from './const';
 import OrderModel from '../../models/OrderModel';
 import {formatPrice} from 'utils/index';
 import Loading from 'components/Common/Loading';
+import "./style.scss";
+
 layoutFullWidthHeight();
 
 function OrderDetail() {
