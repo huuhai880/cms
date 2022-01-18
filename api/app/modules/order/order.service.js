@@ -350,7 +350,7 @@ const getListDiscountApply = async (bodyParams = {}) => {
                         (x.product_id == y.combo_id && x.is_combo))
                 })
                 if (!checkProduct.length) {
-                    break;
+                    continue;
                 }
             }
 
@@ -358,18 +358,18 @@ const getListDiscountApply = async (bodyParams = {}) => {
             if (is_appoint_customer_type) {
                 const checkCustomerType = customer_type_apply.findIndex((x) => x.customertype_id == customer_type_id);
                 if (checkCustomerType == -1) {
-                    break;
+                    continue;
                 }
             }
 
             //Kiểm tra số tiền tối thiểu
             if (is_min_total_money && value_min_total_money > sub_total) {
-                break;
+                continue;
             }
 
             //Kiểm tra số lượng tối thiểu
             if (is_min_num_product && value_min_num_product > total_quantity) {
-                break;
+                continue;
             }
 
 

@@ -278,7 +278,7 @@ function PopupDiscount({ orderDetails = [], discountSeleted = {}, handleClosePop
                                             dataSource={discountApply}
                                             bordered={true}
                                             pagination={false}
-                                            scroll={{ y: 370 }}
+                                            // scroll={{ y: 370 }}
                                             rowKey={"discount_id"}
                                         />
                                     </div>
