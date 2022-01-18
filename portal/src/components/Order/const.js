@@ -21,7 +21,8 @@ export const initialValues = {
     order_details: [],
     sub_total: 0,
     total: 0,
-    total_discount: 0
+    total_discount: 0,
+    discount: null
 };
 
 export const getColumTable = (data, total, query, handleDelete, isCenter) => {
@@ -67,6 +68,24 @@ export const getColumTable = (data, total, query, handleDelete, isCenter) => {
         {
             name: "customer_name",
             label: "Tên khách hàng",
+            options: {
+                filter: false,
+                sort: true,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return <div className="text-left">{value}</div>;
+                },
+            },
+        },
+        {
+            name: "discount_code",
+            label: "Mã khuyến mãi",
             options: {
                 filter: false,
                 sort: true,

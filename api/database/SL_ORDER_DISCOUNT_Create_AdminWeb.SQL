@@ -1,0 +1,32 @@
+CREATE  PROCEDURE SL_ORDER_DISCOUNT_Create_AdminWeb
+    @ORDERID BIGINT = 0,
+    @DISCOUNTID BIGINT = 0,
+    @DISCOUNTCODE VARCHAR(50) = NULL,
+    @DISCOUNTMONEY MONEY =0,
+    @CREATEDUSER VARCHAR(50)
+AS
+BEGIN
+    INSERT INTO SL_ORDER_DISCOUNT
+    (
+        ORDERID,
+        DISCOUNTID,
+        DISCOUNTCODE,
+        DISCOUNTMONEY,
+        CREATEDDATE,
+        CREATEDUSER,
+        ISDELETED,
+        ISACTIVE
+    )
+    VALUES
+    (
+        @ORDERID,
+        @DISCOUNTID,
+        @DISCOUNTCODE,
+        @DISCOUNTMONEY,
+        GETDATE(),
+        @CREATEDUSER,
+        0,
+        1
+    )
+
+END

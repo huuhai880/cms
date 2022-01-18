@@ -85,7 +85,9 @@ const detailOrder = async (order_id) => {
 
         let order = OrderClass.detailOrder(data.recordsets[0][0]);
         let order_details = OrderClass.listOrderDetail(data.recordsets[1]);
+        let discount = OrderClass.discountDetail(data.recordsets[2][0] || {})
         order.order_details = order_details || [];
+        order.discount = discount;
         return new ServiceResponse(true, '', order);
     } catch (e) {
         logger.error(e, {
@@ -160,15 +162,26 @@ const createOrUpdateOrder = async (bodyParams = {}) => {
         let auth_name = apiHelper.getValueFromObject(bodyParams, 'auth_name');
         let order_no = apiHelper.getValueFromObject(bodyParams, 'order_no');
         let is_grow_revenue = apiHelper.getValueFromObject(bodyParams, 'is_grow_revenue', false);
+        let discount = apiHelper.getValueFromObject(bodyParams, 'discount', null);
 
         await transaction.begin();
 
         if (order_details && order_details.length > 0) {
             let sub_total = 0;
+            let total_discount = 0;
+
             order_details.forEach(item => {
                 sub_total += item.quantity * item.price;
                 item.sub_total = item.quantity * item.price;
             });
+
+            if (discount) {
+                let { discount_money = 0 } = discount || {};
+                total_discount = discount_money;
+            }
+
+            let total_money = sub_total - total_discount;
+
 
             //Insert Order
             const reqOrder = new sql.Request(transaction);
@@ -180,8 +193,8 @@ const createOrUpdateOrder = async (bodyParams = {}) => {
                 .input('EMAIL', email)
                 .input('PHONENUMBER', phone_number)
                 .input('ADDRESS', address)
-                .input('TOTALMONEY', sub_total)
-                .input('TOTALDISCOUNT', null)
+                .input('TOTALMONEY', total_money)
+                .input('TOTALDISCOUNT', total_discount)
                 .input('SUBTOTAL', sub_total)
                 .input('TOTALSHIPFEE', null)
                 .input('ISGROWREVENUE', is_grow_revenue)
@@ -193,10 +206,20 @@ const createOrUpdateOrder = async (bodyParams = {}) => {
             //Delete Order Detail
             if (order_id && order_id > 0) {
                 const reqDelDetail = new sql.Request(transaction);
+
+                //Delete Order detail
                 await reqDelDetail
                     .input('ORDERID', order_id)
                     .input('DELETEDUSER', auth_name)
                     .execute('SL_ORDERDETAIL_Delete_AdminWeb')
+
+                //Delete Discount neu co
+                const reqDelDiscount = new sql.Request(transaction);
+                await reqDelDiscount
+                    .input('ORDERID', order_id)
+                    .input('DELETEDUSER', auth_name)
+                    .execute('SL_ORDER_DISCOUNT_Delete_AdminWeb')
+
             }
 
             //Insert/Update Order Detail
@@ -216,14 +239,26 @@ const createOrUpdateOrder = async (bodyParams = {}) => {
                     .execute('SL_ORDERDETAIL_CreateOrUpdate_AdminWeb')
             }
 
+            //Nếu có chọn mã khuyến mãi
+            if (discount) {
+                const reqOrderDiscount = new sql.Request(transaction);
+                await reqOrderDiscount
+                    .input('ORDERID', order_id_result)
+                    .input('DISCOUNTID', discount.discount_id)
+                    .input('DISCOUNTCODE', discount.discount_code)
+                    .input('DISCOUNTMONEY', discount.discount_money)
+                    .input('CREATEDUSER', auth_name)
+                    .execute('SL_ORDER_DISCOUNT_Create_AdminWeb')
+            }
+
             //NEU LA THANH TOAN THI TAO RECEIPT
             if (status == 1) {
                 const reqReceipt = new sql.Request(transaction);
                 await reqReceipt
                     .input('ORDERID', order_id_result)
                     .input('MEMBERID', member_id)
-                    .input('TOTALMONEY', sub_total)
-                    .input('TOTALPAID', sub_total)
+                    .input('TOTALMONEY', total_money)
+                    .input('TOTALPAID', total_money)
                     .input('CREATEDUSER', auth_name)
                     .execute('SL_RECEIPTS_Create_AdminWeb')
             }
@@ -257,11 +292,123 @@ const getOptionProductCombo = async () => {
     }
 }
 
+const getListDiscountApply = async (bodyParams = {}) => {
+    try {
+        let order_details = apiHelper.getValueFromObject(bodyParams, 'order_details', []);
+        let member_id = apiHelper.getValueFromObject(bodyParams, 'member_id', null);
+
+        if (order_details.length == 0) {
+            return new ServiceResponse(true, '', [])
+        }
+
+        const pool = await mssql.pool;
+        const res = await pool.request()
+            .input('memberid', member_id)
+            .execute('PRO_DISCOUNT_GetListApply_AdminWeb');
+
+        let listDiscount = OrderClass.listDiscount(res.recordsets[0]);
+        let listDiscountProduct = OrderClass.listDiscountProduct(res.recordsets[1]);
+        let listDiscountCustomerType = OrderClass.listDiscountProduct(res.recordsets[2]);
+        let { customer_type_id = 0 } = res.recordsets[3][0] || {}
+
+        for (let i = 0; i < listDiscount.length; i++) {
+            let _discount = listDiscount[i];
+            let product_apply = listDiscountProduct.filter(p => p.discount_id == _discount.discount_id);
+            _discount.product_apply = product_apply || [];
+            let customer_type_apply = listDiscountCustomerType.filter(p => p.discount_id == _discount.discount_id);
+            _discount.customer_type_apply = customer_type_apply || [];
+        }
+
+        let sub_total = 0;
+        let total_quantity = 0;
+        order_details.forEach(item => {
+            sub_total += item.quantity * item.price;
+            total_quantity += (1 * item.quantity)
+        })
+
+        //Duyêt danh sách khuyến mãi để check điều kiện
+        let listDiscountApply = [];
+        for (let k = 0; k < listDiscount.length; k++) {
+            let _discount = listDiscount[k];
+            let {
+                is_percent_discount,
+                discount_value,
+                is_appoint_product,
+                is_appoint_customer_type,
+                is_min_total_money,
+                value_min_total_money,
+                is_min_num_product,
+                value_min_num_product,
+                product_apply = [],
+                customer_type_apply = []
+            } = _discount || {}
+
+            //Chỉ định sản phẩm
+            if (is_appoint_product) {
+                const checkProduct = order_details.filter((x) => {
+                    return product_apply.find((y) => (x.product_id == y.product_id && !x.is_combo) ||
+                        (x.product_id == y.combo_id && x.is_combo))
+                })
+                if (!checkProduct.length) {
+                    continue;
+                }
+            }
+
+            //Chỉ định Loại khách hàng
+            if (is_appoint_customer_type) {
+                const checkCustomerType = customer_type_apply.findIndex((x) => x.customertype_id == customer_type_id);
+                if (checkCustomerType == -1) {
+                    continue;
+                }
+            }
+
+            //Kiểm tra số tiền tối thiểu
+            if (is_min_total_money && value_min_total_money > sub_total) {
+                continue;
+            }
+
+            //Kiểm tra số lượng tối thiểu
+            if (is_min_num_product && value_min_num_product > total_quantity) {
+                continue;
+            }
+
+
+            //Tính giá trị discount
+            let discount_money = 0;
+            if (is_percent_discount) {
+                discount_money = discount_value * (1 * sub_total) / 100
+            } else {
+                discount_money = discount_value
+            }
+            _discount.discount_money = discount_money;
+
+            let _discount_apply = {
+                discount_id: _discount.discount_id,
+                discount_code: _discount.discount_code,
+                end_date: _discount.end_date,
+                start_date: _discount.start_date,
+                is_percent_discount,
+                discount_value,
+                discount_money
+            }
+
+            listDiscountApply.push(_discount_apply)
+        }
+        return new ServiceResponse(true, "", listDiscountApply)
+    } catch (error) {
+        logger.error(error, {
+            function: "order.service.getListDiscountApply",
+        });
+        return new ServiceResponse(false, "Lỗi lấy danh sách khuyến mãi thoả điều kiện.");
+    }
+}
+
 module.exports = {
     getOrderList,
     detailOrder,
     deleteOrder,
     initCreateOrder,
     createOrUpdateOrder,
-    getOptionProductCombo
+    getOptionProductCombo,
+    getListDiscountApply
 };

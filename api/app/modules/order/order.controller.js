@@ -120,11 +120,31 @@ const getOptionProductCombo = async (req, res, next) => {
     }
 };
 
+const getListDiscountApply = async (req, res, next) => {
+    try {
+        const serviceRes = await OrderService.getListDiscountApply(req.body);
+        if (serviceRes.isFailed()) {
+            return next(serviceRes);
+        }
+        return res.json(new SingleResponse(serviceRes.getData()));
+    } catch (error) {
+        return next(
+            new ErrorResponse(
+                httpStatus.NOT_IMPLEMENTED,
+                error,
+                RESPONSE_MSG.REQUEST_FAILED
+            )
+        );
+    }
+};
+
+
 module.exports = {
     getOrderList,
     detailOrder,
     deleteOrder,
     initOrder,
     createOrUpdateOrder,
-    getOptionProductCombo
+    getOptionProductCombo,
+    getListDiscountApply
 };

@@ -692,6 +692,14 @@ const ParamOtherEdit = React.lazy(() => import("./components/ParamOther/ParamOth
 const ParamOtherDetail = React.lazy(() => import("./components/ParamOther/ParamOtherDetail"));
 //.end#ParamOther
 
+// Discount
+const Discount = React.lazy(() => import("./components/Discount/Discount"));
+const DiscountAdd = React.lazy(() => import("./components/Discount/DiscountAdd"));
+const DiscountDetail = React.lazy(() => import("./components/Discount/DiscountDetail"));
+const DiscountEdit = React.lazy(() => import("./components/Discount/DiscountEdit"));
+//.end#Discount
+
+
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -3276,6 +3284,40 @@ const routes = [
     component: ParamOtherEdit,
   },
   // end#ParamOther
+
+  //discount
+  {
+    path: "/discount",
+    exact: true,
+    name: "Mã Khuyến mãi",
+    function: "PRO_DISCOUNT_VIEW",
+    component: Discount,
+  },
+  {
+    path: "/discount/add",
+    exact: true,
+    name: "Thêm mới",
+    function: "PRO_DISCOUNT_ADD",
+    component: DiscountAdd,
+  },
+  {
+    path: "/discount/detail/:id",
+    exact: true,
+    name: "Chi tiết",
+    function: "PRO_DISCOUNT_VIEW",
+    component: DiscountDetail,
+  },
+  {
+    path: "/discount/edit/:id",
+    exact: true,
+    name: "Chỉnh sửa",
+    function: "PRO_DISCOUNT_EDIT",
+    component: DiscountEdit,
+  },
+
+  // end#DisCount
+
+
 
 ];
 

@@ -18,6 +18,8 @@ routes.route('/init/:order_id(\\d+)').get(OrderController.initOrder);
 
 routes.route('/option').get(OrderController.getOptionProductCombo);
 
+routes.route('/discount-apply').post(OrderController.getListDiscountApply);
+
 module.exports = {
     prefix,
     routes,

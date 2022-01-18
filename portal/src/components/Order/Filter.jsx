@@ -112,7 +112,7 @@ function Filter({ handleSubmitFillter, report = {} }) {
       setProductOption(_productOption);
     } catch (error) {
       window._$g.dialogs.alert(
-        window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+        window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
       );
     }
   };
@@ -407,7 +407,7 @@ function Filter({ handleSubmitFillter, report = {} }) {
                       autoComplete="nope"
                       type="text"
                       name="keyword"
-                      placeholder="Nhập mã đơn hàng, tên khách hàng"
+                      placeholder="Nhập mã đơn hàng, tên khách hàng, mã khuyến mãi"
                       onKeyDown={handleKeyDown}
                       value={searchValue.keyword}
                       onChange={handleChange}
