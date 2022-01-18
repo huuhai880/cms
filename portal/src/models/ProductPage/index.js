@@ -10,5 +10,9 @@ export default class ProductPage extends Model {
     getListInterPertProductPage(id) {
         return this._api.get(_static.API_PRODUCT_PAGE_LIST_INTERPRET.replace(':id', id));
     }
+
+    getListInterpretSpecial(){
+        return this._api.get('/product-page/interpret-special')
+    }
 }
 const _static = ProductPage;

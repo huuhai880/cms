@@ -13,7 +13,8 @@ const folderName = 'productpicture';
 const fileHelper = require('../../common/helpers/file.helper');
 const config = require('../../../config/config');
 const { saveImage } = require('../../common/helpers/saveFile.helper');
-const { createOrUpdatePageProduct } = require('../product-page/product-page.service');
+const _ = require('lodash');
+const productPageService = require('../product-page/product-page.service')
 
 const savedPath = 'product_image';
 const getListProduct = async (queryParams = {}) => {
@@ -404,24 +405,72 @@ const createProduct = async (bodyParams = {}) => {
             for (let i = 0; i < product_page.length; i++) {
                 const data_child = product_page[i].data_child;
                 for (let j = 0; j < data_child.length; j++) {
-                    const data_selected = data_child[j].data_selected;
-                    for (let k = 0; k < data_selected.length; k++) {
-                        await reqProductPage
-                            .input('PRODUCTPAGEID', product_page[i].id_product_page)
-                            .input('PRODUCTID', product_id)
-                            .input('PAGEID', product_page[i].product_page_id)
-                            .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
-                            .input('ATTRIBUTEID', data_selected[k].attributes_id)
-                            .input('INTERPRETID', data_selected[k].interpret_id)
-                            .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
-                            .input('ORDERINDEX', data_child[j].show_index)
-                            .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
-                            .input('CREATEDUSER', apiHelper.getValueFromObject(
-                                bodyParams,
-                                'auth_name',
-                                'administrator'
-                            ))
-                            .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                    if (data_child[j].attributes_group_id == -1) { //Nếu là luận giải đặc biệt
+                        let _interpretSpecialSelecteds = [];
+                        let { data_interpret = [] } = data_child[j] || {};
+
+                        //Lấy luận giải cha có selected
+                        for (let t = 0; t < data_interpret.length; t++) {
+                            let _interpretSpecial = data_interpret[t];
+                            if (_interpretSpecial.is_selected) {
+                                _interpretSpecial.interpret_detail_id = null;
+                                _interpretSpecialSelecteds.push(_interpretSpecial);
+                            }
+                            let { interpret_details = [] } = _interpretSpecial || {};
+                            if (interpret_details.length > 0) {
+                                //Lấy luận giải con có selected
+                                for (let r = 0; r < interpret_details.length; r++) {
+                                    let _childInterpret = interpret_details[r];
+                                    if (_childInterpret.is_selected) {
+                                        _interpretSpecialSelecteds.push(_childInterpret)
+                                    }
+                                }
+                            }
+                        }
+
+                        //Thêm luận giải vào Page
+                        for (let m = 0; m < _interpretSpecialSelecteds.length; m++) {
+                            await reqProductPage
+                                .input('PRODUCTPAGEID', product_page[i].id_product_page)
+                                .input('PRODUCTID', product_id)
+                                .input('PAGEID', product_page[i].product_page_id)
+                                .input('ATTRIBUTESGROUPID', -1)
+                                .input('ATTRIBUTEID', -1)
+                                .input('INTERPRETID', _interpretSpecialSelecteds[m].interpret_id)
+                                .input('INTERPRETDETAILID', _interpretSpecialSelecteds[m].interpret_detail_id)
+                                .input('ORDERINDEX', data_child[j].show_index)
+                                .input('ORDERINDEXINTERPRET', _interpretSpecialSelecteds[m].order_index)
+                                .input('CREATEDUSER', apiHelper.getValueFromObject(
+                                    bodyParams,
+                                    'auth_name',
+                                    'administrator'
+                                ))
+                                .input('ISINTERPRETSPECIAL', true)
+                                .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                        }
+
+                    }
+                    else {//Nếu không phải là luận giải đặc biệt thì như cũ
+                        const data_selected = data_child[j].data_selected;
+                        for (let k = 0; k < data_selected.length; k++) {
+                            await reqProductPage
+                                .input('PRODUCTPAGEID', product_page[i].id_product_page)
+                                .input('PRODUCTID', product_id)
+                                .input('PAGEID', product_page[i].product_page_id)
+                                .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
+                                .input('ATTRIBUTEID', data_selected[k].attributes_id)
+                                .input('INTERPRETID', data_selected[k].interpret_id)
+                                .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
+                                .input('ORDERINDEX', data_child[j].show_index)
+                                .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
+                                .input('CREATEDUSER', apiHelper.getValueFromObject(
+                                    bodyParams,
+                                    'auth_name',
+                                    'administrator'
+                                ))
+                                .input('ISINTERPRETSPECIAL', false)
+                                .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                        }
                     }
                 }
             }
@@ -683,25 +732,70 @@ const updateProduct = async (bodyParams = {}) => {
             for (let i = 0; i < product_page.length; i++) {
                 const data_child = product_page[i].data_child;
                 for (let j = 0; j < data_child.length; j++) {
-                    const data_selected = data_child[j].data_selected;
+                    if (data_child[j].attributes_group_id == -1) { //Nếu là luận giải đặc biệt
+                        let _interpretSpecialSelecteds = [];
+                        let { data_interpret = [] } = data_child[j] || {};
+                        //Lấy luận giải cha có selected
+                        for (let t = 0; t < data_interpret.length; t++) {
+                            let _interpretSpecial = data_interpret[t];
+                            if (_interpretSpecial.is_selected) {
+                                _interpretSpecial.interpret_detail_id = null;
+                                _interpretSpecialSelecteds.push(_interpretSpecial);
+                            }
+                            let { interpret_details = [] } = _interpretSpecial || {};
+                            if (interpret_details.length > 0) {
+                                //Lấy luận giải con có selected
+                                for (let r = 0; r < interpret_details.length; r++) {
+                                    let _childInterpret = interpret_details[r];
+                                    if (_childInterpret.is_selected) {
+                                        _interpretSpecialSelecteds.push(_childInterpret)
+                                    }
+                                }
+                            }
+                        }
 
-                    for (let k = 0; k < data_selected.length; k++) {
-                        await reqProductPage
-                            .input('PRODUCTPAGEID', data_selected[k].product_page_id)
-                            .input('PRODUCTID', product_id)
-                            .input('PAGEID', product_page[i].product_page_id)
-                            .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
-                            .input('ATTRIBUTEID', data_selected[k].attributes_id)
-                            .input('INTERPRETID', data_selected[k].interpret_id)
-                            .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
-                            .input('ORDERINDEX', data_child[j].show_index)
-                            .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
-                            .input('CREATEDUSER', apiHelper.getValueFromObject(
-                                bodyParams,
-                                'auth_name',
-                                'administrator'
-                            ))
-                            .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                        //Thêm luận giải vào Page
+                        for (let m = 0; m < _interpretSpecialSelecteds.length; m++) {
+                            await reqProductPage
+                                .input('PRODUCTPAGEID', product_page[i].id_product_page)
+                                .input('PRODUCTID', product_id)
+                                .input('PAGEID', product_page[i].product_page_id)
+                                .input('ATTRIBUTESGROUPID', -1)
+                                .input('ATTRIBUTEID', -1)
+                                .input('INTERPRETID', _interpretSpecialSelecteds[m].interpret_id)
+                                .input('INTERPRETDETAILID', _interpretSpecialSelecteds[m].interpret_detail_id)
+                                .input('ORDERINDEX', data_child[j].show_index)
+                                .input('ORDERINDEXINTERPRET', _interpretSpecialSelecteds[m].order_index)
+                                .input('CREATEDUSER', apiHelper.getValueFromObject(
+                                    bodyParams,
+                                    'auth_name',
+                                    'administrator'
+                                ))
+                                .input('ISINTERPRETSPECIAL', true)
+                                .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                        }
+                    }
+                    else {//Nếu không phải là luận giải đặc biệt thì như cũ
+                        const data_selected = data_child[j].data_selected;
+                        for (let k = 0; k < data_selected.length; k++) {
+                            await reqProductPage
+                                .input('PRODUCTPAGEID', data_selected[k].product_page_id)
+                                .input('PRODUCTID', product_id)
+                                .input('PAGEID', product_page[i].product_page_id)
+                                .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
+                                .input('ATTRIBUTEID', data_selected[k].attributes_id)
+                                .input('INTERPRETID', data_selected[k].interpret_id)
+                                .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
+                                .input('ORDERINDEX', data_child[j].show_index)
+                                .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
+                                .input('CREATEDUSER', apiHelper.getValueFromObject(
+                                    bodyParams,
+                                    'auth_name',
+                                    'administrator'
+                                ))
+                                .input('ISINTERPRETSPECIAL', false)
+                                .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                        }
                     }
                 }
             }
@@ -733,106 +827,248 @@ const detailProduct = async (product_id) => {
         product_images = productClass.listPicture(resProduct.recordsets[1]);
         let attributes = productClass.listAttributes(resProduct.recordsets[2]);
 
+        // let product_attributes = [];
+        // if (attributes && attributes.length > 0) {
+        //     for (let index = 0; index < attributes.length; index++) {
+        //         const attr = attributes[index];
+        //         let { attributes_group_id, product_id } = attr || {};
+        //         product_attributes.push({
+        //             attributes_group_id,
+        //             product_id,
+        //         });
+        //     }
+        // }
+
+
+        // for (let index = 0; index < product_attributes.length; index++) {
+        //     const element = product_attributes[index];
+        //     const res = await pool
+        //         .request()
+        //         .input(
+        //             'ATTRIBUTESGROUPID',
+        //             apiHelper.getValueFromObject(element, 'attributes_group_id', null)
+        //         )
+        //         .input(
+        //             'PRODUCTID',
+        //             apiHelper.getValueFromObject(element, 'product_id', null)
+        //         )
+        //         .execute('FOR_Interpret_GetListInterpretbyAttributesGruopId_AdminWeb');
+        //     let listInterpret = productClass.listInterpret(res.recordsets[1]);
+
+        //     if (listInterpret && listInterpret.length > 0) {
+        //         let interPretIds = listInterpret
+        //             .map((item) => item.interpret_id)
+        //             .join(',');
+        //         const resDetail = await pool
+        //             .request()
+        //             .input('INTERPRETIDS', interPretIds)
+        //             .input(
+        //                 'PRODUCTID',
+        //                 apiHelper.getValueFromObject(element, 'product_id', null)
+        //             )
+        //             .execute('FOR_INTERPRETDETAIL_GetListByIds_AdminWeb');
+        //         let listInterPretDetail =
+        //             productClass.listInterpretDetail(resDetail.recordsets[1]) || [];
+        //         for (let index = 0; index < listInterpret.length; index++) {
+        //             let interpret = listInterpret[index];
+        //             let interpret_details = listInterPretDetail.filter(
+        //                 (x) => x.interpret_id == interpret.interpret_id
+        //             );
+        //             interpret.interpret_details = interpret_details || [];
+        //         }
+        //         product_attributes[index].interprets = listInterpret;
+        //     }
+        // }
+
+        //LAY DU LIEU PRODUCT ATTRIBUTE V2
+        let attributesGroupIds = attributes.map(p => p.attributes_group_id).join(",");
+        // console.log({ attributesGroupIds })
+        const resAttrV2 = await pool.request()
+            .input('productid', product_id)
+            .input('ATTRIBUTESGROUPIDS', attributesGroupIds)
+            .execute('MD_PRODUCT_INTERPRET_GetList_AdminWeb');
+
+        let listInterpretAll = productClass.listInterpret(resAttrV2.recordsets[0]);
+        let listInterpretDetailAll = productClass.listInterpretDetail(resAttrV2.recordsets[1]);
         let product_attributes = [];
         if (attributes && attributes.length > 0) {
-            for (let index = 0; index < attributes.length; index++) {
-                const attr = attributes[index];
+            for (let i = 0; i < attributes.length; i++) {
+                const attr = attributes[i];
                 let { attributes_group_id, product_id } = attr || {};
+                //Lấy danh sách luận giải theo Chỉ số
+                let interprets = listInterpretAll.filter(p => p.attributes_group_id == attributes_group_id)|| [];
+
+                interprets = _.orderBy(interprets, ['date_sort'], ['desc']);;
+
+                //Lấy danh sách luận giải chi tiết
+                for (let k = 0; k < interprets.length; k++) {
+                    let _interpret = interprets[k];
+                    let interpret_details = listInterpretDetailAll.filter(p => p.interpret_id == _interpret.interpret_id);
+                    _interpret.interpret_details = interpret_details || [];
+                }
+
                 product_attributes.push({
                     attributes_group_id,
                     product_id,
+                    interprets
                 });
             }
         }
-        for (let index = 0; index < product_attributes.length; index++) {
-            const element = product_attributes[index];
-            const res = await pool
-                .request()
-                .input(
-                    'ATTRIBUTESGROUPID',
-                    apiHelper.getValueFromObject(element, 'attributes_group_id', null)
-                )
-                .input(
-                    'PRODUCTID',
-                    apiHelper.getValueFromObject(element, 'product_id', null)
-                )
-                .execute('FOR_Interpret_GetListInterpretbyAttributesGruopId_AdminWeb');
-            let listInterpret = productClass.listInterpret(res.recordsets[1]);
 
-            if (listInterpret && listInterpret.length > 0) {
-                let interPretIds = listInterpret
-                    .map((item) => item.interpret_id)
-                    .join(',');
-                const resDetail = await pool
-                    .request()
-                    .input('INTERPRETIDS', interPretIds)
-                    .input(
-                        'PRODUCTID',
-                        apiHelper.getValueFromObject(element, 'product_id', null)
-                    )
-                    .execute('FOR_INTERPRETDETAIL_GetListByIds_AdminWeb');
-                let listInterPretDetail =
-                    productClass.listInterpretDetail(resDetail.recordsets[1]) || [];
-                for (let index = 0; index < listInterpret.length; index++) {
-                    let interpret = listInterpret[index];
-                    let interpret_details = listInterPretDetail.filter(
-                        (x) => x.interpret_id == interpret.interpret_id
-                    );
-                    interpret.interpret_details = interpret_details || [];
-                }
-                product_attributes[index].interprets = listInterpret;
-            }
+
+        // // get detail product page
+        // let product_page = [];
+        // const product_page_detail = await pool
+        //     .request()
+        //     .input(
+        //         'PRODUCTID',
+        //         product_id
+        //     )
+        //     .execute('MD_PRODUCT_PAGE_GetListPage_AdminWeb');
+        // const result_page = productClass.list_page_product(product_page_detail.recordset);
+
+        // // data child
+        // for (let i = 0; i < result_page.length; i++) {
+        //     let page_product = {
+        //         product_page_id: result_page[i].page_id,
+        //         title_page: result_page[i].title_page,
+        //         data_child: []
+        //     }
+        //     const att_group_detail = await pool
+        //         .request()
+        //         .input('PRODUCTID', product_id)
+        //         .input('PAGEID', result_page[i].page_id)
+        //         .execute('MD_PRODUCT_PAGE_GetAttGroup_AdminWeb');
+
+        //     const result_AttGroup_Page = productClass.listAttGroupProductPage(att_group_detail.recordset);
+        //     for (let j = 0; j < result_AttGroup_Page.length; j++) {
+        //         const interpert_detail = await pool
+        //             .request()
+        //             .input('PRODUCTID', product_id)
+        //             .input('PAGEID', result_page[i].page_id)
+        //             .input('ATTRIBUTESGROUPID', result_AttGroup_Page[j].attributes_group_id)
+        //             .execute('MD_PRODUCT_PAGE_GetIntePertDetail_AdminWeb');
+        //         const interpert_page = productClass.listInterPertPage(interpert_detail.recordset);
+
+        //         const interpert_list = await pool
+        //             .request()
+        //             .input('ATTRIBUTESGROUPID', result_AttGroup_Page[j].attributes_group_id)
+        //             .execute('MD_PRODUCT_PAGE_GetListInterPret_AdminWeb');
+        //         const interpert = productClass.listInterPertPage(interpert_list.recordset);
+        //         page_product.data_child.push(
+        //             {
+        //                 attributes_group_id: result_AttGroup_Page[j].attributes_group_id,
+        //                 show_index: result_AttGroup_Page[j].order_index,
+        //                 data_interpret: [...interpert],
+        //                 data_selected: [...interpert_page],
+        //             }
+        //         )
+        //     }
+
+        //     product_page.push(page_product);
+        // }
+
+        //Lấy dữ liệu V2
+        const resV2 = await pool.request()
+            .input('productid', product_id)
+            .execute('MD_PRODUCT_PAGE_GetData_AdminWeb')
+
+        let listPage = productClass.list_page_product(resV2.recordsets[0]);
+        let listAttributesGroup = productClass.listAttGroupProductPage(resV2.recordsets[1]);
+        let listInterpretPage = productClass.listInterPertPage(resV2.recordsets[2]);
+        let listInterpret = productClass.listInterPertPage(resV2.recordsets[3]);
+        let listInterpretSpecialOfPage = productClass.listInterpretSpecialOfPage(resV2.recordsets[4]);
+
+        //Lấy danh sách luận giải đặc biệt nếu có
+        let product_page = [];
+        let _interpretSpecial = [];
+        if (listAttributesGroup.find(p => p.attributes_group_id == -1)) {
+            _interpretSpecial = (await productPageService.getListInterpretSpecial()).getData();
         }
 
-
-        // get detail product page
-        let product_page = [];
-        const product_page_detail = await pool
-            .request()
-            .input(
-                'PRODUCTID',
-                product_id
-            )
-            .execute('MD_PRODUCT_PAGE_GetListPage_AdminWeb');
-        const result_page = productClass.list_page_product(product_page_detail.recordset);
-        // data child
-        for (let i = 0; i < result_page.length; i++) {
+        for (let i = 0; i < listPage.length; i++) {
+            let _page = listPage[i];
             let page_product = {
-                product_page_id: result_page[i].page_id,
-                title_page: result_page[i].title_page,
+                product_page_id: _page.page_id,
+                title_page: _page.page_name,
                 data_child: []
             }
-            const att_group_detail = await pool
-                .request()
-                .input('PRODUCTID', product_id)
-                .input('PAGEID', result_page[i].page_id)
-                .execute('MD_PRODUCT_PAGE_GetAttGroup_AdminWeb');
 
-            const result_AttGroup_Page = productClass.listAttGroupProductPage(att_group_detail.recordset);
-            for (let j = 0; j < result_AttGroup_Page.length; j++) {
-                const interpert_detail = await pool
-                    .request()
-                    .input('PRODUCTID', product_id)
-                    .input('PAGEID', result_page[i].page_id)
-                    .input('ATTRIBUTESGROUPID', result_AttGroup_Page[j].attributes_group_id)
-                    .execute('MD_PRODUCT_PAGE_GetIntePertDetail_AdminWeb');
-                const interpert_page = productClass.listInterPertPage(interpert_detail.recordset);
+            let __interpretSpecialClone = JSON.parse(JSON.stringify([..._interpretSpecial]));
+            let attributesGroupOfPage = listAttributesGroup.filter(p => p.page_id == _page.page_id);
 
-                const interpert_list = await pool
-                    .request()
-                    .input('ATTRIBUTESGROUPID', result_AttGroup_Page[j].attributes_group_id)
-                    .execute('MD_PRODUCT_PAGE_GetListInterPret_AdminWeb');
-                const interpert = productClass.listInterPertPage(interpert_list.recordset);
-                page_product.data_child.push(
-                    {
-                        attributes_group_id: result_AttGroup_Page[j].attributes_group_id,
-                        show_index: result_AttGroup_Page[j].order_index,
-                        data_interpret: [...interpert],
-                        data_selected: [...interpert_page],
-                    }
-                )
+            for (let y = 0; y < attributesGroupOfPage.length; y++) {
+                let _attrOfPage = attributesGroupOfPage[y];
+
+                //Luận giải đặc biệt
+                if (_attrOfPage.attributes_group_id == -1) {
+                    let interpretSpecialPage = listInterpretSpecialOfPage.filter(p => p.attributes_group_id == -1 && p.page_id == _page.page_id);
+                    __interpretSpecialClone = __interpretSpecialClone.map(item => {
+                        return {
+                            ...item,
+                            is_selected: interpretSpecialPage.find(p => p.interpret_id == item.interpret_id && p.page_id == _page.page_id) ? true : false,
+                            interpret_details: item.interpret_details.map(_detail => {
+                                return {
+                                    ..._detail,
+                                    is_selected: interpretSpecialPage.find(p => p.interpret_id == item.interpret_id
+                                        && p.interpret_detail_id == _detail.interpret_detail_id && p.page_id == _page.page_id) ? true : false
+
+                                }
+
+                            })
+                        }
+                    })
+
+                    // for (let k = 0; k < __interpretSpecialClone.length; k++) {
+                    //     let item = __interpretSpecialClone[k];
+                    //     let _find = interpretSpecialPage.find(p => p.interpret_id == item.interpret_id && p.page_id == _page.page_id);
+                    //     if (_find) {
+                    //         item.is_selected = true
+                    //     }
+                    //     else {
+                    //         item.is_selected = false
+                    //     };
+                    //     if (item.interpret_details.length > 0) {
+                    //         for (let l = 0; l < item.interpret_details.length; l++) {
+                    //             let _detail = item.interpret_details[l];
+                    //             let _findDetail = interpretSpecialPage.find(p => p.interpret_id == item.interpret_id
+                    //                 && p.interpret_detail_id == _detail.interpret_detail_id && p.page_id == _page.page_id);
+                    //             if (_findDetail) {
+                    //                 _detail.is_selected = true
+                    //             }
+                    //             else {
+                    //                 _detail.is_selected = false
+                    //             }
+                    //         }
+                    //     }
+                    // }
+
+                    page_product.data_child.push(
+                        {
+                            attributes_group_id: _attrOfPage.attributes_group_id,
+                            show_index: _attrOfPage.order_index,
+                            data_interpret: [...__interpretSpecialClone],
+                            data_selected: []
+                        }
+                    )
+                }
+                else {//Luận giải thường
+                    //Danh sách luận giải chi tiết theo Chỉ số
+                    let interpert = listInterpret.filter(p => p.attributes_group_id == _attrOfPage.attributes_group_id);
+                    //Danh sách luận giải của chỉ số theo Page
+                    let interpretPage = listInterpretPage.filter(p => p.page_id == _page.page_id && p.attributes_group_id == _attrOfPage.attributes_group_id) || [];
+                    //Sap xep
+                    interpretPage = _.orderBy(interpretPage, ['attributes_id', 'showIndex'], ['asc', 'asc']);
+                    page_product.data_child.push(
+                        {
+                            attributes_group_id: _attrOfPage.attributes_group_id,
+                            show_index: _attrOfPage.order_index,
+                            data_interpret: [...interpert],
+                            data_selected: [...interpretPage]
+                        }
+                    )
+                }
             }
-
             product_page.push(page_product);
         }
 
