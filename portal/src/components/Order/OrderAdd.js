@@ -12,6 +12,8 @@ import {
     Label,
     Input,
     Form,
+    Modal,
+    ModalBody
 } from "reactstrap";
 import { ActionButton } from "@widget";
 import { mapDataOptions4Select } from "../../utils/html";
@@ -25,6 +27,11 @@ import { convertValueSelect, formatPrice } from 'utils/index';
 import { initialValues, validationSchema } from './const'
 import OrderModel from 'models/OrderModel/index';
 import "./style.scss";
+import PopupDiscount from './PopupDiscount';
+import {
+    CloseOutlined
+} from '@ant-design/icons';
+
 
 function OrderAdd({ noEdit = false, order_id = 0 }) {
     const [loading, setLoading] = useState(false);
@@ -33,6 +40,7 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
     const [productComboOption, setProductComboOption] = useState([]);
     const [buttonType, setButtonType] = useState(null);
     const [alerts, setAlerts] = useState([]);
+    const [isShowDiscount, setIsShowDiscount] = useState(false)
 
     const [dataOrderStatus] = useState([
         { label: "Chưa thanh toán", value: 0 },
@@ -54,6 +62,18 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
     useEffect(() => {
         initData();
     }, [])
+
+    useEffect(() => {
+        if (formik.values.discount) {
+            let { discount_money = 0 } = formik.values.discount || {};
+            formik.setFieldValue('total', (formik.values.sub_total - discount_money));
+            formik.setFieldValue('total_discount', discount_money)
+        }
+        else { //Xoa Discount
+            formik.setFieldValue('total', formik.values.sub_total);
+            formik.setFieldValue('total_discount', 0)
+        }
+    }, [formik.values.discount])
 
     const initData = async () => {
         setLoading(true)
@@ -301,13 +321,15 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
         order_details.forEach(item => {
             sub_total += item.quantity * item.price;
         });
+
         let _values = {
             ...formik.values,
             ...{
                 sub_total,
                 total: sub_total,
                 total_discount
-            }
+            },
+            discount: null
         }
         formik.setValues(_values)
     }
@@ -374,9 +396,30 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
     }
 
     const handleAddPromotion = () => {
-        window._$g.dialogs.alert(
-            window._$g._("Chức năng này đang được cập nhật.")
-        );
+        let _order_details = [...formik.values.order_details] || [];
+        if (_order_details.length == 0 || (
+            _order_details.length > 0 && _order_details.filter(x => (!x.product_id && !x.is_combo) || (!x.combo_id) && x.is_combo).length > 0
+        )) {
+            window._$g.dialogs.alert(
+                window._$g._("Vui lòng chọn Sản phẩm/Combo")
+            );
+        }
+        else {
+            setIsShowDiscount(true)
+        }
+    }
+
+    const handleClosePopup = () => {
+        setIsShowDiscount(false)
+    }
+
+    const handleApplyDiscount = (discount) => {
+        formik.setFieldValue('discount', discount);
+        setIsShowDiscount(false)
+    }
+
+    const handleClearDiscount = () => {
+        formik.setFieldValue('discount', null);
     }
 
     return loading ? <Loading /> : (
@@ -616,7 +659,12 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
                                                     <td className=" align-middle text-left" colSpan={4}>
                                                         <b style={{ cursor: 'pointer' }} className='underline title_page_h1 text-primary' onClick={handleAddPromotion}>Thêm khuyến mãi</b>
                                                     </td>
-                                                    <td className=" align-middle text-right"></td>
+                                                    <td className=" align-middle text-right">
+                                                        {formik.values.discount ? <div className='discount-code'>
+                                                            <span>{formik.values.discount.discount_code}</span>
+                                                            <CloseOutlined style={{ color: "red" }} onClick={handleClearDiscount} />
+                                                        </div> : null}
+                                                    </td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
@@ -718,6 +766,24 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
                     </Card>
                 </Col>
             </Row>
+
+            {isShowDiscount ? (
+                <Modal isOpen={true} size={"lg"} style={{ maxWidth: "60rem" }}>
+                    <ModalBody className="p-0">
+                        <PopupDiscount
+                            orderDetails={formik.values.order_details}
+                            handleClosePopup={handleClosePopup}
+                            noEdit={noEdit}
+                            discountSeleted={null}
+                            memberId={formik.values.member_id}
+                            handleApplyDiscount={handleApplyDiscount}
+                            discountSeleted={formik.values.discount}
+                        />
+                    </ModalBody>
+                </Modal>
+            ) : null}
+
+
         </div>
     );
 }

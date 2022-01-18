@@ -37,6 +37,7 @@ BEGIN
                     SL_ORDER.SUBTOTAL,
                     SL_ORDER.ISGROWREVENUE,
                     CONCAT(CRM_ACCOUNT.CUSTOMERCODE,' - ', CRM_ACCOUNT.FULLNAME) AS CUSTOMERNAME,
+                    SL_ORDER_DISCOUNT.DISCOUNTCODE,
                     COUNT(1) OVER() AS TOTALITEMS
 
         FROM        SL_ORDER
@@ -45,12 +46,18 @@ BEGIN
         AND         CRM_ACCOUNT.ISACTIVE = 1
         AND         CRM_ACCOUNT.ISDELETED = 0
 
+        LEFT JOIN   SL_ORDER_DISCOUNT
+        ON          SL_ORDER_DISCOUNT.ORDERID = SL_ORDER.ORDERID
+        AND         SL_ORDER_DISCOUNT.ISACTIVE = 1
+        AND         SL_ORDER_DISCOUNT.ISDELETED = 0
+
 
         WHERE       (
                         @KEYWORD IS NULL
                         OR @KEYWORD = ''
                         OR SL_ORDER.ORDERNO LIKE '%' + LTRIM(RTRIM(@KEYWORD)) + '%'
                         OR UPPER(CRM_ACCOUNT.FULLNAME) LIKE '%' + UPPER(LTRIM(RTRIM(@KEYWORD))) + '%'
+                        OR SL_ORDER_DISCOUNT.DISCOUNTCODE LIKE '%' + LTRIM(RTRIM(@KEYWORD)) + '%'
                     )
         AND         (@ISDELETED = 2 OR SL_ORDER.ISDELETED = @ISDELETED)
         AND         (@ORDERSTATUS = 2 OR SL_ORDER.[STATUS] = @ORDERSTATUS)
@@ -116,12 +123,18 @@ BEGIN
             AND         PRO_COMBOPRODUCT.ISACTIVE = 1 
             AND         PRO_COMBOPRODUCT.ISDELETED = 0
 
+            LEFT JOIN   SL_ORDER_DISCOUNT
+            ON          SL_ORDER_DISCOUNT.ORDERID = SL_ORDER.ORDERID
+            AND         SL_ORDER_DISCOUNT.ISACTIVE = 1
+            AND         SL_ORDER_DISCOUNT.ISDELETED = 0 
+
             WHERE       
                         (
                             @KEYWORD IS NULL
                             OR @KEYWORD = ''
                             OR SL_ORDER.ORDERNO LIKE '%' + LTRIM(RTRIM(@KEYWORD)) + '%'
                             OR UPPER(CRM_ACCOUNT.FULLNAME) LIKE '%' + UPPER(LTRIM(RTRIM(@KEYWORD))) + '%'
+                            OR SL_ORDER_DISCOUNT.DISCOUNTCODE LIKE '%' + LTRIM(RTRIM(@KEYWORD)) + '%'
                         )
             AND         SL_ORDER.ISDELETED = 0
             AND         SL_ORDER.[STATUS] = 1

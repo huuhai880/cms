@@ -61,7 +61,6 @@ function DiscountAdd({noEdit}) {
         try {
             values.product_list = values.is_all_product ? [] : values.product_list;
             values.customer_type_list = values.is_all_customer_type ? [] : values.customer_type_list;
-            console.log({values});
             await _discountModel.create(values);
             window._$g.toastr.show('Lưu thành công!', 'success');
 
@@ -89,21 +88,19 @@ function DiscountAdd({noEdit}) {
         if (formik.values.start_date) {
             var _now = moment();
             let discount_status = 1;
-            if (formik.values.end_date) {
-                var _end_date = moment(formik.values.end_date, 'DD/MM/YYYY');
-                if (_end_date < _now) {
-                    discount_status = 3;
-                } else {
-                    discount_status = 2;
-                }
-            } else {
-                var _start_date = moment(formik.values.start_date, 'DD/MM/YYYY');
-                if (_now >= _start_date) {
-                    discount_status = 2;
-                } else {
-                    discount_status = 1;
-                }
+            var _start_date = moment(formik.values.start_date, 'DD/MM/YYYY');
+            var _end_date = formik.values.end_date ?  moment(formik.values.end_date, 'DD/MM/YYYY') : null;
+
+            if(_now >= _start_date && (_now <= _end_date || !_end_date)){
+                discount_status = 2;
             }
+            else if(_now < _start_date){
+                discount_status = 1;
+            }
+            else if(_now > _end_date && _end_date){
+                discount_status = 1;
+            }
+
             formik.setFieldValue('discount_status', discount_status);
         }
     }, [formik.values.start_date, formik.values.end_date]);
@@ -300,7 +297,7 @@ function DiscountAdd({noEdit}) {
                                         key={`alert-${idx}`}
                                         color={color}
                                         isOpen={true}
-                                        toggle={() => setAlerts({alerts: []})}>
+                                        toggle={() => setAlerts([])}>
                                         <span dangerouslySetInnerHTML={{__html: msg}} />
                                     </Alert>
                                 );

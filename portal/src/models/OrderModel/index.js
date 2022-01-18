@@ -31,5 +31,9 @@ export default class OrderModel extends Model {
     getOptionProduct() {
         return this._api.get('/order/option')
     }
+
+    getListDiscountApply(values) {
+        return this._api.post('/order/discount-apply', values)
+    }
 }
 const _static = OrderModel;

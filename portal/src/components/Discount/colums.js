@@ -104,20 +104,16 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
                     const start_date = data[tableMeta["rowIndex"]].start_date;
                     var _now = moment();
                     let discount_status = 1;
-                    if (end_date) {
-                        var _end_date = moment(end_date, 'DD/MM/YYYY');
-                        if (_end_date < _now) {
-                            discount_status = 3;
-                        } else {
-                            discount_status = 2;
-                        }
-                    } else {
-                        var _start_date = moment(start_date, 'DD/MM/YYYY');
-                        if (_now >= _start_date) {
-                            discount_status = 2;
-                        } else {
-                            discount_status = 1;
-                        }
+                    var _start_date = moment(start_date, 'DD/MM/YYYY');
+                    var _end_date = end_date ? moment(end_date, 'DD/MM/YYYY') : null;
+                    if (_now >= _start_date && (_now <= _end_date || !_end_date)) {
+                        discount_status = 2;
+                    }
+                    else if (_now < _start_date) {
+                        discount_status = 1;
+                    }
+                    else if (_now > _end_date && _end_date) {
+                        discount_status = 1;
                     }
                     return (
                         <div className="text-left">{discount_status == 1 ? "Chưa áp dụng" : discount_status == 2 ? "Đang áp dụng" : "Đã kết thúc"}</div>

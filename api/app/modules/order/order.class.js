@@ -30,7 +30,29 @@ const template = {
 
     total_order: '{{#? TOTALORDER}}',
     total_quantity: '{{#? TOTALQUANTITY}}',
-    total_amount: '{{#? TOTALAMOUNT}}'
+    total_amount: '{{#? TOTALAMOUNT}}',
+    discount_code: '{{#? DISCOUNTCODE}}',
+
+    //discount
+    discount_id: '{{#? DISCOUNTID}}',
+    // discount_code: '{{#? DISCOUNTCODE}}',
+    is_percent_discount: '{{ISPERCENTDISCOUNT ? 1 : 0}}',
+    is_money_discount: '{{ISMONEYDISCOUNT ? 1: 0}}',
+    discount_value: '{{#? DISCOUNTVALUE}}',
+    discount_status: '{{#? DISCOUNTSTATUS}}',
+    is_all_product: '{{ISALLPRODUCT ? 1: 0}}',
+    is_appoint_product: '{{ISAPPOINTPRODUCT ? 1: 0}}',
+    is_all_customer_type: '{{ISALLCUSTOMERTYPE ? 1: 0}}',
+    is_appoint_customer_type: '{{ISAPPOINTCUSTOMERTYPE ? 1: 0}}',
+    is_non_requirement: '{{ISNONEREQUIREMENT ? 1 : 0}}',
+    is_min_total_money: '{{ISMINTOTALMONEY ? 1 : 0}}',
+    value_min_total_money: '{{#? VALUEMINTOTALMONEY}}',
+    is_min_num_product: '{{ISMINNUMPRODUCT ? 1 : 0}}',
+    value_min_num_product: '{{#? VALUEMINNUMPRODUCT}}',
+    start_date: '{{#? STARTDATE}}',
+    end_date: '{{#? ENDDATE}}',
+    customer_type_id: '{{#? CUSTOMERTYPEID}}',
+    discount_money: '{{#? DISCOUNTMONEY}}'
 };
 let transform = new Transform(template);
 
@@ -47,7 +69,8 @@ const list = (data = []) => {
         'combo_name',
         'order_type',
         'customer_name',
-        'is_grow_revenue'
+        'is_grow_revenue',
+        'discount_code'
     ]);
 };
 
@@ -117,7 +140,50 @@ const report = (data = {}) => {
     ]) : null;
 };
 
+const listDiscount = (data = []) => {
+    return transform.transform(data, [
+        'discount_id',
+        'discount_code',
+        'is_percent_discount',
+        'is_money_discount',
+        'discount_value',
+        'discount_status',
+        'is_all_product',
+        'is_appoint_product',
+        'is_all_customer_type',
+        'is_appoint_customer_type',
+        'is_non_requirement',
+        'is_min_total_money',
+        'value_min_total_money',
+        'is_min_num_product',
+        'value_min_num_product',
+        'start_date',
+        'end_date'
+    ]);
+};
 
+const listDiscountProduct = (data = []) => {
+    return transform.transform(data, [
+        'discount_id',
+        'product_id',
+        'combo_id'
+    ]);
+};
+
+const listDiscountCustomerType = (data = []) => {
+    return transform.transform(data, [
+        'customer_type_id',
+        'discount_id'
+    ]);
+};
+
+const discountDetail = (discount = []) => {
+    return discount && Object.keys(discount).length > 0 ? transform.transform(discount, [
+        'discount_code',
+        'discount_id',
+        'discount_money'
+    ]) : null;
+};
 
 module.exports = {
     list,
@@ -125,5 +191,9 @@ module.exports = {
     listCustomer,
     listProductCombo,
     listOrderDetail,
-    report
+    report,
+    listDiscount,
+    listDiscountProduct,
+    listDiscountCustomerType,
+    discountDetail
 };
