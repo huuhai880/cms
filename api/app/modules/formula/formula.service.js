@@ -88,10 +88,12 @@ const addFormula = async (body = {}) => {
             ref_formula_id = null;
             ref_condition_id = null;
             interpret_formula_id = null;
-            is_default = false
         }
         if (!is_condition_formula) {
             list_condition_formula = [];
+        }
+
+        if (is_couple_formula || is_condition_formula) {
             is_default = false;
         }
 
