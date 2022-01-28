@@ -11,7 +11,8 @@ function InterpetSpecialChild({
     selectedParent,
     handleSelectedChild,
     handleSelectedAllChild,
-    noEdit
+    noEdit,
+    dataUpdate = {}
 }) {
 
     const column = [
@@ -79,7 +80,8 @@ function InterpetSpecialChild({
     };
 
     const getSelectedRowKeys = () => {
-        return data.filter(p => p.is_selected).map(x => x.interpret_detail_id);
+        let { interpret_details = [] } = dataUpdate || {}
+        return interpret_details.filter(p => p.is_selected).map(x => x.interpret_detail_id);
     }
 
     return (

@@ -23,6 +23,7 @@ import { changeAlias, splitString } from "../../utils/index";
 const regex = /(<([^>]+)>)/gi;
 function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClosePopup, detailRow = {}, noEdit }) {
     const [dataInterpretSpecial, setDataInterpretSpecial] = useState([]);
+    const [dataUpdate, setDataUpdate] = useState([])
 
     const [dataCondition] = useState([
         { label: 'Tất cả', value: 2 },
@@ -39,13 +40,15 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
     const [expandedRowKey, setExpandedRowKey] = useState([]);
     const [isSubmitSearch, setIsSubmitSearch] = useState(false)
 
-    useEffect(() => {
-        let _selectedRowKeys = dataInterpretSpecial.filter(p => p.is_selected).map(k => k.interpret_id);
-        setSelectedRowKeys(_selectedRowKeys)
-    }, [dataInterpretSpecial])
+    // useEffect(() => {
+    //     let _selectedRowKeys = dataInterpretSpecial.filter(p => p.is_selected).map(k => k.interpret_id);
+    //     setSelectedRowKeys(_selectedRowKeys)
+    // }, [dataInterpretSpecial])
+
 
     useEffect(() => {
-        setDataInterpretSpecial(interpretSpecial)
+        setDataInterpretSpecial(JSON.parse(JSON.stringify([...interpretSpecial])));
+        setDataUpdate(JSON.parse(JSON.stringify([...interpretSpecial])));
     }, [])
 
 
@@ -117,7 +120,7 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
                 index_parent = null,
                 index_child = null
             } = detailRow || {}
-            productPage[index_parent].data_child[index_child].data_interpret = dataInterpretSpecial;
+            productPage[index_parent].data_child[index_child].data_interpret = dataUpdate;
             formik.setFieldValue("product_page", productPage);
             handleClosePopup();
         } catch (error) { }
@@ -159,7 +162,6 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
 
 
             if (filter.conditionSelected != null) {
-                console.log(filter.conditionSelected)
                 let { value = 2 } = filter.conditionSelected;
                 _interpretSpecialCl = _interpretSpecialCl.filter(p => (p.is_condition_or && value == 1) ||
                     (!p.is_condition_or && value == 0) || value == 2
@@ -198,7 +200,20 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
                 }
             });
 
-            setDataInterpretSpecial(_interpretSpecialCl)
+            setDataInterpretSpecial(_interpretSpecialCl);
+
+            //Update
+            let _cloneDataUpdate = [...dataUpdate];
+            let _cloneDataIndex = _cloneDataUpdate.findIndex(p => p.interpret_id == interpret_id);
+            _cloneDataUpdate[_cloneDataIndex].is_selected = selected;
+            _cloneDataUpdate[_cloneDataIndex].interpret_details = (_cloneDataUpdate[_cloneDataIndex].interpret_details || []).map(p => {
+                return {
+                    ...p,
+                    ...{ is_selected: selected }
+                }
+            });
+            setDataUpdate(_cloneDataUpdate);
+
         },
         onSelectAll: (selected, selectedRows, changeRows) => {
             let _interpretSpecialCl = [...dataInterpretSpecial];
@@ -211,7 +226,20 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
                     }
                 }
             })
-            setDataInterpretSpecial(_interpretSpecialCl)
+            setDataInterpretSpecial(_interpretSpecialCl);
+
+            //Update
+            let _cloneDataUpdate = [...dataUpdate];
+            for (let index = 0; index < _cloneDataUpdate.length; index++) {
+                const _interpret = _cloneDataUpdate[index];
+                let { interpret_id = 0 } = _interpret || {};
+                let _find = _interpretSpecialCl.find(p => p.interpret_id == interpret_id);
+                if (_find) {
+                    _interpret.is_selected = selected;
+                    _interpret.interpret_details = _interpret.interpret_details.map(k => ({ ...k, is_selected: selected }))
+                }
+            }
+            setDataUpdate(_cloneDataUpdate)
         },
         getCheckboxProps: () => ({
             disabled: noEdit,
@@ -221,11 +249,18 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
 
     const handleSelectedChild = (record, selected, indexChild) => {
         let _interpretSpecialCl = [...dataInterpretSpecial];
-        let { interpret_id = 0 } = record || {};
+        let { interpret_id = 0, interpret_detail_id = 0 } = record || {};
         let _indexParent = _interpretSpecialCl.findIndex(p => p.interpret_id == interpret_id);
         let { interpret_details = [] } = _interpretSpecialCl[_indexParent] || {}
         interpret_details[indexChild].is_selected = selected;
         setDataInterpretSpecial(_interpretSpecialCl)
+
+        //Update
+        let _cloneDataUpdate = [...dataUpdate];
+        let _indexParentCloneData = _cloneDataUpdate.findIndex(p => p.interpret_id == interpret_id);
+        let _indexChildClone = (_cloneDataUpdate[_indexParentCloneData].interpret_details || []).findIndex(p => p.interpret_detail_id == interpret_detail_id);
+        _cloneDataUpdate[_indexParentCloneData].interpret_details[_indexChildClone].is_selected = selected;
+        setDataUpdate(_cloneDataUpdate)
     }
 
     const handleSelectedAllChild = (selected, interpret_id) => {
@@ -237,7 +272,22 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
             _detail.is_selected = selected;
         }
 
-        setDataInterpretSpecial(_interpretSpecialCl)
+        setDataInterpretSpecial(_interpretSpecialCl);
+
+        //Update
+        let _cloneDataUpdate = [...dataUpdate];
+        let _indexParentCloneData = _cloneDataUpdate.findIndex(p => p.interpret_id == interpret_id);
+        for (let i = 0; i < _cloneDataUpdate[_indexParentCloneData].interpret_details.length; i++) {
+            const _detail = _cloneDataUpdate[_indexParentCloneData].interpret_details[i];
+            _detail.is_selected = selected;
+        }
+        setDataUpdate(_cloneDataUpdate)
+    }
+
+    const getSelectedRowKeys = () => {
+        let _data = [...dataUpdate];
+        let _rowKeys = _data.filter(p => p.is_selected).map(p => parseInt(p.interpret_id)) || [];
+        return _rowKeys;
     }
 
     return (
@@ -367,7 +417,7 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
                                             scroll={{ y: 370 }}
                                             rowKey={"interpret_id"}
                                             rowSelection={{
-                                                selectedRowKeys,
+                                                selectedRowKeys: getSelectedRowKeys(),
                                                 ...rowSelection,
                                             }}
                                             expandable={{
@@ -379,6 +429,7 @@ function PopupInterpretSpecial({ interpretSpecial = [], formik = {}, handleClose
                                                         handleSelectedChild={handleSelectedChild}
                                                         handleSelectedAllChild={handleSelectedAllChild}
                                                         noEdit={noEdit}
+                                                        dataUpdate={dataUpdate.find(p => p.interpret_id == record.interpret_id)}
                                                     />
                                                 ),
                                                 rowExpandable: (record) => record.interpret_details.length > 0,
