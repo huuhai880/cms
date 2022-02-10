@@ -267,7 +267,7 @@ export const validationSchema = (is_combo = false) => {
                 'price',
                 `Giá ${is_combo ? 'combo' : 'sản phẩm'} là bắt buộc`,
                 function (value) {
-                    if (value < 0) {
+                    if (!value) {
                         return false //Loi
                     }
                     return true;
@@ -287,6 +287,16 @@ export const validationSchema = (is_combo = false) => {
                         function (value) {
                             let _price = this.options.parent.price;
                             if (value > _price) {
+                                return false;
+                            }
+                            return true;
+                        }
+                    )
+                    .test(
+                        'discount_value',
+                        `Giá bán mới là bắt buộc`,
+                        function (value) {
+                            if (!value) {
                                 return false;
                             }
                             return true;
@@ -351,7 +361,7 @@ export const validationSchemaUpdate = (is_combo = false) => {
                 'price',
                 `Giá ${is_combo ? 'combo' : 'sản phẩm'} là bắt buộc`,
                 function (value) {
-                    if (value < 0) {
+                    if (!value) {
                         return false //Loi
                     }
                     return true;
@@ -370,6 +380,16 @@ export const validationSchemaUpdate = (is_combo = false) => {
                         function (value) {
                             let _price = this.options.parent.price;
                             if (value > _price) {
+                                return false;
+                            }
+                            return true;
+                        }
+                    )
+                    .test(
+                        'discount_value',
+                        `Giá bán mới là bắt buộc`,
+                        function (value) {
+                            if (!value) {
                                 return false;
                             }
                             return true;

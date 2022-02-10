@@ -306,8 +306,8 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                                         decimalSeparator="."
                                                         value={formik.values.price ? formik.values.price : ''}
                                                         onValueChange={({ value }) => {
-                                                            let price = 1 * value.replace(/,/g, "");
-                                                            formik.setFieldValue('price', price)
+                                                            // let price = 1 * value.replace(/,/g, "");
+                                                            formik.setFieldValue('price', value)
                                                         }}
                                                         isAllowed={values => isAllowed(values, true)}
                                                     />
@@ -374,8 +374,8 @@ function PriceEdit({ noEdit = false, priceId = null }) {
                                                         decimalSeparator="."
                                                         value={formik.values.discount_value ? formik.values.discount_value : ''}
                                                         onValueChange={({ value }) => {
-                                                            let discount_value = 1 * value.replace(/,/g, "");
-                                                            formik.setFieldValue('discount_value', discount_value)
+                                                            // let discount_value = 1 * value.replace(/,/g, "");
+                                                            formik.setFieldValue('discount_value', value)
                                                         }}
                                                         isAllowed={values => isAllowed(values)}
                                                     />
