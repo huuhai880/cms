@@ -1,174 +1,178 @@
-import React, { PureComponent } from "react";
-import PropTypes from "prop-types";
-import { Input, Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
-import Select from "react-select";
+import React, {useEffect, useState} from 'react';
+import {Input, Button, Form, FormGroup, Label, Col, Row} from 'reactstrap';
+import Select from 'react-select';
+import DatePicker from '../Common/DatePicker';
+import SearchHistoryService from './Service/index';
+import './style.scss';
 
-// Component(s)
-// import DatePicker from "../Common/DatePicker";
-// import { DatePicker } from "antd";
-import RangePicker from "../../containers/Common/widget/RangeTimePicker";
-// import "antd/dist/antd.css";
-import "moment/locale/vi";
-import { FormSelectGroup } from "../../containers/Common/widget";
-import { mapDataOptions4Select } from "../../utils/html";
-import moment from "moment";
+const _searchHistoryService = new SearchHistoryService();
 
-class SearchHistoryFilter extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      inputValue: "",
-      selectedActive: { label: "Có", value: 1 },
-      newsCategory: { label: "Tất cả", value: "" },
-      /** @var {Array} */
-      isActives: [
-        { name: "Tất cả", id: 2 },
-        { name: "Có", id: 1 },
-        { name: "Không", id: 0 },
-      ],
-      startDate: moment().startOf('month'),
-      endDate: moment(),
+function SearchHistoryFillter({handleSubmitFilter}) {
+    const [filter, setFilter] = useState({
+        search: '',
+        productSelected: null,
+        startDate: null,
+        endDate: null,
+    });
 
+    const [optionProduct, setOptionProduct] = useState([]);
+
+    useEffect(() => {
+        const getOptionProduct = async () => {
+            try {
+                let _optionProduct = await _searchHistoryService.getOptionProduct();
+                setOptionProduct(_optionProduct);
+            } catch (error) {
+                window._$g.dialogs.alert(window._$g._('Đã có lỗi xảy ra. Vùi lòng F5 thử lại'));
+            }
+        };
+
+        getOptionProduct();
+    }, []);
+
+    const handleChange = e => {
+        setFilter({
+            ...filter,
+            [e.target.name]: e.target.value,
+        });
     };
-  }
 
-  handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  handleChangeSelectActive = (selectedActive) => {
-    this.setState({ selectedActive });
-  };
-
-  handleChangeSelectCategory = (selectedCategory) => {
-    this.setState({ newsCategory: selectedCategory });
-  };
-
-  handleKeyDown = (event) => {
-    if (1 * event.keyCode === 13) {
-      event.preventDefault();
-      this.onSubmit();
-    }
-  };
-
-  onSubmit = (isReset = false) => {
-    let { inputValue, selectedActive, startDate, endDate } = this.state;
-    const { handleSubmit } = this.props;
-    handleSubmit(
-      inputValue ? inputValue.trim() : null,
-      selectedActive ? selectedActive.value : 2,
-      moment(startDate).isValid() ? moment(startDate, "DD/MM/YYYY").format("DD/MM/YYYY") : null,
-      moment(endDate).isValid() ? moment(endDate, "DD/MM/YYYY").format("DD/MM/YYYY") : null
-    );
-  };
-
-  onClear = () => {
-    const { inputValue, startDate, endDate, selectedActive } = this.state;
-    if (inputValue || startDate || endDate || selectedActive) {
-      this.setState(
-        {
-          inputValue: "",
-          startDate:  moment().startOf('month'),
-          endDate:  moment(),
-          selectedActive: { label: "Có", value: 2 },
-        },
-        () => {
-          this.onSubmit(true);
+    const handleKeyDown = e => {
+        if (1 * e.keyCode === 13) {
+            e.preventDefault();
+            handleSubmit();
         }
-      );
-    }
-  };
+    };
 
-  render() {
-    const { handlePick } = this.props;
+    const handleChangeSelect = (selected, name) => {
+        setFilter(preState => ({
+            ...preState,
+            [name]: selected,
+        }));
+    };
+
+    const handleSubmit = () => {
+        let {search, productSelected, startDate, endDate} = filter;
+
+        handleSubmitFilter({
+            search: search ? search.trim() : null,
+            product_id: productSelected ? productSelected.value : null,
+            start_date: startDate ? startDate.format('DD/MM/YYYY') : null,
+            end_date: endDate ? endDate.format('DD/MM/YYYY') : null,
+            page: 1,
+        });
+    };
+
+    const handleClear = () => {
+        setFilter({
+            search: '',
+            productSelected: null,
+            startDate: null,
+            endDate: null,
+        });
+
+        handleSubmitFilter({
+            search: '',
+            product_id: null,
+            start_date: null,
+            end_date: null,
+            page: 1,
+        });
+    };
+
+    const handleChangeDate = ({startDate, endDate}) => {
+        setFilter(preState => ({
+            ...preState,
+            startDate,
+            endDate,
+        }));
+    };
+
     return (
-      <div className="ml-3 mr-3 mb-3 mt-3">
-        <Form autoComplete="nope" className="zoom-scale-9">
-          <Row>
-            <Col xs={12} sm={6}>
-              <FormGroup className="mb-2 mb-sm-0">
-                <Label for="inputValue" className="mr-sm-2">
-                  Từ khóa
-                </Label>
-                <Input
-                  className="MuiPaper-filter__custom--input"
-                  autoComplete="nope"
-                  type="text"
-                  name="inputValue"
-                  placeholder="Nhập tên khách hàng, tên sản phẩm"
-                  value={this.state.inputValue}
-                  onChange={this.handleChange}
-                  onKeyDown={this.handleKeyDown}
-                  inputprops={{
-                    name: "inputValue",
-                  }}
-                />
-              </FormGroup>
-            </Col>
-            <Col xs={12} sm={3}>
-              <FormGroup className="mb-2 mb-sm-0">
-                <Label for="" className="mr-sm-2">
-                  Ngày tạo
-                </Label>
-                <Col className="pl-0 pr-0">
-                  <RangePicker
-                    setId="date1"
-                    startDateValue={this.state.startDate}
-                    endDateValue={this.state.endDate}
-                    handleDateValue={(startDate, endDate) => this.setState({ startDate, endDate })}
-                  />
-                </Col>
-              </FormGroup>
-            </Col>
+        <div className="ml-3 mr-3 mb-3 mt-3">
+            <Form autoComplete="nope" className="zoom-scale-9">
+                <Row>
+                    <Col xs={12} sm={4}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Label for="inputValue" className="mr-sm-2">
+                                Từ khóa
+                            </Label>
+                            <Input
+                                className="MuiPaper-filter__custom--input"
+                                autoComplete="nope"
+                                type="text"
+                                name="search"
+                                placeholder="Nhập tiêu đề, tên page"
+                                value={filter.search}
+                                onChange={handleChange}
+                                onKeyDown={handleKeyDown}
+                                inputprops={{
+                                    name: 'search',
+                                }}
+                            />
+                        </FormGroup>
+                    </Col>
 
-            <Col xs={12} sm={3} className="d-flex align-items-end justify-content-end">
-              <FormGroup className="mb-2 mb-sm-0">
-                <Button
-                  className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                  onClick={this.onSubmit}
-                  color="primary"
-                  size="sm"
-                >
-                  <i className="fa fa-search" />
-                  <span className="ml-1">Tìm kiếm</span>
-                </Button>
-              </FormGroup>
-              <FormGroup className="mb-2 ml-2 mb-sm-0">
-                <Button
-                  className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                  onClick={this.onClear}
-                  size="sm"
-                >
-                  <i className="fa fa-refresh" />
-                  <span className="ml-1">Làm mới</span>
-                </Button>
-              </FormGroup>
-              {handlePick ? (
-                <FormGroup className="mb-2 ml-2 mb-sm-0">
-                  <Button
-                    className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePick();
-                    }}
-                    color="success"
-                    size="sm"
-                  >
-                    <i className="fa fa-plus" />
-                    <span className="ml-1"> Chọn </span>
-                  </Button>
-                </FormGroup>
-              ) : null}
-            </Col>
-          </Row>
-        </Form>
-      </div>
+                    <Col xs={12} sm={4}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Label for="" className="mr-sm-2">
+                                Ngày tạo từ
+                            </Label>
+                            <Col className="pl-0 pr-0">
+                                <DatePicker
+                                    startDate={filter.startDate}
+                                    startDateId="start_date_id"
+                                    endDate={filter.endDate}
+                                    endDateId="end_date_id"
+                                    onDatesChange={handleChangeDate}
+                                    isMultiple
+                                />
+                            </Col>
+                        </FormGroup>
+                    </Col>
+                    <Col xs={12} sm={4}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Label for="" className="mr-sm-2">
+                                Sản phẩm
+                            </Label>
+                            <Select
+                                className="MuiPaper-filter__custom--select"
+                                id="productSelected"
+                                name="productSelected"
+                                onChange={selected => handleChangeSelect(selected, 'productSelected')}
+                                isSearchable={true}
+                                placeholder={'-- Chọn --'}
+                                value={filter.productSelected}
+                                options={optionProduct}
+                                isClearable={true}
+                            />
+                        </FormGroup>
+                    </Col>
+                    <Col xs={12} className={`d-flex align-items-end mt-3 justify-content-end`}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Button
+                                className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                                onClick={handleSubmit}
+                                color="primary"
+                                size="sm">
+                                <i className="fa fa-search" />
+                                <span className="ml-1">Tìm kiếm</span>
+                            </Button>
+                        </FormGroup>
+                        <FormGroup className="mb-2 ml-2 mb-sm-0">
+                            <Button
+                                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                                onClick={handleClear}
+                                size="sm">
+                                <i className="fa fa-refresh" />
+                                <span className="ml-1">Làm mới</span>
+                            </Button>
+                        </FormGroup>
+                    </Col>
+                </Row>
+            </Form>
+        </div>
     );
-  }
 }
 
-SearchHistoryFilter.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-};
-
-export default SearchHistoryFilter;
+export default SearchHistoryFillter;

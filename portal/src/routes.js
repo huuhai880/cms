@@ -670,9 +670,9 @@ const ProductComboDetail = React.lazy(() => import("./components/ProductCombo/Pr
 //end#ProductCombo
 
 const SearchHistory = React.lazy(() => import("./components/SearchHistory/SearchHistory"));
-const SearchHistoryDetail = React.lazy(() =>
-    import("./components/SearchHistory/SearchHistoryDetail")
-);
+// const SearchHistoryDetail = React.lazy(() =>
+//     import("./components/SearchHistory/SearchHistoryDetail")
+// );
 //Farmous
 const Farmous = React.lazy(() => import("./components/Farmous/Farmous"));
 const FarmousAdd = React.lazy(() => import("./components/Farmous/FarmousAdd"));
@@ -3140,17 +3140,17 @@ const routes = [
     {
         path: "/search-history",
         exact: true,
-        name: "Danh sách tra cứu lịch sử khách hàng",
+        name: "Lịch sử tra cứu",
         function: "CUS_SEARCH_HISTORY_VIEW",
         component: SearchHistory,
     },
-    {
-        path: "/search-history/detail/:id",
-        exact: true,
-        name: "Chi tiết",
-        function: "CUS_SEARCH_HISTORY_VIEW",
-        component: SearchHistoryDetail,
-    },
+    // {
+    //     path: "/search-history/detail/:id",
+    //     exact: true,
+    //     name: "Chi tiết",
+    //     function: "CUS_SEARCH_HISTORY_VIEW",
+    //     component: SearchHistoryDetail,
+    // },
     //end searchHistory
     //formula-ingredients
     {
