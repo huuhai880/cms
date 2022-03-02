@@ -446,6 +446,7 @@ const createProduct = async (bodyParams = {}) => {
                                     'administrator'
                                 ))
                                 .input('ISINTERPRETSPECIAL', true)
+                                .input('ORDERINDEXPAGE', product_page[i].order_index_page)
                                 .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
                         }
 
@@ -469,6 +470,7 @@ const createProduct = async (bodyParams = {}) => {
                                     'administrator'
                                 ))
                                 .input('ISINTERPRETSPECIAL', false)
+                                .input('ORDERINDEXPAGE', product_page[i].order_index_page)
                                 .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
                         }
                     }
@@ -772,6 +774,7 @@ const updateProduct = async (bodyParams = {}) => {
                                     'administrator'
                                 ))
                                 .input('ISINTERPRETSPECIAL', true)
+                                .input('ORDERINDEXPAGE', product_page[i].order_index_page)
                                 .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
                         }
                     }
@@ -794,6 +797,7 @@ const updateProduct = async (bodyParams = {}) => {
                                     'administrator'
                                 ))
                                 .input('ISINTERPRETSPECIAL', false)
+                                .input('ORDERINDEXPAGE', product_page[i].order_index_page)
                                 .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
                         }
                     }
@@ -991,7 +995,8 @@ const detailProduct = async (product_id) => {
             let page_product = {
                 product_page_id: _page.page_id,
                 title_page: _page.page_name,
-                data_child: []
+                data_child: [],
+                order_index_page: _page.order_index_page
             }
 
             let __interpretSpecialClone = JSON.parse(JSON.stringify([..._interpretSpecial]));

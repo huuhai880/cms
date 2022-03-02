@@ -8,13 +8,14 @@ GO
 -- Description:	lay all thong tin page cua product
 -- =============================================
 ALTER PROCEDURE [dbo].[MD_PRODUCT_PAGE_GetData_AdminWeb]
-    @PRODUCTID BIGINT = 0
+    @PRODUCTID BIGINT = 30063
 AS
 BEGIN
         --DANH SACH PAGE CUA SAN PHAM
 		SELECT 			
                     MD_PAGE.PAGEID,
-                    MD_PAGE.PAGENAME
+                    MD_PAGE.PAGENAME,
+                    MD_PRODUCT_PAGE.ORDERINDEXPAGE
         FROM        MD_PRODUCT_PAGE
         JOIN        MD_PAGE
         ON          MD_PAGE.PAGEID = MD_PRODUCT_PAGE.PAGEID
@@ -23,7 +24,9 @@ BEGIN
         WHERE       MD_PRODUCT_PAGE.ISACTIVE = 1
         AND         MD_PRODUCT_PAGE.ISDELETED = 0
         AND         MD_PRODUCT_PAGE.PRODUCTID = @PRODUCTID
-		GROUP BY    MD_PAGE.PAGEID,MD_PAGE.PAGENAME;
+		GROUP BY    MD_PAGE.PAGEID,
+                    MD_PAGE.PAGENAME,
+                    MD_PRODUCT_PAGE.ORDERINDEXPAGE;
 
 
         --DANH SACH CHI SO CUA DANH SACH PAGE CUA SAN PHAM

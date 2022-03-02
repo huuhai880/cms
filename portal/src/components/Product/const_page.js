@@ -7,7 +7,7 @@ import "./style.scss";
 import Select from "react-select";
 import { Checkbox } from "antd";
 import { convertValue } from "utils/html";
-export const columns_product_page = (noEdit, deleteItemPage, optionPageProductGroup, handleChangeProductPageGroup) => [
+export const columns_product_page = (noEdit, deleteItemPage, optionPageProductGroup, handleChangeProductPageGroup, handleChangeOrderIndexPage) => [
 
     {
         title: 'STT',
@@ -50,6 +50,32 @@ export const columns_product_page = (noEdit, deleteItemPage, optionPageProductGr
                 />
             )
         }
+    },
+    {
+        title: 'Thứ tự hiển thị',
+        dataIndex: 'order_index_page',
+        key: 'order_index_page',
+        width: 140,
+        render: (text, record, index) => {
+            return (
+                <div className="hide_araw"
+                 style={{
+                    display: "flex",
+                    justifyContent: "center"
+                }}>
+                    <Input
+                        type="number"
+                        name="order_index_page"
+                        className={'text-center'}
+                        disabled={noEdit}
+                        // readOnly={record.isEdit}
+                        value={text}
+                        placeholder="Thứ tự"
+                        onChange={(e) => handleChangeOrderIndexPage(e.target.value, record, index)}
+                    />
+                </div>
+            )
+        },
     },
     {
         title: 'Thao tác',

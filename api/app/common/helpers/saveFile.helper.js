@@ -20,7 +20,7 @@ const saveImage = async (savedFolder, base64) => {
       bannerImage = base64.split(config.domain_cdn)[1];
     }
   } catch (e) {
-    logger.error(e, { function: 'productCategoryService.saveImage' });
+    logger.error(e, { function: 'saveFile.helper.saveImage' });
 
     return bannerImage;
   }
