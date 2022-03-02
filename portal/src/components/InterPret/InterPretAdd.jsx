@@ -796,7 +796,7 @@ function InterPretAdd({ noEdit }) {
                               formik.values.compare_attribute_id,
                               getOptionAttribute()
                             )}
-                            options={getOptionAttribute(true)}
+                            options={getOptionAttribute()}
                             onChange={(value) => {
                               if (!value) {
                                 formik.setFieldValue(
