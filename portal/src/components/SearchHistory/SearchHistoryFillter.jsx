@@ -102,7 +102,7 @@ function SearchHistoryFillter({handleSubmitFilter}) {
                                 autoComplete="nope"
                                 type="text"
                                 name="search"
-                                placeholder="Nhập tiêu đề, tên page"
+                                placeholder="Nhập họ và tên"
                                 value={filter.search}
                                 onChange={handleChange}
                                 onKeyDown={handleKeyDown}
