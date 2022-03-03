@@ -404,14 +404,15 @@ function ProductAdd({noEdit = false, productId = null}) {
     const optionPageProductGroup = () => {
         let {product_page = []} = formik.values || {};
         if (dataProductPage && dataProductPage.length > 0) {
-            return dataProductPage.map(({product_page_id: value, page_name: label}) => {
+            return dataProductPage.map(({product_page_id: value, page_name: label, page_type}) => {
                 return product_page.find(p => p.product_page_id == value)
                     ? {
                           value,
                           label,
                           isDisabled: true,
+                          page_type,
                       }
-                    : {value, label};
+                    : {value, label, page_type};
             });
         }
         return [];
@@ -441,6 +442,7 @@ function ProductAdd({noEdit = false, productId = null}) {
         pageProduct[index].name_page = selected ? selected.label : null;
 
         pageProduct[index].order_index_page = index + 1;
+        pageProduct[index].page_type = selected ? selected.page_type : null;
 
         setNamePageProduct({
             name_page: record.name_page,
@@ -450,7 +452,23 @@ function ProductAdd({noEdit = false, productId = null}) {
             index_child: null,
         });
         formik.setFieldValue('product_page', pageProduct);
-        onTableRowExpand(true, {rowIndex: pageProduct[index].rowIndex});
+
+        if (pageProduct[index].data_child.length == 0) {
+            pageProduct[index].data_child = [
+                {
+                    attributes_group_id: null,
+                    show_index: null,
+                    data_interpret: null,
+                    data_selected: null,
+                },
+            ];
+        }
+
+        if (pageProduct[index].page_type == 2) {
+            pageProduct[index].data_child = [];
+        } else {
+            onTableRowExpand(true, {rowIndex: pageProduct[index].rowIndex});
+        }
     };
 
     const handleChangeAttributesPageProduct = (selected, record, index, parent_key) => {
@@ -560,7 +578,8 @@ function ProductAdd({noEdit = false, productId = null}) {
                     data_selected: null,
                 },
             ],
-            order_index_page: null
+            order_index_page: null,
+            page_type: null,
         };
 
         let {product_page = []} = formik.values || {};
@@ -692,9 +711,9 @@ function ProductAdd({noEdit = false, productId = null}) {
                 onExpand={onTableRowExpand}
                 expandable={{
                     expandedRowRender: (record, index) => _expandableProductPage(index, record.data_child),
-                    rowExpandable: record => record.product_page_id !== null,
+                    rowExpandable: record => record.product_page_id !== null && record.page_type != 2,
                     expandIcon: ({expanded, onExpand, record}) =>
-                        record.product_page_id !== null ? (
+                        record.product_page_id !== null && record.page_type != 2 ? (
                             expanded ? (
                                 <MinusSquareOutlined
                                     rotate={360}
@@ -912,13 +931,13 @@ function ProductAdd({noEdit = false, productId = null}) {
                                             <Col xs={12} sm={12}>
                                                 <FormGroup row>
                                                     <Label className="col-sm-4 col-form-label">
-                                                        Mô tả ngắn ngọn
+                                                        Mô tả ngắn
                                                         <span className="font-weight-bold red-text">*</span>
                                                     </Label>
                                                     <Col sm={8}>
                                                         <Input
                                                             type="textarea"
-                                                            placeholder="Mô tả ngắn ngọn"
+                                                            placeholder="Mô tả ngắn"
                                                             disabled={noEdit}
                                                             rows={4}
                                                             name="short_description"

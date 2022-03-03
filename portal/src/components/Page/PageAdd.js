@@ -270,6 +270,53 @@ function PageAdd({ pageId = null, noEdit = false }) {
                                                     </Col>
                                                 </FormGroup>
                                             </Col>
+                                            <Col xs={12}>
+                                                <FormGroup row>
+                                                    <Label className="col-sm-3 col-form-label"></Label>
+                                                    <Col sm={2} xs={12}>
+                                                        <CustomInput
+                                                            className="pull-left"
+                                                            onBlur={null}
+                                                            checked={formik.values.is_active}
+                                                            type="checkbox"
+                                                            id="is_active"
+                                                            onChange={(e) => {
+                                                                formik.setFieldValue("is_active", e.target.checked);
+                                                            }}
+                                                            label="Kích hoạt"
+                                                            disabled={noEdit}
+                                                        />
+                                                    </Col>
+                                                    <Col sm={2} xs={12}>
+                                                        <CustomInput
+                                                            className="pull-left"
+                                                            onBlur={null}
+                                                            checked={formik.values.is_show_header}
+                                                            type="checkbox"
+                                                            id="is_show_header"
+                                                            onChange={(e) => {
+                                                                formik.setFieldValue("is_show_header", e.target.checked);
+                                                            }}
+                                                            label="Is Show Header"
+                                                            disabled={noEdit}
+                                                        />
+                                                    </Col>
+                                                    <Col sm={2} xs={12}>
+                                                        <CustomInput
+                                                            className="pull-left"
+                                                            onBlur={null}
+                                                            checked={formik.values.is_show_footer}
+                                                            type="checkbox"
+                                                            id="is_show_footer"
+                                                            onChange={(e) => {
+                                                                formik.setFieldValue("is_show_footer", e.target.checked);
+                                                            }}
+                                                            label="Is Show Footer"
+                                                            disabled={noEdit}
+                                                        />
+                                                    </Col>
+                                                </FormGroup>
+                                            </Col>
                                         </Row>
                                     </Col>
 
@@ -350,7 +397,7 @@ function PageAdd({ pageId = null, noEdit = false }) {
                                         <MessageError formik={formik} name="description" />
                                     </Col>
                                 </Row>
-                                <Row>
+                                {/* <Row>
                                     <Col xs={12} className="m-t-10 mb-2 mt-2">
                                         <FormGroup row>
                                             <Col sm={2} xs={12}>
@@ -369,7 +416,7 @@ function PageAdd({ pageId = null, noEdit = false }) {
                                             </Col>
                                         </FormGroup>
                                     </Col>
-                                </Row>
+                                </Row> */}
                                 <Row className="mt-4">
                                     <Col xs={12} sm={12} style={{ padding: "0px" }}>
                                         <ActionButton

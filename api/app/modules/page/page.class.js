@@ -20,7 +20,9 @@ const template = {
     created_user: "{{#? CREATEDUSER}}",
     created_full_name: "{{#? FULLNAME}}",
     page_type: "{{PAGETYPE ? PAGETYPE : 0}}",
-    title_page: "{{#? TITLEPAGE}}"
+    title_page: "{{#? TITLEPAGE}}",
+    is_show_header: "{{ISSHOWHEADER ? 1 : 0}}",
+    is_show_footer: "{{ISSHOWFOOTER ? 1 : 0}}"
 }
 
 let transform = new Transform(template);
@@ -51,6 +53,8 @@ const detail = (data = {}) => {
         'background_url',
         'is_active',
         'page_type',
+        'is_show_header',
+        'is_show_footer'
     ]) : null;
 }
 

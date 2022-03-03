@@ -1,4 +1,8 @@
-CREATE PROCEDURE MD_PAGE_CreateOrUpdate_AdminWeb
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[MD_PAGE_CreateOrUpdate_AdminWeb]
     @PAGEID BIGINT = 0,
     @PAGENAME NVARCHAR(250) = NULL,
     @PAGETYPE INT = 0,
@@ -6,7 +10,9 @@ CREATE PROCEDURE MD_PAGE_CreateOrUpdate_AdminWeb
     @SHORTDESCRIPTION NVARCHAR(MAX) = NULL,
     @BACKGROUNDURL VARCHAR(500) = NULL,
     @ISACTIVE BIT = 1,
-    @CREATEDUSER VARCHAR(100) = NULL
+    @CREATEDUSER VARCHAR(100) = NULL,
+    @ISSHOWHEADER BIT = 1,
+    @ISSHOWFOOTER BIT = 1
 AS
 BEGIN
     IF(EXISTS (SELECT 1 FROM MD_PAGE WHERE PAGEID = @PAGEID AND ISDELETED = 0))
@@ -19,7 +25,9 @@ BEGIN
                 ISACTIVE = @ISACTIVE,
                 BACKGROUNDURL = @BACKGROUNDURL,
                 UPDATEDDATE = GETDATE(),
-                UPDATEDUSER = @CREATEDUSER
+                UPDATEDUSER = @CREATEDUSER,
+                ISSHOWHEADER = @ISSHOWHEADER,
+                ISSHOWFOOTER = @ISSHOWFOOTER
         WHERE   PAGEID = @PAGEID
 
     END
@@ -36,7 +44,9 @@ BEGIN
             ISACTIVE,
             CREATEDDATE,
             CREATEDUSER,
-            ISDELETED
+            ISDELETED,
+            ISSHOWHEADER,
+            ISSHOWFOOTER
         )
         VALUES
         (
@@ -48,7 +58,10 @@ BEGIN
             @ISACTIVE,
             GETDATE(),
             @CREATEDUSER,
-            0
+            0,
+            @ISSHOWHEADER,
+            @ISSHOWFOOTER
         )
     END
 END
+GO

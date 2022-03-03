@@ -193,7 +193,9 @@ export const initialValues = {
     short_description: '',
     is_active: true,
     background_url: null,
-    page_type: 0
+    page_type: null,
+    is_show_header: true,
+    is_show_footer: true
 }
 
 export const validationSchema = yup.object().shape({

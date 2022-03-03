@@ -80,6 +80,8 @@ const createOrUpdatePage = async (bodyParams = {}) => {
         let background_url = apiHelper.getValueFromObject(bodyParams, 'background_url', null);
         let is_active = apiHelper.getValueFromObject(bodyParams, 'is_active', 1);
         let auth_name = apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator');
+        let is_show_header = apiHelper.getValueFromObject(bodyParams, 'is_show_header', 1);
+        let is_show_footer = apiHelper.getValueFromObject(bodyParams, 'is_show_footer', 1);
 
         if (background_url) {
             const path_background_url = await saveImage('page', background_url);
@@ -101,6 +103,8 @@ const createOrUpdatePage = async (bodyParams = {}) => {
             .input('backgroundurl', background_url)
             .input('isactive', is_active)
             .input('createduser', auth_name)
+            .input('isshowheader', is_show_header)
+            .input('isshowfooter', is_show_footer)
             .execute('MD_PAGE_CreateOrUpdate_AdminWeb')
 
         return new ServiceResponse(true, "", true)
