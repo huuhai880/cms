@@ -39,7 +39,7 @@ function Page(props) {
     });
 
     useEffect(() => {
-        getListPage();
+        getListPage(query);
     }, [])
 
     const getListPage = async (query) => {

@@ -16,4 +16,8 @@ export default class PageService extends Model {
     read(id) {
         return this._api.get(`/page/${id}`)
     }
+    
+    upload(_data = {}) {
+        return this._api.post('/upload-file', _data);
+    }
 }

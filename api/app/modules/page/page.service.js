@@ -89,7 +89,7 @@ const createOrUpdatePage = async (bodyParams = {}) => {
                 background_url = path_background_url;
             }
             else {
-                return new ServiceResponse(false, 'Lỗi upload ảnh background page');
+                return new ServiceResponse(false, 'Vui lòng upload ảnh < 4MB và có kích thước A4 210 x 297 mm');
             }
         }
 

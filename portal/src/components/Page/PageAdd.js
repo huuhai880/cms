@@ -31,12 +31,10 @@ import Loading from "../Common/Loading";
 import "./style.scss";
 import Upload from "../Common/Antd/Upload";
 import PageService from "./Service/index";
-import AuthorModel from "../../models/AuthorModel/index";
 import Select from "react-select";
 import { convertValueSelect } from "utils/index";
 
 const _pageService = new PageService();
-const _authorModel = new AuthorModel();
 
 function PageAdd({ pageId = null, noEdit = false }) {
     const [page, setPage] = useState(initialValues);
@@ -128,7 +126,7 @@ function PageAdd({ pageId = null, noEdit = false }) {
     const handleUploadImage = async (blobInfo, success, failure) => {
         readImageAsBase64(blobInfo.blob(), async (imageUrl) => {
             try {
-                const imageUpload = await _authorModel.upload({
+                const imageUpload = await _pageService.upload({
                     base64: imageUrl,
                     folder: "files",
                     includeCdn: true,
@@ -239,25 +237,30 @@ function PageAdd({ pageId = null, noEdit = false }) {
                                                             value={formik.values.short_description}
                                                             disabled={noEdit}
                                                             init={{
-                                                                height: "250px",
+                                                                height: "350px",
                                                                 width: "100%",
                                                                 menubar: false,
                                                                 branding: false,
+                                                                entity_encoding: "raw",
                                                                 statusbar: false,
                                                                 plugins: [
-                                                                    "advlist autolink fullscreen lists link image charmap print preview anchor",
-                                                                    "searchreplace visualblocks code fullscreen ",
-                                                                    "insertdatetime media table paste code help",
-                                                                    "image imagetools ",
-                                                                    "toc",
+                                                                  "advlist autolink fullscreen lists link image charmap print preview anchor",
+                                                                  "searchreplace visualblocks code fullscreen ",
+                                                                  "insertdatetime media table paste code help",
+                                                                  "image imagetools ",
+                                                                  "toc",
                                                                 ],
-                                                                menubar: "file edit view insert format tools table tc help",
+                                                                menubar:
+                                                                  "file edit view insert format tools table tc help",
                                                                 toolbar1:
-                                                                    "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
-                                                                    "alignleft aligncenter alignright alignjustify",
-                                                                // toolbar2:
-                                                                //     "bullist numlist outdent indent | removeformat | help | image | toc",
+                                                                  "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
+                                                                  "alignleft aligncenter alignright alignjustify",
+                                                                toolbar2:
+                                                                  "bullist numlist outdent indent | removeformat | help | image | toc",
                                                                 file_picker_types: "image",
+                                                                relative_urls: false,
+                                                                remove_script_host: false,
+                                                                convert_urls: true,
                                                                 images_dataimg_filter: function (img) {
                                                                     return img.hasAttribute("internal-blob");
                                                                 },
@@ -366,25 +369,30 @@ function PageAdd({ pageId = null, noEdit = false }) {
                                             value={formik.values.description}
                                             disabled={noEdit}
                                             init={{
-                                                height: "500px",
+                                                height: "600px",
                                                 width: "100%",
                                                 menubar: false,
                                                 branding: false,
+                                                entity_encoding: "raw",
                                                 statusbar: false,
                                                 plugins: [
-                                                    "advlist autolink fullscreen lists link image charmap print preview anchor",
-                                                    "searchreplace visualblocks code fullscreen ",
-                                                    "insertdatetime media table paste code help",
-                                                    "image imagetools ",
-                                                    "toc",
+                                                  "advlist autolink fullscreen lists link image charmap print preview anchor",
+                                                  "searchreplace visualblocks code fullscreen ",
+                                                  "insertdatetime media table paste code help",
+                                                  "image imagetools ",
+                                                  "toc",
                                                 ],
-                                                menubar: "file edit view insert format tools table tc help",
+                                                menubar:
+                                                  "file edit view insert format tools table tc help",
                                                 toolbar1:
-                                                    "undo redo | fullscreen | formatselect | bold italic backcolor | \n" +
-                                                    "alignleft aligncenter alignright alignjustify",
+                                                  "undo redo | fullscreen | formatselect | bold italic underline strikethrough forecolor backcolor |fontselect |  fontsizeselect| \n" +
+                                                  "alignleft aligncenter alignright alignjustify",
                                                 toolbar2:
-                                                    "bullist numlist outdent indent | removeformat | help | image | toc",
+                                                  "bullist numlist outdent indent | removeformat | help | image | toc",
                                                 file_picker_types: "image",
+                                                relative_urls: false,
+                                                remove_script_host: false,
+                                                convert_urls: true,
                                                 images_dataimg_filter: function (img) {
                                                     return img.hasAttribute("internal-blob");
                                                 },
