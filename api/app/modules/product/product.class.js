@@ -59,7 +59,9 @@ const template = {
   product_page_id:'{{#? PRODUCTPAGEID}}',
   link_landing_page:'{{#? LINKLANDINGPAGE}}',
   is_new_comment: '{{ISNEWCOMMENT ? 1 : 0}}',
-  date_sort: '{{#? CREATEDDATE}}'
+  date_sort: '{{#? CREATEDDATE}}',
+  order_index_page: '{{#? ORDERINDEXPAGE}}',
+  page_type: '{{#? PAGETYPE}}'
 };
 
 let transform = new Transform(template);
@@ -182,6 +184,8 @@ const list_page_product = (users = []) => {
   return transform.transform(users, [
     'page_id',
     'page_name',
+    'order_index_page',
+    'page_type'
   ]);
 };
 

@@ -19,7 +19,8 @@ const template = {
     short_content: '{{#? SHORTCONTENT}}',
     main_number: '{{#? MAINNUMBER}}',
     main_number_id: '{{#? MAINNUMBERID}}',
-    is_selected: '{{ISSELECTED ? 1 : 0}}'
+    is_selected: '{{ISSELECTED ? 1 : 0}}',
+    page_type: '{{#? PAGETYPE}}'
 
 };
 
@@ -29,6 +30,7 @@ const list = (list = []) => {
     return transform.transform(list, [
         'product_page_id',
         'page_name',
+        'page_type'
     ]);
 };
 

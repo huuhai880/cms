@@ -403,73 +403,95 @@ const createProduct = async (bodyParams = {}) => {
         if (product_page && product_page.length > 0) {
             const reqProductPage = new sql.Request(transaction);
             for (let i = 0; i < product_page.length; i++) {
-                const data_child = product_page[i].data_child;
-                for (let j = 0; j < data_child.length; j++) {
-                    if (data_child[j].attributes_group_id == -1) { //Nếu là luận giải đặc biệt
-                        let _interpretSpecialSelecteds = [];
-                        let { data_interpret = [] } = data_child[j] || {};
 
-                        //Lấy luận giải cha có selected
-                        for (let t = 0; t < data_interpret.length; t++) {
-                            let _interpretSpecial = data_interpret[t];
-                            if (_interpretSpecial.is_selected) {
-                                _interpretSpecial.interpret_detail_id = null;
-                                _interpretSpecialSelecteds.push(_interpretSpecial);
-                            }
-                            let { interpret_details = [] } = _interpretSpecial || {};
-                            if (interpret_details.length > 0) {
-                                //Lấy luận giải con có selected
-                                for (let r = 0; r < interpret_details.length; r++) {
-                                    let _childInterpret = interpret_details[r];
-                                    if (_childInterpret.is_selected) {
-                                        _interpretSpecialSelecteds.push(_childInterpret)
+                //NEU LA PAGE TINH THI KHONG CO LUAN GIAI VA CHI SO
+                if (product_page[i].page_type == 2) {
+                    await reqProductPage
+                        .input('PRODUCTPAGEID', product_page[i].id_product_page)
+                        .input('PRODUCTID', product_id)
+                        .input('PAGEID', product_page[i].product_page_id)
+                        .input('ATTRIBUTESGROUPID', -2)
+                        .input('ATTRIBUTEID', -2)
+                        .input('INTERPRETID', null)
+                        .input('INTERPRETDETAILID', null)
+                        .input('ORDERINDEX', 0)
+                        .input('ORDERINDEXINTERPRET', 0)
+                        .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+                        .input('ISINTERPRETSPECIAL', false)
+                        .input('ORDERINDEXPAGE', product_page[i].order_index_page)
+                        .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                }
+                else { //Nguoc lai theo RULE cu
+                    const data_child = product_page[i].data_child;
+                    for (let j = 0; j < data_child.length; j++) {
+                        if (data_child[j].attributes_group_id == -1) { //Nếu là luận giải đặc biệt
+                            let _interpretSpecialSelecteds = [];
+                            let { data_interpret = [] } = data_child[j] || {};
+
+                            //Lấy luận giải cha có selected
+                            for (let t = 0; t < data_interpret.length; t++) {
+                                let _interpretSpecial = data_interpret[t];
+                                if (_interpretSpecial.is_selected) {
+                                    _interpretSpecial.interpret_detail_id = null;
+                                    _interpretSpecialSelecteds.push(_interpretSpecial);
+                                }
+                                let { interpret_details = [] } = _interpretSpecial || {};
+                                if (interpret_details.length > 0) {
+                                    //Lấy luận giải con có selected
+                                    for (let r = 0; r < interpret_details.length; r++) {
+                                        let _childInterpret = interpret_details[r];
+                                        if (_childInterpret.is_selected) {
+                                            _interpretSpecialSelecteds.push(_childInterpret)
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        //Thêm luận giải vào Page
-                        for (let m = 0; m < _interpretSpecialSelecteds.length; m++) {
-                            await reqProductPage
-                                .input('PRODUCTPAGEID', product_page[i].id_product_page)
-                                .input('PRODUCTID', product_id)
-                                .input('PAGEID', product_page[i].product_page_id)
-                                .input('ATTRIBUTESGROUPID', -1)
-                                .input('ATTRIBUTEID', -1)
-                                .input('INTERPRETID', _interpretSpecialSelecteds[m].interpret_id)
-                                .input('INTERPRETDETAILID', _interpretSpecialSelecteds[m].interpret_detail_id)
-                                .input('ORDERINDEX', data_child[j].show_index)
-                                .input('ORDERINDEXINTERPRET', _interpretSpecialSelecteds[m].order_index)
-                                .input('CREATEDUSER', apiHelper.getValueFromObject(
-                                    bodyParams,
-                                    'auth_name',
-                                    'administrator'
-                                ))
-                                .input('ISINTERPRETSPECIAL', true)
-                                .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
-                        }
+                            //Thêm luận giải vào Page
+                            for (let m = 0; m < _interpretSpecialSelecteds.length; m++) {
+                                await reqProductPage
+                                    .input('PRODUCTPAGEID', product_page[i].id_product_page)
+                                    .input('PRODUCTID', product_id)
+                                    .input('PAGEID', product_page[i].product_page_id)
+                                    .input('ATTRIBUTESGROUPID', -1)
+                                    .input('ATTRIBUTEID', -1)
+                                    .input('INTERPRETID', _interpretSpecialSelecteds[m].interpret_id)
+                                    .input('INTERPRETDETAILID', _interpretSpecialSelecteds[m].interpret_detail_id)
+                                    .input('ORDERINDEX', data_child[j].show_index)
+                                    .input('ORDERINDEXINTERPRET', _interpretSpecialSelecteds[m].order_index)
+                                    .input('CREATEDUSER', apiHelper.getValueFromObject(
+                                        bodyParams,
+                                        'auth_name',
+                                        'administrator'
+                                    ))
+                                    .input('ISINTERPRETSPECIAL', true)
+                                    .input('ORDERINDEXPAGE', product_page[i].order_index_page)
+                                    .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                            }
 
-                    }
-                    else {//Nếu không phải là luận giải đặc biệt thì như cũ
-                        const data_selected = data_child[j].data_selected;
-                        for (let k = 0; k < data_selected.length; k++) {
-                            await reqProductPage
-                                .input('PRODUCTPAGEID', product_page[i].id_product_page)
-                                .input('PRODUCTID', product_id)
-                                .input('PAGEID', product_page[i].product_page_id)
-                                .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
-                                .input('ATTRIBUTEID', data_selected[k].attributes_id)
-                                .input('INTERPRETID', data_selected[k].interpret_id)
-                                .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
-                                .input('ORDERINDEX', data_child[j].show_index)
-                                .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
-                                .input('CREATEDUSER', apiHelper.getValueFromObject(
-                                    bodyParams,
-                                    'auth_name',
-                                    'administrator'
-                                ))
-                                .input('ISINTERPRETSPECIAL', false)
-                                .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                        }
+                        else {//Nếu không phải là luận giải đặc biệt thì như cũ
+                            const data_selected = data_child[j].data_selected;
+                            for (let k = 0; k < data_selected.length; k++) {
+                                await reqProductPage
+                                    .input('PRODUCTPAGEID', product_page[i].id_product_page)
+                                    .input('PRODUCTID', product_id)
+                                    .input('PAGEID', product_page[i].product_page_id)
+                                    .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
+                                    .input('ATTRIBUTEID', data_selected[k].attributes_id)
+                                    .input('INTERPRETID', data_selected[k].interpret_id)
+                                    .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
+                                    .input('ORDERINDEX', data_child[j].show_index)
+                                    .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
+                                    .input('CREATEDUSER', apiHelper.getValueFromObject(
+                                        bodyParams,
+                                        'auth_name',
+                                        'administrator'
+                                    ))
+                                    .input('ISINTERPRETSPECIAL', false)
+                                    .input('ORDERINDEXPAGE', product_page[i].order_index_page)
+                                    .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                            }
                         }
                     }
                 }
@@ -730,71 +752,93 @@ const updateProduct = async (bodyParams = {}) => {
         if (product_page && product_page.length > 0) {
             const reqProductPage = new sql.Request(transaction);
             for (let i = 0; i < product_page.length; i++) {
-                const data_child = product_page[i].data_child;
-                for (let j = 0; j < data_child.length; j++) {
-                    if (data_child[j].attributes_group_id == -1) { //Nếu là luận giải đặc biệt
-                        let _interpretSpecialSelecteds = [];
-                        let { data_interpret = [] } = data_child[j] || {};
-                        //Lấy luận giải cha có selected
-                        for (let t = 0; t < data_interpret.length; t++) {
-                            let _interpretSpecial = data_interpret[t];
-                            if (_interpretSpecial.is_selected) {
-                                _interpretSpecial.interpret_detail_id = null;
-                                _interpretSpecialSelecteds.push(_interpretSpecial);
-                            }
-                            let { interpret_details = [] } = _interpretSpecial || {};
-                            if (interpret_details.length > 0) {
-                                //Lấy luận giải con có selected
-                                for (let r = 0; r < interpret_details.length; r++) {
-                                    let _childInterpret = interpret_details[r];
-                                    if (_childInterpret.is_selected) {
-                                        _interpretSpecialSelecteds.push(_childInterpret)
+
+                //NEU LA PAGE TINH THI KHONG CO LUAN GIAI VA CHI SO
+                if (product_page[i].page_type == 2) {
+                    await reqProductPage
+                        .input('PRODUCTPAGEID', product_page[i].id_product_page)
+                        .input('PRODUCTID', product_id)
+                        .input('PAGEID', product_page[i].product_page_id)
+                        .input('ATTRIBUTESGROUPID', -2)
+                        .input('ATTRIBUTEID', -2)
+                        .input('INTERPRETID', null)
+                        .input('INTERPRETDETAILID', null)
+                        .input('ORDERINDEX', 0)
+                        .input('ORDERINDEXINTERPRET', 0)
+                        .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+                        .input('ISINTERPRETSPECIAL', false)
+                        .input('ORDERINDEXPAGE', product_page[i].order_index_page)
+                        .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                }
+                else { //Nguoc lai theo RULE cu
+                    const data_child = product_page[i].data_child;
+                    for (let j = 0; j < data_child.length; j++) {
+                        if (data_child[j].attributes_group_id == -1) { //Nếu là luận giải đặc biệt
+                            let _interpretSpecialSelecteds = [];
+                            let { data_interpret = [] } = data_child[j] || {};
+                            //Lấy luận giải cha có selected
+                            for (let t = 0; t < data_interpret.length; t++) {
+                                let _interpretSpecial = data_interpret[t];
+                                if (_interpretSpecial.is_selected) {
+                                    _interpretSpecial.interpret_detail_id = null;
+                                    _interpretSpecialSelecteds.push(_interpretSpecial);
+                                }
+                                let { interpret_details = [] } = _interpretSpecial || {};
+                                if (interpret_details.length > 0) {
+                                    //Lấy luận giải con có selected
+                                    for (let r = 0; r < interpret_details.length; r++) {
+                                        let _childInterpret = interpret_details[r];
+                                        if (_childInterpret.is_selected) {
+                                            _interpretSpecialSelecteds.push(_childInterpret)
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        //Thêm luận giải vào Page
-                        for (let m = 0; m < _interpretSpecialSelecteds.length; m++) {
-                            await reqProductPage
-                                .input('PRODUCTPAGEID', product_page[i].id_product_page)
-                                .input('PRODUCTID', product_id)
-                                .input('PAGEID', product_page[i].product_page_id)
-                                .input('ATTRIBUTESGROUPID', -1)
-                                .input('ATTRIBUTEID', -1)
-                                .input('INTERPRETID', _interpretSpecialSelecteds[m].interpret_id)
-                                .input('INTERPRETDETAILID', _interpretSpecialSelecteds[m].interpret_detail_id)
-                                .input('ORDERINDEX', data_child[j].show_index)
-                                .input('ORDERINDEXINTERPRET', _interpretSpecialSelecteds[m].order_index)
-                                .input('CREATEDUSER', apiHelper.getValueFromObject(
-                                    bodyParams,
-                                    'auth_name',
-                                    'administrator'
-                                ))
-                                .input('ISINTERPRETSPECIAL', true)
-                                .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                            //Thêm luận giải vào Page
+                            for (let m = 0; m < _interpretSpecialSelecteds.length; m++) {
+                                await reqProductPage
+                                    .input('PRODUCTPAGEID', product_page[i].id_product_page)
+                                    .input('PRODUCTID', product_id)
+                                    .input('PAGEID', product_page[i].product_page_id)
+                                    .input('ATTRIBUTESGROUPID', -1)
+                                    .input('ATTRIBUTEID', -1)
+                                    .input('INTERPRETID', _interpretSpecialSelecteds[m].interpret_id)
+                                    .input('INTERPRETDETAILID', _interpretSpecialSelecteds[m].interpret_detail_id)
+                                    .input('ORDERINDEX', data_child[j].show_index)
+                                    .input('ORDERINDEXINTERPRET', _interpretSpecialSelecteds[m].order_index)
+                                    .input('CREATEDUSER', apiHelper.getValueFromObject(
+                                        bodyParams,
+                                        'auth_name',
+                                        'administrator'
+                                    ))
+                                    .input('ISINTERPRETSPECIAL', true)
+                                    .input('ORDERINDEXPAGE', product_page[i].order_index_page)
+                                    .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                            }
                         }
-                    }
-                    else {//Nếu không phải là luận giải đặc biệt thì như cũ
-                        const data_selected = data_child[j].data_selected;
-                        for (let k = 0; k < data_selected.length; k++) {
-                            await reqProductPage
-                                .input('PRODUCTPAGEID', data_selected[k].product_page_id)
-                                .input('PRODUCTID', product_id)
-                                .input('PAGEID', product_page[i].product_page_id)
-                                .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
-                                .input('ATTRIBUTEID', data_selected[k].attributes_id)
-                                .input('INTERPRETID', data_selected[k].interpret_id)
-                                .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
-                                .input('ORDERINDEX', data_child[j].show_index)
-                                .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
-                                .input('CREATEDUSER', apiHelper.getValueFromObject(
-                                    bodyParams,
-                                    'auth_name',
-                                    'administrator'
-                                ))
-                                .input('ISINTERPRETSPECIAL', false)
-                                .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                        else {//Nếu không phải là luận giải đặc biệt thì như cũ
+                            const data_selected = data_child[j].data_selected;
+                            for (let k = 0; k < data_selected.length; k++) {
+                                await reqProductPage
+                                    .input('PRODUCTPAGEID', data_selected[k].product_page_id)
+                                    .input('PRODUCTID', product_id)
+                                    .input('PAGEID', product_page[i].product_page_id)
+                                    .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
+                                    .input('ATTRIBUTEID', data_selected[k].attributes_id)
+                                    .input('INTERPRETID', data_selected[k].interpret_id)
+                                    .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
+                                    .input('ORDERINDEX', data_child[j].show_index)
+                                    .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
+                                    .input('CREATEDUSER', apiHelper.getValueFromObject(
+                                        bodyParams,
+                                        'auth_name',
+                                        'administrator'
+                                    ))
+                                    .input('ISINTERPRETSPECIAL', false)
+                                    .input('ORDERINDEXPAGE', product_page[i].order_index_page)
+                                    .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+                            }
                         }
                     }
                 }
@@ -896,9 +940,9 @@ const detailProduct = async (product_id) => {
                 const attr = attributes[i];
                 let { attributes_group_id, product_id } = attr || {};
                 //Lấy danh sách luận giải theo Chỉ số
-                let interprets = listInterpretAll.filter(p => p.attributes_group_id == attributes_group_id)|| [];
+                let interprets = listInterpretAll.filter(p => p.attributes_group_id == attributes_group_id) || [];
 
-                interprets = _.orderBy(interprets, ['date_sort'], ['desc']);;
+                interprets = _.orderBy(interprets, ['date_sort'], ['desc']);
 
                 //Lấy danh sách luận giải chi tiết
                 for (let k = 0; k < interprets.length; k++) {
@@ -991,7 +1035,9 @@ const detailProduct = async (product_id) => {
             let page_product = {
                 product_page_id: _page.page_id,
                 title_page: _page.page_name,
-                data_child: []
+                data_child: [],
+                order_index_page: _page.order_index_page,
+                page_type: _page.page_type
             }
 
             let __interpretSpecialClone = JSON.parse(JSON.stringify([..._interpretSpecial]));
@@ -1075,7 +1121,7 @@ const detailProduct = async (product_id) => {
         if (product) {
             product.product_images = product_images;
             product.product_attributes = product_attributes;
-            product.product_page = product_page;
+            product.product_page = _.orderBy(product_page, ['order_index_page'], ['asc']);;
 
         }
 

@@ -1,48 +1,29 @@
 const Transform = require('../../common/helpers/transform.helper');
+
 const template = {
-  member_id: '{{#? MEMBERID}}',
-  full_name: '{{#? FULLNAME}}',
-  product_name: '{{#? PRODUCTNAME}}',
-  search_count: '{{#? SEARCHCOUNT}}',
-  search_date: '{{#? SEARCHDATE}}',
-  is_active: '{{ ISACTIVE? 1: 0}}',
-  product_id: '{{#? PRODUCTID}}',
+    search_result_free_id: '{{#? SEARCHRESULTFREEID}}',
+    full_name: '{{#? FULLNAME}}',
+    birth_day: '{{#? BIRTHDAY}}',
+    gender: '{{#? GENDER}}',
+    search_date: '{{#? SEARCHDATEVIEW}}',
+    product_name: '{{#? PRODUCTNAME}}',
+    product_id: '{{#? PRODUCTID}}'
 };
 
 let transform = new Transform(template);
 
-const list = (SearchHistory = []) => {
-  return transform.transform(SearchHistory, [
-    'member_id',
-    'full_name',
-    'product_name',
-    'attribute_name',
-    'search_count',
-    'search_date',
-    'is_active',
-  ]);
-};
-
-const detail = (SearchHistoryDetail = []) => {
-  return transform.transform(SearchHistoryDetail, [
-    'member_id',
-    'full_name',
-    'search_date',
-    'is_active',
-  ]);
-};
-
-const detailProduct = (SearchHistoryDetailProduct = []) => {
-  return transform.transform(SearchHistoryDetailProduct, [
-    'product_id',
-    'product_name',
-    'search_count',
-    'search_date',
-  ]);
+const listFree = (list = []) => {
+    return transform.transform(list, [
+        'search_result_free_id',
+        'full_name',
+        'birth_day',
+        'gender',
+        'search_date',
+        'product_name',
+        'product_id',
+    ]);
 };
 
 module.exports = {
-  list,
-  detail,
-  detailProduct,
+    listFree
 };

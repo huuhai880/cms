@@ -1,0 +1,26 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[MD_PAGE_GetById_AdminWeb]
+    @PAGEID BIGINT = 0
+AS
+BEGIN
+
+    SELECT 
+            PAGEID,
+            PAGENAME,
+            PAGETYPE,
+            [DESCRIPTION],
+            SHORTDESCRIPTION,
+            ISACTIVE,
+            TITLEPAGE,
+            BACKGROUND,
+            BACKGROUNDURL,
+            ISSHOWHEADER,
+            ISSHOWFOOTER
+    FROM    MD_PAGE
+    WHERE   PAGEID = @PAGEID
+
+END
+GO

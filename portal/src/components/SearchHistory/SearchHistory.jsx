@@ -1,438 +1,140 @@
-import React, { Component } from "react";
-import { Card, CardBody, CardHeader, Button, Col, FormGroup } from "reactstrap";
+import React, {useState, useEffect} from 'react';
+import {Card, CardBody, CardHeader, Button, Col, FormGroup, Row} from 'reactstrap';
 
 // Material
-import MUIDataTable from "mui-datatables";
-import { CircularProgress } from "@material-ui/core";
-import CustomPagination from "../../utils/CustomPagination";
+import MUIDataTable from 'mui-datatables';
+import {CircularProgress} from '@material-ui/core';
+import CustomPagination from '../../utils/CustomPagination';
 
 // Component(s)
-import { CheckAccess } from "../../navigation/VerifyAccess";
-import SearchHistoryFillter from "./SearchHistoryFillter";
+import {CheckAccess} from '../../navigation/VerifyAccess';
+
 // Util(s)
-import { layoutFullWidthHeight } from "../../utils/html";
-import { configTableOptions, configIDRowTable } from "../../utils/index";
-// Model(s)
-import SearchHistoryModel from "../../models/SearchHistoryModel";
-import SearchHistoryDetail from "./SearchHistoryDetail";
-import moment from "moment";
+import {layoutFullWidthHeight} from '../../utils/html';
+import {configTableOptions} from '../../utils/index';
+
+import {getColumnTable, numberWithCommas} from './const';
+import SearchHistoryService from '../SearchHistory/Service/index';
+import SearchHistoryFillter from './SearchHistoryFillter';
+import './style.scss';
 
 // Set layout full-wh
 layoutFullWidthHeight();
 
-/**
- * @class SearchHistory
- */
-class SearchHistory extends Component {
-  /**
-   * @var {Partner}
-   */
-  _partnerModel;
+const _searchHistory = new SearchHistoryService();
 
-  constructor(props) {
-    super(props);
-
-    // Init model(s)
-    this._searchHistoryModel = new SearchHistoryModel();
-
-    // Bind method(s)
-  }
-
-  state = {
-    toggleSearch: true,
-    isLoading: false,
-    page: 0,
-    count: 1,
-    data: [],
-    query: {
-      itemsPerPage: 25,
-      page: 1,
-      is_active: 2,
-      start_date: moment().startOf("month").format("DD/MM/YYYY"),
-      end_date: moment().format("DD/MM/YYYY"),
-    },
-  };
-
-  componentDidMount() {
-    // Get bundle data
-    this.setState({ isLoading: true });
-    (async () => {
-      let bundle = await this._getBundleData();
-      let { data } = bundle;
-      let dataConfig = data ? data.items : [];
-      let isLoading = false;
-      let count = data ? data.totalItems : 0;
-      let page = 0;
-      this.setState(
-        {
-          isLoading,
-        },
-        () => {
-          this.setState({
-            data: dataConfig,
-            count,
-            page,
-          });
-        }
-      );
-    })();
-    //.end
-  }
-
-  /**
-   * Goi API, lay toan bo data lien quan, vd: chuc vu, phong ban, dia chi,...
-   */
-  async _getBundleData() {
-    let bundle = {};
-    let all = [
-      // @TODO:
-      this._searchHistoryModel.getList(this.state.query).then((data) => (bundle["data"] = data)),
-    ];
-    // console.log(this.state.query)
-    await Promise.all(all).catch((err) => {
-      window._$g.dialogs.alert(
-        window._$g._(`Khởi tạo dữ liệu không thành công (${err.message}).`),
-        () => {
-          window.location.reload();
-        }
-      );
+function SearchHistory(props) {
+    const [toggleSearch, setToggleSearch] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [data, setData] = useState({
+        list: [],
+        total: 0,
     });
-    return bundle;
-  }
-
-  // get data
-  getData = (query = {}) => {
-    this.setState({ isLoading: true });
-    return this._searchHistoryModel.getList(query).then((res) => {
-      let data = res.items;
-      let isLoading = false;
-      let count = res.totalItems;
-      let page = query["page"] - 1 || 0;
-      this.setState({
-        data,
-        isLoading,
-        count,
-        page,
-        query,
-      });
+    const [query, setQuery] = useState({
+        itemsPerPage: 25,
+        page: 1,
+        product_id: null,
+        search: '',
+        start_date: null,
+        end_date: null,
     });
-  };
 
-  handleClickAdd = () => {
-    window._$g.rdr("/search-history/add");
-  };
+    useEffect(() => {
+        getListSearchHistory();
+    }, []);
 
-  handleActionItemClick(type, id, rowIndex) {
-    let routes = {
-      detail: "/search-history/detail/",
-      delete: "/search-history/delete/",
+    const getListSearchHistory = async query => {
+        setIsLoading(true);
+        try {
+            let data = await _searchHistory.getList(query);
+            setData(data);
+        } catch (error) {
+            window._$g.dialogs.alert(window._$g._('Đã có lỗi xảy ra. Vùi lòng F5 thử lại'));
+        } finally {
+            setIsLoading(false);
+        }
     };
-    const route = routes[type];
-    if (type.match(/detail/i)) {
-      this.props.history.push(`${route}${id}`, this.state.data[rowIndex].search_date);
-    } else {
-      window._$g.dialogs.prompt("Bạn có chắc chắn muốn xóa dữ liệu đang chọn?", "Xóa", (confirm) =>
-        this.handleClose(confirm, id, rowIndex)
-      );
-    }
-  }
 
-  handleClose(confirm, id, rowIndex) {
-    const { data } = this.state;
-    let search_date = this.state.data[rowIndex].search_date
-    if (confirm) {
-      this._searchHistoryModel
-        .delete(id, {search_date})
-        .then(() => {
-          const cloneData = JSON.parse(JSON.stringify(data));
-          cloneData.splice(rowIndex, 1);
-          this.setState({
-            data: cloneData,
-          });
-        })
-        .catch(() => {
-          window._$g.dialogs.alert(window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!"));
-        });
-    }
-  }
+    const handleSubmitFilter = params => {
+        let query_params = {
+            ...query,
+            ...params,
+            page: 1,
+            itemsPerPage: 25,
+        };
+        setQuery(query_params);
+        getListSearchHistory(query_params);
+    };
 
-  handleSubmitFilter = (search, is_active, start_date, end_date) => {
-    let query = { ...this.state.query };
-    query.page = 1;
-    query = Object.assign(query, {
-      search,
-      is_active,
-      start_date,
-      end_date,
-    });
-    this.getData(query).catch(() => {
-      window._$g.dialogs.alert(window._$g._("Bạn vui lòng chọn dòng dữ liệu cần thao tác!"));
-    });
-  };
+    const handleChangePage = (event, newPage) => {
+        let filter = {...query};
+        filter.page = newPage + 1;
+        setQuery(filter);
+        getListSearchHistory(filter);
+    };
 
-  handleChangeRowsPerPage = (event) => {
-    let query = { ...this.state.query };
-    query.itemsPerPage = event.target.value;
-    query.page = 1;
-    this.getData(query);
-  };
-
-  handleChangePage = (event, newPage) => {
-    let query = { ...this.state.query };
-    query.page = newPage + 1;
-    this.getData(query);
-  };
-
-  SearchHistoryDetailMember = (member_id, search_date) => {
-    this.props.history.push({
-      pathname: `${"/search-history/detail/"}${member_id}`,
-      state: search_date,
-    });
-  };
-
-  render() {
-    const columns = [
-      // configIDRowTable("member_id", "/search-history/detail/", this.state.query),
-      {
-        name: "",
-        label: "STT",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            let indx = this.state.data.indexOf(this.state.data[tableMeta["rowIndex"]]);
-            return (
-              <div>
-                <div
-                  className="text-center"
-                  style={{ cursor: "pointer", color: "#20a8d8" }}
-                  onClick={() =>
-                    this.SearchHistoryDetailMember(
-                      this.state.data[tableMeta["rowIndex"]].member_id,
-                      this.state.data[tableMeta["rowIndex"]].search_date
-                    )
-                  }
-                >
-                  {indx + 1}
-                </div>
-              </div>
-            );
-          },
-        },
-      },
-      {
-        name: "full_name",
-        label: "Tên khách hàng",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-left">{value}</div>;
-          },
-        },
-      },
-      {
-        name: "product_name",
-        label: "Tên sản phẩm",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-left">{value}</div>;
-          },
-        },
-      },
-      {
-        name: "search_count",
-        label: "Số lần tra cứu",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">{value}</div>;
-          },
-        },
-      },
-      {
-        name: "search_date",
-        label: "Ngày tra cứu ",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">{value}</div>;
-          },
-        },
-      },
-      {
-        name: "is_active",
-        label: "Kích hoạt",
-        options: {
-          filter: false,
-          sort: false,
-          customHeadRender: (columnMeta, handleToggleColumn) => {
-            return (
-              <th
-                key={`head-th-${columnMeta.label}`}
-                className="MuiTableCell-root MuiTableCell-head"
-              >
-                <div className="text-center">{columnMeta.label}</div>
-              </th>
-            );
-          },
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return <div className="text-center">{value ? "Có" : "Không"}</div>;
-          },
-        },
-      },
-      {
-        name: "Thao tác",
-        options: {
-          filter: false,
-          sort: false,
-          empty: true,
-          customBodyRender: (value, tableMeta, updateValue) => {
-            return (
-              <div className="text-center">
-                <Button
-                  color="warning"
-                  title="Chi tiết"
-                  className="mr-1"
-                  onClick={(evt) =>
-                    this.handleActionItemClick(
-                      "detail",
-                      this.state.data[tableMeta["rowIndex"]].member_id,
-                      tableMeta["rowIndex"]
-                    )
-                  }
-                >
-                  <i className="fa fa-info" />
-                </Button>
-                <CheckAccess permission="CUS_SEARCHHISTORY_DEL">
-                  <Button
-                    color="danger"
-                    title="Xóa"
-                    className=""
-                    onClick={(evt) =>
-                      this.handleActionItemClick(
-                        "delete",
-                        this.state.data[tableMeta["rowIndex"]].member_id,
-                        tableMeta["rowIndex"]
-                      )
-                    }
-                  >
-                    <i className="fa fa-trash" />
-                  </Button>
-                </CheckAccess>
-              </div>
-            );
-          },
-        },
-      },
-    ];
-
-    const { count, page, query } = this.state;
-    const options = configTableOptions(count, page, query);
+    const handleChangeRowsPerPage = event => {
+        let filter = {...query};
+        filter.itemsPerPage = event.target.value;
+        filter.page = 1;
+        setQuery(filter);
+        getListSearchHistory(filter);
+    };
 
     return (
-      <div>
-        <Card className="animated fadeIn z-index-222 mb-3">
-          <CardHeader className="d-flex">
-            <div className="flex-fill font-weight-bold">Thông tin tìm kiếm</div>
-            <div
-              className="minimize-icon cur-pointer"
-              onClick={() =>
-                this.setState((prevState) => ({
-                  toggleSearch: !prevState.toggleSearch,
-                }))
-              }
-            >
-              <i className={`fa ${this.state.toggleSearch ? "fa-minus" : "fa-plus"}`} />
-            </div>
-          </CardHeader>
-          {this.state.toggleSearch && (
-            <CardBody className="px-0 py-0">
-              <div className="MuiPaper-filter__custom z-index-2">
-                <SearchHistoryFillter handleSubmit={this.handleSubmitFilter} />
-              </div>
-            </CardBody>
-          )}
-        </Card>
-        <Card className="animated fadeIn">
-          <CardBody className="px-0 py-0">
-            <div className="MuiPaper-root__custom">
-              {this.state.isLoading ? (
-                <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
-                  <CircularProgress />
-                </div>
-              ) : (
-                <div>
-                  <MUIDataTable data={this.state.data} columns={columns} options={options} />
-                  <CustomPagination
-                    count={count}
-                    rowsPerPage={query.itemsPerPage}
-                    page={page}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                  />
-                </div>
-              )}
-            </div>
-          </CardBody>
-        </Card>
-      </div>
+        <div>
+            <Card className={`animated fadeIn z-index-222 mb-3`}>
+                <CardHeader className="d-flex">
+                    <div className="flex-fill font-weight-bold">Thông tin tìm kiếm</div>
+                    <div className="minimize-icon cur-pointer " onClick={() => setToggleSearch(p => !p)}>
+                        <i className={`fa ${toggleSearch ? 'fa-minus' : 'fa-plus'}`} />
+                    </div>
+                </CardHeader>
+                {toggleSearch && (
+                    <CardBody className="px-0 py-0">
+                        <div className="MuiPaper-filter__custom z-index-2">
+                            <SearchHistoryFillter handleSubmitFilter={handleSubmitFilter} total={data.total} />
+                        </div>
+                    </CardBody>
+                )}
+            </Card>
+
+            <Row className="d-flex mb-3">
+                <Col xs={12} sm={4} className="d-flex align-items-center">
+                    <span className="total-search-title">Tổng số lượt tra cứu</span>
+                    <div className="total-search-value">{numberWithCommas(data.total)}</div>
+                </Col>
+            </Row>
+
+            <Card className="animated fadeIn">
+                <CardBody className={`py-0 px-0`}>
+                    <div className="MuiPaper-root__custom MuiPaper-user">
+                        {isLoading ? (
+                            <div className="d-flex flex-fill justify-content-center mt-5 mb-5">
+                                <CircularProgress />
+                            </div>
+                        ) : (
+                            <div>
+                                <MUIDataTable
+                                    data={data.list}
+                                    columns={getColumnTable(data.list, query)}
+                                    options={configTableOptions(data.total, 0, query)}
+                                />
+                                <CustomPagination
+                                    count={data.total}
+                                    rowsPerPage={query.itemsPerPage}
+                                    page={query.page - 1 || 0}
+                                    rowsPerPageOptions={[25, 50, 75, 100]}
+                                    onChangePage={handleChangePage}
+                                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </CardBody>
+            </Card>
+        </div>
     );
-  }
 }
 
 export default SearchHistory;

@@ -1,0 +1,67 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[MD_PAGE_CreateOrUpdate_AdminWeb]
+    @PAGEID BIGINT = 0,
+    @PAGENAME NVARCHAR(250) = NULL,
+    @PAGETYPE INT = 0,
+    @DESCRIPTION NVARCHAR(MAX) = NULL,
+    @SHORTDESCRIPTION NVARCHAR(MAX) = NULL,
+    @BACKGROUNDURL VARCHAR(500) = NULL,
+    @ISACTIVE BIT = 1,
+    @CREATEDUSER VARCHAR(100) = NULL,
+    @ISSHOWHEADER BIT = 1,
+    @ISSHOWFOOTER BIT = 1
+AS
+BEGIN
+    IF(EXISTS (SELECT 1 FROM MD_PAGE WHERE PAGEID = @PAGEID AND ISDELETED = 0))
+    BEGIN
+        UPDATE  MD_PAGE
+        SET     PAGENAME = @PAGENAME,
+                PAGETYPE = @PAGETYPE,
+                [DESCRIPTION] = @DESCRIPTION,
+                SHORTDESCRIPTION = @SHORTDESCRIPTION,
+                ISACTIVE = @ISACTIVE,
+                BACKGROUNDURL = @BACKGROUNDURL,
+                UPDATEDDATE = GETDATE(),
+                UPDATEDUSER = @CREATEDUSER,
+                ISSHOWHEADER = @ISSHOWHEADER,
+                ISSHOWFOOTER = @ISSHOWFOOTER
+        WHERE   PAGEID = @PAGEID
+
+    END
+    ELSE 
+    BEGIN
+
+        INSERT INTO MD_PAGE
+        (
+            PAGENAME,
+            PAGETYPE,
+            [DESCRIPTION],
+            SHORTDESCRIPTION, 
+            BACKGROUNDURL,
+            ISACTIVE,
+            CREATEDDATE,
+            CREATEDUSER,
+            ISDELETED,
+            ISSHOWHEADER,
+            ISSHOWFOOTER
+        )
+        VALUES
+        (
+            @PAGENAME,
+            @PAGETYPE,
+            @DESCRIPTION,
+            @SHORTDESCRIPTION, 
+            @BACKGROUNDURL,
+            @ISACTIVE,
+            GETDATE(),
+            @CREATEDUSER,
+            0,
+            @ISSHOWHEADER,
+            @ISSHOWFOOTER
+        )
+    END
+END
+GO

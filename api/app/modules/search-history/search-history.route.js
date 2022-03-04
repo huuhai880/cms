@@ -3,17 +3,9 @@ const searchHistoryController = require('./search-history.controller');
 const routes = express.Router();
 const prefix = '/search-history';
 
-// Get List searchHistory
-routes.route('').get(searchHistoryController.getListSearchHistory);
+routes.route('/free').get(searchHistoryController.getListSearchHistoryFree);
 
-// Delete
-routes.route('/:member_id(\\d+)').delete(searchHistoryController.deleteSearchHistory);
-
-// Detail
-routes.route('/:member_id(\\d+)').get(searchHistoryController.detailSearchHistory);
-
-// Detail Product
-routes.route('/product/:member_id(\\d+)').get(searchHistoryController.detailSearchHistoryproduct);
+routes.route('/option-product').get(searchHistoryController.getOptionProduct);
 
 module.exports = {
   prefix,

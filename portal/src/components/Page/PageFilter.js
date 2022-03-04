@@ -1,43 +1,31 @@
-import React, {useEffect, useState} from 'react';
-import {Input, Button, Form, FormGroup, Label, Col, Row} from 'reactstrap';
-import Select from 'react-select';
-import DatePicker from '../Common/DatePicker';
-import SearchHistoryService from './Service/index';
-import './style.scss';
+import React, { useEffect, useState } from "react";
+import { Input, Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
+import Select from "react-select";
+import DatePicker from "../Common/DatePicker";
 
-const _searchHistoryService = new SearchHistoryService();
+function PageFilter({ handleSubmitFilter }) {
 
-function SearchHistoryFillter({handleSubmitFilter}) {
     const [filter, setFilter] = useState({
-        search: '',
-        productSelected: null,
+        search: "",
+        isActiveSelected: { label: "Có", value: 1 },
         startDate: null,
         endDate: null,
     });
 
-    const [optionProduct, setOptionProduct] = useState([]);
+    const [dataIsActive] = useState([
+        { label: "Tất cả", value: 2 },
+        { label: "Có", value: 1 },
+        { label: "Không", value: 0 },
+    ]);
 
-    useEffect(() => {
-        const getOptionProduct = async () => {
-            try {
-                let _optionProduct = await _searchHistoryService.getOptionProduct();
-                setOptionProduct(_optionProduct);
-            } catch (error) {
-                window._$g.dialogs.alert(window._$g._('Đã có lỗi xảy ra. Vùi lòng F5 thử lại'));
-            }
-        };
-
-        getOptionProduct();
-    }, []);
-
-    const handleChange = e => {
+    const handleChange = (e) => {
         setFilter({
             ...filter,
             [e.target.name]: e.target.value,
         });
     };
 
-    const handleKeyDown = e => {
+    const handleKeyDown = (e) => {
         if (1 * e.keyCode === 13) {
             e.preventDefault();
             handleSubmit();
@@ -45,43 +33,43 @@ function SearchHistoryFillter({handleSubmitFilter}) {
     };
 
     const handleChangeSelect = (selected, name) => {
-        setFilter(preState => ({
+        setFilter((preState) => ({
             ...preState,
             [name]: selected,
         }));
     };
 
     const handleSubmit = () => {
-        let {search, productSelected, startDate, endDate} = filter;
+        let { search, isActiveSelected, startDate, endDate } = filter;
 
         handleSubmitFilter({
             search: search ? search.trim() : null,
-            product_id: productSelected ? productSelected.value : null,
-            start_date: startDate ? startDate.format('DD/MM/YYYY') : null,
-            end_date: endDate ? endDate.format('DD/MM/YYYY') : null,
+            is_active: isActiveSelected ? isActiveSelected.value : 1,
+            start_date: startDate ? startDate.format("DD/MM/YYYY") : null,
+            end_date: endDate ? endDate.format("DD/MM/YYYY") : null,
             page: 1,
         });
     };
 
     const handleClear = () => {
         setFilter({
-            search: '',
-            productSelected: null,
+            search: "",
+            isActiveSelected: { label: "Có", value: 1 },
             startDate: null,
             endDate: null,
         });
 
         handleSubmitFilter({
-            search: '',
-            product_id: null,
+            search: "",
+            is_active: 1,
             start_date: null,
             end_date: null,
             page: 1,
         });
-    };
+    }
 
-    const handleChangeDate = ({startDate, endDate}) => {
-        setFilter(preState => ({
+    const handleChangeDate = ({ startDate, endDate }) => {
+        setFilter((preState) => ({
             ...preState,
             startDate,
             endDate,
@@ -92,7 +80,7 @@ function SearchHistoryFillter({handleSubmitFilter}) {
         <div className="ml-3 mr-3 mb-3 mt-3">
             <Form autoComplete="nope" className="zoom-scale-9">
                 <Row>
-                    <Col xs={12} sm={4}>
+                    <Col xs={12} sm={6}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="inputValue" className="mr-sm-2">
                                 Từ khóa
@@ -102,18 +90,18 @@ function SearchHistoryFillter({handleSubmitFilter}) {
                                 autoComplete="nope"
                                 type="text"
                                 name="search"
-                                placeholder="Nhập họ và tên"
+                                placeholder="Nhập tiêu đề, tên page"
                                 value={filter.search}
                                 onChange={handleChange}
                                 onKeyDown={handleKeyDown}
                                 inputprops={{
-                                    name: 'search',
+                                    name: "search",
                                 }}
                             />
                         </FormGroup>
                     </Col>
 
-                    <Col xs={12} sm={4}>
+                    <Col xs={12} sm={3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="" className="mr-sm-2">
                                 Ngày tạo từ
@@ -130,31 +118,35 @@ function SearchHistoryFillter({handleSubmitFilter}) {
                             </Col>
                         </FormGroup>
                     </Col>
-                    <Col xs={12} sm={4}>
+                    <Col xs={12} sm={3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="" className="mr-sm-2">
-                                Sản phẩm
+                                Kích hoạt
                             </Label>
                             <Select
                                 className="MuiPaper-filter__custom--select"
-                                id="productSelected"
-                                name="productSelected"
-                                onChange={selected => handleChangeSelect(selected, 'productSelected')}
+                                id="isActiveSelected"
+                                name="isActiveSelected"
+                                onChange={(selected) => handleChangeSelect(selected, "isActiveSelected")}
                                 isSearchable={true}
-                                placeholder={'-- Chọn --'}
-                                value={filter.productSelected}
-                                options={optionProduct}
-                                isClearable={true}
+                                placeholder={"-- Chọn --"}
+                                value={filter.isActiveSelected}
+                                options={dataIsActive}
                             />
                         </FormGroup>
                     </Col>
-                    <Col xs={12} className={`d-flex align-items-end mt-3 justify-content-end`}>
+
+                    <Col
+                        xs={12}
+                        className={`d-flex align-items-end mt-3 justify-content-end`}
+                    >
                         <FormGroup className="mb-2 mb-sm-0">
                             <Button
                                 className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                                 onClick={handleSubmit}
                                 color="primary"
-                                size="sm">
+                                size="sm"
+                            >
                                 <i className="fa fa-search" />
                                 <span className="ml-1">Tìm kiếm</span>
                             </Button>
@@ -163,11 +155,13 @@ function SearchHistoryFillter({handleSubmitFilter}) {
                             <Button
                                 className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                                 onClick={handleClear}
-                                size="sm">
+                                size="sm"
+                            >
                                 <i className="fa fa-refresh" />
                                 <span className="ml-1">Làm mới</span>
                             </Button>
                         </FormGroup>
+                        
                     </Col>
                 </Row>
             </Form>
@@ -175,4 +169,4 @@ function SearchHistoryFillter({handleSubmitFilter}) {
     );
 }
 
-export default SearchHistoryFillter;
+export default PageFilter;
