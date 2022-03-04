@@ -52,7 +52,7 @@ function PageAdd({ pageId = null, noEdit = false }) {
     const customStyles = {
         menu: (provided, state) => ({
             ...provided,
-            zIndex: 999,
+            zIndex: 10,
         }),
     }
 
@@ -273,7 +273,7 @@ function PageAdd({ pageId = null, noEdit = false }) {
                                             <Col xs={12}>
                                                 <FormGroup row>
                                                     <Label className="col-sm-3 col-form-label"></Label>
-                                                    <Col sm={2} xs={12}>
+                                                    <Col sm={3} xs={12}>
                                                         <CustomInput
                                                             className="pull-left"
                                                             onBlur={null}
@@ -287,7 +287,7 @@ function PageAdd({ pageId = null, noEdit = false }) {
                                                             disabled={noEdit}
                                                         />
                                                     </Col>
-                                                    <Col sm={2} xs={12}>
+                                                    <Col sm={3} xs={12}>
                                                         <CustomInput
                                                             className="pull-left"
                                                             onBlur={null}
@@ -297,11 +297,11 @@ function PageAdd({ pageId = null, noEdit = false }) {
                                                             onChange={(e) => {
                                                                 formik.setFieldValue("is_show_header", e.target.checked);
                                                             }}
-                                                            label="Is Show Header"
+                                                            label="Hiện Header"
                                                             disabled={noEdit}
                                                         />
                                                     </Col>
-                                                    <Col sm={2} xs={12}>
+                                                    <Col sm={3} xs={12}>
                                                         <CustomInput
                                                             className="pull-left"
                                                             onBlur={null}
@@ -311,7 +311,7 @@ function PageAdd({ pageId = null, noEdit = false }) {
                                                             onChange={(e) => {
                                                                 formik.setFieldValue("is_show_footer", e.target.checked);
                                                             }}
-                                                            label="Is Show Footer"
+                                                            label="Hiện Footer"
                                                             disabled={noEdit}
                                                         />
                                                     </Col>
