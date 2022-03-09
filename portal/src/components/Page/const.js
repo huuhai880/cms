@@ -55,7 +55,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{value == 1 ? 'Page động' : (value == 2 ? 'Page tĩnh' : '----')}</div>;
+                    return <div className="text-left">{value == 1 ? 'Page fill luận giải' : (value == 2 ? 'Page không fill luận giải' : '----')}</div>;
                 },
             },
         },
