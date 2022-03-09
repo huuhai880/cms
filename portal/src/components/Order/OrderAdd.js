@@ -555,7 +555,7 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
                                                             name="email"
                                                             id="email"
                                                             type="text"
-                                                            disabled={noEdit}
+                                                            // disabled={noEdit}
                                                             {...formik.getFieldProps('email')}
                                                             disabled={true}
                                                         />
@@ -579,7 +579,7 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
                                                             name="phone_number"
                                                             id="phone_number"
                                                             type="text"
-                                                            disabled={noEdit}
+                                                            // disabled={noEdit}
                                                             {...formik.getFieldProps('phone_number')}
                                                             disabled={true}
                                                         />
@@ -598,7 +598,7 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
                                                             name="address"
                                                             id="address"
                                                             type="text"
-                                                            disabled={noEdit}
+                                                            // disabled={noEdit}
                                                             {...formik.getFieldProps('address')}
                                                             disabled={true}
                                                         />
@@ -774,7 +774,7 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
                             orderDetails={formik.values.order_details}
                             handleClosePopup={handleClosePopup}
                             noEdit={noEdit}
-                            discountSeleted={null}
+                            // discountSeleted={null}
                             memberId={formik.values.member_id}
                             handleApplyDiscount={handleApplyDiscount}
                             discountSeleted={formik.values.discount}

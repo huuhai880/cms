@@ -43,8 +43,8 @@ function PageAdd({ pageId = null, noEdit = false }) {
     const [loading, setLoading] = useState(false);
 
     const [opPageType] = useState([
-        { label: 'Page động', value: 1 },
-        { label: 'Page tĩnh', value: 2 },
+        { label: 'Page fill luận giải', value: 1 },
+        { label: 'Page không fill luận giải', value: 2 },
     ])
 
     const customStyles = {
