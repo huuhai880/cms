@@ -67,7 +67,7 @@ const template = {
 let transform = new Transform(template);
 
 const detail = (product) => {
-  return Object.keys(product).length > 0
+  return product && Object.keys(product).length > 0
     ? transform.transform(product, [
       'product_id',
       'product_category_id',

@@ -1,0 +1,72 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[MD_PRODUCT_ATTRIBUTES_Create_AdminWeb_BACKUP]
+	@PROATTRIBUTESID bigint = 0,
+    @PRODUCTID BIGINT = 0,
+    @ATTRIBUTESGROUPID BIGINT = 0,
+    @INTERPRETID BIGINT = 0,
+    @INTERPRETDETAILID BIGINT = null,
+    @ISSHOWSEARCHRESULT BIT = 0,
+    @TEXTURL NVARCHAR(2000) = NULL,
+    @URL NVARCHAR(1000) = NULL,
+    @CREATEDUSER VARCHAR(50) = NULL,
+    @ORDERINDEX INT = 0
+AS
+BEGIN
+
+	IF @INTERPRETDETAILID is null SET @INTERPRETDETAILID = 0
+	
+    IF NOT EXISTS (SELECT 1 FROM dbo.MD_PRODUCT_ATTRIBUTES WHERE PROATTRIBUTESID = @PROATTRIBUTESID)
+    BEGIN
+        INSERT INTO MD_PRODUCT_ATTRIBUTES
+        (
+            PRODUCTID,
+            ATTRIBUTESGROUPID,
+            INTERPRETID,
+            INTERPRETDETAILID,
+            ISACTIVE,
+            ISDELETED,
+            CREATEDDATE,
+            CREATEDUSER,
+            ISSHOWSEARCHRESULT,
+            TEXTURL,
+            URL,
+            ORDERINDEX
+        )
+        VALUES
+        (
+            @PRODUCTID,
+            @ATTRIBUTESGROUPID,
+            @INTERPRETID,
+            @INTERPRETDETAILID,
+            1,
+            0,
+            GETDATE(),
+            @CREATEDUSER,
+            @ISSHOWSEARCHRESULT,
+            @TEXTURL,
+            @URL,
+            @ORDERINDEX
+        )
+    END
+    ELSE
+    BEGIN
+            UPDATE [dbo].[MD_PRODUCT_ATTRIBUTES]
+            SET     PRODUCTID=@PRODUCTID,
+                    ATTRIBUTESGROUPID=@ATTRIBUTESGROUPID,
+                    INTERPRETID=@INTERPRETID,
+                    INTERPRETDETAILID=@INTERPRETDETAILID,
+                    ISACTIVE=1,
+                    ISDELETED=0,
+                    UPDATEDUSER=@CREATEDUSER,
+                    UPDATEDDATE=GETDATE(),
+                    ISSHOWSEARCHRESULT=@ISSHOWSEARCHRESULT,
+                    TEXTURL=@TEXTURL,
+                    URL=@URL,
+                    ORDERINDEX = @ORDERINDEX
+            WHERE   PROATTRIBUTESID = @PROATTRIBUTESID
+    END
+END
+GO
