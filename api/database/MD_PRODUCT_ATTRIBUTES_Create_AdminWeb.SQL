@@ -18,55 +18,36 @@ BEGIN
 
 	IF @INTERPRETDETAILID is null SET @INTERPRETDETAILID = 0
 	
-    IF NOT EXISTS (SELECT 1 FROM dbo.MD_PRODUCT_ATTRIBUTES WHERE PROATTRIBUTESID = @PROATTRIBUTESID)
-    BEGIN
-        INSERT INTO MD_PRODUCT_ATTRIBUTES
-        (
-            PRODUCTID,
-            ATTRIBUTESGROUPID,
-            INTERPRETID,
-            INTERPRETDETAILID,
-            ISACTIVE,
-            ISDELETED,
-            CREATEDDATE,
-            CREATEDUSER,
-            ISSHOWSEARCHRESULT,
-            TEXTURL,
-            URL,
-            ORDERINDEX
-        )
-        VALUES
-        (
-            @PRODUCTID,
-            @ATTRIBUTESGROUPID,
-            @INTERPRETID,
-            @INTERPRETDETAILID,
-            1,
-            0,
-            GETDATE(),
-            @CREATEDUSER,
-            @ISSHOWSEARCHRESULT,
-            @TEXTURL,
-            @URL,
-            @ORDERINDEX
-        )
-    END
-    ELSE
-    BEGIN
-            UPDATE [dbo].[MD_PRODUCT_ATTRIBUTES]
-            SET     PRODUCTID=@PRODUCTID,
-                    ATTRIBUTESGROUPID=@ATTRIBUTESGROUPID,
-                    INTERPRETID=@INTERPRETID,
-                    INTERPRETDETAILID=@INTERPRETDETAILID,
-                    ISACTIVE=1,
-                    ISDELETED=0,
-                    UPDATEDUSER=@CREATEDUSER,
-                    UPDATEDDATE=GETDATE(),
-                    ISSHOWSEARCHRESULT=@ISSHOWSEARCHRESULT,
-                    TEXTURL=@TEXTURL,
-                    URL=@URL,
-                    ORDERINDEX = @ORDERINDEX
-            WHERE   PROATTRIBUTESID = @PROATTRIBUTESID
-    END
+    INSERT INTO MD_PRODUCT_ATTRIBUTES
+    (
+        PRODUCTID,
+        ATTRIBUTESGROUPID,
+        INTERPRETID,
+        INTERPRETDETAILID,
+        ISACTIVE,
+        ISDELETED,
+        CREATEDDATE,
+        CREATEDUSER,
+        ISSHOWSEARCHRESULT,
+        TEXTURL,
+        URL,
+        ORDERINDEX
+    )
+    VALUES
+    (
+        @PRODUCTID,
+        @ATTRIBUTESGROUPID,
+        @INTERPRETID,
+        @INTERPRETDETAILID,
+        1,
+        0,
+        GETDATE(),
+        @CREATEDUSER,
+        @ISSHOWSEARCHRESULT,
+        @TEXTURL,
+        @URL,
+        @ORDERINDEX
+    )
+    
 END
 GO

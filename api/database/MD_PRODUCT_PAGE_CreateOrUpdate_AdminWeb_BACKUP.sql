@@ -1,0 +1,101 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<hainh>
+-- Create date: <01/11/2021>
+-- Description:	<Thêm hoặc sửa product page>
+-- =============================================
+CREATE PROCEDURE [dbo].[MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb_BACKUP]
+	@PRODUCTPAGEID AS BIGINT= NULL,
+	@PRODUCTID AS INT= NULL,
+	@PAGEID AS INT= NULL,
+	@ATTRIBUTESGROUPID AS INT = NULL,
+	@ATTRIBUTEID AS INT = NULL,
+	@INTERPRETID AS INT = NULL,
+	@INTERPRETDETAILID AS INT = NULL,
+	@ORDERINDEX AS INT = NULL,
+	@ORDERINDEXINTERPRET AS INT = NULL,
+	@CREATEDUSER AS nvarchar(100) = NULL,
+    @ISINTERPRETSPECIAL BIT = 0,
+    @ORDERINDEXPAGE INT = 0
+AS
+BEGIN
+	-- kiểm tra xem id đã tồn tại hay chưa
+	IF NOT EXISTS 
+    (
+            SELECT TOP 1 1 FROM dbo.MD_PRODUCT_PAGE WITH (NOLOCK)
+            WHERE PRODUCTID = @PRODUCTID
+            AND PAGEID = @PAGEID
+            AND ATTRIBUTESGROUPID=@ATTRIBUTESGROUPID
+            AND ATTRIBUTEID = @ATTRIBUTEID
+            AND INTERPRETID = @INTERPRETID
+            AND INTERPRETDETAILID= @INTERPRETDETAILID
+    )
+	BEGIN -- insert nếu id không tồn tại
+		INSERT INTO MD_PRODUCT_PAGE
+        (
+            PRODUCTID,
+            PAGEID,
+            ATTRIBUTESGROUPID,
+            ATTRIBUTEID,
+            INTERPRETID,
+            INTERPRETDETAILID,
+            ORDERINDEX,
+            ORDERINDEXINTERPRET,
+            CREATEDUSER,
+            CREATEDDATE,
+            ISDELETED,
+            ISACTIVE,
+            ISINTERPRETSPECIAL,
+            ORDERINDEXPAGE
+        )
+        VALUES
+        (   
+            @PRODUCTID,
+            @PAGEID,
+            @ATTRIBUTESGROUPID,
+            @ATTRIBUTEID,
+            @INTERPRETID,
+            @INTERPRETDETAILID,
+            @ORDERINDEX,
+            @ORDERINDEXINTERPRET,
+            @CREATEDUSER,
+            GETDATE(),
+            0,
+            1,
+            @ISINTERPRETSPECIAL,
+            @ORDERINDEXPAGE
+        )
+
+		SELECT  SCOPE_IDENTITY() AS RESULT
+	END
+ELSE 
+	BEGIN -- update nếu id tồn tại
+		UPDATE  MD_PRODUCT_PAGE
+		SET 
+                PRODUCTID = @PRODUCTID,
+                PAGEID = @PAGEID,
+                ATTRIBUTESGROUPID=@ATTRIBUTESGROUPID,
+                ATTRIBUTEID=@ATTRIBUTEID,
+                INTERPRETID=@INTERPRETID,
+                INTERPRETDETAILID=@INTERPRETDETAILID,
+                ORDERINDEX=@ORDERINDEX,
+                ORDERINDEXINTERPRET=@ORDERINDEXINTERPRET,
+                UPDATEDUSER= @CREATEDUSER,
+                UPDATEDDATE= GETDATE(),
+                ISDELETED = 0,
+                ISINTERPRETSPECIAL = @ISINTERPRETSPECIAL,
+                ORDERINDEXPAGE = @ORDERINDEXPAGE
+		WHERE   PRODUCTID = @PRODUCTID
+		AND     PAGEID = @PAGEID
+		AND     ATTRIBUTESGROUPID=@ATTRIBUTESGROUPID
+		AND     ATTRIBUTEID = @ATTRIBUTEID
+		AND     INTERPRETID = @INTERPRETID
+		AND     INTERPRETDETAILID= @INTERPRETDETAILID
+
+		SELECT @PRODUCTPAGEID AS RESULT
+	END
+END
+GO

@@ -179,6 +179,23 @@ function ProductAdd({noEdit = false, productId = null}) {
     const handleSubmitProduct = async values => {
         try {
             let result = false;
+            let {product_page = []} = values || {};
+            for (let index = 0; index < product_page.length; index++) {
+                let _pPage = product_page[index];
+                let {data_child = []} = _pPage || {};
+                for (let j = 0; j < data_child.length; j++) {
+                    let _attributesGroup = data_child[j];
+                    if (_attributesGroup.attributes_group_id == -1) { //Luan giai dac biet
+                        _attributesGroup.data_interpret = (_attributesGroup.data_interpret || [])
+                        .filter(
+                            p => p.is_selected || 
+                            (p.interpret_details || []).filter(k => k.is_selected).length > 0
+                        );
+                    }
+                }
+            }
+            values.product_page = product_page;
+
             if (productId) {
                 result = await _productModel.update(productId, values);
             } else {
