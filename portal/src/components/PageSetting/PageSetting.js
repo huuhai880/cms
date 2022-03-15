@@ -1,18 +1,18 @@
 import React, { PureComponent } from "react";
 import {
-  Alert,
-  Col,
-  Row,
-  Button,
-  Media,
-  Nav,
-  NavItem,
-  NavLink,
-  TabPane,
-  TabContent,
-  CardBody,
-  CardHeader,
-  Card,
+    Alert,
+    Col,
+    Row,
+    Button,
+    Media,
+    Nav,
+    NavItem,
+    NavLink,
+    TabPane,
+    TabContent,
+    CardBody,
+    CardHeader,
+    Card,
 } from "reactstrap";
 
 // Assets
@@ -33,156 +33,167 @@ import SearchResults from "./Page/SearchResult";
 // Model(s)
 import AppConfigModel from "../../models/AppConfigModel";
 import Keyword from "./Page/Keyword";
+import Search from "./Page/Search";
 
 /**
  * @class PageSetting
  */
 export default class PageSetting extends React.Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    // Init model(s)
-    this._appConfigModel = new AppConfigModel();
+        // Init model(s)
+        this._appConfigModel = new AppConfigModel();
 
-    this.state = {
-      activeTab: "HOME",
-    };
-  }
-
-  componentDidMount() { }
-
-  renderTab = () => {
-    const { activeTab } = this.state;
-    switch (activeTab) {
-      case "HOME":
-        return <Home />;
-      case "AUTHOR":
-        return <Author />;
-      case "PUBLISHING":
-        return <Publishing />;
-      case "INTRODUCE":
-        return <Introduce />;
-      case "CONTACT":
-        return <Contact />;
-      case "LOGIN":
-        return <Login />;
-      case 'SEARCHRESULTS':
-        return <SearchResults />
-      case "FOOTER":
-        return <Footer />;
-      case "DECRYPTION":
-        return <Decryption />;
-      case "SEO":
-        return <SEO />;
-      case "KEYWORD":
-        return <Keyword />;
+        this.state = {
+            activeTab: "HOME",
+        };
     }
-  };
 
-  render() {
-    let { activeTab } = this.state;
+    componentDidMount() { }
 
-    return (
-      <div key={`view-page-setting`} className="animated fadeIn">
-        <Row className="d-flex justify-content-center">
-          <Col xs={12} md={12}>
-            <Card>
-              <CardHeader>
-                <b>Cài đặt trang web</b>
-              </CardHeader>
-              <CardBody>
-                <Row>
-                  <Nav tabs>
-                    <NavItem>
-                      <NavLink
-                        className={`${activeTab === "HOME" ? "active" : ""
-                          }`}
-                        onClick={() => this.setState({ activeTab: "HOME" })}
-                      >
-                        Trang chủ
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={`${activeTab === "CONTACT" ? "active" : ""
-                          }`}
-                        onClick={() =>
-                          this.setState({ activeTab: "CONTACT" })
-                        }
-                      >
-                        Liên hệ
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={`${activeTab === "LOGIN" ? "active" : ""
-                          }`}
-                        onClick={() =>
-                          this.setState({ activeTab: "LOGIN" })
-                        }
-                      >
-                        Đăng nhập
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={`${activeTab === "DECRYPTION" ? "active" : ""
-                          }`}
-                        onClick={() =>
-                          this.setState({ activeTab: "DECRYPTION" })
-                        }
-                      >
-                        Giải mã cá nhân
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={`${activeTab === "SEARCHRESULTS" ? "active" : ""
-                          }`}
-                        onClick={() =>
-                          this.setState({ activeTab: "SEARCHRESULTS" })
-                        }
-                      >
-                        Kết quả tra cứu
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={`${activeTab === "FOOTER" ? "active" : ""
-                          }`}
-                        onClick={() =>
-                          this.setState({ activeTab: "FOOTER" })
-                        }
-                      >
-                        Footer
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={`${activeTab === "SEO" ? "active" : ""}`}
-                        onClick={() => this.setState({ activeTab: "SEO" })}
-                      >
-                        SEO website
-                      </NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink
-                        className={`${activeTab === "KEYWORD" ? "active" : ""}`}
-                        onClick={() => this.setState({ activeTab: "KEYWORD" })}
-                      >
-                        Tìm kiếm
-                      </NavLink>
-                    </NavItem>
-                  </Nav>
-                  <TabContent activeTab={activeTab} style={{ width: "100%" }}>
-                    <TabPane tabId={activeTab}>{this.renderTab()}</TabPane>
-                  </TabContent>
+    renderTab = () => {
+        const { activeTab } = this.state;
+        switch (activeTab) {
+            case "HOME":
+                return <Home />;
+            case "AUTHOR":
+                return <Author />;
+            case "PUBLISHING":
+                return <Publishing />;
+            case "INTRODUCE":
+                return <Introduce />;
+            case "CONTACT":
+                return <Contact />;
+            case "LOGIN":
+                return <Login />;
+            case 'SEARCHRESULTS':
+                return <SearchResults />
+            case "FOOTER":
+                return <Footer />;
+            case "DECRYPTION":
+                return <Decryption />;
+            case "SEO":
+                return <SEO />;
+            case "KEYWORD":
+                return <Keyword />;
+            case "SEARCH":
+                return <Search />;
+        }
+    };
+
+    render() {
+        let { activeTab } = this.state;
+
+        return (
+            <div key={`view-page-setting`} className="animated fadeIn">
+                <Row className="d-flex justify-content-center">
+                    <Col xs={12} md={12}>
+                        <Card>
+                            <CardHeader>
+                                <b>Cài đặt trang web</b>
+                            </CardHeader>
+                            <CardBody>
+                                <Row>
+                                    <Nav tabs>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${activeTab === "HOME" ? "active" : ""
+                                                    }`}
+                                                onClick={() => this.setState({ activeTab: "HOME" })}
+                                            >
+                                                Trang chủ
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${activeTab === "CONTACT" ? "active" : ""
+                                                    }`}
+                                                onClick={() =>
+                                                    this.setState({ activeTab: "CONTACT" })
+                                                }
+                                            >
+                                                Liên hệ
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${activeTab === "LOGIN" ? "active" : ""
+                                                    }`}
+                                                onClick={() =>
+                                                    this.setState({ activeTab: "LOGIN" })
+                                                }
+                                            >
+                                                Đăng nhập
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${activeTab === "DECRYPTION" ? "active" : ""
+                                                    }`}
+                                                onClick={() =>
+                                                    this.setState({ activeTab: "DECRYPTION" })
+                                                }
+                                            >
+                                                Giải mã cá nhân
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${activeTab === "SEARCHRESULTS" ? "active" : ""
+                                                    }`}
+                                                onClick={() =>
+                                                    this.setState({ activeTab: "SEARCHRESULTS" })
+                                                }
+                                            >
+                                                Kết quả tra cứu
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${activeTab === "FOOTER" ? "active" : ""
+                                                    }`}
+                                                onClick={() =>
+                                                    this.setState({ activeTab: "FOOTER" })
+                                                }
+                                            >
+                                                Footer
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${activeTab === "SEO" ? "active" : ""}`}
+                                                onClick={() => this.setState({ activeTab: "SEO" })}
+                                            >
+                                                SEO website
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${activeTab === "KEYWORD" ? "active" : ""}`}
+                                                onClick={() => this.setState({ activeTab: "KEYWORD" })}
+                                            >
+                                                Tìm kiếm
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem>
+                                            <NavLink
+                                                className={`${activeTab === "SEARCH" ? "active" : ""}`}
+                                                onClick={() => this.setState({ activeTab: "SEARCH" })}
+                                            >
+                                                Tra cứu
+                                            </NavLink>
+                                        </NavItem>
+                                    </Nav>
+                                    <TabContent activeTab={activeTab} style={{ width: "100%" }}>
+                                        <TabPane tabId={activeTab}>{this.renderTab()}</TabPane>
+                                    </TabContent>
+                                </Row>
+                            </CardBody>
+                        </Card>
+                    </Col>
                 </Row>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
-    );
-  }
+            </div>
+        );
+    }
 }

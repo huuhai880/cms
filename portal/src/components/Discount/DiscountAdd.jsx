@@ -141,7 +141,7 @@ function DiscountAdd({noEdit}) {
                 });
             }
         } catch (error) {
-            window._$g.dialogs.alert(window._$g._('Đã có lỗi xảy ra. Vùi lòng F5 thử lại'));
+            window._$g.dialogs.alert(window._$g._('Đã có lỗi xảy ra. Vui lòng F5 thử lại'));
         }
     };
 

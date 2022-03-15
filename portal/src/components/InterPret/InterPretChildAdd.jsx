@@ -77,7 +77,7 @@ function InterPretChildAdd({ noEdit, interpretDetailEnt = null }) {
       let data = await _interpretModel.getListInterpretParent(interpretId, interpretDetailId);
       setInterpretParent(data.items);
     } catch (error) {
-      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại"));
+      window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
     }
   };
 

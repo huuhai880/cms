@@ -107,7 +107,7 @@ function OrderAdd({ noEdit = false, order_id = 0 }) {
             setProductComboOption(_productComboOption);
         } catch (error) {
             window._$g.dialogs.alert(
-                window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+                window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
             );
         }
         finally {

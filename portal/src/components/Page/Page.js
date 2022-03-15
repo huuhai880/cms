@@ -49,7 +49,7 @@ function Page(props) {
             setData(data);
         } catch (error) {
             window._$g.dialogs.alert(
-                window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+                window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
             );
         } finally {
             setIsLoading(false);
@@ -102,7 +102,7 @@ function Page(props) {
                 })
                 .catch((e) => {
                     window._$g.dialogs.alert(
-                        window._$g._("Đã có lỗi xảy ra. Vùi lòng F5 thử lại")
+                        window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
                     );
                 });
         }
