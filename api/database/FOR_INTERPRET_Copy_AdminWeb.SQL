@@ -9,17 +9,18 @@ ALTER PROCEDURE [dbo].[FOR_INTERPRET_Copy_AdminWeb]
     @FORMULAID AS BIGINT  = NULL,
     @RELATIONSHIPID AS BIGINT  = NULL,
     @COMPARENUM AS BIGINT  = NULL,
-    @DESCRIPTION AS nvarchar(2000) = NULL,
+    @DESCRIPTION AS nvarchar(MAX) = NULL,
     @ORDERINDEX as int =null,
-    @BRIEFDESCRIPTION AS nvarchar(2000) = NULL,
-    @NOTE AS nvarchar(2000) = NULL,
+    @BRIEFDESCRIPTION AS nvarchar(MAX) = NULL,
+    @NOTE AS nvarchar(MAX) = NULL,
     @ISACTIVE AS bit = NULL,
     @ISMASTER AS bit = NULL,
     @CREATEDUSER AS nvarchar(100) = NULL,
     @ISFORPOWERDIAGRAM AS BIT = 0,
-		    @ISINTERPRETSPECIAL AS BIT = 0,
+	@ISINTERPRETSPECIAL AS BIT = 0,
     @COMPAREATTRIBUTEID BIGINT = 0,
-    @ISCONDITIONOR BIT = 0
+    @ISCONDITIONOR BIT = 0,
+    @MATCHPERCENT FLOAT = null
 AS
 BEGIN
 
@@ -44,7 +45,8 @@ BEGIN
             ISDELETED,
             ISFORPOWERDIAGRAM,
             COMPAREATTRIBUTEID,
-            ISCONDITIONOR
+            ISCONDITIONOR,
+            MATCHPERCENT
         )
         VALUES
         (
@@ -65,7 +67,8 @@ BEGIN
             0,
             @ISFORPOWERDIAGRAM,
             @COMPAREATTRIBUTEID,
-            @ISCONDITIONOR
+            @ISCONDITIONOR,
+            @MATCHPERCENT
         )
 
         SET @INTERPRETID = SCOPE_IDENTITY();
