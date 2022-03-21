@@ -232,6 +232,7 @@ const listInterpretSpecialOfPage = (list = []) => {
       'attributes_id',
       'page_id',
       'product_id',
+      'showIndex'
     ]);
   }
 

@@ -141,8 +141,8 @@ function ProductAdd({noEdit = false, productId = null}) {
             setDataProductPage(dataProductPage);
 
             //Lay danh sach Luan giai dac biet
-            let _interpretSpecial = await _productPageModel.getListInterpretSpecial();
-            setInterpretSpecial(_interpretSpecial);
+            // let _interpretSpecial = await _productPageModel.getListInterpretSpecial();
+            // setInterpretSpecial(_interpretSpecial);
         } catch (error) {
             window._$g.dialogs.alert(window._$g._('Đã có lỗi xảy ra. Vui lòng F5 thử lại'));
         } finally {
@@ -179,22 +179,27 @@ function ProductAdd({noEdit = false, productId = null}) {
     const handleSubmitProduct = async values => {
         try {
             let result = false;
-            let {product_page = []} = values || {};
-            for (let index = 0; index < product_page.length; index++) {
-                let _pPage = product_page[index];
-                let {data_child = []} = _pPage || {};
-                for (let j = 0; j < data_child.length; j++) {
-                    let _attributesGroup = data_child[j];
-                    if (_attributesGroup.attributes_group_id == -1) { //Luan giai dac biet
-                        _attributesGroup.data_interpret = (_attributesGroup.data_interpret || [])
-                        .filter(
-                            p => p.is_selected || 
-                            (p.interpret_details || []).filter(k => k.is_selected).length > 0
-                        );
-                    }
-                }
-            }
-            values.product_page = product_page;
+            // let {product_page = []} = values || {};
+            // for (let index = 0; index < product_page.length; index++) {
+            //     let _pPage = product_page[index];
+            //     let {data_child = []} = _pPage || {};
+            //     for (let j = 0; j < data_child.length; j++) {
+            //         let _attributesGroup = data_child[j];
+            //         if (_attributesGroup.attributes_group_id == -1) { //Luan giai dac biet
+            //             _attributesGroup.data_interpret = (_attributesGroup.data_interpret || [])
+            //             .filter(
+            //                 p => p.is_selected || 
+            //                 (p.interpret_details || []).filter(k => k.is_selected).length > 0
+            //             );
+            //         }
+            //     }
+            // }
+            // values.product_page = product_page;
+
+            console.log(formik.values['product_attributes']);
+
+            //Chi lay nhung gia Tri co is_selected
+            
 
             if (productId) {
                 result = await _productModel.update(productId, values);
@@ -540,18 +545,18 @@ function ProductAdd({noEdit = false, productId = null}) {
         let product_page = [...formik.values.product_page];
         let interprets = [];
         if (query.attributes_group_id == -1) {
-            interprets = JSON.parse(JSON.stringify([...interpretSpecial]));
-            if (!productId) {
-                interprets = interprets.map(p => {
-                    return {
-                        ...p,
-                        ...{is_selected: true},
-                        interpret_details: (p.interpret_details || []).map(k => {
-                            return {...k, ...{is_selected: true}};
-                        }),
-                    };
-                });
-            }
+            // interprets = JSON.parse(JSON.stringify([...interpretSpecial]));
+            // if (!productId) {
+            //     interprets = interprets.map(p => {
+            //         return {
+            //             ...p,
+            //             ...{is_selected: true},
+            //             interpret_details: (p.interpret_details || []).map(k => {
+            //                 return {...k, ...{is_selected: true}};
+            //             }),
+            //         };
+            //     });
+            // }
             //   console.log({interprets})
             //   console.log({query})
         } else {
@@ -593,6 +598,7 @@ function ProductAdd({noEdit = false, productId = null}) {
                     show_index: null,
                     data_interpret: null,
                     data_selected: null,
+                    data_selected_special: null
                 },
             ],
             order_index_page: null,
@@ -615,6 +621,7 @@ function ProductAdd({noEdit = false, productId = null}) {
             show_index: null,
             data_interpret: null,
             data_selected: null,
+            data_selected_special: null
         });
         pageProduct[index].data_child = new_child;
         formik.setFieldValue('product_page', pageProduct);

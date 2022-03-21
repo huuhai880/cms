@@ -8,11 +8,11 @@ const regex = /(<([^>]+)>)/gi;
 function InterpetSpecialChild({
     data = [],
     indexParent,
-    selectedParent,
     handleSelectedChild,
     handleSelectedAllChild,
     noEdit,
-    dataUpdate = {}
+    dataSelected = {},
+    orderIndex
 }) {
 
     const column = [
@@ -67,12 +67,11 @@ function InterpetSpecialChild({
 
     const rowSelection = {
         onSelect: (record, selected) => {
-            let index = data.findIndex(p => p.interpret_detail_id == record.interpret_detail_id);
-            handleSelectedChild(record, selected, index)
+            handleSelectedChild(record, selected, orderIndex)
         },
         onSelectAll: (selected, selectedRows) => {
             let { interpret_id = 0 } = data[0] || {}
-            handleSelectedAllChild(selected, interpret_id)
+            handleSelectedAllChild(selected, interpret_id, data, orderIndex)
         },
         getCheckboxProps: () => ({
             disabled: noEdit,
@@ -80,8 +79,9 @@ function InterpetSpecialChild({
     };
 
     const getSelectedRowKeys = () => {
-        let { interpret_details = [] } = dataUpdate || {}
-        return interpret_details.filter(p => p.is_selected).map(x => x.interpret_detail_id);
+        let { interpret_details = {} } = dataSelected || {}
+        let _rowKeys = Object.keys(interpret_details).filter(key => interpret_details[key].is_selected).map(p => parseInt(p))
+        return _rowKeys;
     }
 
     return (

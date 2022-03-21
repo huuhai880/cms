@@ -37,8 +37,8 @@ function InterpretSpecialFilter({ handleSubmitFilter, handleSubmitSpecial, noEdi
         } = query;
 
         handleSubmitFilter({
-            keyword: keyword ? keyword.trim() : null,
-            condition: conditionSelected,
+            search: keyword ? keyword.trim() : null,
+            is_condition_or: conditionSelected ? conditionSelected.value : 2,
             isSubmit: true
         });
     };
@@ -49,8 +49,8 @@ function InterpretSpecialFilter({ handleSubmitFilter, handleSubmitSpecial, noEdi
             conditionSelected: { label: 'Tất cả', value: 2 }
         })
         handleSubmitFilter({
-            keyword: '',
-            condition: { label: 'Tất cả', value: 2 },
+            search: '',
+            is_condition_or: 2,
             isSubmit: false
         });
     }
@@ -58,7 +58,7 @@ function InterpretSpecialFilter({ handleSubmitFilter, handleSubmitSpecial, noEdi
     const handleKeyDown = (e) => {
         if (1 * e.keyCode === 13) {
             e.preventDefault();
-            handleSubmitFilter({ ...query, isSubmit: true });
+            handleSubmit();
         }
     }
 

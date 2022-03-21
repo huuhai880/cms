@@ -11,6 +11,8 @@ routes.route('/:attributes_group_id(\\d+)').get(ProductController.getListInterPr
 
 routes.route('/interpret-special').get(ProductController.getListInterpretSpecial);
 
+routes.route('/interpret-special/paging').get(ProductController.getListInterpretSpecialPaging);
+
 module.exports = {
   prefix,
   routes,
