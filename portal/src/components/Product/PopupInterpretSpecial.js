@@ -46,7 +46,7 @@ function PopupInterpretSpecial({ formik = {}, handleClosePopup, detailRow = {}, 
                 index_child = null
             } = detailRow || {}
 
-            let attributesGroupOfPage = formik.values['product_page'][index_parent].data_child[index_child];
+            let attributesGroupOfPage = formik.values['product_page'][index_parent].data_child[index_child] || {};
             let { data_selected_special = {} } = attributesGroupOfPage || {};
             setDataSelected(data_selected_special)
         } catch (error) {
@@ -356,7 +356,7 @@ function PopupInterpretSpecial({ formik = {}, handleClosePopup, detailRow = {}, 
                                                         handleSelectedChild={handleSelectedChild}
                                                         handleSelectedAllChild={handleSelectedAllChild}
                                                         noEdit={noEdit}
-                                                        dataSelected={dataSelected.hasOwnProperty(record.interpret_id) ? dataSelected[record.interpret_id] : {}}
+                                                        dataSelected={dataSelected ? dataSelected[record.interpret_id] : {}}
                                                         orderIndex={record.order_index}
                                                     />
                                                 ),

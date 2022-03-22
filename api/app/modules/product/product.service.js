@@ -250,193 +250,104 @@ const createProduct = async (bodyParams = {}) => {
             }
         }
 
-        //Product Attribute
         let product_attributes = apiHelper.getValueFromObject(bodyParams, 'product_attributes', []);
-
         if (product_attributes && product_attributes.length > 0) {
-            let listProductAttributes = []; //Insert
-            for (let k = 0; k < product_attributes.length; k++) {
-                let attr = product_attributes[k];
-                let { interprets = [] } = attr || {};
-                //Chỉ lấy luận giải cha được chọn của Chỉ số đang xét
-                interprets = (interprets.filter(p => p.is_selected) || [])
-                if (interprets && interprets.length > 0) {
-                    interprets.forEach(interpret => {
-                        let { interpret_id = 0,
-                            is_show_search_result = false,
-                            text_url = null,
-                            url = null,
-                            interpret_details = []
-                        } = interpret || {};
+            const table = new sql.Table('MD_PRODUCT_ATTRIBUTES')
+            table.create = false;
+            table.columns.add('PRODUCTID', sql.BigInt, { nullable: false });
+            table.columns.add('ISACTIVE', sql.Bit, { nullable: false });
+            table.columns.add('CREATEDUSER', sql.VarChar, { nullable: false });
+            table.columns.add('CREATEDDATE', sql.DateTime, { nullable: false });
+            table.columns.add('UPDATEDUSER', sql.VarChar, { nullable: true });
+            table.columns.add('UPDATEDDATE', sql.DateTime, { nullable: true });
+            table.columns.add('ISDELETED', sql.Bit, { nullable: true });
+            table.columns.add('DELETEDUSER', sql.VarChar, { nullable: true });
+            table.columns.add('DELETEDDATE', sql.DateTime, { nullable: true });
+            table.columns.add('ATTRIBUTESGROUPID', sql.BigInt, { nullable: false });
+            table.columns.add('INTERPRETID', sql.BigInt, { nullable: false });
+            table.columns.add('INTERPRETDETAILID', sql.BigInt, { nullable: true });
+            table.columns.add('ISSHOWSEARCHRESULT', sql.Bit, { nullable: true });
+            table.columns.add('URL', sql.NVarChar, { nullable: true });
+            table.columns.add('TEXTURL', sql.NVarChar, { nullable: true });
+            table.columns.add('ORDERINDEX', sql.BigInt, { nullable: true });
 
-                        listProductAttributes.push({
-                            product_attribute_id: 0,
-                            product_id,
-                            attributes_group_id: attr.attributes_group_id,
-                            interpret_id,
-                            interpret_detail_id: 0,
-                            is_show_search_result,
-                            text_url,
-                            url,
-                            order_index: k
-                        })
-
-                        //Chỉ lấy luận giải con của Luận giải cha chỉ được chọn
-                        interpret_details = (interpret_details.filter(p => p.is_selected) || [])
-                        interpret_details.forEach(detail => {
-                            let {
-                                interpret_detail_id = 0,
-                                is_show_search_result = false,
-                                text_url = null,
-                                url = null,
-                            } = detail || {};
-
-                            listProductAttributes.push({
-                                product_attribute_id: 0,
-                                product_id,
-                                attributes_group_id: attr.attributes_group_id,
-                                interpret_id: interpret.interpret_id,
-                                interpret_detail_id,
-                                is_show_search_result,
-                                text_url,
-                                url,
-                                order_index: k
-                            })
-                        })
-                    })
-                }
-                else { //Nếu không có luận giải thì vẫn Insert Chỉ số
-                    listProductAttributes.push({
-                        product_attribute_id: 0,
-                        product_id,
-                        attributes_group_id: attr.attributes_group_id,
-                        interpret_id: 0,
-                        interpret_detail_id: 0,
-                        is_show_search_result: false,
-                        text_url: null,
-                        url: null,
-                        order_index: k
-                    })
-                }
-            };
-
-
-            if (listProductAttributes && listProductAttributes.length > 0) {
-                const reqAttribute = new sql.Request(transaction);
-                //Insert Chi so cho san pham
-                for (let i = 0; i < listProductAttributes.length; i++) {
-                    let attributesGroup = listProductAttributes[i];
-                    await reqAttribute
-                        .input('PROATTRIBUTESID', attributesGroup.product_attribute_id)
-                        .input('PRODUCTID', product_id)
-                        .input('ATTRIBUTESGROUPID', attributesGroup.attributes_group_id)
-                        .input('INTERPRETID', attributesGroup.interpret_id)
-                        .input('INTERPRETDETAILID', attributesGroup.interpret_detail_id)
-                        .input('ISSHOWSEARCHRESULT', attributesGroup.is_show_search_result)
-                        .input('TEXTURL', attributesGroup.text_url)
-                        .input('URL', attributesGroup.url)
-                        .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-                        .input('ORDERINDEX', attributesGroup.order_index)
-                        .execute('MD_PRODUCT_ATTRIBUTES_Create_AdminWeb');
-                }
+            for (let i = 0; i < product_attributes.length; i++) {
+                let attributesGroup = product_attributes[i];
+                table.rows.add(
+                    product_id, //PRODUCTID
+                    true, //ISACTIVE
+                    apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'), //CREATEDUSER
+                    new Date(), //CREATEDDATE
+                    null, //UPDATEDUSER
+                    null, //UPDATEDDATE
+                    false, //ISDELETED
+                    null, //DELETEDUSER
+                    null, //DELETEDDATE
+                    attributesGroup.attributes_group_id, //ATTRIBUTESGROUPID
+                    attributesGroup.interpret_id, //INTERPRETID
+                    attributesGroup.interpret_detail_id, //INTERPRETDETAILID
+                    attributesGroup.is_show_search_result, //ISSHOWSEARCHRESULT
+                    attributesGroup.url, //URL
+                    attributesGroup.text_url, //TEXTURL
+                    attributesGroup.order_index //ORDERINDEX
+                )
             }
+            const reqProductAttr = new sql.Request(transaction);
+            const results = await reqProductAttr.bulk(table);
+            console.log(`MD_PRODUCT_ATTRIBUTES rows affected ${results.rowsAffected}`);
         }
 
-        // tạo product page
         let product_page = apiHelper.getValueFromObject(bodyParams, 'product_page', []);
-
         if (product_page && product_page.length > 0) {
-            const reqProductPage = new sql.Request(transaction);
-            for (let i = 0; i < product_page.length; i++) {
+            const table = new sql.Table('MD_PRODUCT_PAGE')
+            table.create = false;
+            table.columns.add('PRODUCTID', sql.BigInt, { nullable: true });
+            table.columns.add('PAGEID', sql.BigInt, { nullable: true });
+            table.columns.add('ATTRIBUTESGROUPID', sql.BigInt, { nullable: true });
+            table.columns.add('ATTRIBUTEID', sql.BigInt, { nullable: true });
+            table.columns.add('INTERPRETID', sql.BigInt, { nullable: true });
+            table.columns.add('INTERPRETDETAILID', sql.BigInt, { nullable: true });
+            table.columns.add('ORDERINDEX', sql.BigInt, { nullable: true });
+            table.columns.add('CREATEDUSER', sql.VarChar, { nullable: true });
+            table.columns.add('CREATEDDATE', sql.DateTime, { nullable: true });
+            table.columns.add('UPDATEDUSER', sql.VarChar, { nullable: true });
+            table.columns.add('UPDATEDDATE', sql.DateTime, { nullable: true });
+            table.columns.add('ISDELETED', sql.Bit, { nullable: true });
+            table.columns.add('DELETEDUSER', sql.VarChar, { nullable: true });
+            table.columns.add('DELETEDDATE', sql.DateTime, { nullable: true });
+            table.columns.add('ISACTIVE', sql.Bit, { nullable: true });
+            table.columns.add('ORDERINDEXINTERPRET', sql.BigInt, { nullable: true });
+            table.columns.add('ISINTERPRETSPECIAL', sql.Bit, { nullable: true });
+            table.columns.add('ORDERINDEXPAGE', sql.BigInt, { nullable: true });
 
-                //NEU LA PAGE TINH THI KHONG CO LUAN GIAI VA CHI SO
-                if (product_page[i].page_type == 2) {
-                    await reqProductPage
-                        .input('PRODUCTPAGEID', product_page[i].id_product_page)
-                        .input('PRODUCTID', product_id)
-                        .input('PAGEID', product_page[i].product_page_id)
-                        .input('ATTRIBUTESGROUPID', -2)
-                        .input('ATTRIBUTEID', -2)
-                        .input('INTERPRETID', null)
-                        .input('INTERPRETDETAILID', null)
-                        .input('ORDERINDEX', 0)
-                        .input('ORDERINDEXINTERPRET', 0)
-                        .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-                        .input('ISINTERPRETSPECIAL', false)
-                        .input('ORDERINDEXPAGE', product_page[i].order_index_page)
-                        .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
-                }
-                else { //Nguoc lai theo RULE cu
-                    const data_child = product_page[i].data_child;
-                    for (let j = 0; j < data_child.length; j++) {
-                        if (data_child[j].attributes_group_id == -1) { //Nếu là luận giải đặc biệt
-                            let _interpretSpecialSelecteds = [];
-
-                            let { data_selected_special = {} } = data_child[j] || {};
-                            Object.keys(data_selected_special).forEach(key => {
-                                let { order_index = null, is_selected = false, interpret_details = {} } = data_selected_special[key] || {};
-                                if (is_selected) {
-                                    _interpretSpecialSelecteds.push({
-                                        interpret_id: key,
-                                        interpret_detail_id: null,
-                                        order_index
-                                    })
-                                };
-
-                                Object.keys(interpret_details).forEach(keyChild => {
-                                    let { order_index: order_index_child = null, is_selected = false } = interpret_details[keyChild] || {};
-                                    if (is_selected) {
-                                        _interpretSpecialSelecteds.push({
-                                            interpret_id: key,
-                                            interpret_detail_id: keyChild,
-                                            order_index: order_index_child
-                                        })
-                                    }
-                                })
-                            })
-
-                            //Thêm luận giải vào Page
-                            for (let m = 0; m < _interpretSpecialSelecteds.length; m++) {
-                                await reqProductPage
-                                    .input('PRODUCTPAGEID', product_page[i].id_product_page)
-                                    .input('PRODUCTID', product_id)
-                                    .input('PAGEID', product_page[i].product_page_id)
-                                    .input('ATTRIBUTESGROUPID', -1)
-                                    .input('ATTRIBUTEID', -1)
-                                    .input('INTERPRETID', _interpretSpecialSelecteds[m].interpret_id)
-                                    .input('INTERPRETDETAILID', _interpretSpecialSelecteds[m].interpret_detail_id)
-                                    .input('ORDERINDEX', data_child[j].show_index)
-                                    .input('ORDERINDEXINTERPRET', _interpretSpecialSelecteds[m].order_index)
-                                    .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-                                    .input('ISINTERPRETSPECIAL', true)
-                                    .input('ORDERINDEXPAGE', product_page[i].order_index_page)
-                                    .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
-                            }
-
-                        }
-                        else {//Nếu không phải là luận giải đặc biệt thì như cũ
-                            const data_selected = data_child[j].data_selected;
-                            for (let k = 0; k < data_selected.length; k++) {
-                                await reqProductPage
-                                    .input('PRODUCTPAGEID', product_page[i].id_product_page)
-                                    .input('PRODUCTID', product_id)
-                                    .input('PAGEID', product_page[i].product_page_id)
-                                    .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
-                                    .input('ATTRIBUTEID', data_selected[k].attributes_id)
-                                    .input('INTERPRETID', data_selected[k].interpret_id)
-                                    .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
-                                    .input('ORDERINDEX', data_child[j].show_index)
-                                    .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
-                                    .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-                                    .input('ISINTERPRETSPECIAL', false)
-                                    .input('ORDERINDEXPAGE', product_page[i].order_index_page)
-                                    .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
-                            }
-                        }
-                    }
-                }
+            for (let n = 0; n < product_page.length; n++) {
+                const page = product_page[n];
+                table.rows.add(
+                    product_id, //PRODUCTID
+                    page.product_page_id, //PAGEID
+                    page.attributes_group_id, //ATTRIBUTESGROUPID
+                    page.attributes_id, //ATTRIBUTEID
+                    page.interpret_id,  //INTERPRETID
+                    page.interpret_detail_id, //INTERPRETDETAILID
+                    page.order_index, //ORDERINDEX
+                    apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'), //CREATEDUSER
+                    new Date(), //CREATEDDATE
+                    null, //UPDATEDUSER
+                    null, //UPDATEDDATE
+                    false, //ISDELETED
+                    null, //DELETEDUSER
+                    null, //DELETEDDATE
+                    true, //ISACTIVE
+                    page.order_index_interpret, //ORDERINDEXINTERPRET
+                    page.is_interpret_special, //ISINTERPRETSPECIAL
+                    page.order_index_page //ORDERINDEXPAGE
+                );
             }
+            const reqProductPage = new sql.Request(transaction);
+            const results = await reqProductPage.bulk(table);
+            console.log(`MD_PRODUCT_PAGE rows affected ${results.rowsAffected}`);
         }
+
         await transaction.commit();
         return new ServiceResponse(true, '', product_id);
     } catch (e) {
@@ -466,7 +377,6 @@ const updateProduct = async (bodyParams = {}) => {
         }
 
         await transaction.begin();
-
         let product_id = apiHelper.getValueFromObject(bodyParams, 'product_id', 0);
 
         //Product
@@ -487,6 +397,7 @@ const updateProduct = async (bodyParams = {}) => {
             .input('LINKLANDINGPAGE', apiHelper.getValueFromObject(bodyParams, 'link_landing_page', null))
             .execute('MD_PRODUCT_Update_AdminWeb');
 
+
         let { result } = resProduct.recordset[0];
 
         if (result == 0) {
@@ -494,7 +405,7 @@ const updateProduct = async (bodyParams = {}) => {
             return new ServiceResponse(false, 'Lỗi cập nhật sản phẩm', null);
         }
 
-        //Images Product
+        //Delete Images Product
         const reqDelImage = new sql.Request(transaction);
         await reqDelImage
             .input('PRODUCTID', product_id)
@@ -514,7 +425,7 @@ const updateProduct = async (bodyParams = {}) => {
             }
         }
 
-        //Product Attribute
+        //Delete Attributes Of Product
         const reqDelAttribute = new sql.Request(transaction);
         await reqDelAttribute
             .input('PRODUCTID', product_id)
@@ -523,97 +434,70 @@ const updateProduct = async (bodyParams = {}) => {
 
         let product_attributes = apiHelper.getValueFromObject(bodyParams, 'product_attributes', []);
         if (product_attributes && product_attributes.length > 0) {
-            let listProductAttributes = []; //Insert
-            for (let k = 0; k < product_attributes.length; k++) {
-                let attr = product_attributes[k];
-                let { interprets = [] } = attr || {};
-                //Chỉ lấy luận giải cha được chọn của Chỉ số đang xét
-                interprets = (interprets.filter(p => p.is_selected) || [])
-                if (interprets && interprets.length > 0) {
-                    interprets.forEach(interpret => {
-                        let { interpret_id = 0,
-                            is_show_search_result = false,
-                            text_url = null,
-                            url = null,
-                            interpret_details = [],
-                            product_attribute_id = 0
-                        } = interpret || {};
+            const table = new sql.Table('MD_PRODUCT_ATTRIBUTES')
+            table.create = false;
+            table.columns.add('PRODUCTID', sql.BigInt, { nullable: false });
+            table.columns.add('ISACTIVE', sql.Bit, { nullable: false });
+            table.columns.add('CREATEDUSER', sql.VarChar, { nullable: false });
+            table.columns.add('CREATEDDATE', sql.DateTime, { nullable: false });
+            table.columns.add('UPDATEDUSER', sql.VarChar, { nullable: true });
+            table.columns.add('UPDATEDDATE', sql.DateTime, { nullable: true });
+            table.columns.add('ISDELETED', sql.Bit, { nullable: true });
+            table.columns.add('DELETEDUSER', sql.VarChar, { nullable: true });
+            table.columns.add('DELETEDDATE', sql.DateTime, { nullable: true });
+            table.columns.add('ATTRIBUTESGROUPID', sql.BigInt, { nullable: false });
+            table.columns.add('INTERPRETID', sql.BigInt, { nullable: false });
+            table.columns.add('INTERPRETDETAILID', sql.BigInt, { nullable: true });
+            table.columns.add('ISSHOWSEARCHRESULT', sql.Bit, { nullable: true });
+            table.columns.add('URL', sql.NVarChar, { nullable: true });
+            table.columns.add('TEXTURL', sql.NVarChar, { nullable: true });
+            table.columns.add('ORDERINDEX', sql.BigInt, { nullable: true });
 
-                        listProductAttributes.push({
-                            product_attribute_id,
-                            product_id,
-                            attributes_group_id: attr.attributes_group_id,
-                            interpret_id,
-                            interpret_detail_id: 0,
-                            is_show_search_result,
-                            text_url,
-                            url,
-                            order_index: k
-                        })
-
-                        //Chỉ lấy luận giải con của Luận giải cha chỉ được chọn
-                        interpret_details = (interpret_details.filter(p => p.is_selected) || [])
-                        interpret_details.forEach(detail => {
-                            let {
-                                interpret_detail_id = 0,
-                                is_show_search_result = false,
-                                text_url = null,
-                                url = null,
-                                product_attribute_id = 0
-                            } = detail || {};
-
-                            listProductAttributes.push({
-                                product_attribute_id,
-                                product_id,
-                                attributes_group_id: attr.attributes_group_id,
-                                interpret_id: interpret.interpret_id,
-                                interpret_detail_id,
-                                is_show_search_result,
-                                text_url,
-                                url,
-                                order_index: k
-                            })
-                        })
-                    })
-                }
-                else { //Nếu không có luận giải thì vẫn Insert Chỉ số
-                    listProductAttributes.push({
-                        product_attribute_id: 0,
-                        product_id,
-                        attributes_group_id: attr.attributes_group_id,
-                        interpret_id: 0,
-                        interpret_detail_id: 0,
-                        is_show_search_result: false,
-                        text_url: null,
-                        url: null,
-                        order_index: k
-                    })
-                }
-            };
-
-            if (listProductAttributes && listProductAttributes.length > 0) {
-                const reqAttribute = new sql.Request(transaction);
-                //Insert Chi so cho san pham
-                for (let i = 0; i < listProductAttributes.length; i++) {
-                    let attributesGroup = listProductAttributes[i];
-                    await reqAttribute
-                        .input('PROATTRIBUTESID', attributesGroup.product_attribute_id)
-                        .input('PRODUCTID', product_id)
-                        .input('ATTRIBUTESGROUPID', attributesGroup.attributes_group_id)
-                        .input('INTERPRETID', attributesGroup.interpret_id)
-                        .input('INTERPRETDETAILID', attributesGroup.interpret_detail_id)
-                        .input('ISSHOWSEARCHRESULT', attributesGroup.is_show_search_result)
-                        .input('TEXTURL', attributesGroup.text_url)
-                        .input('URL', attributesGroup.url)
-                        .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-                        .input('ORDERINDEX', attributesGroup.order_index)
-                        .execute('MD_PRODUCT_ATTRIBUTES_Create_AdminWeb');
-                }
+            for (let i = 0; i < product_attributes.length; i++) {
+                let attributesGroup = product_attributes[i];
+                table.rows.add(
+                    product_id, //PRODUCTID
+                    true, //ISACTIVE
+                    apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'), //CREATEDUSER
+                    new Date(), //CREATEDDATE
+                    null, //UPDATEDUSER
+                    null, //UPDATEDDATE
+                    false, //ISDELETED
+                    null, //DELETEDUSER
+                    null, //DELETEDDATE
+                    attributesGroup.attributes_group_id, //ATTRIBUTESGROUPID
+                    attributesGroup.interpret_id, //INTERPRETID
+                    attributesGroup.interpret_detail_id, //INTERPRETDETAILID
+                    attributesGroup.is_show_search_result, //ISSHOWSEARCHRESULT
+                    attributesGroup.url, //URL
+                    attributesGroup.text_url, //TEXTURL
+                    attributesGroup.order_index //ORDERINDEX
+                )
             }
+            const reqProductAttr = new sql.Request(transaction);
+            const results = await reqProductAttr.bulk(table);
+            console.log(`MD_PRODUCT_ATTRIBUTES rows affected ${results.rowsAffected}`);
 
+
+            //const reqAttribute = new sql.Request(transaction);
+            // for (let i = 0; i < product_attributes.length; i++) {
+            //     let attributesGroup = product_attributes[i];
+            //     await pool.request()
+            //         .input('PROATTRIBUTESID', attributesGroup.product_attribute_id)
+            //         .input('PRODUCTID', product_id)
+            //         .input('ATTRIBUTESGROUPID', attributesGroup.attributes_group_id)
+            //         .input('INTERPRETID', attributesGroup.interpret_id)
+            //         .input('INTERPRETDETAILID', attributesGroup.interpret_detail_id)
+            //         .input('ISSHOWSEARCHRESULT', attributesGroup.is_show_search_result)
+            //         .input('TEXTURL', attributesGroup.text_url)
+            //         .input('URL', attributesGroup.url)
+            //         .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+            //         .input('ORDERINDEX', attributesGroup.order_index)
+            //         .execute('MD_PRODUCT_ATTRIBUTES_Create_AdminWeb');
+            // }
         }
 
-        // ---- update product page ---
+        //Delete Page Of Product
         let product_page = apiHelper.getValueFromObject(bodyParams, 'product_page', []);
         const reqDelPageProduct = new sql.Request(transaction);
         await reqDelPageProduct
@@ -622,100 +506,77 @@ const updateProduct = async (bodyParams = {}) => {
             .execute('MD_PRODUCT_PAGE_DeleteProductPage_AdminWeb');
 
         if (product_page && product_page.length > 0) {
-            const reqProductPage = new sql.Request(transaction);
-            for (let i = 0; i < product_page.length; i++) {
+            const table = new sql.Table('MD_PRODUCT_PAGE')
+            table.create = false;
+            table.columns.add('PRODUCTID', sql.BigInt, { nullable: true });
+            table.columns.add('PAGEID', sql.BigInt, { nullable: true });
+            table.columns.add('ATTRIBUTESGROUPID', sql.BigInt, { nullable: true });
+            table.columns.add('ATTRIBUTEID', sql.BigInt, { nullable: true });
+            table.columns.add('INTERPRETID', sql.BigInt, { nullable: true });
+            table.columns.add('INTERPRETDETAILID', sql.BigInt, { nullable: true });
+            table.columns.add('ORDERINDEX', sql.BigInt, { nullable: true });
+            table.columns.add('CREATEDUSER', sql.VarChar, { nullable: true });
+            table.columns.add('CREATEDDATE', sql.DateTime, { nullable: true });
+            table.columns.add('UPDATEDUSER', sql.VarChar, { nullable: true });
+            table.columns.add('UPDATEDDATE', sql.DateTime, { nullable: true });
+            table.columns.add('ISDELETED', sql.Bit, { nullable: true });
+            table.columns.add('DELETEDUSER', sql.VarChar, { nullable: true });
+            table.columns.add('DELETEDDATE', sql.DateTime, { nullable: true });
+            table.columns.add('ISACTIVE', sql.Bit, { nullable: true });
+            table.columns.add('ORDERINDEXINTERPRET', sql.BigInt, { nullable: true });
+            table.columns.add('ISINTERPRETSPECIAL', sql.Bit, { nullable: true });
+            table.columns.add('ORDERINDEXPAGE', sql.BigInt, { nullable: true });
 
-                //NEU LA PAGE TINH THI KHONG CO LUAN GIAI VA CHI SO
-                if (product_page[i].page_type == 2) {
-                    await reqProductPage
-                        .input('PRODUCTPAGEID', product_page[i].id_product_page)
-                        .input('PRODUCTID', product_id)
-                        .input('PAGEID', product_page[i].product_page_id)
-                        .input('ATTRIBUTESGROUPID', -2)
-                        .input('ATTRIBUTEID', -2)
-                        .input('INTERPRETID', null)
-                        .input('INTERPRETDETAILID', null)
-                        .input('ORDERINDEX', 0)
-                        .input('ORDERINDEXINTERPRET', 0)
-                        .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-                        .input('ISINTERPRETSPECIAL', false)
-                        .input('ORDERINDEXPAGE', product_page[i].order_index_page)
-                        .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
-                }
-                else { //Nguoc lai theo RULE cu
-                    const data_child = product_page[i].data_child;
-                    for (let j = 0; j < data_child.length; j++) {
-                        if (data_child[j].attributes_group_id == -1) { //Nếu là luận giải đặc biệt
-                            let _interpretSpecialSelecteds = [];
-
-                            let { data_selected_special = {} } = data_child[j] || {};
-                            Object.keys(data_selected_special).forEach(key => {
-                                let { order_index = null, is_selected = false, interpret_details = {} } = data_selected_special[key] || {};
-                                if (is_selected) {
-                                    _interpretSpecialSelecteds.push({
-                                        interpret_id: key,
-                                        interpret_detail_id: null,
-                                        order_index
-                                    })
-                                };
-
-                                Object.keys(interpret_details).forEach(keyChild => {
-                                    let { order_index: order_index_child = null, is_selected = false } = interpret_details[keyChild] || {};
-                                    if (is_selected) {
-                                        _interpretSpecialSelecteds.push({
-                                            interpret_id: key,
-                                            interpret_detail_id: keyChild,
-                                            order_index: order_index_child
-                                        })
-                                    }
-                                })
-                            })
-
-                            //Thêm luận giải vào Page
-                            for (let m = 0; m < _interpretSpecialSelecteds.length; m++) {
-                                await reqProductPage
-                                    .input('PRODUCTPAGEID', product_page[i].id_product_page)
-                                    .input('PRODUCTID', product_id)
-                                    .input('PAGEID', product_page[i].product_page_id)
-                                    .input('ATTRIBUTESGROUPID', -1)
-                                    .input('ATTRIBUTEID', -1)
-                                    .input('INTERPRETID', _interpretSpecialSelecteds[m].interpret_id)
-                                    .input('INTERPRETDETAILID', _interpretSpecialSelecteds[m].interpret_detail_id)
-                                    .input('ORDERINDEX', data_child[j].show_index)
-                                    .input('ORDERINDEXINTERPRET', _interpretSpecialSelecteds[m].order_index)
-                                    .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-                                    .input('ISINTERPRETSPECIAL', true)
-                                    .input('ORDERINDEXPAGE', product_page[i].order_index_page)
-                                    .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
-                            }
-                        }
-                        else {//Nếu không phải là luận giải đặc biệt thì như cũ
-                            const data_selected = data_child[j].data_selected;
-                            for (let k = 0; k < data_selected.length; k++) {
-                                await reqProductPage
-                                    .input('PRODUCTPAGEID', data_selected[k].product_page_id)
-                                    .input('PRODUCTID', product_id)
-                                    .input('PAGEID', product_page[i].product_page_id)
-                                    .input('ATTRIBUTESGROUPID', data_selected[k].attributes_group_id)
-                                    .input('ATTRIBUTEID', data_selected[k].attributes_id)
-                                    .input('INTERPRETID', data_selected[k].interpret_id)
-                                    .input('INTERPRETDETAILID', data_selected[k].interpret_detail_id)
-                                    .input('ORDERINDEX', data_child[j].show_index)
-                                    .input('ORDERINDEXINTERPRET', data_selected[k].showIndex)
-                                    .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
-                                    .input('ISINTERPRETSPECIAL', false)
-                                    .input('ORDERINDEXPAGE', product_page[i].order_index_page)
-                                    .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
-                            }
-                        }
-                    }
-                }
+            for (let n = 0; n < product_page.length; n++) {
+                const page = product_page[n];
+                table.rows.add(
+                    product_id, //PRODUCTID
+                    page.product_page_id, //PAGEID
+                    page.attributes_group_id, //ATTRIBUTESGROUPID
+                    page.attributes_id, //ATTRIBUTEID
+                    page.interpret_id,  //INTERPRETID
+                    page.interpret_detail_id, //INTERPRETDETAILID
+                    page.order_index, //ORDERINDEX
+                    apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'), //CREATEDUSER
+                    new Date(), //CREATEDDATE
+                    null, //UPDATEDUSER
+                    null, //UPDATEDDATE
+                    false, //ISDELETED
+                    null, //DELETEDUSER
+                    null, //DELETEDDATE
+                    true, //ISACTIVE
+                    page.order_index_interpret, //ORDERINDEXINTERPRET
+                    page.is_interpret_special, //ISINTERPRETSPECIAL
+                    page.order_index_page //ORDERINDEXPAGE
+                );
             }
+            const reqProductPage = new sql.Request(transaction);
+            const results = await reqProductPage.bulk(table);
+            console.log(`MD_PRODUCT_PAGE rows affected ${results.rowsAffected}`);
+
+            // const reqProductPage = new sql.Request(transaction);
+            // for (let n = 0; n < product_page.length; n++) {
+            //     const page = product_page[n];
+            //     await reqProductPage
+            //         .input('PRODUCTPAGEID', page.id_product_page)
+            //         .input('PRODUCTID', product_id)
+            //         .input('PAGEID', page.product_page_id)
+            //         .input('ATTRIBUTESGROUPID', page.attributes_group_id)
+            //         .input('ATTRIBUTEID', page.attributes_id)
+            //         .input('INTERPRETID', page.interpret_id)
+            //         .input('INTERPRETDETAILID', page.interpret_detail_id)
+            //         .input('ORDERINDEX', page.order_index)
+            //         .input('ORDERINDEXINTERPRET', page.order_index_interpret)
+            //         .input('CREATEDUSER', apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator'))
+            //         .input('ISINTERPRETSPECIAL', page.is_interpret_special)
+            //         .input('ORDERINDEXPAGE', page.order_index_page)
+            //         .execute('MD_PRODUCT_PAGE_CreateOrUpdate_AdminWeb');
+            // }
         }
         await transaction.commit();
-        // removeCacheOptions();
         return new ServiceResponse(true, '', true);
     } catch (e) {
+        console.log({ e })
         await transaction.rollback();
         logger.error(e, {
             function: 'product.service.updateProduct',
