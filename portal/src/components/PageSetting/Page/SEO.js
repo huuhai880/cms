@@ -19,6 +19,8 @@ import Loading from '../../Common/Loading';
 // Model(s)
 import ConfigModel from '../../../models/ConfigModel';
 
+import '../styles.scss'
+
 /**
  * @class SEO
  */
@@ -68,6 +70,48 @@ export default class SEO extends PureComponent {
             //Ket qua tra cuu
             seoPageResultSearchImage: "",
             clearSeoPageResultSearchImage: false,
+
+            //#region TRA CUU FREE
+            //Tra cuu so dien thoai
+            seoPageSearchPhoneImage: "",
+            clearSeoPageSearchPhoneImage: false,
+
+            //Ket qua tra cuu so dien thoai
+            seoPageResultSearchPhoneImage: "",
+            clearSeoPageResultSearchPhoneImage: false,
+
+            //Tra cuu so nha
+            seoPageSearchHouseImage: "",
+            clearSeoPageSearchHouseImage: false,
+
+            //Ket qua tra cuu so nha
+            seoPageResultSearchHouseImage: "",
+            clearSeoPageResultSearchHouseImage: false,
+
+            //Tra cuu khach hang
+            seoPageSearchCustomerImage: "",
+            clearSeoPageSearchCustomerImage: false,
+
+            //Ket qua tra cuu khach hang
+            seoPageResultSearchCustomerImage: "",
+            clearSeoPageResultSearchCustomerImage: false,
+
+            //Tra cuu su tuong hop
+            seoPageSearchLoveImage: "",
+            clearSeoPageSearchLoveImage: false,
+
+            //Ket qua tra cuu su tuong hop
+            seoPageResultSearchLoveImage: "",
+            clearSeoPageResultSearchLoveImage: false,
+
+            //Tra cứu con cái
+            seoPageSearchChildrenImage: "",
+            clearSeoPageSearchChildrenImage: false,
+
+            //Ket qua tra cuu con cai
+            seoPageResultSearchChildrenImage: "",
+            clearSeoPageResultSearchChildrenImage: false,
+            //#endregion
         };
     }
 
@@ -83,7 +127,19 @@ export default class SEO extends PureComponent {
                 seoPageProductImage,
                 seoPageLoginImage,
                 seoPageRegisterImage,
-                seoPageResultSearchImage
+                seoPageResultSearchImage,
+
+                //TRA CUU
+                seoPageSearchPhoneImage,
+                seoPageSearchHouseImage,
+                seoPageSearchCustomerImage,
+                seoPageSearchLoveImage,
+                seoPageSearchChildrenImage,
+                seoPageResultSearchPhoneImage,
+                seoPageResultSearchHouseImage,
+                seoPageResultSearchCustomerImage,
+                seoPageResultSearchLoveImage,
+                seoPageResultSearchChildrenImage
             } = this.state;
 
             let bundle = await this._getBundleData();
@@ -96,6 +152,20 @@ export default class SEO extends PureComponent {
             if (bundle['SEO_LOGIN_IMAGE']) seoPageLoginImage = bundle["SEO_LOGIN_IMAGE"] ? bundle["SEO_LOGIN_IMAGE"].value : null;
             if (bundle['SEO_REGISTER_IMAGE']) seoPageRegisterImage = bundle["SEO_REGISTER_IMAGE"] ? bundle["SEO_REGISTER_IMAGE"].value : null;
             if (bundle['SEO_RESULTSEARCH_IMAGE']) seoPageResultSearchImage = bundle["SEO_RESULTSEARCH_IMAGE"] ? bundle["SEO_RESULTSEARCH_IMAGE"].value : null;
+
+            //TRA CUU
+            if (bundle['SEO_SEARCHPHONE_IMAGE']) seoPageSearchPhoneImage = bundle["SEO_SEARCHPHONE_IMAGE"] ? bundle["SEO_SEARCHPHONE_IMAGE"].value : null;
+            if (bundle['SEO_SEARCHHOUSE_IMAGE']) seoPageSearchHouseImage = bundle["SEO_SEARCHHOUSE_IMAGE"] ? bundle["SEO_SEARCHHOUSE_IMAGE"].value : null;
+            if (bundle['SEO_SEARCHCUSTOMER_IMAGE']) seoPageSearchCustomerImage = bundle["SEO_SEARCHCUSTOMER_IMAGE"] ? bundle["SEO_SEARCHCUSTOMER_IMAGE"].value : null;
+            if (bundle['SEO_SEARCHLOVE_IMAGE']) seoPageSearchLoveImage = bundle["SEO_SEARCHLOVE_IMAGE"] ? bundle["SEO_SEARCHLOVE_IMAGE"].value : null;
+            if (bundle['SEO_SEARCHCHILDREN_IMAGE']) seoPageSearchChildrenImage = bundle["SEO_SEARCHCHILDREN_IMAGE"] ? bundle["SEO_SEARCHCHILDREN_IMAGE"].value : null;
+
+            if (bundle['SEO_RESULTSEARCHPHONE_IMAGE']) seoPageResultSearchPhoneImage = bundle["SEO_RESULTSEARCHPHONE_IMAGE"] ? bundle["SEO_RESULTSEARCHPHONE_IMAGE"].value : null;
+            if (bundle['SEO_RESULTSEARCHHOUSE_IMAGE']) seoPageResultSearchHouseImage = bundle["SEO_RESULTSEARCHHOUSE_IMAGE"] ? bundle["SEO_RESULTSEARCHHOUSE_IMAGE"].value : null;
+            if (bundle['SEO_RESULTSEARCHCUSTOMER_IMAGE']) seoPageResultSearchCustomerImage = bundle["SEO_RESULTSEARCHCUSTOMER_IMAGE"] ? bundle["SEO_RESULTSEARCHCUSTOMER_IMAGE"].value : null;
+            if (bundle['SEO_RESULTSEARCHLOVE_IMAGE']) seoPageResultSearchLoveImage = bundle["SEO_RESULTSEARCHLOVE_IMAGE"] ? bundle["SEO_RESULTSEARCHLOVE_IMAGE"].value : null;
+            if (bundle['SEO_RESULTSEARCHCHILDREN_IMAGE']) seoPageResultSearchChildrenImage = bundle["SEO_RESULTSEARCHCHILDREN_IMAGE"] ? bundle["SEO_RESULTSEARCHCHILDREN_IMAGE"].value : null;
+
 
             if (bundle) configEnt = bundle;
             this.setState({
@@ -110,7 +180,18 @@ export default class SEO extends PureComponent {
                 seoPageProductImage,
                 seoPageLoginImage,
                 seoPageRegisterImage,
-                seoPageResultSearchImage
+                seoPageResultSearchImage,
+
+                seoPageSearchPhoneImage,
+                seoPageSearchHouseImage,
+                seoPageSearchCustomerImage,
+                seoPageSearchLoveImage,
+                seoPageSearchChildrenImage,
+                seoPageResultSearchPhoneImage,
+                seoPageResultSearchHouseImage,
+                seoPageResultSearchCustomerImage,
+                seoPageResultSearchLoveImage,
+                seoPageResultSearchChildrenImage
             });
         })();
     }
@@ -340,6 +421,228 @@ export default class SEO extends PureComponent {
                     data_type: 'image'
                 },
 
+
+                //SEO TRA CUU SO DIEN THOAI
+                SEO_SEARCHPHONE_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHPHONE_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHPHONE_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHPHONE_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHPHONE_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
+                //SEO KET QUA TRA CUU SO DIEN THOAI
+                SEO_RESULTSEARCHPHONE_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHPHONE_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHPHONE_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHPHONE_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHPHONE_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
+                //SEO TRA CUU SO NHA
+                SEO_SEARCHHOUSE_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHHOUSE_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHHOUSE_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHHOUSE_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHHOUSE_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
+                //SEO KET QUA TRA CUU SO DIEN THOAI
+                SEO_RESULTSEARCHHOUSE_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHHOUSE_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHHOUSE_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHHOUSE_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHHOUSE_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
+
+                //SEO TRA CUU KHACH HANG
+                SEO_SEARCHCUSTOMER_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHCUSTOMER_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHCUSTOMER_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHCUSTOMER_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHCUSTOMER_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
+                //SEO KET QUA TRA CUU KHACH HANG
+                SEO_RESULTSEARCHCUSTOMER_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHCUSTOMER_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHCUSTOMER_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHCUSTOMER_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHCUSTOMER_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
+                //SEO TRA CUU SU TUONG HOP
+                SEO_SEARCHLOVE_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHLOVE_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHLOVE_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHLOVE_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHLOVE_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
+                //SEO KET QUA TRA CUU SU TUONG HOP
+                SEO_RESULTSEARCHLOVE_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHLOVE_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHLOVE_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHLOVE_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHLOVE_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
+                //SEO TRA CUU CON CAI
+                SEO_SEARCHCHILDREN_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHCHILDREN_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHCHILDREN_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHCHILDREN_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_SEARCHCHILDREN_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
+                //SEO KET QUA TRA CUU CON CAI
+                SEO_RESULTSEARCHCHILDREN_TITLE: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHCHILDREN_KEYWORDS: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHCHILDREN_DESCRIPTION: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHCHILDREN_URL: {
+                    value: "",
+                    data_type: 'string'
+                },
+                SEO_RESULTSEARCHCHILDREN_IMAGE: {
+                    value: "",
+                    data_type: 'image'
+                },
+
             },
         );
         if (this.state.configEnt) {
@@ -430,7 +733,48 @@ export default class SEO extends PureComponent {
             seoPageRegisterImage,
             clearSeoPageRegisterImage,
             seoPageResultSearchImage,
-            clearSeoPageResultSearchImage
+            clearSeoPageResultSearchImage,
+
+            //Tra cuu so dien thoai
+            seoPageSearchPhoneImage,
+            clearSeoPageSearchPhoneImage,
+
+            //Ket qua tra cuu so dien thoai
+            seoPageResultSearchPhoneImage,
+            clearSeoPageResultSearchPhoneImage,
+
+            //Tra cuu so nha
+            seoPageSearchHouseImage,
+            clearSeoPageSearchHouseImage,
+
+            //Ket qua tra cuu so nha
+            seoPageResultSearchHouseImage,
+            clearSeoPageResultSearchHouseImage,
+
+            //Tra cuu khach hang
+            seoPageSearchCustomerImage,
+            clearSeoPageSearchCustomerImage,
+
+            //Ket qua tra cuu khach hang
+            seoPageResultSearchCustomerImage,
+            clearSeoPageResultSearchCustomerImage,
+
+            //Tra cuu su tuong hop
+            seoPageSearchLoveImage,
+            clearSeoPageSearchLoveImage,
+
+            //Ket qua tra cuu su tuong hop
+            seoPageResultSearchLoveImage,
+            clearSeoPageResultSearchLoveImage,
+
+            //Tra cứu con cái
+            seoPageSearchChildrenImage,
+            clearSeoPageSearchChildrenImage,
+
+            //Ket qua tra cuu con cai
+            seoPageResultSearchChildrenImage,
+            clearSeoPageResultSearchChildrenImage
+
         } = this.state;
         let { noEdit } = this.props;
         let initialValues = this.getInitialValues();
@@ -546,14 +890,14 @@ export default class SEO extends PureComponent {
                                                 </Row>
                                             </Col>
 
-                                            <Col xs={12}>
-                                                <Row className="mb-4">
-                                                    <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">SEO Trang chủ</b>
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name" >
+                                                        <b className="title_page_h1 text-primary">SEO Trang chủ</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
-                                                    <Col xs={8} className="mx-auto">
+                                                    <Col xs={12} className="mx-auto">
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
@@ -606,78 +950,16 @@ export default class SEO extends PureComponent {
                                                         </Row>
                                                     </Col>
                                                 </Row>
-                                            </Col>
+                                            </Col>                                          
 
-                                            <Col xs={12}>
-                                                <Row className="mb-4">
-                                                    <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">SEO Tra cứu</b>
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name" >
+                                                        <b className="title_page_h1 text-primary">SEO Kiến thức</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
-                                                    <Col xs={8} className="mx-auto">
-                                                        <Row>
-                                                            <FormInput
-                                                                label="Tiêu đề"
-                                                                name="SEO_SEARCH_TITLE.value"
-                                                                labelSm={3}
-                                                                inputSm={9}
-                                                                isEdit={!noEdit}
-                                                                isRequired={false}
-                                                            />
-                                                            <FormInput
-                                                                label="Từ khóa"
-                                                                name="SEO_SEARCH_KEYWORDS.value"
-                                                                labelSm={3}
-                                                                inputSm={9}
-                                                                isEdit={!noEdit}
-                                                                isRequired={false}
-                                                            />
-                                                            <FormInput
-                                                                label="Link SEO"
-                                                                name="SEO_SEARCH_URL.value"
-                                                                labelSm={3}
-                                                                inputSm={9}
-                                                                isEdit={!noEdit}
-                                                                isRequired={false}
-                                                            />
-                                                            <FormInput
-                                                                label="Mô tả ngắn gọn"
-                                                                type="textarea"
-                                                                name="SEO_SEARCH_DESCRIPTION.value"
-                                                                isEdit={!noEdit}
-                                                                labelSm={3}
-                                                                inputSm={9}
-                                                                inputClassName="home-page_textarea"
-                                                                isRequired={false}
-                                                            />
-                                                            <UploadImage
-                                                                urlImageEdit={seoPageSearchImage}
-                                                                clearImage={clearSeoPageSearchImage}
-                                                                isEdit={!noEdit}
-                                                                name="SEO_SEARCH_IMAGE.value"
-                                                                title="Ảnh SEO"
-                                                                isHorizontal={true}
-                                                                textColor=""
-                                                                labelSm={3}
-                                                                inputSm={9}
-                                                                isBoldLabel={false}
-                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
-                                                                isRequired={false}
-                                                            />
-                                                        </Row>
-                                                    </Col>
-                                                </Row>
-                                            </Col>
-
-                                            <Col xs={12}>
-                                                <Row className="mb-4">
-                                                    <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">SEO Kiến thức</b>
-                                                    </Col>
-                                                </Row>
-                                                <Row>
-                                                    <Col xs={8} className="mx-auto">
+                                                    <Col xs={12} className="mx-auto">
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
@@ -732,14 +1014,14 @@ export default class SEO extends PureComponent {
                                                 </Row>
                                             </Col>
 
-                                            <Col xs={12}>
-                                                <Row className="mb-4">
-                                                    <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">SEO Về chúng tôi</b>
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name" >
+                                                        <b className="title_page_h1 text-primary">SEO Về chúng tôi</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
-                                                    <Col xs={8} className="mx-auto">
+                                                    <Col xs={12} className="mx-auto">
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
@@ -794,14 +1076,14 @@ export default class SEO extends PureComponent {
                                                 </Row>
                                             </Col>
 
-                                            <Col xs={12}>
-                                                <Row className="mb-4">
-                                                    <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">SEO Sản phẩm</b>
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Sản phẩm</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
-                                                    <Col xs={8} className="mx-auto">
+                                                    <Col xs={12} className="mx-auto">
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
@@ -856,14 +1138,14 @@ export default class SEO extends PureComponent {
                                                 </Row>
                                             </Col>
 
-                                            <Col xs={12}>
-                                                <Row className="mb-4">
-                                                    <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">SEO Đăng nhập</b>
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Đăng nhập</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
-                                                    <Col xs={8} className="mx-auto">
+                                                    <Col xs={12} className="mx-auto">
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
@@ -918,14 +1200,14 @@ export default class SEO extends PureComponent {
                                                 </Row>
                                             </Col>
 
-                                            <Col xs={12}>
-                                                <Row className="mb-4">
-                                                    <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">SEO Đăng ký</b>
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Đăng ký</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
-                                                    <Col xs={8} className="mx-auto">
+                                                    <Col xs={12} className="mx-auto">
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
@@ -980,14 +1262,76 @@ export default class SEO extends PureComponent {
                                                 </Row>
                                             </Col>
 
-                                            <Col xs={12}>
-                                                <Row className="mb-4">
-                                                    <Col xs={8} className="mx-auto">
-                                                        <b className="title_page_h1 text-primary underline">SEO Kết quả tra cứu</b>
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name" >
+                                                        <b className="title_page_h1 text-primary">SEO Tra cứu</b>
                                                     </Col>
                                                 </Row>
                                                 <Row>
-                                                    <Col xs={8} className="mx-auto">
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_SEARCH_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_SEARCH_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_SEARCH_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_SEARCH_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageSearchImage}
+                                                                clearImage={clearSeoPageSearchImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_SEARCH_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Kết quả tra cứu</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
                                                         <Row>
                                                             <FormInput
                                                                 label="Tiêu đề"
@@ -1043,9 +1387,632 @@ export default class SEO extends PureComponent {
                                             </Col>
 
 
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Tra cứu Số điện thoại</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_SEARCHPHONE_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_SEARCHPHONE_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_SEARCHPHONE_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_SEARCHPHONE_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageSearchPhoneImage}
+                                                                clearImage={clearSeoPageSearchPhoneImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_SEARCHPHONE_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Kết quả Tra cứu Số điện thoại</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_RESULTSEARCHPHONE_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_RESULTSEARCHPHONE_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_RESULTSEARCHPHONE_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_RESULTSEARCHPHONE_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageResultSearchPhoneImage}
+                                                                clearImage={clearSeoPageResultSearchPhoneImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_RESULTSEARCHPHONE_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Tra cứu Số nhà</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_SEARCHHOUSE_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_SEARCHHOUSE_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_SEARCHHOUSE_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_SEARCHHOUSE_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageSearchHouseImage}
+                                                                clearImage={clearSeoPageSearchHouseImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_SEARCHHOUSE_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Kết quả Tra cứu Số nhà</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_RESULTSEARCHHOUSE_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_RESULTSEARCHHOUSE_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_RESULTSEARCHHOUSE_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_RESULTSEARCHHOUSE_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageResultSearchHouseImage}
+                                                                clearImage={clearSeoPageResultSearchHouseImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_RESULTSEARCHHOUSE_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Tra cứu Khách hàng</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_SEARCHCUSTOMER_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_SEARCHCUSTOMER_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_SEARCHCUSTOMER_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_SEARCHCUSTOMER_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageSearchCustomerImage}
+                                                                clearImage={clearSeoPageSearchCustomerImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_SEARCHCUSTOMER_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Kết quả Tra cứu Khách hàng</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_RESULTSEARCHCUSTOMER_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_RESULTSEARCHCUSTOMER_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_RESULTSEARCHCUSTOMER_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_RESULTSEARCHCUSTOMER_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageResultSearchCustomerImage}
+                                                                clearImage={clearSeoPageResultSearchCustomerImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_RESULTSEARCHCUSTOMER_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Tra cứu Sự tương hợp</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_SEARCHLOVE_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_SEARCHLOVE_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_SEARCHLOVE_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_SEARCHLOVE_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageSearchLoveImage}
+                                                                clearImage={clearSeoPageSearchLoveImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_SEARCHLOVE_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Kết quả Tra cứu Sự tương hợp</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_RESULTSEARCHLOVE_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_RESULTSEARCHLOVE_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_RESULTSEARCHLOVE_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_RESULTSEARCHLOVE_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageResultSearchLoveImage}
+                                                                clearImage={clearSeoPageResultSearchLoveImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_RESULTSEARCHLOVE_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Tra cứu Con cái</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_SEARCHCHILDREN_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_SEARCHCHILDREN_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_SEARCHCHILDREN_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_SEARCHCHILDREN_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageSearchChildrenImage}
+                                                                clearImage={clearSeoPageSearchChildrenImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_SEARCHCHILDREN_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+                                            <Col xs={6}>
+                                                <Row className="mb-4 title-page-seo">
+                                                    <Col xs={12} className="mx-auto title-page-seo-name">
+                                                        <b className="title_page_h1 text-primary">SEO Kết quả Tra cứu Con cái</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={12} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="SEO_RESULTSEARCHCHILDREN_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Từ khóa"
+                                                                name="SEO_RESULTSEARCHCHILDREN_KEYWORDS.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Link SEO"
+                                                                name="SEO_RESULTSEARCHCHILDREN_URL.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isEdit={!noEdit}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả ngắn gọn"
+                                                                type="textarea"
+                                                                name="SEO_RESULTSEARCHCHILDREN_DESCRIPTION.value"
+                                                                isEdit={!noEdit}
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                            <UploadImage
+                                                                urlImageEdit={seoPageResultSearchChildrenImage}
+                                                                clearImage={clearSeoPageResultSearchChildrenImage}
+                                                                isEdit={!noEdit}
+                                                                name="SEO_RESULTSEARCHCHILDREN_IMAGE.value"
+                                                                title="Ảnh SEO"
+                                                                isHorizontal={true}
+                                                                textColor=""
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isBoldLabel={false}
+                                                                dropzoneText={'Ưu tiên ảnh có kích thước 280x280 px '}
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+
                                             <Col xs={12}>
                                                 <Row>
-                                                    <Col xs={8} className="mx-auto">
+                                                    <Col xs={12} className="mx-auto">
                                                         <FormGroup row>
                                                             <Col sm={12} className="text-right">
                                                                 <Button key="buttonSave" type="submit" color="primary" disabled={isSubmitting} onClick={() => this.handleSubmit('save')} className="mr-2 btn-block-sm">

@@ -33,7 +33,8 @@ export const initialValues = {
     is_for_power_diagram: false,
     compare_attribute_id: null,
     is_interpretspectial: 0,
-    is_condition_or: false
+    is_condition_or: false,
+    match_percent: null
 };
 
 export const validationSchema = (is_for_power_diagram = false, is_interpretspectial = false) => {

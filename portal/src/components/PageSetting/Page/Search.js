@@ -73,7 +73,28 @@ export default class Search extends PureComponent {
                 HOUSENUMBER_DESCRIPTION: {
                     value: '',
                     data_type: "string",
-                }
+                },
+
+                LOVE_TITLE: {
+                    value: '',
+                    data_type: "string",
+                },
+
+                LOVE_DESCRIPTION: {
+                    value: '',
+                    data_type: "string",
+                },
+
+                CHILD_TITLE: {
+                    value: '',
+                    data_type: "string",
+                },
+
+                CHILD_DESCRIPTION: {
+                    value: '',
+                    data_type: "string",
+                },
+
             },
         );
         if (this.state.configEnt) {
@@ -265,6 +286,67 @@ export default class Search extends PureComponent {
                                                                 label="Mô tả"
                                                                 type="textarea"
                                                                 name="CUSTOMER_DESCRIPTION.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+                                            <Col xs={12}>
+                                                <Row className="mb-4">
+                                                    <Col xs={8} className="mx-auto">
+                                                        <b className="title_page_h1 text-primary underline">Tra cứu Sự tương hợp</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={8} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="LOVE_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả"
+                                                                type="textarea"
+                                                                name="LOVE_DESCRIPTION.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                inputClassName="home-page_textarea"
+                                                                isRequired={false}
+                                                            />
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+
+
+                                            <Col xs={12}>
+                                                <Row className="mb-4">
+                                                    <Col xs={8} className="mx-auto">
+                                                        <b className="title_page_h1 text-primary underline">Tra cứu Con cái</b>
+                                                    </Col>
+                                                </Row>
+                                                <Row>
+                                                    <Col xs={8} className="mx-auto">
+                                                        <Row>
+                                                            <FormInput
+                                                                label="Tiêu đề"
+                                                                name="CHILD_TITLE.value"
+                                                                labelSm={3}
+                                                                inputSm={9}
+                                                                isRequired={false}
+                                                            />
+                                                            <FormInput
+                                                                label="Mô tả"
+                                                                type="textarea"
+                                                                name="CHILD_DESCRIPTION.value"
                                                                 labelSm={3}
                                                                 inputSm={9}
                                                                 inputClassName="home-page_textarea"

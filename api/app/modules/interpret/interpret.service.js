@@ -256,6 +256,7 @@ const addIntergret = async (body = {}) => {
             .input('COMPAREATTRIBUTEID', apiHelper.getValueFromObject(body, 'compare_attribute_id', null))
             .input('ISINTERPRETSPECIAL', apiHelper.getValueFromObject(body, 'is_interpretspectial', false))
             .input('ISCONDITIONOR', apiHelper.getValueFromObject(body, 'is_condition_or', false))
+            .input('MATCHPERCENT', apiHelper.getValueFromObject(body, 'match_percent', null))
             .execute('FOR_INTERPRET_CreateOrUpdate_AdminWeb');
 
         const interpret_id = rsIntergret.recordset[0].RESULT;
@@ -481,50 +482,23 @@ const copyIntergret = async (body = {}) => {
         await transaction.begin();
         const requestInterpret = new sql.Request(transaction);
         const resultIntergret = await requestInterpret
-            .input(
-                'INTERPRETIDCOPY',
-                apiHelper.getValueFromObject(body, 'interpret_id')
-            )
+            .input('INTERPRETIDCOPY',apiHelper.getValueFromObject(body, 'interpret_id'))
             .input('ATTRIBUTEID', apiHelper.getValueFromObject(body, 'attribute_id'))
-            .input(
-                'MAINNUMBERID',
-                apiHelper.getValueFromObject(body, 'mainnumber_id')
-            )
-            .input(
-                'RELATIONSHIPID',
-                apiHelper.getValueFromObject(body, 'relationship_id')
-            )
-            .input(
-                'COMPARENUM',
-                apiHelper.getValueFromObject(body, 'compare_mainnumber_id')
-            )
+            .input('MAINNUMBERID',apiHelper.getValueFromObject(body, 'mainnumber_id'))
+            .input('RELATIONSHIPID',apiHelper.getValueFromObject(body, 'relationship_id'))
+            .input('COMPARENUM',apiHelper.getValueFromObject(body, 'compare_mainnumber_id'))
             .input('ISMASTER', apiHelper.getValueFromObject(body, 'is_master'))
             .input('ISACTIVE', apiHelper.getValueFromObject(body, 'is_active'))
             .input('ORDERINDEX', apiHelper.getValueFromObject(body, 'order_index'))
             .input('DESCRIPTION', apiHelper.getValueFromObject(body, 'decs'))
-            .input(
-                'ISINTERPRETSPECIAL',
-                apiHelper.getValueFromObject(body, 'is_interpretspectial')
-            )
-
-            .input(
-                'BRIEFDESCRIPTION',
-                apiHelper.getValueFromObject(body, 'brief_decs')
-            )
+            .input('ISINTERPRETSPECIAL',apiHelper.getValueFromObject(body, 'is_interpretspectial'))
+            .input('BRIEFDESCRIPTION',apiHelper.getValueFromObject(body, 'brief_decs'))
             .input('NOTE', apiHelper.getValueFromObject(body, 'note'))
             .input('CREATEDUSER', apiHelper.getValueFromObject(body, 'auth_name'))
-            .input(
-                'ISFORPOWERDIAGRAM',
-                apiHelper.getValueFromObject(body, 'is_for_power_diagram')
-            )
-            .input(
-                'COMPAREATTRIBUTEID',
-                apiHelper.getValueFromObject(body, 'compare_attribute_id', null)
-            )
-            .input(
-                'ISCONDITIONOR',
-                apiHelper.getValueFromObject(body, 'is_condition_or', false)
-            )
+            .input('ISFORPOWERDIAGRAM',apiHelper.getValueFromObject(body, 'is_for_power_diagram'))
+            .input('COMPAREATTRIBUTEID',apiHelper.getValueFromObject(body, 'compare_attribute_id', null))
+            .input('ISCONDITIONOR',apiHelper.getValueFromObject(body, 'is_condition_or', false))
+            .input('MATCHPERCENT',apiHelper.getValueFromObject(body, 'match_percent', false))
             .execute('FOR_INTERPRET_Copy_AdminWeb');
 
         const interpret_id = resultIntergret.recordset[0].interpret_id;

@@ -42,7 +42,8 @@ const template = {
   attributes_name: '{{#? ATTRIBUTESNAME}}',
   desc_attributes_gruop: '{{#? DESCRIPTIONATTRIBUTESGRUOP}}',
   introduction: '{{#? INTRODUCTION}}',
-  is_condition_or: '{{ISCONDITIONOR ? 1: 0}}'
+  is_condition_or: '{{ISCONDITIONOR ? 1: 0}}',
+  match_percent: '{{MATCHPERCENT ? MATCHPERCENT : null}}'
 };
 
 let transform = new Transform(template);
@@ -131,7 +132,8 @@ const detailInterpret = (users = []) => {
     'group_name',
     'compare_attribute_id',
     'is_interpretspectial',
-    'is_condition_or'
+    'is_condition_or',
+    'match_percent'
   ]);
 };
 const detailInterpretWeb = (users = []) => {
