@@ -200,9 +200,9 @@ function ProductAdd({noEdit = false, productId = null}) {
             }
         } catch (error) {
             let {errors, statusText, message} = error;
-
             let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join('<br/>');
             setAlerts([{color: 'danger', msg}]);
+            formik.setSubmitting(false);
             window.scrollTo(0, 0);
         } finally {
             formik.setSubmitting(false);
