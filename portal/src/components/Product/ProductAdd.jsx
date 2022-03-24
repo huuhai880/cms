@@ -40,6 +40,7 @@ import './style.scss';
 import {columns, columns_config, columns_config_child, columns_page_child, columns_product_page} from './const_page';
 import PopUpChildPage from './PopUpChildPage';
 import PopupInterpretSpecial from './PopupInterpretSpecial';
+import {getAttributesOfProduct, getPageOfProduct} from './const';
 
 const _authorModel = new AuthorModel();
 const _productCategoryModel = new ProductCategoryModel();
@@ -141,8 +142,8 @@ function ProductAdd({noEdit = false, productId = null}) {
             setDataProductPage(dataProductPage);
 
             //Lay danh sach Luan giai dac biet
-            let _interpretSpecial = await _productPageModel.getListInterpretSpecial();
-            setInterpretSpecial(_interpretSpecial);
+            // let _interpretSpecial = await _productPageModel.getListInterpretSpecial();
+            // setInterpretSpecial(_interpretSpecial);
         } catch (error) {
             window._$g.dialogs.alert(window._$g._('Đã có lỗi xảy ra. Vui lòng F5 thử lại'));
         } finally {
@@ -178,28 +179,16 @@ function ProductAdd({noEdit = false, productId = null}) {
 
     const handleSubmitProduct = async values => {
         try {
-            let result = false;
-            let {product_page = []} = values || {};
-            for (let index = 0; index < product_page.length; index++) {
-                let _pPage = product_page[index];
-                let {data_child = []} = _pPage || {};
-                for (let j = 0; j < data_child.length; j++) {
-                    let _attributesGroup = data_child[j];
-                    if (_attributesGroup.attributes_group_id == -1) { //Luan giai dac biet
-                        _attributesGroup.data_interpret = (_attributesGroup.data_interpret || [])
-                        .filter(
-                            p => p.is_selected || 
-                            (p.interpret_details || []).filter(k => k.is_selected).length > 0
-                        );
-                    }
-                }
-            }
-            values.product_page = product_page;
+            let _dataSave = JSON.parse(JSON.stringify({...values}));
+            //Chỉ số của Sản phẩm
+            _dataSave.product_attributes = getAttributesOfProduct(_dataSave.product_attributes);
+            //Page của Sản phẩm
+            _dataSave.product_page = getPageOfProduct(_dataSave.product_page);
 
             if (productId) {
-                result = await _productModel.update(productId, values);
+                await _productModel.update(productId, _dataSave);
             } else {
-                result = await _productModel.create(values);
+                await _productModel.create(_dataSave);
             }
             window._$g.toastr.show('Lưu thành công!', 'success');
             if (buttonType == 'save_n_close') {
@@ -211,9 +200,9 @@ function ProductAdd({noEdit = false, productId = null}) {
             }
         } catch (error) {
             let {errors, statusText, message} = error;
-
             let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join('<br/>');
             setAlerts([{color: 'danger', msg}]);
+            formik.setSubmitting(false);
             window.scrollTo(0, 0);
         } finally {
             formik.setSubmitting(false);
@@ -540,18 +529,18 @@ function ProductAdd({noEdit = false, productId = null}) {
         let product_page = [...formik.values.product_page];
         let interprets = [];
         if (query.attributes_group_id == -1) {
-            interprets = JSON.parse(JSON.stringify([...interpretSpecial]));
-            if (!productId) {
-                interprets = interprets.map(p => {
-                    return {
-                        ...p,
-                        ...{is_selected: true},
-                        interpret_details: (p.interpret_details || []).map(k => {
-                            return {...k, ...{is_selected: true}};
-                        }),
-                    };
-                });
-            }
+            // interprets = JSON.parse(JSON.stringify([...interpretSpecial]));
+            // if (!productId) {
+            //     interprets = interprets.map(p => {
+            //         return {
+            //             ...p,
+            //             ...{is_selected: true},
+            //             interpret_details: (p.interpret_details || []).map(k => {
+            //                 return {...k, ...{is_selected: true}};
+            //             }),
+            //         };
+            //     });
+            // }
             //   console.log({interprets})
             //   console.log({query})
         } else {
@@ -562,17 +551,24 @@ function ProductAdd({noEdit = false, productId = null}) {
         formik.setFieldValue('product_page', product_page);
     };
 
-    const setShowProductPage = async (data_interpret, index, parent_key, record = {}) => {
-        // console.log({data_interpret})
-        // show model product page
-        await setItemInterPertPage(data_interpret);
+    const setShowProductPage = async (data_interpret = [], index, parent_key, record = {}) => {
+        let {attributes_group_id = -1} = record || {};
+
+        //Neu chua co du lieu luan giai thi call API
+        if (data_interpret.length == 0 && attributes_group_id != -1) {
+            data_interpret = await _productPageModel.getListInterPertProductPage(attributes_group_id);
+            formik.values['product_page'][parent_key].data_child[index].data_interpret = data_interpret;
+        }
+
+        //Show model product page
+        setItemInterPertPage(data_interpret);
         setNamePageProduct({
             ...namePageProduct,
             index_parent: parent_key,
             index_child: index,
         });
 
-        let {attributes_group_id = -1} = record || {};
+        // let {attributes_group_id = -1} = record || {};
         if (attributes_group_id == -1) {
             setIsShowInterpretSpecial(true);
         } else {
@@ -593,6 +589,7 @@ function ProductAdd({noEdit = false, productId = null}) {
                     show_index: null,
                     data_interpret: null,
                     data_selected: null,
+                    data_selected_special: null
                 },
             ],
             order_index_page: null,
@@ -615,6 +612,7 @@ function ProductAdd({noEdit = false, productId = null}) {
             show_index: null,
             data_interpret: null,
             data_selected: null,
+            data_selected_special: null
         });
         pageProduct[index].data_child = new_child;
         formik.setFieldValue('product_page', pageProduct);

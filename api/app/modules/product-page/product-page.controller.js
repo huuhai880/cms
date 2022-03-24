@@ -63,8 +63,28 @@ const getListInterpretSpecial = async (req, res, next) => {
 };
 
 
+const getListInterpretSpecialPaging = async (req, res, next) => {
+    try {
+        const serviceRes = await ProductPage.getListInterpretSpecialPaging(req.query);
+        if (serviceRes.isFailed()) {
+            return next(serviceRes);
+        }
+        return res.json(new SingleResponse(serviceRes.getData()));
+    } catch (error) {
+        return next(
+            new ErrorResponse(
+                httpStatus.NOT_IMPLEMENTED,
+                error,
+                RESPONSE_MSG.REQUEST_FAILED
+            )
+        );
+    }
+};
+
+
 module.exports = {
     getListProductPage,
     getListInterPretPageProduct,
-    getListInterpretSpecial
+    getListInterpretSpecial,
+    getListInterpretSpecialPaging
 };

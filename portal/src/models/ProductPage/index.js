@@ -14,5 +14,9 @@ export default class ProductPage extends Model {
     getListInterpretSpecial(){
         return this._api.get('/product-page/interpret-special')
     }
+
+    getListInterpretSpecialPaging(filter){
+        return this._api.get('/product-page/interpret-special/paging', filter)
+    }
 }
 const _static = ProductPage;
