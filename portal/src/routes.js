@@ -706,6 +706,11 @@ const PageDetail = React.lazy(() => import("./components/Page/PageDetail"));
 const PageEdit = React.lazy(() => import("./components/Page/PageEdit"));
 //.end#PAGE
 
+// PAGE
+const WithdrawRequest = React.lazy(() => import("./components/WithdrawRequest/WithdrawRequest"));
+const WithdrawRequestDetail = React.lazy(() => import("./components/WithdrawRequest/WithdrawRequestDetail"));
+//.end#PAGE
+
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -3356,6 +3361,23 @@ const routes = [
     },
 
     // end#Page
+
+     //WithdrawMoney
+     {
+        path: "/withdraw-request",
+        exact: true,
+        name: "Danh sách yêu cầu rút tiền",
+        function: "WA_WITHDRAWREQUEST_VIEW",
+        component: WithdrawRequest,
+    },
+    {
+        path: "/withdraw-request/detail/:id",
+        exact: true,
+        name: "Chi tiết",
+        function: "WA_WITHDRAWREQUEST_EDIT",
+        component: WithdrawRequestDetail,
+    }
+    // end#WithdrawMoney
 
 
 ];
