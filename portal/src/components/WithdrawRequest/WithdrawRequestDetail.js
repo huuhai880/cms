@@ -113,7 +113,9 @@ function WithdrawRequestDetail(props) {
             await _withdrawRequestService.reject({
                 wd_request_id: withdrawRequest.wd_request_id,
                 note,
-                email: withdrawRequest.email
+                email: withdrawRequest.email,
+                full_name: withdrawRequest.full_name,
+                wd_request_no: withdrawRequest.wd_request_no
             })
             window._$g.toastr.show('Huỷ yêu cầu thành công!', 'success');
             initData();

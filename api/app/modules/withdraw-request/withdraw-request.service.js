@@ -5,6 +5,9 @@ const logger = require('../../common/classes/logger.class');
 const { saveImage } = require('../../common/helpers/saveFile.helper');
 const withdrawRequestClass = require('./withdraw-request.class');
 const sql = require('mssql');
+const events = require('../../common/events')
+const htmlHelper = require('../../common/helpers/html.helper');
+const config = require('../../../config/config');
 
 const getListWithdrawRequest = async (queryParams = {}) => {
     try {
@@ -61,6 +64,8 @@ const rejectWithdrawRequest = async (bodyParams = {}) => {
         let note = apiHelper.getValueFromObject(bodyParams, 'note', null);
         let confirm_user = apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator');
         let email = apiHelper.getValueFromObject(bodyParams, 'email', null);
+        let wd_request_no = apiHelper.getValueFromObject(bodyParams, 'wd_request_no', null);
+        let fullname = apiHelper.getValueFromObject(bodyParams, 'full_name', null);
 
         const pool = await mssql.pool;
         await pool.request()
@@ -71,7 +76,19 @@ const rejectWithdrawRequest = async (bodyParams = {}) => {
 
         //Send email không duyệt
         if (email) {
-
+            events.emit('send-email', {
+                to: email,
+                subject: '[TSH] Kết quả yêu cầu rút tiền',
+                html: htmlHelper.format({
+                    template: 'rejectrequest.html',
+                    mail: {
+                        fullname,
+                        note,
+                        requestNo: wd_request_no,
+                        link: config.website,
+                    },
+                }),
+            });
         }
 
         return new ServiceResponse(true, "", true)
