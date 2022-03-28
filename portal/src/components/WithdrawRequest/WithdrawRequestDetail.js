@@ -190,14 +190,14 @@ function WithdrawRequestDetail(props) {
                                             </Col>
                                             <Col sm={6}>
                                                 <Row>
-                                                    <Label className="text-left" sm={5}>Số tài khoản:</Label>
-                                                    <Label className="text-left font-weight-bold" sm={7}>{withdrawRequest.bank_account_name}</Label>
+                                                    <Label className="text-left" sm={5}>Số tài khoản nhận:</Label>
+                                                    <Label className="text-left font-weight-bold" sm={7}>{withdrawRequest.bank_account_number}</Label>
                                                 </Row>
                                             </Col>
                                             <Col sm={6}>
                                                 <Row>
-                                                    <Label className="text-left" sm={5}>Ghi chú:</Label>
-                                                    <Label className="text-left font-weight-bold" sm={7}>{withdrawRequest.description}</Label>
+                                                    <Label className="text-left" sm={5}>Người nhận:</Label>
+                                                    <Label className="text-left font-weight-bold" sm={7}>{withdrawRequest.holder}</Label>
                                                 </Row>
                                             </Col>
                                             <Col sm={6}>
@@ -208,6 +208,14 @@ function WithdrawRequestDetail(props) {
                                                     </Label>
                                                 </Row>
                                             </Col>
+
+                                            <Col sm={6}>
+                                                <Row>
+                                                    <Label className="text-left" sm={5}>Ghi chú:</Label>
+                                                    <Label className="text-left font-weight-bold" sm={7}>{withdrawRequest.description}</Label>
+                                                </Row>
+                                            </Col>
+                                           
                                             <Col sm={6}>
                                                 <Row>
                                                     <Label className="text-left" sm={5}>Nội dung:</Label>
