@@ -20,4 +20,16 @@ export default class AffiliateService extends Model {
     // reject(value) {
     //     return this._api.post(`/withdraw-request/reject`, value)
     // }
+
+    getOption() {
+        return this._api.get('/affiliate/option');
+    }
+
+    init() {
+        return this._api.get('/affiliate/init');
+    }
+
+    createAff(values) {
+        return this._api.post('/affiliate', values);
+    }
 }

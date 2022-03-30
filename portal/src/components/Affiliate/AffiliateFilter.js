@@ -1,9 +1,305 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import { Input, Button, Form, FormGroup, Label, Col, Row } from "reactstrap";
+import Select from "react-select";
+import DatePicker from "../Common/DatePicker";
+import AffiliateService from "./Service/index";
 
-function AffiliateFilter(props) {
+const _affiliateService = new AffiliateService();
+function AffiliateFilter({ handleSubmitFilter }) {
+    const [filter, setFilter] = useState({
+        search: "",
+        isActiveSelected: { label: "Có", value: 1 },
+        isDeletedSelected: { label: "Không", value: 0 },
+        startDate: null,
+        endDate: null,
+        affiliateTypeSelected: null,
+        policyCommisionSelected: null,
+        statusSelected: { label: "Đã duyệt", value: 1 },
+    });
+
+
+    const [dataIsActive] = useState([
+        { label: "Có", value: 1 },
+        { label: "Không", value: 0 },
+        { label: "Tất cả", value: 2 }
+    ])
+
+    const [dataIsDeleted] = useState([
+        { label: "Có", value: 1 },
+        { label: "Không", value: 0 },
+        { label: "Tất cả", value: 2 }
+    ])
+
+    const [dataStatus] = useState([
+        { label: "Mới", value: 1 },
+        { label: "Đã duyệt", value: 2 },
+        { label: "Không duyệt", value: 4 },
+        { label: "Tất cả", value: -1 }
+    ])
+
+    const [optionAffType, setOptionAffType] = useState([]);
+    const [optionPolicyCommision, setOptionPolicyCommision] = useState([])
+
+    useEffect(() => {
+        const initSelecte = async () => {
+            try {
+                let { affiliate_type, policy_commision } = await _affiliateService.getOption();
+                setOptionAffType(affiliate_type);
+                setOptionPolicyCommision(policy_commision)
+            } catch (error) {
+                window._$g.dialogs.alert(
+                    window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
+                );
+            }
+        }
+
+        initSelecte();
+    }, [])
+
+    const handleChange = (e) => {
+        setFilter({
+            ...filter,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleKeyDown = (e) => {
+        if (1 * e.keyCode === 13) {
+            e.preventDefault();
+            handleSubmit();
+        }
+    };
+
+    const handleChangeSelect = (selected, name) => {
+        setFilter((preState) => ({
+            ...preState,
+            [name]: selected,
+        }));
+    };
+
+
+    const handleSubmit = () => {
+        let {
+            search,
+            isActiveSelected,
+            startDate,
+            endDate,
+            isDeletedSelected,
+            affiliateTypeSelected,
+            policyCommisionSelected,
+            statusSelected
+        } = filter;
+
+        handleSubmitFilter({
+            search: search ? search.trim() : null,
+            is_active: isActiveSelected ? isActiveSelected.value : 1,
+            start_date: startDate ? startDate.format("DD/MM/YYYY") : null,
+            end_date: endDate ? endDate.format("DD/MM/YYYY") : null,
+            page: 1,
+            is_deleted: isDeletedSelected ? isDeletedSelected.value : 0,
+            affiliate_type: affiliateTypeSelected ? affiliateTypeSelected : null,
+            status: statusSelected ? statusSelected.value : 2,
+            policy_commision: policyCommisionSelected ? policyCommisionSelected.value : null
+        });
+    };
+
+
+    const handleClear = () => {
+        setFilter({
+            search: "",
+            isActiveSelected: { label: "Có", value: 1 },
+            isDeletedSelected: { label: "Không", value: 0 },
+            startDate: null,
+            endDate: null,
+            affiliateTypeSelected: null,
+            policyCommisionSelected: null,
+            statusSelected: { label: "Đã duyệt", value: 1 },
+        });
+
+        handleSubmitFilter({
+            search: '',
+            is_active: 1,
+            start_date: null,
+            end_date: null,
+            page: 1,
+            is_deleted: 0,
+            affiliate_type: null,
+            status: 2,
+            policy_commision: null
+        });
+    }
+
+    const handleChangeDate = ({ startDate, endDate }) => {
+        setFilter((preState) => ({
+            ...preState,
+            startDate,
+            endDate,
+        }));
+    };
+
     return (
-        <div>
-            
+        <div className="ml-3 mr-3 mb-3 mt-3">
+            <Form autoComplete="nope" className="zoom-scale-9">
+                <Row>
+                    <Col xs={12} sm={6}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Label for="inputValue" className="mr-sm-2">
+                                Từ khóa
+                            </Label>
+                            <Input
+                                className="MuiPaper-filter__custom--input"
+                                autoComplete="nope"
+                                type="text"
+                                name="search"
+                                placeholder="Nhập mã đối tác, tên đối tác, số điện thoại"
+                                value={filter.search}
+                                onChange={handleChange}
+                                onKeyDown={handleKeyDown}
+                                inputprops={{
+                                    name: "search",
+                                }}
+                            />
+                        </FormGroup>
+                    </Col>
+
+                    <Col xs={12} sm={3}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Label for="" className="mr-sm-2">
+                                Kích hoạt
+                            </Label>
+                            <Select
+                                className="MuiPaper-filter__custom--select"
+                                id="isActiveSelected"
+                                name="isActiveSelected"
+                                onChange={(selected) => handleChangeSelect(selected, "isActiveSelected")}
+                                isSearchable={true}
+                                placeholder={"-- Chọn --"}
+                                value={filter.isActiveSelected}
+                                options={dataIsActive}
+                            />
+                        </FormGroup>
+                    </Col>
+
+                    <Col xs={12} sm={3}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Label for="" className="mr-sm-2">
+                                Đã xoá
+                            </Label>
+                            <Select
+                                className="MuiPaper-filter__custom--select"
+                                id="isDeletedSelected"
+                                name="isDeletedSelected"
+                                onChange={(selected) => handleChangeSelect(selected, "isDeletedSelected")}
+                                isSearchable={true}
+                                placeholder={"-- Chọn --"}
+                                value={filter.isDeletedSelected}
+                                options={dataIsDeleted}
+                            />
+                        </FormGroup>
+                    </Col>
+                </Row>
+                <Row className="mt-3">
+                    <Col xs={12} sm={3}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Label for="" className="mr-sm-2">
+                                Ngày đăng ký
+                            </Label>
+                            <Col className="pl-0 pr-0">
+                                <DatePicker
+                                    startDate={filter.startDate}
+                                    startDateId="start_date_id"
+                                    endDate={filter.endDate}
+                                    endDateId="end_date_id"
+                                    onDatesChange={handleChangeDate}
+                                    isMultiple
+                                />
+                            </Col>
+                        </FormGroup>
+                    </Col>
+
+                    <Col xs={12} sm={3}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Label for="" className="mr-sm-2">
+                                Loại
+                            </Label>
+                            <Select
+                                className="MuiPaper-filter__custom--select"
+                                id="affiliateTypeSelected"
+                                name="affiliateTypeSelected"
+                                onChange={(selected) => handleChangeSelect(selected, "affiliateTypeSelected")}
+                                isSearchable={true}
+                                placeholder={"-- Chọn --"}
+                                value={filter.affiliateTypeSelected}
+                                options={optionAffType}
+                            />
+                        </FormGroup>
+                    </Col>
+
+                    <Col xs={12} sm={3}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Label for="" className="mr-sm-2">
+                                Chính sách áp dụng
+                            </Label>
+                            <Select
+                                className="MuiPaper-filter__custom--select"
+                                id="policyCommisionSelected"
+                                name="policyCommisionSelected"
+                                onChange={(selected) => handleChangeSelect(selected, "policyCommisionSelected")}
+                                isSearchable={true}
+                                placeholder={"-- Chọn --"}
+                                value={filter.policyCommisionSelected}
+                                options={optionPolicyCommision}
+                            />
+                        </FormGroup>
+                    </Col>
+
+                    <Col xs={12} sm={3}>
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Label for="" className="mr-sm-2">
+                                Trạng thái
+                            </Label>
+                            <Select
+                                className="MuiPaper-filter__custom--select"
+                                id="statusSelected"
+                                name="statusSelected"
+                                onChange={(selected) => handleChangeSelect(selected, "statusSelected")}
+                                isSearchable={true}
+                                placeholder={"-- Chọn --"}
+                                value={filter.statusSelected}
+                                options={dataStatus}
+                            />
+                        </FormGroup>
+                    </Col>
+
+                    <Col
+                        xs={12}
+                        className={`d-flex align-items-end mt-3 justify-content-end`}
+                    >
+                        <FormGroup className="mb-2 mb-sm-0">
+                            <Button
+                                className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                                onClick={handleSubmit}
+                                color="primary"
+                                size="sm"
+                            >
+                                <i className="fa fa-search" />
+                                <span className="ml-1">Tìm kiếm</span>
+                            </Button>
+                        </FormGroup>
+                        <FormGroup className="mb-2 ml-2 mb-sm-0">
+                            <Button
+                                className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
+                                onClick={handleClear}
+                                size="sm"
+                            >
+                                <i className="fa fa-refresh" />
+                                <span className="ml-1">Làm mới</span>
+                            </Button>
+                        </FormGroup>
+
+                    </Col>
+                </Row>
+            </Form>
         </div>
     );
 }

@@ -706,10 +706,15 @@ const PageDetail = React.lazy(() => import("./components/Page/PageDetail"));
 const PageEdit = React.lazy(() => import("./components/Page/PageEdit"));
 //.end#PAGE
 
-// PAGE
+// WITHDRAW REQUEST
 const WithdrawRequest = React.lazy(() => import("./components/WithdrawRequest/WithdrawRequest"));
 const WithdrawRequestDetail = React.lazy(() => import("./components/WithdrawRequest/WithdrawRequestDetail"));
-//.end#PAGE
+//.end#WITHDRAW REQUEST
+
+// AFFILIATE
+const Affiliate = React.lazy(() => import("./components/Affiliate/Affiliate"));
+const AffiliateAdd = React.lazy(() => import("./components/Affiliate/AffiliateAdd"));
+//.end#AFFILIATE
 
 
 
@@ -3362,8 +3367,8 @@ const routes = [
 
     // end#Page
 
-     //WithdrawMoney
-     {
+    //WithdrawMoney
+    {
         path: "/withdraw-request",
         exact: true,
         name: "Danh sách yêu cầu rút tiền",
@@ -3376,9 +3381,25 @@ const routes = [
         name: "Chi tiết",
         function: "WA_WITHDRAWREQUEST_EDIT",
         component: WithdrawRequestDetail,
-    }
+    },
     // end#WithdrawMoney
 
+    //Affiliate
+    {
+        path: "/affiliate",
+        exact: true,
+        name: "Quản lý đối tác Affiliate",
+        function: "AFF_AFFILIATE_VIEW",
+        component: Affiliate,
+    },
+    {
+        path: "/affiliate/add",
+        exact: true,
+        name: "Thêm mới đối tác",
+        function: "AFF_AFFILIATE_EDIT",
+        component: AffiliateAdd,
+    },
+    // end#Affiliate
 
 ];
 
