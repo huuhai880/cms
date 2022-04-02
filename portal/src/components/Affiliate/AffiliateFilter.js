@@ -14,7 +14,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
         endDate: null,
         affiliateTypeSelected: null,
         policyCommisionSelected: null,
-        statusSelected: { label: "Đã duyệt", value: 1 },
+        statusSelected: { label: "Tất cả", value: 0 }
     });
 
 
@@ -34,7 +34,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
         { label: "Mới", value: 1 },
         { label: "Đã duyệt", value: 2 },
         { label: "Không duyệt", value: 4 },
-        { label: "Tất cả", value: -1 }
+        { label: "Tất cả", value: 0 }
     ])
 
     const [optionAffType, setOptionAffType] = useState([]);
@@ -97,8 +97,8 @@ function AffiliateFilter({ handleSubmitFilter }) {
             end_date: endDate ? endDate.format("DD/MM/YYYY") : null,
             page: 1,
             is_deleted: isDeletedSelected ? isDeletedSelected.value : 0,
-            affiliate_type: affiliateTypeSelected ? affiliateTypeSelected : null,
-            status: statusSelected ? statusSelected.value : 2,
+            affiliate_type: affiliateTypeSelected ? affiliateTypeSelected.value : null,
+            status: statusSelected ? statusSelected.value : 0,
             policy_commision: policyCommisionSelected ? policyCommisionSelected.value : null
         });
     };
@@ -113,7 +113,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
             endDate: null,
             affiliateTypeSelected: null,
             policyCommisionSelected: null,
-            statusSelected: { label: "Đã duyệt", value: 1 },
+            statusSelected: { label: "Tất cả", value: 0 }
         });
 
         handleSubmitFilter({
@@ -124,7 +124,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
             page: 1,
             is_deleted: 0,
             affiliate_type: null,
-            status: 2,
+            status: 0,
             policy_commision: null
         });
     }
@@ -231,6 +231,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
                                 placeholder={"-- Chọn --"}
                                 value={filter.affiliateTypeSelected}
                                 options={optionAffType}
+                                isClearable={true}
                             />
                         </FormGroup>
                     </Col>
@@ -249,6 +250,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
                                 placeholder={"-- Chọn --"}
                                 value={filter.policyCommisionSelected}
                                 options={optionPolicyCommision}
+                                isClearable={true}
                             />
                         </FormGroup>
                     </Col>

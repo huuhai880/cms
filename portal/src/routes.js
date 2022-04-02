@@ -714,6 +714,10 @@ const WithdrawRequestDetail = React.lazy(() => import("./components/WithdrawRequ
 // AFFILIATE
 const Affiliate = React.lazy(() => import("./components/Affiliate/Affiliate"));
 const AffiliateAdd = React.lazy(() => import("./components/Affiliate/AffiliateAdd"));
+const AffiliateEdit = React.lazy(() => import("./components/Affiliate/AffiliateEdit"));
+const AffiliateReview = React.lazy(() => import("./components/Affiliate/AffiliateReview"));
+const AffiliateDetail = React.lazy(() => import("./components/Affiliate/AffiliateDetail"));
+const AffiliateRequest = React.lazy(() => import("./components/Affiliate/AffiliateRequest"));
 //.end#AFFILIATE
 
 
@@ -3395,9 +3399,39 @@ const routes = [
     {
         path: "/affiliate/add",
         exact: true,
-        name: "Thêm mới đối tác",
-        function: "AFF_AFFILIATE_EDIT",
+        name: "Thêm mới",
+        function: "AFF_AFFILIATE_ADD",
         component: AffiliateAdd,
+    },
+    {
+        path: "/affiliate/edit/:id",
+        exact: true,
+        name: "Chỉnh sửa",
+        function: "AFF_AFFILIATE_EDIT",
+        component: AffiliateEdit,
+    },
+    {
+        path: "/affiliate-request/review/:id",
+        exact: true,
+        name: "Duyệt",
+        function: "AFF_AFFILIATE_REVIEW",
+        component: AffiliateReview,
+    },
+
+    {
+        path: "/affiliate/detail/:id",
+        exact: true,
+        name: "Chi tiết",
+        function: "AFF_AFFILIATE_VIEW",
+        component: AffiliateDetail,
+    },
+
+    {
+        path: "/affiliate-request",
+        exact: true,
+        name: "Danh sách đăng ký Affiliate",
+        function: "AFF_AFFILIATE_REVIEW",
+        component: AffiliateRequest,
     },
     // end#Affiliate
 

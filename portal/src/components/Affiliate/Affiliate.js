@@ -29,7 +29,8 @@ function Affiliate(props) {
         total: 0,
     });
 
-    const [totalNotReview, setTotalNotReview] = useState(0)
+    const [totalNotReview, setTotalNotReview] = useState(0);
+    const [memberUpLevel, setMemberUpLevel] = useState({})
 
     const [query, setQuery] = useState({
         itemsPerPage: 25,
@@ -41,7 +42,7 @@ function Affiliate(props) {
         end_date: null,
         affiliate_type: null,
         policy_commision: null,
-        status: 1
+        status: 0
     });
 
     useEffect(() => {
@@ -51,7 +52,7 @@ function Affiliate(props) {
     const getListAffiliate = async (query) => {
         setIsLoading(true);
         try {
-            let {data, total_not_review} = await _affiliateService.getList(query);
+            let { data, total_not_review } = await _affiliateService.getList(query);
             setData(data);
             setTotalNotReview(total_not_review)
         } catch (error) {
@@ -83,19 +84,21 @@ function Affiliate(props) {
         let routes = {
             detail: "/affiliate/detail/",
             delete: "/affiliate/delete/",
-            edit: "/affiliate/edit/"
+            edit: "/affiliate/edit/",
+            review: "/affiliate/review/"
         };
         const route = routes[type];
 
-        if (type.match(/detail|edit/i)) {
+        if (type.match(/detail|review|edit/i)) {
             window._$g.rdr(`${route}${id}`);
-        } else {
-            window._$g.dialogs.prompt(
-                "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
-                "Xóa",
-                (confirm) => handleClose(confirm, id, rowIndex)
-            );
-        }
+        } 
+        // else {
+        //     window._$g.dialogs.prompt(
+        //         "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
+        //         "Xóa",
+        //         (confirm) => handleClose(confirm, id, rowIndex)
+        //     );
+        // }
     };
 
     const handleClose = (confirm, id, rowIndex) => {
@@ -129,6 +132,27 @@ function Affiliate(props) {
         getListAffiliate(filter);
     };
 
+    const handleUpLevel = async () => {
+        try {
+            if(!memberUpLevel || Object.keys(memberUpLevel).length == 0){
+                window._$g.dialogs.alert(
+                    window._$g._("Vui lòng chọn thành viên cần nâng hạng hạng")
+                );
+                return;
+            }
+            else{
+                let member_up_level = Object.keys(memberUpLevel).map(p => p);
+                await _affiliateService.upLevelAff({member_up_level});
+                window._$g.toastr.show("Nâng hạng thành viên thành công!", "success");
+                setMemberUpLevel({})
+                getListAffiliate(query);
+            }
+        } catch (error) {
+            window._$g.dialogs.alert(
+                window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
+            );
+        }
+    }
 
     return (
         <div>
@@ -178,7 +202,7 @@ function Affiliate(props) {
                         <FormGroup className="mb-2 mb-sm-0">
                             <Button
                                 className="pt-2 pb-2 MuiPaper-filter__custom--button"
-                                onClick={handleClickAdd}
+                                onClick={handleUpLevel}
                                 color="primary"
                                 size="sm">
                                 <i className="fa fa-arrow-up mr-1" />
@@ -212,7 +236,9 @@ function Affiliate(props) {
                                     columns={getColumnTable(
                                         data.list,
                                         query,
-                                        handleActionItemClick
+                                        handleActionItemClick,
+                                        setMemberUpLevel,
+                                        { ...memberUpLevel }
                                     )}
                                     options={configTableOptions(data.total, 0, query)}
                                 />

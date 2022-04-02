@@ -16,10 +16,26 @@ const ruleCreateAff = {
     live_image: Joi.string().required()
 };
 
+const ruleReviewAff = {
+    member_id: Joi.number().required(),
+    status: Joi.number().required()
+}
+
+const ruleUpLevelAff = {
+    member_up_level: Joi.array().required()
+}
+
+
 const validateRules = {
     createAff: {
         body: ruleCreateAff,
     },
+    reviewAff: {
+        body: ruleReviewAff
+    },
+    upLevelAff: {
+        body: ruleUpLevelAff
+    }
 };
 
 module.exports = validateRules;

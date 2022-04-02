@@ -1,0 +1,22 @@
+CREATE PROCEDURE CRM_ACCOUNT_AFFILIATE_Report_AdminWeb
+    @MEMBERID BIGINT = 0,
+    @FROMDATE VARCHAR(20) = NULL,
+    @TODATE VARCHAR(20) = NULL 
+AS 
+BEGIN
+
+    DECLARE @FROMDATE_S AS DATETIME = NULL;
+    DECLARE @TODATE_S AS DATETIME = NULL;
+
+    IF(ISNULL(@FROMDATE, '') <> '')
+        SET @FROMDATE_S = TRY_CONVERT(DATETIME, @FROMDATE, 103)
+
+    IF(ISNULL(@TODATE, '') <> '')
+        SET @TODATE_S = TRY_CONVERT(DATETIME, @TODATE, 103)
+
+    
+    SELECT  0 AS total_amount,
+            0 AS total_order,
+            0 AS total_commision
+
+END

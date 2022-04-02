@@ -39,7 +39,7 @@ import moment from 'moment'
 
 const _affiliateService = new AffiliateService();
 
-function AffiliateAdd({ memberId, noEdit }) {
+function AffiliateAdd({ memberId = null, noEdit }) {
     const [alerts, setAlerts] = useState([]);
     const [buttonType, setButtonType] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -75,6 +75,11 @@ function AffiliateAdd({ memberId, noEdit }) {
         try {
             let data = await _affiliateService.init();
             setDataSelect(data);
+            if (memberId) {
+                let _data = await _affiliateService.getDetailAff(memberId);
+                let value = { ...initialValues, ..._data };
+                setAffiliate(value)
+            }
         } catch (error) {
             window._$g.dialogs.alert(
                 window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
@@ -85,9 +90,9 @@ function AffiliateAdd({ memberId, noEdit }) {
         }
     }
 
-
     const handleSubmitAff = async (values) => {
         try {
+            values.is_modify = memberId ? true : false;
             await _affiliateService.createAff(values);
             window._$g.toastr.show("Lưu thành công!", "success");
             if (buttonType == "save_n_close") {
@@ -114,7 +119,7 @@ function AffiliateAdd({ memberId, noEdit }) {
             ...initialValues,
             ...customer
         };
-        console.log({values})
+        console.log({ values })
         formik.setValues(values)
     }
 
@@ -142,8 +147,6 @@ function AffiliateAdd({ memberId, noEdit }) {
             keyEvent.preventDefault();
         }
     };
-
-    console.log(formik.values.id_card_plate)
 
     return loading ? (
         <Loading />
@@ -185,17 +188,28 @@ function AffiliateAdd({ memberId, noEdit }) {
                                                         <span className="font-weight-bold red-text"> *</span>
                                                     </Label>
                                                     <Col sm={9}>
-                                                        <Select
-                                                            className="MuiPaper-filter__custom--select"
-                                                            id="member_id"
-                                                            name="member_id"
-                                                            onChange={(e) => handleChangeCustomer(e)}
-                                                            isSearchable={true}
-                                                            placeholder={"-- Chọn --"}
-                                                            value={convertValueSelect(formik.values['member_id'], dataSelect.members)}
-                                                            options={dataSelect.members}
-                                                            disabled={noEdit}
-                                                        />
+                                                        {
+                                                            memberId ?
+                                                                <Input
+                                                                    name="full_name"
+                                                                    id="full_name"
+                                                                    type="text"
+                                                                    placeholder="Họ và tên"
+                                                                    value={formik.values.label}
+                                                                    disabled={true}
+                                                                /> :
+                                                                <Select
+                                                                    className="MuiPaper-filter__custom--select"
+                                                                    id="member_id"
+                                                                    name="member_id"
+                                                                    onChange={(e) => handleChangeCustomer(e)}
+                                                                    isSearchable={true}
+                                                                    placeholder={"-- Chọn --"}
+                                                                    value={convertValueSelect(formik.values['member_id'], dataSelect.members)}
+                                                                    options={dataSelect.members}
+                                                                    disabled={noEdit}
+                                                                />
+                                                        }
                                                         <MessageError formik={formik} name="member_id" />
                                                     </Col>
                                                 </FormGroup>
@@ -240,7 +254,7 @@ function AffiliateAdd({ memberId, noEdit }) {
                                                             {...formik.getFieldProps('birth_day')}
                                                             disabled={true}
                                                         />
-                                                         <MessageError formik={formik} name="birth_day" />
+                                                        <MessageError formik={formik} name="birth_day" />
                                                     </Col>
                                                 </FormGroup>
                                             </Col>
@@ -280,7 +294,7 @@ function AffiliateAdd({ memberId, noEdit }) {
                                                             id="email"
                                                             type="text"
                                                             placeholder="Email"
-                                                            {...formik.getFieldProps('email')}
+                                                            value={formik.values.email || ''}
                                                             disabled={true}
                                                         />
                                                         <MessageError formik={formik} name="email" />
@@ -300,7 +314,8 @@ function AffiliateAdd({ memberId, noEdit }) {
                                                             id="phone_number"
                                                             type="text"
                                                             placeholder="Số điện thoại"
-                                                            {...formik.getFieldProps('phone_number')}
+                                                            value={formik.values.phone_number || ''}
+                                                            onChange={formik.handleChange}
                                                             disabled={noEdit}
                                                         />
                                                         <MessageError formik={formik} name="phone_number" />
@@ -410,7 +425,8 @@ function AffiliateAdd({ memberId, noEdit }) {
                                                             id="address"
                                                             type="text"
                                                             placeholder="Địa chỉ"
-                                                            {...formik.getFieldProps('address')}
+                                                            value={formik.values.address || ''}
+                                                            onChange={formik.handleChange}
                                                             disabled={noEdit}
                                                         />
                                                         <MessageError formik={formik} name="address" />
@@ -430,7 +446,9 @@ function AffiliateAdd({ memberId, noEdit }) {
                                                             type="text"
                                                             placeholder="Số CMND"
                                                             disabled={noEdit}
-                                                            {...formik.getFieldProps('id_card')}
+                                                            value={formik.values.id_card || ''}
+                                                            onChange={formik.handleChange}
+                                                        // {...formik.getFieldProps('id_card')}
                                                         />
                                                         <MessageError formik={formik} name="id_card" />
                                                     </Col>
@@ -446,11 +464,13 @@ function AffiliateAdd({ memberId, noEdit }) {
                                                             id="id_card_date"
                                                             date={
                                                                 formik.values.id_card_date
-                                                                    ? moment(formik.values.id_card_date)
+                                                                    ? moment(formik.values.id_card_date, 'DD/MM/YYYY')
                                                                     : null
                                                             }
-                                                            onDateChange={(dates) => {
-                                                                formik.setFieldValue("id_card_date", dates);
+                                                            onDateChange={(date) => {
+                                                                let _date = date ? moment(date).format("DD/MM/YYYY") : null;
+                                                                console.log({ _date })
+                                                                formik.setFieldValue("id_card_date", _date);
                                                             }}
                                                             disabled={noEdit}
                                                             maxToday
@@ -462,20 +482,20 @@ function AffiliateAdd({ memberId, noEdit }) {
                                             </Col>
                                             <Col xs={12} sm={6}>
                                                 <FormGroup row>
-                                                    <Label for="id_card_plate" sm={3}>
+                                                    <Label for="id_card_place" sm={3}>
                                                         Nơi cấp<span className="font-weight-bold red-text">*</span>
                                                     </Label>
                                                     <Col sm={9}>
                                                         <Input
-                                                            name="id_card_plate"
-                                                            id="id_card_plate"
+                                                            name="id_card_place"
+                                                            id="id_card_place"
                                                             type="text"
                                                             placeholder="Nơi cấp"
                                                             disabled={noEdit}
-                                                            value={formik.values.id_card_plate || ''}
-                                                            // {...formik.getFieldProps('id_card_plate')}
+                                                            value={formik.values.id_card_place || ''}
+                                                            onChange={formik.handleChange}
                                                         />
-                                                        <MessageError formik={formik} name="id_card_plate" />
+                                                        <MessageError formik={formik} name="id_card_place" />
                                                     </Col>
                                                 </FormGroup>
                                             </Col>
@@ -498,7 +518,7 @@ function AffiliateAdd({ memberId, noEdit }) {
                                                                 disabled={noEdit}
                                                                 label="Thêm ảnh"
                                                             />
-                                                             <MessageError formik={formik} name="id_card_front_side" />
+                                                            <MessageError formik={formik} name="id_card_front_side" />
                                                             <i>Ảnh mặt trước</i>
                                                         </div>
                                                         <div className="cmnd-upload ml-2">
@@ -628,7 +648,7 @@ function AffiliateAdd({ memberId, noEdit }) {
                                                 {
                                                     title: "Lưu",
                                                     color: "primary",
-                                                    isShow: !noEdit && !formik.values.status,
+                                                    isShow: !noEdit,
                                                     notSubmit: true,
                                                     permission: ["AFF_AFFILIATE_EDIT", "AFF_AFFILIATE_ADD"],
                                                     icon: "save",
@@ -637,7 +657,7 @@ function AffiliateAdd({ memberId, noEdit }) {
                                                 {
                                                     title: "Lưu và đóng",
                                                     color: "success",
-                                                    isShow: !noEdit && !formik.values.status,
+                                                    isShow: !noEdit,
                                                     permission: ["AFF_AFFILIATE_EDIT", "AFF_AFFILIATE_ADD"],
                                                     notSubmit: true,
                                                     icon: "save",

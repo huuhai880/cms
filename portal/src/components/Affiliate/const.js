@@ -1,12 +1,12 @@
 import React from 'react'
 import { configIDRowTable, numberFormat } from "../../utils/index";
 import { CheckAccess } from "../../navigation/VerifyAccess";
-import { Button } from "reactstrap";
+import { Button, Badge} from "reactstrap";
 import * as yup from "yup";
 import { Link } from "react-router-dom";
 import { Checkbox } from "antd";
 
-export const getColumnTable = (data, query, handleActionItemClick) => {
+export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLevel, memberUpLevel) => {
     return [
         // configIDRowTable("page_id", "/page/detail/", query),
         {
@@ -19,25 +19,26 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     return (
                         <th
                             key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head"
-                        >
+                            className="MuiTableCell-root MuiTableCell-head">
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
+                    let { affiliate_type_id = 0, is_affiliate_level_1 = false, member_id } = data[tableMeta["rowIndex"]] || {}
                     return (
                         <div className="text-center">
                             <Checkbox
-                                checked={false}
+                                checked={!!memberUpLevel[member_id]}
                                 onChange={({ target }) => {
-                                    // if (target.checked) {
-                                    //     pickItems[item.product_id] = item;
-                                    // } else {
-                                    //     delete pickItems[item.product_id];
-                                    // }
-                                    // setPickItem(pickItems);
+                                    if (target.checked) {
+                                        memberUpLevel[member_id] = data[tableMeta["rowIndex"]];
+                                    } else {
+                                        delete memberUpLevel[member_id];
+                                    }
+                                    setMemberUpLevel(memberUpLevel);
                                 }}
+                                disabled={!is_affiliate_level_1}
                             />
                         </div>
                     );
@@ -54,8 +55,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     return (
                         <th
                             key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head"
-                        >
+                            className="MuiTableCell-root MuiTableCell-head">
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );
@@ -64,9 +64,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     return (
                         <div className="text-left">
                             <Link
-                                to={`/page/detail/${data[tableMeta["rowIndex"]].member_id
-                                    }`}
-                            >
+                                to={`/affiliate/review/${data[tableMeta["rowIndex"]].member_id}`}>
                                 {value}
                             </Link>
                         </div>
@@ -90,14 +88,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-left">
-                        <Link
-                            to={`/policy-commision/detail/${data[tableMeta["rowIndex"]].policy_commision_id
-                                }`}
-                        >
-                            {value}
-                        </Link>
-                    </div>;
+                    return <div className="text-left"></div>;
                 },
             },
         },
@@ -139,7 +130,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{numberFormat(value)} đ</div>;
+                    return <div className="text-center">{numberFormat(value)}</div>;
                 },
             },
         },
@@ -159,13 +150,13 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{value}</div>;
+                    return <div className="text-center">{value == 1 ? 'Poral' : 'Website'}</div>;
                 },
             },
         },
 
         {
-            name: "status",
+            name: "status_affiliate",
             label: "Trạng thái",
             options: {
                 filter: false,
@@ -181,7 +172,20 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
                     let result = ''
-                    return <div className="text-center">{numberFormat(value)} đ</div>;
+                    switch (value) {
+                        case 1:
+                            result = 'Mới'
+                            break;
+                        case 2:
+                            result = 'Đã duyệt'
+                            break;
+                        case 4:
+                            result = 'Không duyệt'
+                            break;
+                        default:
+                            break;
+                    }
+                    return <div className="text-center">{result}</div>;
                 },
             },
         },
@@ -202,7 +206,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{numberFormat(value)} đ</div>;
+                    return <div className="text-center">{value}</div>;
                 },
             },
         },
@@ -223,7 +227,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{numberFormat(value)} đ</div>;
+                    return <div className="text-left">{value}</div>;
                 },
             },
         },
@@ -256,6 +260,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                 sort: false,
                 empty: true,
                 customBodyRender: (value, tableMeta, updateValue) => {
+                    let { status_affiliate = 0 } = data[tableMeta["rowIndex"]] || {}
                     return (
                         <div className="text-center">
                             <CheckAccess permission="AFF_AFFILIATE_REVIEW">
@@ -263,6 +268,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                                     color={"success"}
                                     title="Duyệt"
                                     className="mr-1"
+                                    disabled={status_affiliate != 1}
                                     onClick={(evt) => handleActionItemClick(
                                         "review",
                                         data[tableMeta["rowIndex"]].member_id,
@@ -292,6 +298,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                                 color="warning"
                                 title="Chi tiết"
                                 className="mr-1"
+                                disabled={status_affiliate != 2}
                                 onClick={evt =>
                                     handleActionItemClick(
                                         "detail",
@@ -302,7 +309,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                                 <i className="fa fa-info" />
                             </Button>
 
-                            <CheckAccess permission="AFF_AFFILIATE_DEL">
+                            {/* <CheckAccess permission="AFF_AFFILIATE_DEL">
                                 <Button
                                     color="danger"
                                     title="Xóa"
@@ -316,7 +323,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                                     }>
                                     <i className="fa fa-trash" />
                                 </Button>
-                            </CheckAccess>
+                            </CheckAccess> */}
                         </div>
                     );
                 },
@@ -328,7 +335,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
 export const initialValues = {
     member_id: null,
     affiliate_type_id: null,
-    status: null,
+    status_affiliate: 0,
     birth_day: "",
     aff_leader_id: null,
     email: "",
@@ -341,7 +348,7 @@ export const initialValues = {
     address: '',
     id_card: '',
     id_card_date: '',
-    id_card_plate: '',
+    id_card_place: '',
     id_card_back_side: null,
     id_card_front_side: null,
     live_image: null,
@@ -371,10 +378,563 @@ export const validationSchema = yup.object().shape({
         .required("Địa chỉ là bắt buộc."),
 
     id_card: yup.string().required("Số CMND/CCCD là bắt buộc.").nullable(),
-    id_card_place: yup.string().required("Nơi cấp CMND/CCCD  là bắt buộc.").nullable(),
-    id_card_date: yup.string().required("Ngày cấp CMND/CCCD  là bắt buộc.").nullable(),
+    id_card_place: yup.string().required("Nơi cấp CMND/CCCD là bắt buộc.").nullable(),
+    id_card_date: yup.string().required("Ngày cấp CMND/CCCD là bắt buộc.").nullable(),
 
     id_card_back_side: yup.string().required("Ảnh mặt sau CMND/CCCD là bắt buộc.").nullable(),
     id_card_front_side: yup.string().required("Ảnh mặt trước CMND/CCCD là bắt buộc.").nullable(),
     live_image: yup.string().required("Ảnh Live là bắt buộc.").nullable(),
 })
+
+export const columnsOrder = (query) => {
+    return [
+        configIDRowTable("order_id", "", query),
+        {
+            name: "order_date",
+            label: "Ngày ghi nhận",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{ width: 200 }}>
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-left">
+                            {value}
+                        </div>
+                    );
+                },
+            },
+        },
+        {
+            name: "order_no",
+            label: "Mã đơn hàng",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{ width: 200 }}>
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-center">
+                            {value}
+                        </div>
+                    );
+                },
+            },
+        },
+        {
+            name: "full_name",
+            label: "Thành viên",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-left">
+                            {value}
+                        </div>
+                    );
+                },
+            },
+        },
+        {
+            name: "total_amount",
+            label: "Giá trị đơn hàng",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{ width: 200 }}>
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-right">
+                            {numberFormat(value)}
+                        </div>
+                    );
+                },
+            },
+        },
+        {
+            name: "total_commision",
+            label: "Hoa hồng",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{ width: 200 }}>
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-right">
+                            {numberFormat(value)}
+                        </div>
+                    );
+                },
+            },
+        },
+        {
+            name: "status",
+            label: "Trạng thái đơn hàng",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{ width: 200 }}>
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-right">
+                            {value}
+                        </div>
+                    );
+                },
+            },
+        },
+    ]
+};
+
+export const columnsCustomer = (query) => {
+    return [
+        configIDRowTable("member_id", "", query),
+        {
+            name: "registration_date",
+            label: "Thời gian đăng ký",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-center">
+                            {value}
+                        </div>
+                    );
+                },
+            },
+        },
+
+        {
+            name: "full_name",
+            label: "Họ tên",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-left">
+                            {value}
+                        </div>
+                    );
+                },
+            },
+        },
+        {
+            name: "total_amount",
+            label: "Tổng giá trị đơn hàng",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-right">
+                            {numberFormat(value)}
+                        </div>
+                    );
+                },
+            },
+        },
+        {
+            name: "commision_value",
+            label: "Hoa hồng",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-right">
+                            {numberFormat(value)}
+                        </div>
+                    );
+                },
+            },
+        },
+    ]
+};
+
+export const columnsMember = (query) => {
+    return [
+        configIDRowTable("member_id", "", query),
+        {
+            name: "registration_date",
+            label: "Thời gian duyệt đăng ký",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-center">
+                            {value}
+                        </div>
+                    );
+                },
+            },
+        },
+
+        {
+            name: "full_name",
+            label: "Họ tên",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-left">
+                            {value}
+                        </div>
+                    );
+                },
+            },
+        },
+        {
+            name: "total_amount",
+            label: "Tổng giá trị đơn hàng",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-right">
+                            {numberFormat(value)}
+                        </div>
+                    );
+                },
+            },
+        },
+        {
+            name: "commision_value",
+            label: "Hoa hồng",
+            options: {
+                filter: false,
+                sort: false,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-right">
+                            {numberFormat(value)}
+                        </div>
+                    );
+                },
+            },
+        },
+    ]
+};
+
+export const columnAffRequest = (data, query) => {
+    return [
+        configIDRowTable("affiliate_request_id", "/affiliate-request/review/", query),
+        {
+            name: "request_no",
+            label: "Mã đăng ký",
+            options: {
+                filter: false,
+                sort: true,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return <div className="text-center">
+                        <Link
+                            to={`/affiliate-request/review/${data[tableMeta["rowIndex"]].affiliate_request_id}`}>
+                            {value}
+                        </Link>
+                    </div>;
+                },
+            },
+        },
+
+        {
+            name: "full_name",
+            label: "Tên đối tác",
+            options: {
+                filter: false,
+                sort: true,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return <div className="text-left">{value}</div>;
+                },
+            },
+        },
+
+        {
+            name: "registration_date",
+            label: "Ngày yêu cầu",
+            options: {
+                filter: false,
+                sort: true,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return <div className="text-center">{value}</div>;
+                },
+            },
+        },
+
+        {
+            name: "approved_date",
+            label: "Ngày xác nhận",
+            options: {
+                filter: false,
+                sort: true,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return <div className="text-center">{value ? value : '--/--/---- --:--:--'}</div>;
+                },
+            },
+        },
+
+        {
+            name: "request_status",
+            label: "Trạng thái",
+            options: {
+                filter: false,
+                sort: true,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    let {result, color} = getStatus(value);
+                   
+                    return <div className="text-center">
+                        <Badge color={color}>{result}</Badge>
+                    </div>;
+                },
+            },
+        },
+
+        {
+            name: "review_user_full_name",
+            label: "Nhân viên xác nhận",
+            options: {
+                filter: false,
+                sort: true,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th
+                            key={`head-th-${columnMeta.label}`}
+                            className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return <div className="text-center">{value ? value : '------'}</div>;
+                },
+            },
+        },
+
+        {
+            name: "Thao tác",
+            options: {
+                filter: false,
+                sort: false,
+                empty: true,
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    let { affiliate_request_id } = data[tableMeta["rowIndex"]] || {}
+                    return (
+                        <div className="text-center">
+                            <CheckAccess permission="AFF_AFFILIATE_REVIEW">
+                                <Button
+                                    color={"success"}
+                                    title="Duyệt"
+                                    className="mr-1"
+                                    onClick={(evt) => window._$g.rdr(`/affiliate-request/review/${affiliate_request_id}`)}>
+                                    <i className="fa fa-check" />
+                                </Button>
+                            </CheckAccess>
+                        </div>
+                    );
+                },
+            },
+        },
+    ]
+}
+
+export const getStatus = status => {
+    switch (status) {
+        case 1:
+            return {
+                result: 'Yêu cầu mới',
+                color: 'primary'
+            }
+        case 2:
+            return {
+                result: 'Thành công',
+                color: 'success'
+            }
+        case 3:
+            return {
+                result: 'KH Huỷ yêu cầu',
+                color: 'danger'
+            }
+        case 4:
+            return {
+                result: 'Huỷ yêu cầu',
+                color: 'danger'
+            }
+        default:
+            return '';
+    }
+}
