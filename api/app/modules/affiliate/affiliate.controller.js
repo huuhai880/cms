@@ -28,9 +28,9 @@ const getListAffiliate = async (req, res, next) => {
     }
 }
 
-const init = async (req, res, next) => {
+const initDataOption = async (req, res, next) => {
     try {
-        const serviceRes = await affiliateService.init();
+        const serviceRes = await affiliateService.initDataOption();
         if (serviceRes.isFailed()) {
             return next(serviceRes);
         }
@@ -40,22 +40,23 @@ const init = async (req, res, next) => {
     }
 }
 
-const createAff = async (req, res, next) => {
+const createOrUpdateAff = async (req, res, next) => {
     try {
-        const serviceRes = await affiliateService.createAff(req.body);
+        const serviceRes = await affiliateService.createOrUpdateAff(req.body);
         if (serviceRes.isFailed()) {
             return next(serviceRes);
         }
         return res.json(new SingleResponse(serviceRes.getData()));
     } catch (error) {
+        console.log({error})
         return next(error);
     }
 }
 
-const getDetailAff = async (req, res, next) => {
+const getDetailAffiliate = async (req, res, next) => {
     try {
         let { id } = req.params;
-        const serviceRes = await affiliateService.getDetailAff(id);
+        const serviceRes = await affiliateService.getDetailAffiliate(id);
         if (serviceRes.isFailed()) {
             return next(serviceRes);
         }
@@ -65,9 +66,9 @@ const getDetailAff = async (req, res, next) => {
     }
 }
 
-const reviewAff = async (req, res, next) => {
+const upLevelAffiliate = async (req, res, next) => {
     try {
-        const serviceRes = await affiliateService.reviewAff(req.body);
+        const serviceRes = await affiliateService.upLevelAffiliate(req.body);
         if (serviceRes.isFailed()) {
             return next(serviceRes);
         }
@@ -78,34 +79,9 @@ const reviewAff = async (req, res, next) => {
 }
 
 
-const upLevelAff = async (req, res, next) => {
+const reportOfAffiliate = async (req, res, next) => {
     try {
-        const serviceRes = await affiliateService.upLevelAff(req.body);
-        if (serviceRes.isFailed()) {
-            return next(serviceRes);
-        }
-        return res.json(new SingleResponse(serviceRes.getData()));
-    } catch (error) {
-        return next(error);
-    }
-}
-
-const infoAff = async (req, res, next) => {
-    try {
-        let { id } = req.params
-        const serviceRes = await affiliateService.infoAff(id);
-        if (serviceRes.isFailed()) {
-            return next(serviceRes);
-        }
-        return res.json(new SingleResponse(serviceRes.getData()));
-    } catch (error) {
-        return next(error);
-    }
-}
-
-const reportOfAff = async (req, res, next) => {
-    try {
-        const serviceRes = await affiliateService.reportOfAff(req.query);
+        const serviceRes = await affiliateService.reportOfAffiliate(req.query);
         if (serviceRes.isFailed()) {
             return next(serviceRes);
         }
@@ -165,10 +141,10 @@ const getListAffRequest = async (req, res, next) => {
 }
 
 
-const detailAffRequest = async (req, res, next) => {
+const getDetailAffRequest = async (req, res, next) => {
     try {
         let { id } = req.params;
-        const serviceRes = await affiliateService.detailAffRequest(id);
+        const serviceRes = await affiliateService.getDetailAffRequest(id);
         if (serviceRes.isFailed()) {
             return next(serviceRes);
         }
@@ -199,13 +175,6 @@ const approveAffRequest = async (req, res, next) => {
         return res.json(new SingleResponse(serviceRes.getData()));
     } catch (error) {
         return next(error);
-        // return next(
-        //     new ErrorResponse(
-        //         httpStatus.NOT_IMPLEMENTED,
-        //         error,
-        //         RESPONSE_MSG.REQUEST_FAILED
-        //     )
-        // );
     }
 }
 
@@ -214,18 +183,16 @@ const approveAffRequest = async (req, res, next) => {
 module.exports = {
     getOption,
     getListAffiliate,
-    init,
-    createAff,
-    getDetailAff,
-    reviewAff,
-    upLevelAff,
-    infoAff,
-    reportOfAff,
+    initDataOption,
+    createOrUpdateAff,
+    getDetailAffiliate,
+    upLevelAffiliate,
+    reportOfAffiliate,
     getListOrderAff,
     getListCustomerAff,
     getListMemberAff,
     getListAffRequest,
-    detailAffRequest,
+    getDetailAffRequest,
     approveAffRequest,
     rejectAffRequest
 }

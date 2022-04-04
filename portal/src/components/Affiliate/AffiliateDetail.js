@@ -60,15 +60,20 @@ function AffiliateDetail(props) {
     const [activeTab, setActiveTab] = useState('INFO')
     const [affiliate, setAffiliate] = useState({});
     const [loading, setLoading] = useState(false);
+    const [policyCommsions, setPolicyCommisions] = useState([])
 
     useEffect(() => {
         initData()
     }, [])
 
-    const initData = async (isInit = true) => {
+    const initData = async () => {
         setLoading(true)
         try {
-            let _affiliate = await _affiliateService.infoAff(id);
+            let _affiliate = await _affiliateService.getDetailAff(id);
+            let { policy_commisions } = await _affiliateService.init();
+            let {affiliate_type_id} = _affiliate || {};
+            let _policyCommisions = (policy_commisions || []).filter(p => p.affiliate_type_id == affiliate_type_id)
+            setPolicyCommisions(_policyCommisions);
             setAffiliate(_affiliate);
         } catch (error) {
             window._$g.dialogs.alert(
@@ -83,7 +88,7 @@ function AffiliateDetail(props) {
     const renderTabContent = () => {
         switch (activeTab) {
             case 'INFO':
-                return <TabInfoAffiliate affiliate={affiliate} />
+                return <TabInfoAffiliate affiliate={affiliate} policyCommsions={policyCommsions}/>
             case 'ORDER':
                 return <TabOrder />
             case 'CUSTOMER':

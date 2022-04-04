@@ -79,7 +79,9 @@ const template = {
     review_user_full_name: '{{#? REVIEWUSERFULLNAME}}',
     policy_commision_id : '{{#? POLICYCOMMISIONID}}',
     policy_commision_name : '{{#? POLICYCOMMISIONNAME}}',
-    request_status_name: '{{#? REQUESTSTATUSNAME}}'
+    request_status_name: '{{#? REQUESTSTATUSNAME}}',
+    affiliate_id:'{{#? AFFILIATEID}}',
+    total_revenue: '{{#? TOTALREVENUE}}'
 }
 
 let transform = new Transform(template);
@@ -142,8 +144,9 @@ const listPolicy = (list = []) => {
     ]);
 };
 
-const affDetail = (aff = []) => {
+const affiliateDetail = (aff = []) => {
     return aff && Object.keys(aff).length > 0 ? transform.transform(aff, [
+        'affiliate_id',
         'member_id',
         'customer_code',
         'value',
@@ -165,9 +168,12 @@ const affDetail = (aff = []) => {
         'is_active',
         'is_agree',
         'affiliate_type_id',
-        'review_note',
-        'status_affiliate',
-        'aff_leader_id'
+        'is_active',
+        'affiliate_type_name',
+        'is_affiliate_level_1',
+        'is_affiliate_level_2',
+        'registration_date',
+        'approved_date'
     ]) : null;
 };
 
@@ -262,14 +268,16 @@ const detailAffRequest = (data = []) => {
         'district_id',
         'ward_id',
         'address',
-
+       
     ]) : null;
 };
 
 const listAffiliateType = (list = []) => {
     return transform.transform(list, [
         'affiliate_type_id',
-        'affiliate_type_name'
+        'affiliate_type_name',
+        'is_affiliate_level_1',
+        'is_affiliate_level_2'
     ]);
 };
 
@@ -278,8 +286,36 @@ const listPolicyCommision = (list = []) => {
         'affiliate_type_id',
         'policy_commision_id',
         'policy_commision_name',
-        'is_default'
+        'is_default',
+        'value',
+        'label'
     ]);
+};
+
+const listAffiliate = (list = []) => {
+    return transform.transform(list, [
+        'affiliate_id',
+        'affiliate_type_id',
+        'registration_source',
+        'registration_date',
+        'member_id',
+        'affiliate_type_name',
+        'total_order',
+        'total_commision',
+        'customer_code',
+        'full_name',
+        'is_affiliate_level_1',
+        'is_affiliate_level_2',
+        'is_active'
+    ]);
+};
+
+const reportAffiliate = (data = []) => {
+    return data && Object.keys(data).length > 0 ? transform.transform(data, [
+        'total_revenue',
+        'total_order',
+        'total_commision'
+    ]) : null;
 };
 
 module.exports = {
@@ -287,7 +323,7 @@ module.exports = {
     listMember,
     options,
     listPolicy,
-    affDetail,
+    affiliateDetail,
     infoAff,
     listOrderAff,
     listCustomerAff,
@@ -295,5 +331,7 @@ module.exports = {
     listAffRequest,
     detailAffRequest,
     listAffiliateType,
-    listPolicyCommision
+    listPolicyCommision,
+    listAffiliate,
+    reportAffiliate
 }

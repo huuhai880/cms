@@ -29,19 +29,16 @@ function Affiliate(props) {
         total: 0,
     });
 
-    const [totalNotReview, setTotalNotReview] = useState(0);
     const [memberUpLevel, setMemberUpLevel] = useState({})
 
     const [query, setQuery] = useState({
         itemsPerPage: 25,
         page: 1,
         is_active: 1,
-        is_deleted: 0,
         search: "",
         start_date: null,
         end_date: null,
         affiliate_type: null,
-        policy_commision: null,
         status: 0
     });
 
@@ -52,9 +49,8 @@ function Affiliate(props) {
     const getListAffiliate = async (query) => {
         setIsLoading(true);
         try {
-            let { data, total_not_review } = await _affiliateService.getList(query);
-            setData(data);
-            setTotalNotReview(total_not_review)
+            let _data = await _affiliateService.getListAffiliate(query);
+            setData(_data);
         } catch (error) {
             window._$g.dialogs.alert(
                 window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
@@ -83,38 +79,13 @@ function Affiliate(props) {
     const handleActionItemClick = (type, id, rowIndex) => {
         let routes = {
             detail: "/affiliate/detail/",
-            delete: "/affiliate/delete/",
             edit: "/affiliate/edit/",
-            review: "/affiliate/review/"
         };
         const route = routes[type];
 
-        if (type.match(/detail|review|edit/i)) {
+        if (type.match(/detail|edit/i)) {
             window._$g.rdr(`${route}${id}`);
         } 
-        // else {
-        //     window._$g.dialogs.prompt(
-        //         "Bạn có chắc chắn muốn xóa dữ liệu đang chọn?",
-        //         "Xóa",
-        //         (confirm) => handleClose(confirm, id, rowIndex)
-        //     );
-        // }
-    };
-
-    const handleClose = (confirm, id, rowIndex) => {
-        const { list } = data;
-        if (confirm) {
-            _affiliateService
-                .delete(id)
-                .then(() => {
-                    getListAffiliate(query);
-                })
-                .catch((e) => {
-                    window._$g.dialogs.alert(
-                        window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
-                    );
-                });
-        }
     };
 
     const handleChangePage = (event, newPage) => {
@@ -136,7 +107,7 @@ function Affiliate(props) {
         try {
             if(!memberUpLevel || Object.keys(memberUpLevel).length == 0){
                 window._$g.dialogs.alert(
-                    window._$g._("Vui lòng chọn thành viên cần nâng hạng hạng")
+                    window._$g._("Vui lòng chọn thành viên cần nâng hạng")
                 );
                 return;
             }
@@ -153,6 +124,8 @@ function Affiliate(props) {
             );
         }
     }
+
+    
 
     return (
         <div>
@@ -211,13 +184,6 @@ function Affiliate(props) {
                         </FormGroup>
                     </CheckAccess>
 
-                </Col>
-                <Col sm={8} xs={12}
-                    className="mb-3 d-flex"
-                    style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Label className="mr-sm-2 ml-5" style={{ color: 'red', fontWeight: 'bold' }}>
-                        Đối tác chờ duyệt: {totalNotReview}
-                    </Label>
                 </Col>
             </Row>
 

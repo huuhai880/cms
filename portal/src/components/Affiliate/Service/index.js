@@ -1,7 +1,7 @@
 import Model from "models/Model";
 
 export default class AffiliateService extends Model {
-    getList(_data = {}) {
+    getListAffiliate(_data = {}) {
         return this._api.get('/affiliate', _data);
     }
 

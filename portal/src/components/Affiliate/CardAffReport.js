@@ -59,7 +59,7 @@ function AffiliateReport({ member_id }) {
     });
 
     const [report, setReport] = useState({
-        total_amount: 0,
+        total_revenue: 0,
         total_order: 0,
         total_commision: 0
     })
@@ -237,7 +237,7 @@ function AffiliateReport({ member_id }) {
                                 <i class="fa fa-money" aria-hidden="true"></i>
                             </span>
                             <div class="d-flex flex-column ml-1">
-                                <span><b>{numberFormat(report.total_amount)}</b></span>
+                                <span><b>{numberFormat(report.total_revenue)}</b></span>
                                 <span>Doanh thu</span>
                             </div>
                         </div>
@@ -253,7 +253,7 @@ function AffiliateReport({ member_id }) {
                                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                             </span>
                             <div class="d-flex flex-column ml-1">
-                                <span><b>{report.total_order}</b></span>
+                                <span><b>{report.total_order ? report.total_order : 0}</b></span>
                                 <span>Đơn hàng</span>
                             </div>
                         </div>

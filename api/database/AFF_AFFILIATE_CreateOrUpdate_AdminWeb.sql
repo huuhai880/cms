@@ -1,0 +1,110 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[AFF_AFFILIATE_CreateOrUpdate_AdminWeb]
+    @AFFILIATEID BIGINT = 0,
+    @MEMBERID BIGINT = 0,
+    @AFFILIATETYPEID BIGINT = 0,
+    @AFFILIATELEADERID BIGINT = 0,
+    @PHONENUMBER VARCHAR(20) = NULL,
+    @PROVINCEID BIGINT = 0,
+    @DISTRICTID BIGINT = 0,
+    @WARDID BIGINT = 0,
+    @ADDRESS NVARCHAR(200) = NULL,
+    @IDCARD VARCHAR(20) = NULL,
+    @IDCARDDATE VARCHAR(20) = NULL,
+    @IDCARDPLACE NVARCHAR(100) = NULL,
+    @IDCARDBACKSIDE VARCHAR(500) = NULL,
+    @IDCARDFRONTSIDE VARCHAR(500) = NULL,
+    @LIVEIMAGE VARCHAR(500) = NULL,
+    @ISAGREE BIT = 0,
+    @ISACTIVE BIT = 0,
+    @CREATEDUSER VARCHAR(20) = NULL
+AS 
+BEGIN
+
+    IF(EXISTS (SELECT 1 FROM AFF_AFFILIATE WHERE AFFILIATEID = @AFFILIATEID AND MEMBERID = @MEMBERID AND ISDELETED = 0))
+    BEGIN
+
+        UPDATE  AFF_AFFILIATE
+        SET     UPDATEDDATE = GETDATE(),
+                UPDATEDUSER = @CREATEDUSER,
+                AFFILIATETYPEID = @AFFILIATETYPEID,
+                PHONENUMBER = @PHONENUMBER,
+                PROVINCEID = @PROVINCEID,
+                DISTRICTID = @DISTRICTID,
+                WARDID = @WARDID,
+                ADDRESS = @ADDRESS,
+                IDCARD = @IDCARD,
+                IDCARDDATE = IIF(@IDCARDDATE IS NOT NULL, CONVERT(DATETIME, @IDCARDDATE, 103), NULL),
+                IDCARDPLACE = @IDCARDPLACE,
+                IDCARDBACKSIDE = @IDCARDBACKSIDE,
+                IDCARDFRONTSIDE = @IDCARDFRONTSIDE,
+                LIVEIMAGE = @LIVEIMAGE,
+                ISACTIVE = @ISACTIVE,
+                ISAGREE = @ISAGREE
+        WHERE   AFFILIATEID = @AFFILIATEID
+        AND     MEMBERID = @MEMBERID
+
+        SELECT @AFFILIATEID AS RESULT;
+    END
+    ELSE 
+    BEGIN
+        INSERT INTO AFF_AFFILIATE
+        (
+            MEMBERID,
+            ISAGREE,
+            REGISTRATIONDATE,
+            LIVEIMAGE,
+            IDCARDFRONTSIDE,
+            IDCARDBACKSIDE,
+            PHONENUMBER,
+            AFFILIATETYPEID,
+            AFFILIATEREQUESTID,
+            ISACTIVE,
+            CREATEDDATE,
+            CREATEDUSER,
+            ISDELETED,
+            REGISTRATIONSOURCE,
+            IDCARD,
+            IDCARDDATE,
+            IDCARDPLACE,
+            ADDRESS,
+            PROVINCEID,
+            DISTRICTID,
+            WARDID,
+            COUNTRYID,
+            APPROVEDDATE
+        )
+        VALUES
+        (
+            @MEMBERID,
+            @ISAGREE,
+            GETDATE(),
+            @LIVEIMAGE,
+            @IDCARDFRONTSIDE,
+            @IDCARDBACKSIDE,
+            @PHONENUMBER,
+            @AFFILIATETYPEID,
+            NULL,
+            1,
+            GETDATE(),
+            @CREATEDUSER,
+            0,
+            1, --1. PORTAL 2.WEB
+            @IDCARD,
+            IIF(@IDCARDDATE IS NOT NULL, CONVERT(DATETIME, @IDCARDDATE, 103), NULL),
+            @IDCARDPLACE,
+            @ADDRESS,
+            @PROVINCEID,
+            @DISTRICTID,
+            @WARDID,
+            6, --COUNTRYID,
+            GETDATE()
+        )
+
+        SELECT SCOPE_IDENTITY() AS RESULT
+    END
+END
+GO

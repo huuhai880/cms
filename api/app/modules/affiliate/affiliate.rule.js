@@ -13,7 +13,8 @@ const ruleCreateAff = {
     id_card_place: Joi.string().required(),
     id_card_back_side: Joi.string().required(),
     id_card_front_side: Joi.string().required(),
-    live_image: Joi.string().required()
+    live_image: Joi.string().required(),
+    policy_commision_apply: Joi.array().required()
 };
 
 const ruleReviewAff = {

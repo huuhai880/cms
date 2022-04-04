@@ -7,28 +7,22 @@ const rule = require('./affiliate.rule')
 
 routes.route('/')
     .get(affiliateController.getListAffiliate)
-    .post(validate(rule.createAff), affiliateController.createAff)
+    .post(validate(rule.createAff), affiliateController.createOrUpdateAff)
 
 routes.route('/option')
     .get(affiliateController.getOption)
 
 routes.route('/init')
-    .get(affiliateController.init)
+    .get(affiliateController.initDataOption)
 
 routes.route('/:id(\\d+)')
-    .get(affiliateController.getDetailAff);
-
-routes.route('/review')
-    .post(validate(rule.reviewAff), affiliateController.reviewAff)
+    .get(affiliateController.getDetailAffiliate);
 
 routes.route('/up-level')
-    .post(validate(rule.upLevelAff), affiliateController.upLevelAff)
-
-routes.route('/detail/:id(\\d+)')
-    .get(affiliateController.infoAff);
+    .post(validate(rule.upLevelAff), affiliateController.upLevelAffiliate)
 
 routes.route('/report')
-    .get(affiliateController.reportOfAff);
+    .get(affiliateController.reportOfAffiliate);
 
 routes.route('/order')
     .get(affiliateController.getListOrderAff);
@@ -43,7 +37,7 @@ routes.route('/request')
     .get(affiliateController.getListAffRequest);
 
 routes.route('/request/:id(\\d+)')
-    .get(affiliateController.detailAffRequest);
+    .get(affiliateController.getDetailAffRequest);
 
 routes.route('/request/reject')
     .post(affiliateController.rejectAffRequest);

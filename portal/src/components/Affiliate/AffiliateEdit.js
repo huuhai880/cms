@@ -4,7 +4,7 @@ import AffiliateAdd from './AffiliateAdd';
 
 function AffiliateEdit(props) {
     let { id } = useParams();
-    return <AffiliateAdd memberId={id} noEdit={false} />
+    return <AffiliateAdd affiliateId={id} noEdit={false} />
 }
 
 export default AffiliateEdit;

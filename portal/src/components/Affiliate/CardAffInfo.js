@@ -62,7 +62,7 @@ function CardAffInfo({ affiliate = {} }) {
                         onChange={handleChangeActive}
                     />
                 </Col>
-                <Label sm={10}>Tắt kích hoạt</Label>
+                <Label sm={10}>Kích hoạt</Label>
             </Row>
         </>
     );

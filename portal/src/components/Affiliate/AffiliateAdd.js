@@ -39,20 +39,18 @@ import moment from 'moment'
 
 const _affiliateService = new AffiliateService();
 
-function AffiliateAdd({ memberId = null, noEdit }) {
+function AffiliateAdd({ affiliateId = null, noEdit }) {
     const [alerts, setAlerts] = useState([]);
     const [buttonType, setButtonType] = useState(null);
     const [loading, setLoading] = useState(false);
-
     const [affiliate, setAffiliate] = useState(initialValues)
-
     const [dataSelect, setDataSelect] = useState({
         members: [],
         affiliate_types: [],
         aff_leaders: [],
         policy_commisions: []
-    })
-
+    });
+    const [isMemberAff, setIsMemberAff] = useState(true);
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -63,6 +61,7 @@ function AffiliateAdd({ memberId = null, noEdit }) {
         onSubmit: (values) => {
             handleSubmitAff(values);
         },
+        validate: values => handleValidateLeader(values),
     });
 
 
@@ -75,8 +74,8 @@ function AffiliateAdd({ memberId = null, noEdit }) {
         try {
             let data = await _affiliateService.init();
             setDataSelect(data);
-            if (memberId) {
-                let _data = await _affiliateService.getDetailAff(memberId);
+            if (affiliateId) {
+                let _data = await _affiliateService.getDetailAff(affiliateId);
                 let value = { ...initialValues, ..._data };
                 setAffiliate(value)
             }
@@ -92,13 +91,12 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
     const handleSubmitAff = async (values) => {
         try {
-            values.is_modify = memberId ? true : false;
             await _affiliateService.createAff(values);
             window._$g.toastr.show("Lưu thành công!", "success");
             if (buttonType == "save_n_close") {
                 return window._$g.rdr("/affiliate");
             }
-            if (buttonType == "save" && !memberId) {
+            if (buttonType == "save" && !affiliateId) {
                 formik.resetForm();
             }
 
@@ -115,11 +113,11 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
     const handleChangeCustomer = customer => {
         customer = customer ? customer : {};
+        let _valueFomik = { ...formik.values }
         let values = {
-            ...initialValues,
+            ..._valueFomik,
             ...customer
         };
-        console.log({ values })
         formik.setValues(values)
     }
 
@@ -148,16 +146,61 @@ function AffiliateAdd({ memberId = null, noEdit }) {
         }
     };
 
+    useEffect(() => {
+        if (formik.values.affiliate_type_id) {
+            let { affiliate_type_id } = formik.values || {};
+            let _findAffType = (dataSelect.affiliate_types || []).find(p => p.affiliate_type_id == affiliate_type_id);
+            let { is_affiliate_level_1 = false, is_affiliate_level_2 = false } = _findAffType || {};
+            setIsMemberAff(!is_affiliate_level_1);  
+
+            //NEU LA LEADER THI KHONG CO LEADER
+            if(is_affiliate_level_2){
+                formik.setFieldValue('affiliate_leader_id', null)
+            }
+        }
+    }, [formik.values.affiliate_type_id])
+
+    const handleValidateLeader = values => {
+        let errors = {};
+        // let { affiliate_type_id, affiliate_leader_id } = formik.values || {};
+        // let _findAffType = (dataSelect.affiliate_types || []).find(p => p.affiliate_type_id == affiliate_type_id);
+        // if(_findAffType){
+        //     let { is_affiliate_level_2 = false } = _findAffType || {};
+        //     if(is_affiliate_level_2 && !affiliate_leader_id){
+        //         errors.affiliate_leader_id = 'Affiliate Leader là bắt buộc.'
+        //     }
+        // }
+        return errors;
+    }
+
+    const getPolicyCommisionByAffType = () => {
+        let { affiliate_type_id } = formik.values || {};
+        let _policyCommision = dataSelect.policy_commisions.filter(p => p.affiliate_type_id == affiliate_type_id);
+        return _policyCommision;
+    }
+
+    const handleChangeAffType = (e) => {
+        let value = e ? e.value : null;
+        formik.setFieldValue('affiliate_type_id', value);
+        formik.setFieldValue('policy_commision_apply', [])
+        // if (value) {
+        //     let _findAffType = (dataSelect.affiliate_types || []).find(p => p.affiliate_type_id == value);
+        //     let { is_affiliate_level_1 = false } = _findAffType || {};
+        //     setIsMemberAff(!is_affiliate_level_1);
+        // }
+    }
+
+
     return loading ? (
         <Loading />
     ) : (
-        <div key={`view-${memberId || 0}`} className="animated fadeIn">
+        <div key={`view-${affiliateId || 0}`} className="animated fadeIn">
             <Row className="d-flex justify-content-center">
                 <Col xs={12} md={12}>
                     <Card>
                         <CardHeader>
                             <b>
-                                {memberId ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} đối tác{" "}
+                                {affiliateId ? (noEdit ? "Chi tiết" : "Chỉnh sửa") : "Thêm mới"} đối tác{" "}
                             </b>
                         </CardHeader>
                         <CardBody>
@@ -183,13 +226,13 @@ function AffiliateAdd({ memberId = null, noEdit }) {
                                         <Row>
                                             <Col xs={6}>
                                                 <FormGroup row>
-                                                    <Label for="attribute_id" sm={3}>
+                                                    <Label for="full_name" sm={4}>
                                                         Họ và tên
                                                         <span className="font-weight-bold red-text"> *</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         {
-                                                            memberId ?
+                                                            affiliateId ?
                                                                 <Input
                                                                     name="full_name"
                                                                     id="full_name"
@@ -208,6 +251,7 @@ function AffiliateAdd({ memberId = null, noEdit }) {
                                                                     value={convertValueSelect(formik.values['member_id'], dataSelect.members)}
                                                                     options={dataSelect.members}
                                                                     disabled={noEdit}
+                                                                    isClearable={true}
                                                                 />
                                                         }
                                                         <MessageError formik={formik} name="member_id" />
@@ -217,18 +261,16 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
                                             <Col xs={6}>
                                                 <FormGroup row>
-                                                    <Label for="attribute_id" sm={3}>
+                                                    <Label for="affiliate_type_id" sm={4}>
                                                         Loại
                                                         <span className="font-weight-bold red-text"> *</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <Select
                                                             className="MuiPaper-filter__custom--select"
                                                             id="affiliate_type_id"
                                                             name="affiliate_type_id"
-                                                            onChange={(e) => {
-                                                                formik.setFieldValue('affiliate_type_id', e ? e.value : null)
-                                                            }}
+                                                            onChange={(e) => handleChangeAffType(e)}
                                                             isSearchable={true}
                                                             placeholder={"-- Chọn --"}
                                                             value={convertValueSelect(formik.values['affiliate_type_id'], dataSelect.affiliate_types)}
@@ -242,10 +284,10 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
                                             <Col xs={6}>
                                                 <FormGroup row>
-                                                    <Label for="attribute_id" sm={3}>
+                                                    <Label for="birth_day" sm={4}>
                                                         Ngày sinh<span className="font-weight-bold red-text">*</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <Input
                                                             name="birth_day"
                                                             id="birth_day"
@@ -261,34 +303,36 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
                                             <Col xs={6}>
                                                 <FormGroup row>
-                                                    <Label for="aff_leader_id" sm={3}>
+                                                    <Label for="affiliate_leader_id" sm={4}>
                                                         Affiliate Leader
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <Select
                                                             className="MuiPaper-filter__custom--select"
-                                                            id="aff_leader_id"
-                                                            name="aff_leader_id"
+                                                            id="affiliate_leader_id"
+                                                            name="affiliate_leader_id"
                                                             onChange={(e) => {
-                                                                formik.setFieldValue('aff_leader_id', e ? e.value : null)
+                                                                formik.setFieldValue('affiliate_leader_id', e ? e.value : null)
                                                             }}
                                                             isSearchable={true}
                                                             placeholder={"-- Chọn --"}
-                                                            value={convertValueSelect(formik.values['aff_leader_id'], dataSelect.aff_leaders)}
+                                                            value={convertValueSelect(formik.values['affiliate_leader_id'], dataSelect.aff_leaders)}
                                                             options={dataSelect.aff_leaders}
-                                                            disabled={noEdit}
+                                                            isDisabled={noEdit || isMemberAff}
+                                                            isClearable={true}
                                                         />
+                                                        <MessageError formik={formik} name="affiliate_leader_id" />
                                                     </Col>
                                                 </FormGroup>
                                             </Col>
 
                                             <Col xs={6}>
                                                 <FormGroup row>
-                                                    <Label for="attribute_id" sm={3}>
+                                                    <Label for="email" sm={4}>
                                                         Email
                                                         <span className="font-weight-bold red-text"> *</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <Input
                                                             name="email"
                                                             id="email"
@@ -304,11 +348,11 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
                                             <Col xs={6}>
                                                 <FormGroup row>
-                                                    <Label for="relationship_id" sm={3}>
+                                                    <Label for="phone_number" sm={4}>
                                                         Số điện thoại
                                                         <span className="font-weight-bold red-text"> *</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <Input
                                                             name="phone_number"
                                                             id="phone_number"
@@ -325,11 +369,11 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
                                             <Col xs={6}>
                                                 <FormGroup row>
-                                                    <Label for="province_id" sm={3}>
+                                                    <Label for="province_id" sm={4}>
                                                         Tỉnh/TP
                                                         <span className="font-weight-bold red-text"> *</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <ProvinceComponent
                                                             id={"province_id"}
                                                             name={"province_id"}
@@ -355,11 +399,11 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
                                             <Col xs={6}>
                                                 <FormGroup row>
-                                                    <Label for="district_id" sm={3}>
+                                                    <Label for="district_id" sm={4}>
                                                         Quận/Huyện
                                                         <span className="font-weight-bold red-text"> *</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <DistrictComponent
                                                             id={"district_id"}
                                                             name={"district_id"}
@@ -385,11 +429,11 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
                                             <Col xs={6}>
                                                 <FormGroup row>
-                                                    <Label for="ward_id" sm={3}>
+                                                    <Label for="ward_id" sm={4}>
                                                         Phường/Xã
                                                         <span className="font-weight-bold red-text"> *</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <WardComponent
                                                             id={"ward_id"}
                                                             name={"ward_id"}
@@ -415,11 +459,11 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
                                             <Col xs={6}>
                                                 <FormGroup row>
-                                                    <Label for="relationship_id" sm={3}>
+                                                    <Label for="address" sm={4}>
                                                         Địa chỉ
                                                         <span className="font-weight-bold red-text"> *</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <Input
                                                             name="address"
                                                             id="address"
@@ -436,10 +480,10 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
                                             <Col xs={12} sm={6}>
                                                 <FormGroup row>
-                                                    <Label for="id_card" sm={3}>
+                                                    <Label for="id_card" sm={4}>
                                                         Số CMND<span className="font-weight-bold red-text">*</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <Input
                                                             name="id_card"
                                                             id="id_card"
@@ -456,10 +500,10 @@ function AffiliateAdd({ memberId = null, noEdit }) {
                                             </Col>
                                             <Col xs={12} sm={6}>
                                                 <FormGroup row>
-                                                    <Label for="id_card_date" sm={3}>
+                                                    <Label for="id_card_date" sm={4}>
                                                         Ngày cấp<span className="font-weight-bold red-text">*</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <DatePicker
                                                             id="id_card_date"
                                                             date={
@@ -482,10 +526,10 @@ function AffiliateAdd({ memberId = null, noEdit }) {
                                             </Col>
                                             <Col xs={12} sm={6}>
                                                 <FormGroup row>
-                                                    <Label for="id_card_place" sm={3}>
+                                                    <Label for="id_card_place" sm={4}>
                                                         Nơi cấp<span className="font-weight-bold red-text">*</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <Input
                                                             name="id_card_place"
                                                             id="id_card_place"
@@ -504,10 +548,10 @@ function AffiliateAdd({ memberId = null, noEdit }) {
                                             </Col>
                                             <Col xs={6} sm={6} >
                                                 <FormGroup row>
-                                                    <Label sm={3} for="id_card_front_side">Ảnh CMND/CCCD
+                                                    <Label sm={4} for="id_card_front_side">Ảnh CMND/CCCD
                                                         <span className="font-weight-bold red-text">*</span>
                                                     </Label>
-                                                    <Col sm={9} style={{ display: 'flex' }}>
+                                                    <Col sm={8} style={{ display: 'flex' }}>
                                                         <div className="cmnd-upload mr-2">
                                                             <Upload
                                                                 onChange={(img) => {
@@ -540,10 +584,10 @@ function AffiliateAdd({ memberId = null, noEdit }) {
 
                                             <Col xs={6} sm={6}>
                                                 <FormGroup row>
-                                                    <Label sm={3} for="id_card_front_image">Ảnh live
+                                                    <Label sm={4} for="live_image">Ảnh live
                                                         <span className="font-weight-bold red-text">*</span>
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <div className="cmnd-upload" style={{ width: '50%' }}>
                                                             <Upload
                                                                 onChange={(img) => {
@@ -562,7 +606,7 @@ function AffiliateAdd({ memberId = null, noEdit }) {
                                             </Col>
                                             <Col xs={6} sm={6}>
                                                 <FormGroup row>
-                                                    <Col sm={9}>
+                                                    <Col sm={8}>
                                                         <CustomInput
                                                             className="pull-left"
                                                             onBlur={null}
@@ -586,27 +630,26 @@ function AffiliateAdd({ memberId = null, noEdit }) {
                                     </Col>
                                     <Col xs={12}>
                                         <Row>
-                                            <Col xs={6}>
+                                            <Col xs={12}>
                                                 <FormGroup row>
-                                                    <Label for="attribute_id" sm={3}>
+                                                    <Label for="policy_commision_apply" sm={2}>
                                                         Chính sách Affliate
                                                         {/* <span className="font-weight-bold red-text"> *</span> */}
                                                     </Label>
-                                                    <Col sm={9}>
+                                                    <Col sm={10}>
                                                         <Select
                                                             className="MuiPaper-filter__custom--select"
-                                                            id="policy_commision_id"
-                                                            name="policy_commision_id"
-                                                            onChange={(e) => {
-
-                                                            }}
+                                                            id="policy_commision_apply"
+                                                            name="policy_commision_apply"
+                                                            onChange={(e) => formik.setFieldValue('policy_commision_apply', e)}
                                                             isSearchable={true}
                                                             placeholder={"Vui lòng chọn chính sách theo loại Affliate tương ứng"}
-                                                            value={convertValueSelect(formik.values['policy_commision_id'], dataSelect.policy_commisions)}
-                                                            options={dataSelect.policy_commisions}
+                                                            value={formik.values['policy_commision_apply']}
+                                                            options={getPolicyCommisionByAffType()}
                                                             disabled={noEdit}
+                                                            isMulti
                                                         />
-                                                        <MessageError formik={formik} name="policy_commision_id" />
+                                                        <MessageError formik={formik} name="policy_commision_apply" />
                                                     </Col>
                                                 </FormGroup>
                                             </Col>
@@ -614,7 +657,7 @@ function AffiliateAdd({ memberId = null, noEdit }) {
                                     </Col>
                                     <Col xs={6} sm={6}>
                                         <FormGroup row>
-                                            <Col sm={9}>
+                                            <Col sm={8}>
                                                 <CustomInput
                                                     className="pull-left"
                                                     onBlur={null}
@@ -643,7 +686,7 @@ function AffiliateAdd({ memberId = null, noEdit }) {
                                                     icon: "edit",
                                                     permission: "AFF_AFFILIATE_EDIT",
                                                     notSubmit: true,
-                                                    onClick: () => window._$g.rdr(`/affiliate/edit/${memberId}`),
+                                                    onClick: () => window._$g.rdr(`/affiliate/edit/${affiliateId}`),
                                                 },
                                                 {
                                                     title: "Lưu",

@@ -8,7 +8,6 @@ import { Checkbox } from "antd";
 
 export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLevel, memberUpLevel) => {
     return [
-        // configIDRowTable("page_id", "/page/detail/", query),
         {
             name: "#",
             label: "Chọn",
@@ -45,6 +44,7 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
                 },
             },
         },
+        configIDRowTable("affiliate_id", "/affiliate/detail/", query),
         {
             name: "full_name",
             label: "Tên đối tác",
@@ -64,7 +64,7 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
                     return (
                         <div className="text-left">
                             <Link
-                                to={`/affiliate/review/${data[tableMeta["rowIndex"]].member_id}`}>
+                                to={`/affiliate/detail/${data[tableMeta["rowIndex"]].affiliate_id}`}>
                                 {value}
                             </Link>
                         </div>
@@ -72,9 +72,10 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
                 },
             },
         },
+
         {
-            name: "policy_commision_name",
-            label: "Chính sách áp dụng",
+            name: "affiliate_type_name",
+            label: "Loại",
             options: {
                 filter: false,
                 sort: true,
@@ -88,11 +89,10 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-left"></div>;
+                    return <div className="text-left">{value}</div>;
                 },
             },
         },
-
         {
             name: "total_order",
             label: "Tổng số đơn hàng",
@@ -109,11 +109,11 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{value}</div>;
+                    return <div className="text-center">{value ? value : 0}</div>;
                 },
             },
         },
-
+        
         {
             name: "total_commision",
             label: "Tổng hoa hồng",
@@ -156,41 +156,6 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
         },
 
         {
-            name: "status_affiliate",
-            label: "Trạng thái",
-            options: {
-                filter: false,
-                sort: true,
-                customHeadRender: (columnMeta, handleToggleColumn) => {
-                    return (
-                        <th
-                            key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head">
-                            <div className="text-center">{columnMeta.label}</div>
-                        </th>
-                    );
-                },
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    let result = ''
-                    switch (value) {
-                        case 1:
-                            result = 'Mới'
-                            break;
-                        case 2:
-                            result = 'Đã duyệt'
-                            break;
-                        case 4:
-                            result = 'Không duyệt'
-                            break;
-                        default:
-                            break;
-                    }
-                    return <div className="text-center">{result}</div>;
-                },
-            },
-        },
-
-        {
             name: "registration_date",
             label: "Ngày đăng ký",
             options: {
@@ -207,27 +172,6 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return <div className="text-center">{value}</div>;
-                },
-            },
-        },
-
-        {
-            name: "affiliate_type_name",
-            label: "Loại",
-            options: {
-                filter: false,
-                sort: true,
-                customHeadRender: (columnMeta, handleToggleColumn) => {
-                    return (
-                        <th
-                            key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head">
-                            <div className="text-center">{columnMeta.label}</div>
-                        </th>
-                    );
-                },
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-left">{value}</div>;
                 },
             },
         },
@@ -263,21 +207,6 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
                     let { status_affiliate = 0 } = data[tableMeta["rowIndex"]] || {}
                     return (
                         <div className="text-center">
-                            <CheckAccess permission="AFF_AFFILIATE_REVIEW">
-                                <Button
-                                    color={"success"}
-                                    title="Duyệt"
-                                    className="mr-1"
-                                    disabled={status_affiliate != 1}
-                                    onClick={(evt) => handleActionItemClick(
-                                        "review",
-                                        data[tableMeta["rowIndex"]].member_id,
-                                        tableMeta["rowIndex"]
-                                    )}>
-                                    <i className="fa fa-check" />
-                                </Button>
-                            </CheckAccess>
-
                             <CheckAccess permission="AFF_AFFILIATE_EDIT">
                                 <Button
                                     color="primary"
@@ -286,7 +215,7 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
                                     onClick={(evt) =>
                                         handleActionItemClick(
                                             "edit",
-                                            data[tableMeta["rowIndex"]].member_id,
+                                            data[tableMeta["rowIndex"]].affiliate_id,
                                             tableMeta["rowIndex"]
                                         )
                                     }>
@@ -298,32 +227,15 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
                                 color="warning"
                                 title="Chi tiết"
                                 className="mr-1"
-                                disabled={status_affiliate != 2}
                                 onClick={evt =>
                                     handleActionItemClick(
                                         "detail",
-                                        data[tableMeta["rowIndex"]].member_id,
+                                        data[tableMeta["rowIndex"]].affiliate_id,
                                         tableMeta["rowIndex"]
                                     )
                                 }>
                                 <i className="fa fa-info" />
                             </Button>
-
-                            {/* <CheckAccess permission="AFF_AFFILIATE_DEL">
-                                <Button
-                                    color="danger"
-                                    title="Xóa"
-                                    className=""
-                                    onClick={(evt) =>
-                                        handleActionItemClick(
-                                            "delete",
-                                            data[tableMeta["rowIndex"]].member_id,
-                                            tableMeta["rowIndex"]
-                                        )
-                                    }>
-                                    <i className="fa fa-trash" />
-                                </Button>
-                            </CheckAccess> */}
                         </div>
                     );
                 },
@@ -333,11 +245,11 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
 }
 
 export const initialValues = {
+    affiliate_id: null,
     member_id: null,
     affiliate_type_id: null,
-    status_affiliate: 0,
     birth_day: "",
-    aff_leader_id: null,
+    affiliate_leader_id: null,
     email: "",
     phone_number: "",
     full_name: "",
@@ -353,7 +265,8 @@ export const initialValues = {
     id_card_front_side: null,
     live_image: null,
     is_agree: true,
-    is_active: true
+    is_active: true,
+    policy_commision_apply: []
 };
 
 export const validationSchema = yup.object().shape({
@@ -363,9 +276,9 @@ export const validationSchema = yup.object().shape({
         .required("Loại Affiliate là bắt buộc.")
         .nullable(),
     birth_day: yup.string()
-        .required("Ngày sinh là bắt buộc."),
+        .required("Ngày sinh là bắt buộc.").nullable(),
     email: yup.string()
-        .required("Email là bắt buộc."),
+        .required("Email là bắt buộc.").nullable(),
     phone_number: yup
         .string()
         .required("Số điện thoại là bắt buộc .")
@@ -374,16 +287,15 @@ export const validationSchema = yup.object().shape({
     ward_id: yup.number().required("Phường/ Xã là bắt buộc.").nullable(),
     province_id: yup.number().required("Tỉnh/ Thành phố là bắt buộc.").nullable(),
     district_id: yup.number().required("Quận/ Huyện là bắt buộc.").nullable(),
-    address: yup.string()
-        .required("Địa chỉ là bắt buộc."),
-
+    address: yup.string().required("Địa chỉ là bắt buộc.").nullable(),
     id_card: yup.string().required("Số CMND/CCCD là bắt buộc.").nullable(),
     id_card_place: yup.string().required("Nơi cấp CMND/CCCD là bắt buộc.").nullable(),
     id_card_date: yup.string().required("Ngày cấp CMND/CCCD là bắt buộc.").nullable(),
-
     id_card_back_side: yup.string().required("Ảnh mặt sau CMND/CCCD là bắt buộc.").nullable(),
     id_card_front_side: yup.string().required("Ảnh mặt trước CMND/CCCD là bắt buộc.").nullable(),
     live_image: yup.string().required("Ảnh Live là bắt buộc.").nullable(),
+    policy_commision_apply: yup.array().required('Chính sách Affiliate là bắt buộc').nullable(),
+    affiliate_leader_id: yup.number().nullable()
 })
 
 export const columnsOrder = (query) => {

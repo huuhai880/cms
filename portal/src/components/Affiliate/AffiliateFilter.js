@@ -9,12 +9,9 @@ function AffiliateFilter({ handleSubmitFilter }) {
     const [filter, setFilter] = useState({
         search: "",
         isActiveSelected: { label: "Có", value: 1 },
-        isDeletedSelected: { label: "Không", value: 0 },
         startDate: null,
         endDate: null,
-        affiliateTypeSelected: null,
-        policyCommisionSelected: null,
-        statusSelected: { label: "Tất cả", value: 0 }
+        affiliateTypeSelected: null
     });
 
 
@@ -24,28 +21,13 @@ function AffiliateFilter({ handleSubmitFilter }) {
         { label: "Tất cả", value: 2 }
     ])
 
-    const [dataIsDeleted] = useState([
-        { label: "Có", value: 1 },
-        { label: "Không", value: 0 },
-        { label: "Tất cả", value: 2 }
-    ])
-
-    const [dataStatus] = useState([
-        { label: "Mới", value: 1 },
-        { label: "Đã duyệt", value: 2 },
-        { label: "Không duyệt", value: 4 },
-        { label: "Tất cả", value: 0 }
-    ])
-
     const [optionAffType, setOptionAffType] = useState([]);
-    const [optionPolicyCommision, setOptionPolicyCommision] = useState([])
 
     useEffect(() => {
-        const initSelecte = async () => {
+        const initDataSelect = async () => {
             try {
-                let { affiliate_type, policy_commision } = await _affiliateService.getOption();
+                let { affiliate_type } = await _affiliateService.getOption();
                 setOptionAffType(affiliate_type);
-                setOptionPolicyCommision(policy_commision)
             } catch (error) {
                 window._$g.dialogs.alert(
                     window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
@@ -53,7 +35,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
             }
         }
 
-        initSelecte();
+        initDataSelect();
     }, [])
 
     const handleChange = (e) => {
@@ -84,10 +66,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
             isActiveSelected,
             startDate,
             endDate,
-            isDeletedSelected,
-            affiliateTypeSelected,
-            policyCommisionSelected,
-            statusSelected
+            affiliateTypeSelected
         } = filter;
 
         handleSubmitFilter({
@@ -96,10 +75,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
             start_date: startDate ? startDate.format("DD/MM/YYYY") : null,
             end_date: endDate ? endDate.format("DD/MM/YYYY") : null,
             page: 1,
-            is_deleted: isDeletedSelected ? isDeletedSelected.value : 0,
-            affiliate_type: affiliateTypeSelected ? affiliateTypeSelected.value : null,
-            status: statusSelected ? statusSelected.value : 0,
-            policy_commision: policyCommisionSelected ? policyCommisionSelected.value : null
+            affiliate_type: affiliateTypeSelected ? affiliateTypeSelected.value : null
         });
     };
 
@@ -108,12 +84,9 @@ function AffiliateFilter({ handleSubmitFilter }) {
         setFilter({
             search: "",
             isActiveSelected: { label: "Có", value: 1 },
-            isDeletedSelected: { label: "Không", value: 0 },
             startDate: null,
             endDate: null,
-            affiliateTypeSelected: null,
-            policyCommisionSelected: null,
-            statusSelected: { label: "Tất cả", value: 0 }
+            affiliateTypeSelected: null
         });
 
         handleSubmitFilter({
@@ -122,10 +95,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
             start_date: null,
             end_date: null,
             page: 1,
-            is_deleted: 0,
-            affiliate_type: null,
-            status: 0,
-            policy_commision: null
+            affiliate_type: null
         });
     }
 
@@ -141,7 +111,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
         <div className="ml-3 mr-3 mb-3 mt-3">
             <Form autoComplete="nope" className="zoom-scale-9">
                 <Row>
-                    <Col xs={12} sm={6}>
+                    <Col xs={12} sm={3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="inputValue" className="mr-sm-2">
                                 Từ khóa
@@ -162,43 +132,6 @@ function AffiliateFilter({ handleSubmitFilter }) {
                         </FormGroup>
                     </Col>
 
-                    <Col xs={12} sm={3}>
-                        <FormGroup className="mb-2 mb-sm-0">
-                            <Label for="" className="mr-sm-2">
-                                Kích hoạt
-                            </Label>
-                            <Select
-                                className="MuiPaper-filter__custom--select"
-                                id="isActiveSelected"
-                                name="isActiveSelected"
-                                onChange={(selected) => handleChangeSelect(selected, "isActiveSelected")}
-                                isSearchable={true}
-                                placeholder={"-- Chọn --"}
-                                value={filter.isActiveSelected}
-                                options={dataIsActive}
-                            />
-                        </FormGroup>
-                    </Col>
-
-                    <Col xs={12} sm={3}>
-                        <FormGroup className="mb-2 mb-sm-0">
-                            <Label for="" className="mr-sm-2">
-                                Đã xoá
-                            </Label>
-                            <Select
-                                className="MuiPaper-filter__custom--select"
-                                id="isDeletedSelected"
-                                name="isDeletedSelected"
-                                onChange={(selected) => handleChangeSelect(selected, "isDeletedSelected")}
-                                isSearchable={true}
-                                placeholder={"-- Chọn --"}
-                                value={filter.isDeletedSelected}
-                                options={dataIsDeleted}
-                            />
-                        </FormGroup>
-                    </Col>
-                </Row>
-                <Row className="mt-3">
                     <Col xs={12} sm={3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="" className="mr-sm-2">
@@ -239,51 +172,31 @@ function AffiliateFilter({ handleSubmitFilter }) {
                     <Col xs={12} sm={3}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Label for="" className="mr-sm-2">
-                                Chính sách áp dụng
+                                Kích hoạt
                             </Label>
                             <Select
                                 className="MuiPaper-filter__custom--select"
-                                id="policyCommisionSelected"
-                                name="policyCommisionSelected"
-                                onChange={(selected) => handleChangeSelect(selected, "policyCommisionSelected")}
+                                id="isActiveSelected"
+                                name="isActiveSelected"
+                                onChange={(selected) => handleChangeSelect(selected, "isActiveSelected")}
                                 isSearchable={true}
                                 placeholder={"-- Chọn --"}
-                                value={filter.policyCommisionSelected}
-                                options={optionPolicyCommision}
-                                isClearable={true}
+                                value={filter.isActiveSelected}
+                                options={dataIsActive}
                             />
                         </FormGroup>
                     </Col>
-
-                    <Col xs={12} sm={3}>
-                        <FormGroup className="mb-2 mb-sm-0">
-                            <Label for="" className="mr-sm-2">
-                                Trạng thái
-                            </Label>
-                            <Select
-                                className="MuiPaper-filter__custom--select"
-                                id="statusSelected"
-                                name="statusSelected"
-                                onChange={(selected) => handleChangeSelect(selected, "statusSelected")}
-                                isSearchable={true}
-                                placeholder={"-- Chọn --"}
-                                value={filter.statusSelected}
-                                options={dataStatus}
-                            />
-                        </FormGroup>
-                    </Col>
-
+                </Row>
+                <Row className="mt-3">
                     <Col
                         xs={12}
-                        className={`d-flex align-items-end mt-3 justify-content-end`}
-                    >
+                        className={`d-flex align-items-end mt-3 justify-content-end`}>
                         <FormGroup className="mb-2 mb-sm-0">
                             <Button
                                 className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                                 onClick={handleSubmit}
                                 color="primary"
-                                size="sm"
-                            >
+                                size="sm">
                                 <i className="fa fa-search" />
                                 <span className="ml-1">Tìm kiếm</span>
                             </Button>
@@ -292,8 +205,7 @@ function AffiliateFilter({ handleSubmitFilter }) {
                             <Button
                                 className="mr-1 col-12 pt-2 pb-2 MuiPaper-filter__custom--button"
                                 onClick={handleClear}
-                                size="sm"
-                            >
+                                size="sm">
                                 <i className="fa fa-refresh" />
                                 <span className="ml-1">Làm mới</span>
                             </Button>

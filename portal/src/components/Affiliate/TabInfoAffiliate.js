@@ -47,11 +47,19 @@ import moment from 'moment'
 import { useParams } from "react-router";
 import { Checkbox } from 'antd';
 
-function TabInfoAffiliate({ affiliate = {} }) {
+function TabInfoAffiliate({ affiliate = {}, policyCommisions = [] }) {
     let {
         registration_date = '',
-        date_of_approval = ''
+        approved_date = '',
     } = affiliate || {}
+
+    const [policyCommisionApply, setPolicyCommisionApply] = useState([]);
+
+    useEffect(() => {
+        if(affiliate){
+            setPolicyCommisionApply(affiliate.policy_commision_apply)
+        }
+    },[affiliate])
 
     const handleSubmitForm = () => {
 
@@ -67,14 +75,15 @@ function TabInfoAffiliate({ affiliate = {} }) {
                     <Col sm={9}>
                         <Select
                             className="MuiPaper-filter__custom--select"
-                            id="policy_commision_id"
-                            name="policy_commision_id"
-                            onChange={(e) => { }}
+                            id="policy_commision_apply"
+                            name="policy_commision_apply"
+                            onChange={(e) => setPolicyCommisionApply(e)}
                             isSearchable={true}
                             placeholder={"-- Chọn --"}
-                            value={null}
-                            options={[]}
-                            disabled={false}
+                            value={policyCommisionApply}
+                            options={policyCommisions}
+                            isMulti
+                            isClearable={true}
                         />
                     </Col>
                 </FormGroup>
@@ -107,7 +116,7 @@ function TabInfoAffiliate({ affiliate = {} }) {
                             id="date_approve"
                             type="text"
                             placeholder="Ngày duyệt đăng ký"
-                            value={date_of_approval}
+                            value={approved_date}
                             disabled={true}
                         />
                     </Col>
