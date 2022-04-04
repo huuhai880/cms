@@ -16,9 +16,9 @@ function AffiliateFilter({ handleSubmitFilter }) {
 
 
     const [dataIsActive] = useState([
+        { label: "Tất cả", value: 2 },
         { label: "Có", value: 1 },
-        { label: "Không", value: 0 },
-        { label: "Tất cả", value: 2 }
+        { label: "Không", value: 0 }
     ])
 
     const [optionAffType, setOptionAffType] = useState([]);

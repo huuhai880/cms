@@ -1,57 +1,20 @@
 import React from "react";
-import * as Yup from "yup";
 import {
-    Alert,
-    Card,
-    CardBody,
-    CardHeader,
     Col,
     Row,
-    Button,
-    Table,
-    Modal,
-    ModalBody,
-    CustomInput,
     FormGroup,
-    Label,
-    Input,
-    Form,
-    Badge,
-    Nav,
-    NavItem,
-    NavLink,
-    TabPane,
-    TabContent,
-    InputGroup,
-    InputGroupAddon,
+    Label
 } from "reactstrap";
-import { ActionButton } from "@widget";
-import { readImageAsBase64 } from "../../utils/html";
-import { Editor } from "@tinymce/tinymce-react";
-
 import { useState } from "react";
-import NumberFormat from "../Common/NumberFormat";
 import { useEffect } from "react";
-import { useFormik } from "formik";
-import { initialValues, validationSchema } from "./const";
-import MessageError from "../Product/MessageError";
-import Loading from "../Common/Loading";
 import "./style.scss";
-import Upload from "../Common/Antd/Upload";
 import AffiliateService from "./Service/index";
-import Select from "react-select";
-import { convertValueSelect, numberFormat } from "utils/index";
-import { ProvinceComponent, DistrictComponent, WardComponent } from '../Common/Address';
+import {numberFormat } from "utils/index";
 import DatePicker from "../Common/DatePicker";
 import moment from 'moment'
 
 const _affiliateService = new AffiliateService();
 function AffiliateReport({ member_id }) {
-    const [checkStartDate, setCheckStartDate] = useState(true);
-    const [checkEndDate, setCheckEndDate] = useState(true);
-    const [dateToDate, setDateToDate] = useState("");
-    const [dateFromDate, setDateFromDate] = useState("");
-
     const [searchValue, setSearchValue] = useState({
         startDate: moment().startOf("month"),
         endDate: moment(),

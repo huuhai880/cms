@@ -59,7 +59,8 @@ function TabOrder({ member_id }) {
         setIsLoading(true)
         try {
             query.member_id = member_id;
-            let _data = await _affiliateService.getListOrderAff(query);
+            query.type = 'order';
+            let _data = await _affiliateService.getDataOfAffiliate(query);
             setData(_data)
         } catch (error) {
             window._$g.dialogs.alert(

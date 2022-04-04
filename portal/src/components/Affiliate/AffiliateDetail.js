@@ -1,51 +1,23 @@
 import React from "react";
 import * as Yup from "yup";
 import {
-    Alert,
     Card,
     CardBody,
     CardHeader,
     Col,
     Row,
-    Button,
-    Table,
-    Modal,
-    ModalBody,
-    CustomInput,
-    FormGroup,
-    Label,
-    Input,
-    Form,
-    Badge,
     Nav,
     NavItem,
     NavLink,
     TabPane,
     TabContent,
-    InputGroup,
-    InputGroupAddon,
 } from "reactstrap";
-import { ActionButton } from "@widget";
-import { readImageAsBase64 } from "../../utils/html";
-import { Editor } from "@tinymce/tinymce-react";
-
 import { useState } from "react";
-import NumberFormat from "../Common/NumberFormat";
 import { useEffect } from "react";
-import { useFormik } from "formik";
-import { initialValues, validationSchema } from "./const";
-import MessageError from "../Product/MessageError";
 import Loading from "../Common/Loading";
 import "./style.scss";
-import Upload from "../Common/Antd/Upload";
 import AffiliateService from "./Service/index";
-import Select from "react-select";
-import { convertValueSelect } from "utils/index";
-import { ProvinceComponent, DistrictComponent, WardComponent } from '../Common/Address';
-import DatePicker from "../Common/DatePicker";
-import moment from 'moment'
 import { useParams } from "react-router";
-import { Checkbox } from 'antd';
 import TabInfoAffiliate from "./TabInfoAffiliate";
 import TabOrder from "./TabOrder";
 import TabCustomer from "./TabCustomer";
@@ -60,7 +32,7 @@ function AffiliateDetail(props) {
     const [activeTab, setActiveTab] = useState('INFO')
     const [affiliate, setAffiliate] = useState({});
     const [loading, setLoading] = useState(false);
-    const [policyCommsions, setPolicyCommisions] = useState([])
+    const [policyCommisions, setPolicyCommisions] = useState([])
 
     useEffect(() => {
         initData()
@@ -88,7 +60,7 @@ function AffiliateDetail(props) {
     const renderTabContent = () => {
         switch (activeTab) {
             case 'INFO':
-                return <TabInfoAffiliate affiliate={affiliate} policyCommsions={policyCommsions}/>
+                return <TabInfoAffiliate affiliate={affiliate} policyCommisions={policyCommisions}/>
             case 'ORDER':
                 return <TabOrder />
             case 'CUSTOMER':
@@ -108,7 +80,7 @@ function AffiliateDetail(props) {
                 <Col xs={12} md={12}>
                     <Card>
                         <CardHeader>
-                            <b>Chi tiết đối tác{" "}{affiliate.full_name} </b>
+                            <b>Chi tiết đối tác{" "}{affiliate.label} </b>
                         </CardHeader>
                         <CardBody>
                             <Row style={{ border: '1px solid #dce0e3', margin: 5 }}>

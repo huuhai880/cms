@@ -1,5 +1,4 @@
 import React from "react";
-import * as Yup from "yup";
 import {
     Alert,
     Card,
@@ -7,10 +6,6 @@ import {
     CardHeader,
     Col,
     Row,
-    Button,
-    Table,
-    Modal,
-    ModalBody,
     CustomInput,
     FormGroup,
     Label,
@@ -18,21 +13,13 @@ import {
     Form,
 } from "reactstrap";
 import { ActionButton } from "@widget";
-import { readImageAsBase64 } from "../../utils/html";
-import { Editor } from "@tinymce/tinymce-react";
-
 import { useState } from "react";
-import NumberFormat from "../Common/NumberFormat";
 import { useEffect } from "react";
-import { useFormik } from "formik";
-import { initialValues, validationSchema } from "./const";
-import MessageError from "../Product/MessageError";
 import Loading from "../Common/Loading";
 import "./style.scss";
 import Upload from "../Common/Antd/Upload";
 import AffiliateService from "./Service/index";
 import Select from "react-select";
-import { convertValueSelect } from "utils/index";
 import { ProvinceComponent, DistrictComponent, WardComponent } from '../Common/Address';
 import DatePicker from "../Common/DatePicker";
 import moment from 'moment'
@@ -46,8 +33,6 @@ function AffiliateReview(props) {
     const [loading, setLoading] = useState(false);
     const [alerts, setAlerts] = useState([]);
     const [isSubmit, setIsSubmit] = useState(false);
-    const [reviewNote, setReviewNote] = useState('');
-    const [affiliateTypes, setAffiliateTypes] = useState([]);
     const [policyCommsions, setPolicyCommisions] = useState([]);
     const [msgError, setMsgError] = useState(null)
 

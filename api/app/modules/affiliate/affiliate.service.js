@@ -166,7 +166,6 @@ const createOrUpdateAff = async (bodyParams = {}) => {
             .input('CREATEDUSER', created_user)
             .execute('AFF_AFFILIATE_CreateOrUpdate_AdminWeb')
 
-        console.log(resAffiliate.recordset[0])
         let { RESULT } = resAffiliate.recordset[0];
         if (!RESULT) {
 
@@ -256,13 +255,13 @@ const upLevelAffiliate = async (bodyParams = {}) => {
             await pool.request()
                 .input('MEMBERIDS', member_up_level.join(","))
                 .input('UPDATEDUSER', updated_user)
-                .execute('')
+                .execute('AFF_AFFILIATE_UpLevel_AdminWeb')
         }
         return new ServiceResponse(true, '', true)
     } catch (error) {
         console.log({ error })
         logger.error(error, {
-            function: 'affiliate.service.upLevelAff',
+            function: 'affiliate.service.upLevelAffiliate',
         });
         return new ServiceResponse(false, error.message);
     }
@@ -291,7 +290,7 @@ const reportOfAffiliate = async (queryParams = {}) => {
     }
 }
 
-const getListOrderAff = async (queryParams = {}) => {
+const getDataOfAffiliate = async (queryParams = {}) => {
     try {
 
         const currentPage = apiHelper.getCurrentPage(queryParams);
@@ -299,89 +298,38 @@ const getListOrderAff = async (queryParams = {}) => {
         const start_date = apiHelper.getValueFromObject(queryParams, 'start_date', null);
         const end_date = apiHelper.getValueFromObject(queryParams, 'end_date', null);
         const member_id = apiHelper.getValueFromObject(queryParams, 'member_id', null);
-
-
-        const pool = await mssql.pool;
-        const res = await pool.request()
-            .input('MEMBERID', member_id)
-            .input('STARTDATE', start_date)
-            .input('ENDDATE', end_date)
-            .input('PAGEINDEX', currentPage)
-            .input('PAGESIZE', itemsPerPage)
-            .execute('');
-
-        let list = affiliateClass.listOrderAff(res.recordset);
-        let total = apiHelper.getTotalData(res.recordset[0]);
-
-        return new ServiceResponse(true, "", { list, total })
-    } catch (error) {
-        logger.error(error, {
-            function: 'affiliate.service.getListOrderAff',
-        });
-        return new ServiceResponse(false, error.message);
-    }
-}
-
-const getListCustomerAff = async (queryParams = {}) => {
-    try {
-
-        const currentPage = apiHelper.getCurrentPage(queryParams);
-        const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
-        const start_date = apiHelper.getValueFromObject(queryParams, 'start_date', null);
-        const end_date = apiHelper.getValueFromObject(queryParams, 'end_date', null);
-        const member_id = apiHelper.getValueFromObject(queryParams, 'member_id', null);
-
+        const type = apiHelper.getValueFromObject(queryParams, 'type', 'order');
 
         const pool = await mssql.pool;
         const res = await pool.request()
             .input('MEMBERID', member_id)
             .input('STARTDATE', start_date)
             .input('ENDDATE', end_date)
+            .input('TYPE', type)
             .input('PAGEINDEX', currentPage)
             .input('PAGESIZE', itemsPerPage)
-            .execute('');
+            .execute('AFF_AFFILIATE_OrderCustomerMember_AdminWeb');
 
-        let list = affiliateClass.listCustomerAff(res.recordset);
+        let list = [];
+        if (type == 'order') {
+            list = affiliateClass.listOrderAff(res.recordset);
+        }
+        else if (type == 'customer') {
+            list = affiliateClass.listCustomerAff(res.recordset);
+        }
+        else if (type == 'member') {
+            list = affiliateClass.listMember(res.recordset);
+        }
         let total = apiHelper.getTotalData(res.recordset[0]);
 
         return new ServiceResponse(true, "", { list, total })
     } catch (error) {
         logger.error(error, {
-            function: 'affiliate.service.getListCustomerAff',
+            function: 'affiliate.service.getListOrderCustomerMember',
         });
         return new ServiceResponse(false, error.message);
     }
 }
-
-const getListMemberAff = async (queryParams = {}) => {
-    try {
-        const currentPage = apiHelper.getCurrentPage(queryParams);
-        const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
-        const start_date = apiHelper.getValueFromObject(queryParams, 'start_date', null);
-        const end_date = apiHelper.getValueFromObject(queryParams, 'end_date', null);
-        const member_id = apiHelper.getValueFromObject(queryParams, 'member_id', null);
-
-        const pool = await mssql.pool;
-        const res = await pool.request()
-            .input('MEMBERID', member_id)
-            .input('STARTDATE', start_date)
-            .input('ENDDATE', end_date)
-            .input('PAGEINDEX', currentPage)
-            .input('PAGESIZE', itemsPerPage)
-            .execute('');
-
-        let list = affiliateClass.listMemberAff(res.recordset);
-        let total = apiHelper.getTotalData(res.recordset[0]);
-
-        return new ServiceResponse(true, "", { list, total })
-    } catch (error) {
-        logger.error(error, {
-            function: 'affiliate.service.getListMemberAff',
-        });
-        return new ServiceResponse(false, error.message);
-    }
-}
-
 
 const getListAffRequest = async (queryParams = {}) => {
     try {
@@ -524,6 +472,50 @@ const approveAffRequest = async (bodyParams = {}) => {
     }
 }
 
+const updStatusAff = async (bodyParams = {}) => {
+    try {
+        let updated_user = apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator');
+        let is_active = apiHelper.getValueFromObject(bodyParams, 'is_active', 0);
+        let affiliate_id = apiHelper.getValueFromObject(bodyParams, 'affiliate_id', null);
+
+        const pool = await mssql.pool;
+        await pool.request()
+            .input('AFFILIATEID', affiliate_id)
+            .input('ISACTIVE', is_active)
+            .input('UPDATEDUSER', updated_user)
+            .execute('AFF_AFFILIATE_UpdateStatus_AdminWeb')
+
+        return new ServiceResponse(true, '', true)
+    } catch (error) {
+        logger.error(error, {
+            function: 'affiliate.service.updStatus',
+        });
+        return new ServiceResponse(false, error.message);
+    }
+}
+
+const updPolicyCommisionApply = async (bodyParams = {}) => {
+    try {
+        let policy_commision_apply = apiHelper.getValueFromObject(bodyParams, 'policy_commision_apply', []);
+        let member_id = apiHelper.getValueFromObject(bodyParams, 'member_id', null);
+        let updated_user = apiHelper.getValueFromObject(bodyParams, 'auth_name', 'administrator');
+
+        const pool = await mssql.pool;
+        await pool.request()
+            .input('MEMBERID', member_id)
+            .input('POLICYCOMMISIONIDS', policy_commision_apply.map(p => p.value).join(","))
+            .input('CREATEDUSER', updated_user)
+            .execute('AFF_POLICYCOMMISION_APPLY_CreateOrUpdate_AdminWeb')
+
+        return new ServiceResponse(true, '', true)
+    } catch (error) {
+        logger.error(error, {
+            function: 'affiliate.service.updPolicyCommisionApply',
+        });
+        return new ServiceResponse(false, error.message);
+    }
+}
+
 module.exports = {
     getOption,
     getListAffiliate,
@@ -532,11 +524,11 @@ module.exports = {
     getDetailAffiliate,
     upLevelAffiliate,
     reportOfAffiliate,
-    getListOrderAff,
-    getListCustomerAff,
-    getListMemberAff,
+    getDataOfAffiliate,
     getListAffRequest,
     getDetailAffRequest,
     rejectAffRequest,
-    approveAffRequest
+    approveAffRequest,
+    updStatusAff,
+    updPolicyCommisionApply
 }

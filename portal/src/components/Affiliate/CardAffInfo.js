@@ -7,7 +7,9 @@ import {
 } from "reactstrap";
 import { Checkbox } from 'antd';
 import { Link } from "react-router-dom";
+import AffiliateService from './Service/index';
 
+const _affiliateService = new AffiliateService();
 function CardAffInfo({ affiliate = {} }) {
     const [isActive, setIsActive] = useState(false)
 
@@ -16,16 +18,17 @@ function CardAffInfo({ affiliate = {} }) {
         affiliate_type_name = '',
         email = '',
         phone_number = '',
-        is_active = true
+        affiliate_id,
+        label
     } = affiliate || {};
 
     useEffect(() => {
-        console.log({ affiliate })
         setIsActive(affiliate.is_active)
     }, [affiliate])
 
-    const handleChangeActive = e => {
+    const handleChangeActive = async (e) => {
         try {
+            await _affiliateService.updateStatusAff({ is_active: e.target.checked }, affiliate_id)
             setIsActive(e.target.checked)
         } catch (error) {
             window._$g.dialogs.alert(
@@ -41,7 +44,7 @@ function CardAffInfo({ affiliate = {} }) {
                     <Label className="font-weight-bold mr-4"
                         style={{ fontSize: 18, textDecoration: 'underline' }}>
                         <Link to={`/account/detail/${affiliate.member_id}`}>
-                            {full_name}
+                            {label}
                         </Link>
                     </Label>
                     <h5><Badge color={'primary'}>{affiliate_type_name}</Badge></h5>

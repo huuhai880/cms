@@ -1,5 +1,4 @@
 import React from "react";
-import * as Yup from "yup";
 import {
     Alert,
     Card,
@@ -7,10 +6,6 @@ import {
     CardHeader,
     Col,
     Row,
-    Button,
-    Table,
-    Modal,
-    ModalBody,
     CustomInput,
     FormGroup,
     Label,
@@ -18,11 +13,7 @@ import {
     Form,
 } from "reactstrap";
 import { ActionButton } from "@widget";
-import { readImageAsBase64 } from "../../utils/html";
-import { Editor } from "@tinymce/tinymce-react";
-
 import { useState } from "react";
-import NumberFormat from "../Common/NumberFormat";
 import { useEffect } from "react";
 import { useFormik } from "formik";
 import { initialValues, validationSchema } from "./const";

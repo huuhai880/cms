@@ -125,8 +125,6 @@ function Affiliate(props) {
         }
     }
 
-    
-
     return (
         <div>
             <Card className={`animated fadeIn z-index-222 mb-3`}>

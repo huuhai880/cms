@@ -81,29 +81,14 @@ const template = {
     policy_commision_name : '{{#? POLICYCOMMISIONNAME}}',
     request_status_name: '{{#? REQUESTSTATUSNAME}}',
     affiliate_id:'{{#? AFFILIATEID}}',
-    total_revenue: '{{#? TOTALREVENUE}}'
+    total_revenue: '{{#? TOTALREVENUE}}',
+    total_money: '{{#? TOTALMONEY}}',
+    referral_value: '{{#? REFERRALVALUE}}',
+    total_order_value: '{{#? TOTALORDERVALUE}}',
+    total_referral_value: '{{#? TOTALREFERRALVALUE}}'
 }
 
 let transform = new Transform(template);
-
-const list = (list = []) => {
-    return transform.transform(list, [
-        'member_id',
-        'customer_code',
-        'full_name',
-        'policy_commision_name',
-        'total_order',
-        'total_commision',
-        'registration_source',
-        'status_affiliate',
-        'registration_date',
-        'affiliate_type_id',
-        'affiliate_type_name',
-        'is_active',
-        'is_affiliate_level_1',
-        'is_affiliate_level_2'
-    ]);
-};
 
 const listMember = (list = []) => {
     return transform.transform(list, [
@@ -132,15 +117,6 @@ const options = (list = []) => {
     return transform.transform(list, [
         'label',
         'value'
-    ]);
-};
-
-const listPolicy = (list = []) => {
-    return transform.transform(list, [
-        'label',
-        'value',
-        'policy_commision_type_id',
-        'policy_commision_type_name'
     ]);
 };
 
@@ -177,28 +153,14 @@ const affiliateDetail = (aff = []) => {
     ]) : null;
 };
 
-const infoAff = (aff = []) => {
-    return aff && Object.keys(aff).length > 0 ? transform.transform(aff, [
-        'member_id',
-        'customer_code',
-        'full_name',
-        'email',
-        'phone_number',
-        'affiliate_type_id',
-        'affiliate_type_name',
-        'registration_date',
-        'date_of_approval',
-        'is_active'
-    ]) : null;
-};
 
 const listOrderAff = (list = []) => {
     return transform.transform(list, [
         'order_id',
         'order_date',
         'order_no',
-        'total_amount',
-        'total_commision',
+        'total_money',
+        'referral_value',
         'status',
         'full_name'
     ]);
@@ -209,8 +171,8 @@ const listCustomerAff = (list = []) => {
         'member_id',
         'full_name',
         'created_date',
-        'total_amount',
-        'total_commision'
+        'phone_number',
+        'email'
     ]);
 };
 
@@ -218,9 +180,9 @@ const listMemberAff = (list = []) => {
     return transform.transform(list, [
         'member_id',
         'full_name',
-        'created_date',
-        'total_amount',
-        'total_commision'
+        'approved_date',
+        'total_order_value',
+        'total_referral_value'
     ]);
 };
 
@@ -319,12 +281,9 @@ const reportAffiliate = (data = []) => {
 };
 
 module.exports = {
-    list,
     listMember,
     options,
-    listPolicy,
     affiliateDetail,
-    infoAff,
     listOrderAff,
     listCustomerAff,
     listMemberAff,

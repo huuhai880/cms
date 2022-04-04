@@ -78,7 +78,6 @@ const upLevelAffiliate = async (req, res, next) => {
     }
 }
 
-
 const reportOfAffiliate = async (req, res, next) => {
     try {
         const serviceRes = await affiliateService.reportOfAffiliate(req.query);
@@ -91,34 +90,9 @@ const reportOfAffiliate = async (req, res, next) => {
     }
 }
 
-
-const getListOrderAff = async (req, res, next) => {
+const getDataOfAffiliate = async (req, res, next) => {
     try {
-        const serviceRes = await affiliateService.getListOrderAff(req.query);
-        if (serviceRes.isFailed()) {
-            return next(serviceRes);
-        }
-        return res.json(new SingleResponse(serviceRes.getData()));
-    } catch (error) {
-        return next(error);
-    }
-}
-
-const getListCustomerAff = async (req, res, next) => {
-    try {
-        const serviceRes = await affiliateService.getListCustomerAff(req.query);
-        if (serviceRes.isFailed()) {
-            return next(serviceRes);
-        }
-        return res.json(new SingleResponse(serviceRes.getData()));
-    } catch (error) {
-        return next(error);
-    }
-}
-
-const getListMemberAff = async (req, res, next) => {
-    try {
-        const serviceRes = await affiliateService.getListMemberAff(req.query);
+        const serviceRes = await affiliateService.getDataOfAffiliate(req.query);
         if (serviceRes.isFailed()) {
             return next(serviceRes);
         }
@@ -178,7 +152,30 @@ const approveAffRequest = async (req, res, next) => {
     }
 }
 
+const updStatusAff = async (req, res, next) => {
+    try {
+        let {id} = req.params || {};
+        const serviceRes = await affiliateService.updStatusAff(Object.assign(req.body, {affiliate_id: id}));
+        if (serviceRes.isFailed()) {
+            return next(serviceRes);
+        }
+        return res.json(new SingleResponse(serviceRes.getData()));
+    } catch (error) {
+        return next(error);
+    }
+}
 
+const updPolicyCommisionApply = async (req, res, next) => {
+    try {
+        const serviceRes = await affiliateService.updPolicyCommisionApply(req.body);
+        if (serviceRes.isFailed()) {
+            return next(serviceRes);
+        }
+        return res.json(new SingleResponse(serviceRes.getData()));
+    } catch (error) {
+        return next(error);
+    }
+}
 
 module.exports = {
     getOption,
@@ -188,12 +185,12 @@ module.exports = {
     getDetailAffiliate,
     upLevelAffiliate,
     reportOfAffiliate,
-    getListOrderAff,
-    getListCustomerAff,
-    getListMemberAff,
+    getDataOfAffiliate,
     getListAffRequest,
     getDetailAffRequest,
     approveAffRequest,
-    rejectAffRequest
+    rejectAffRequest,
+    updStatusAff,
+    updPolicyCommisionApply
 }
 

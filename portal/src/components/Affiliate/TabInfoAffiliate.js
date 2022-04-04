@@ -1,166 +1,185 @@
 import React from "react";
-import * as Yup from "yup";
 import {
     Alert,
-    Card,
-    CardBody,
-    CardHeader,
     Col,
     Row,
-    Button,
-    Table,
-    Modal,
-    ModalBody,
-    CustomInput,
     FormGroup,
     Label,
-    Input,
-    Form,
-    Badge,
-    Nav,
-    NavItem,
-    NavLink,
-    TabPane,
-    TabContent,
-    InputGroup,
-    InputGroupAddon,
+    Input
 } from "reactstrap";
 import { ActionButton } from "@widget";
-import { readImageAsBase64 } from "../../utils/html";
-import { Editor } from "@tinymce/tinymce-react";
-
 import { useState } from "react";
-import NumberFormat from "../Common/NumberFormat";
 import { useEffect } from "react";
-import { useFormik } from "formik";
-import { initialValues, validationSchema } from "./const";
-import MessageError from "../Product/MessageError";
-import Loading from "../Common/Loading";
 import "./style.scss";
-import Upload from "../Common/Antd/Upload";
 import AffiliateService from "./Service/index";
 import Select from "react-select";
-import { convertValueSelect } from "utils/index";
-import { ProvinceComponent, DistrictComponent, WardComponent } from '../Common/Address';
-import DatePicker from "../Common/DatePicker";
-import moment from 'moment'
-import { useParams } from "react-router";
-import { Checkbox } from 'antd';
+
+const _affiliateService = new AffiliateService();
 
 function TabInfoAffiliate({ affiliate = {}, policyCommisions = [] }) {
     let {
         registration_date = '',
         approved_date = '',
+        member_id
     } = affiliate || {}
 
     const [policyCommisionApply, setPolicyCommisionApply] = useState([]);
+    const [msgError, setMsgError] = useState(null)
+    const [alerts, setAlerts] = useState([]);
 
+    console.log({ policyCommisions })
     useEffect(() => {
-        if(affiliate){
+        if (affiliate) {
             setPolicyCommisionApply(affiliate.policy_commision_apply)
         }
-    },[affiliate])
+    }, [affiliate])
 
-    const handleSubmitForm = () => {
-
+    const handleSubmit = async (isClose = false) => {
+        try {
+            if (policyCommisionApply.length == 0) {
+                setMsgError('Vui lòng chọn chính sách theo loại Affliate tương ứng');
+                return;
+            }
+            await _affiliateService.updPolicyCommisionApply({
+                policy_commision_apply: policyCommisionApply,
+                member_id
+            })
+            window._$g.toastr.show("Cập nhật chính sách thành công!", "success");
+            if (isClose) {
+                return window._$g.rdr("/affiliate");
+            }
+        } catch (error) {
+            let { errors, statusText, message } = error;
+            let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
+            setAlerts([{ color: "danger", msg }]);
+            window.scrollTo(0, 0);
+        }
     }
 
     return (
-        <Row>
-            <Col xs={6}>
-                <FormGroup row>
-                    <Label for="attribute_id" sm={3}>
-                        Chính sách áp dụng
-                    </Label>
-                    <Col sm={9}>
-                        <Select
-                            className="MuiPaper-filter__custom--select"
-                            id="policy_commision_apply"
-                            name="policy_commision_apply"
-                            onChange={(e) => setPolicyCommisionApply(e)}
-                            isSearchable={true}
-                            placeholder={"-- Chọn --"}
-                            value={policyCommisionApply}
-                            options={policyCommisions}
-                            isMulti
-                            isClearable={true}
-                        />
-                    </Col>
-                </FormGroup>
-            </Col>
-            <Col xs={6}>
-                <FormGroup row>
-                    <Label for="attribute_id" sm={3}>
-                        Ngày đăng ký
-                    </Label>
-                    <Col sm={9}>
-                        <Input
-                            name="registration_date"
-                            id="registration_date"
-                            type="text"
-                            placeholder="Ngày đăng ký"
-                            value={registration_date}
-                            disabled={true}
-                        />
-                    </Col>
-                </FormGroup>
-            </Col>
-            <Col xs={6}>
-                <FormGroup row>
-                    <Label for="attribute_id" sm={3}>
-                        Ngày duyệt đăng ký
-                    </Label>
-                    <Col sm={9}>
-                        <Input
-                            name="date_approve"
-                            id="date_approve"
-                            type="text"
-                            placeholder="Ngày duyệt đăng ký"
-                            value={approved_date}
-                            disabled={true}
-                        />
-                    </Col>
-                </FormGroup>
-            </Col>
+        <>
+            <Row>
+                <Col xs={12}>
+                    {alerts.map(({ color, msg }, idx) => {
+                        return (
+                            <Alert
+                                key={`alert-${idx}`}
+                                color={color}
+                                isOpen={true}
+                                toggle={() => setAlerts([])}
+                            >
+                                <span dangerouslySetInnerHTML={{ __html: msg }} />
+                            </Alert>
+                        );
+                    })}
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={12}>
+                    <FormGroup row>
+                        <Label for="attribute_id" sm={2}>
+                            Chính sách áp dụng
+                        </Label>
+                        <Col sm={10}>
+                            <Select
+                                className="MuiPaper-filter__custom--select"
+                                id="policy_commision_apply"
+                                name="policy_commision_apply"
+                                onChange={(e) => {
+                                    setPolicyCommisionApply(e)
+                                    if (msgError) {
+                                        setMsgError(null)
+                                    }
+                                }}
+                                isSearchable={true}
+                                placeholder={"Vui lòng chọn chính sách theo loại Affliate tương ứng"}
+                                value={policyCommisionApply}
+                                options={policyCommisions}
+                                isMulti
+                                isClearable={true}
+                            />
+                            {msgError && <Alert
+                                color="danger"
+                                className="field-validation-error">
+                                {msgError}
+                            </Alert>}
+                        </Col>
+                    </FormGroup>
+                </Col>
+                <Col xs={6}>
+                    <FormGroup row>
+                        <Label for="attribute_id" sm={4}>
+                            Ngày đăng ký
+                        </Label>
+                        <Col sm={8}>
+                            <Input
+                                name="registration_date"
+                                id="registration_date"
+                                type="text"
+                                placeholder="Ngày đăng ký"
+                                value={registration_date}
+                                disabled={true}
+                            />
+                        </Col>
+                    </FormGroup>
+                </Col>
+                <Col xs={6}>
+                    <FormGroup row>
+                        <Label for="attribute_id" sm={4}>
+                            Ngày duyệt đăng ký
+                        </Label>
+                        <Col sm={8}>
+                            <Input
+                                name="date_approve"
+                                id="date_approve"
+                                type="text"
+                                placeholder="Ngày duyệt đăng ký"
+                                value={approved_date}
+                                disabled={true}
+                            />
+                        </Col>
+                    </FormGroup>
+                </Col>
 
-            <Col xs={12}>
-                <Row className="mt-4">
-                    <Col xs={12} sm={12}>
-                        <ActionButton
-                            isSubmitting={false}
-                            buttonList={[
+                <Col xs={12}>
+                    <Row className="mt-4">
+                        <Col xs={12} sm={12}>
+                            <ActionButton
+                                isSubmitting={false}
+                                buttonList={[
 
-                                {
-                                    title: "Lưu",
-                                    color: "primary",
-                                    isShow: true,
-                                    notSubmit: true,
-                                    permission: ["AFF_AFFILIATE_EDIT", "AFF_AFFILIATE_ADD"],
-                                    icon: "save",
-                                    onClick: () => handleSubmitForm("save"),
-                                },
-                                {
-                                    title: "Lưu và đóng",
-                                    color: "success",
-                                    isShow: true,
-                                    permission: ["AFF_AFFILIATE_EDIT", "AFF_AFFILIATE_ADD"],
-                                    notSubmit: true,
-                                    icon: "save",
-                                    onClick: () => handleSubmitForm("save_n_close"),
-                                },
-                                {
-                                    title: "Đóng",
-                                    icon: "times-circle",
-                                    isShow: true,
-                                    notSubmit: true,
-                                    onClick: () => window._$g.rdr("/affiliate"),
-                                },
-                            ]}
-                        />
-                    </Col>
-                </Row>
-            </Col>
-        </Row>
+                                    {
+                                        title: "Lưu",
+                                        color: "primary",
+                                        isShow: true,
+                                        notSubmit: true,
+                                        permission: ["AFF_AFFILIATE_EDIT", "AFF_AFFILIATE_ADD"],
+                                        icon: "save",
+                                        onClick: () => handleSubmit(),
+                                    },
+                                    {
+                                        title: "Lưu và đóng",
+                                        color: "success",
+                                        isShow: true,
+                                        permission: ["AFF_AFFILIATE_EDIT", "AFF_AFFILIATE_ADD"],
+                                        notSubmit: true,
+                                        icon: "save",
+                                        onClick: () => handleSubmit(true),
+                                    },
+                                    {
+                                        title: "Đóng",
+                                        icon: "times-circle",
+                                        isShow: true,
+                                        notSubmit: true,
+                                        onClick: () => window._$g.rdr("/affiliate"),
+                                    },
+                                ]}
+                            />
+                        </Col>
+                    </Row>
+                </Col>
+            </Row>
+        </>
     );
 }
 

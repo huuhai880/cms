@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     Col,
     Row
@@ -8,8 +8,10 @@ import { columnsCustomer } from "./const";
 import "./style.scss";
 import FilterTab from "./FilterTab";
 import TableTab from "./TableTab";
+import AffiliateService from "./Service/index";
 
-function TabCustomer(props) {
+const _affiliateService = new AffiliateService();
+function TabCustomer({member_id}) {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState({
         list: [],
@@ -23,10 +25,15 @@ function TabCustomer(props) {
         end_date: null,
     });
 
+    useEffect(() => {
+        getListCustomerAff(query)
+    },[])
+
     const handleChangePage = (event, newPage) => {
         let filter = { ...query };
         filter.page = newPage + 1;
         setQuery(filter);
+        getListCustomerAff(filter)
     };
 
     const handleChangeRowsPerPage = (event) => {
@@ -34,17 +41,36 @@ function TabCustomer(props) {
         filter.itemsPerPage = event.target.value;
         filter.page = 1;
         setQuery(filter);
+        getListCustomerAff(filter)
     };
 
     const handleSubmitFilter = (params) => {
-        let query_params = {
+        let _query = {
             ...query,
             ...params,
             page: 1,
             itemsPerPage: 25,
         };
-        setQuery(query_params);
+        setQuery(_query);
+        getListCustomerAff(_query)
     };
+
+    const getListCustomerAff = async (query) => {
+        setIsLoading(true)
+        try {
+            query.member_id = member_id;
+            query.type = 'customer';
+            let _data = await _affiliateService.getDataOfAffiliate(query);
+            setData(_data)
+        } catch (error) {
+            window._$g.dialogs.alert(
+                window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
+            );
+        }
+        finally {
+            setIsLoading(false)
+        }
+    }
 
     return (
         <Row>

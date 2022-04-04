@@ -53,31 +53,31 @@ export default class AffiliateService extends Model {
         return this._api.get(`/affiliate/report`, values);
     }
 
-    getListOrderAff(values) {
-        return this._api.get(`/affiliate/order`, values);
-    }
-
-    getListCustomerAff(values) {
-        return this._api.get(`/affiliate/customer`, values);
-    }
-
-    getListMemberAff(values) {
-        return this._api.get(`/affiliate/member`, values);
+    getDataOfAffiliate(values) {
+        return this._api.get(`/affiliate/data`, values);
     }
 
     getListAffRequest(values) {
         return this._api.get(`/affiliate/request`, values);
     }
 
-    detailAffRequest(id){
+    detailAffRequest(id) {
         return this._api.get(`/affiliate/request/${id}`);
     }
 
-    rejectAffRequest(values){
+    rejectAffRequest(values) {
         return this._api.post(`/affiliate/request/reject`, values);
     }
 
-    approveAffRequest(values){
+    approveAffRequest(values) {
         return this._api.post(`/affiliate/request/approve`, values);
+    }
+
+    updateStatusAff(values, id) {
+        return this._api.put(`/affiliate/${id}`, values);
+    }
+
+    updPolicyCommisionApply(values) {
+        return this._api.post(`/affiliate/policy-commision`, values);
     }
 }

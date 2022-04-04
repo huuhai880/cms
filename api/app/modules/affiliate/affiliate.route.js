@@ -16,7 +16,8 @@ routes.route('/init')
     .get(affiliateController.initDataOption)
 
 routes.route('/:id(\\d+)')
-    .get(affiliateController.getDetailAffiliate);
+    .get(affiliateController.getDetailAffiliate)
+    .put(affiliateController.updStatusAff);
 
 routes.route('/up-level')
     .post(validate(rule.upLevelAff), affiliateController.upLevelAffiliate)
@@ -24,14 +25,11 @@ routes.route('/up-level')
 routes.route('/report')
     .get(affiliateController.reportOfAffiliate);
 
-routes.route('/order')
-    .get(affiliateController.getListOrderAff);
+routes.route('/data')
+    .get(affiliateController.getDataOfAffiliate);
 
-routes.route('/customer')
-    .get(affiliateController.getListCustomerAff);
-
-routes.route('/member')
-    .get(affiliateController.getListMemberAff);
+routes.route('/policy-commision')
+    .post(affiliateController.updPolicyCommisionApply);
 
 routes.route('/request')
     .get(affiliateController.getListAffRequest);

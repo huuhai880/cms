@@ -376,7 +376,7 @@ export const columnsOrder = (query) => {
             },
         },
         {
-            name: "total_amount",
+            name: "total_money",
             label: "Giá trị đơn hàng",
             options: {
                 filter: false,
@@ -401,7 +401,7 @@ export const columnsOrder = (query) => {
             },
         },
         {
-            name: "total_commision",
+            name: "referral_value",
             label: "Hoa hồng",
             options: {
                 filter: false,
@@ -457,7 +457,7 @@ export const columnsCustomer = (query) => {
     return [
         configIDRowTable("member_id", "", query),
         {
-            name: "registration_date",
+            name: "created_date",
             label: "Thời gian đăng ký",
             options: {
                 filter: false,
@@ -466,7 +466,8 @@ export const columnsCustomer = (query) => {
                     return (
                         <th
                             key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head">
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{width: 250}}>
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );
@@ -506,8 +507,8 @@ export const columnsCustomer = (query) => {
             },
         },
         {
-            name: "total_amount",
-            label: "Tổng giá trị đơn hàng",
+            name: "email",
+            label: "Email",
             options: {
                 filter: false,
                 sort: false,
@@ -515,7 +516,8 @@ export const columnsCustomer = (query) => {
                     return (
                         <th
                             key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head">
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{width: 300}}>
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );
@@ -523,15 +525,15 @@ export const columnsCustomer = (query) => {
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
                         <div className="text-right">
-                            {numberFormat(value)}
+                           {value}
                         </div>
                     );
                 },
             },
         },
         {
-            name: "commision_value",
-            label: "Hoa hồng",
+            name: "phone_number",
+            label: "Số điện thoại",
             options: {
                 filter: false,
                 sort: false,
@@ -539,7 +541,8 @@ export const columnsCustomer = (query) => {
                     return (
                         <th
                             key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head">
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{width: 300}}>
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );
@@ -547,7 +550,7 @@ export const columnsCustomer = (query) => {
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
                         <div className="text-right">
-                            {numberFormat(value)}
+                            {value}
                         </div>
                     );
                 },
@@ -560,8 +563,8 @@ export const columnsMember = (query) => {
     return [
         configIDRowTable("member_id", "", query),
         {
-            name: "registration_date",
-            label: "Thời gian duyệt đăng ký",
+            name: "approved_date",
+            label: "Thời gian đăng ký",
             options: {
                 filter: false,
                 sort: false,
@@ -569,7 +572,8 @@ export const columnsMember = (query) => {
                     return (
                         <th
                             key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head">
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{width: 250}}>
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );
@@ -609,7 +613,7 @@ export const columnsMember = (query) => {
             },
         },
         {
-            name: "total_amount",
+            name: "total_order_value",
             label: "Tổng giá trị đơn hàng",
             options: {
                 filter: false,
@@ -618,7 +622,8 @@ export const columnsMember = (query) => {
                     return (
                         <th
                             key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head">
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{width: 250}}>
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );
@@ -633,7 +638,7 @@ export const columnsMember = (query) => {
             },
         },
         {
-            name: "commision_value",
+            name: "total_referral_value",
             label: "Hoa hồng",
             options: {
                 filter: false,
@@ -642,7 +647,8 @@ export const columnsMember = (query) => {
                     return (
                         <th
                             key={`head-th-${columnMeta.label}`}
-                            className="MuiTableCell-root MuiTableCell-head">
+                            className="MuiTableCell-root MuiTableCell-head"
+                            style={{width: 250}}>
                             <div className="text-center">{columnMeta.label}</div>
                         </th>
                     );

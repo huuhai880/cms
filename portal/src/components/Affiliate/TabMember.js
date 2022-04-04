@@ -8,8 +8,11 @@ import { columnsMember } from "./const";
 import "./style.scss";
 import FilterTab from "./FilterTab";
 import TableTab from "./TableTab";
+import AffiliateService from "./Service/index";
 
-function TabMember(props) {
+const _affiliateService = new AffiliateService();
+
+function TabMember({member_id}) {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState({
         list: [],
@@ -27,6 +30,7 @@ function TabMember(props) {
         let filter = { ...query };
         filter.page = newPage + 1;
         setQuery(filter);
+        getListMemberAff(filter)
     };
 
     const handleChangeRowsPerPage = (event) => {
@@ -34,17 +38,36 @@ function TabMember(props) {
         filter.itemsPerPage = event.target.value;
         filter.page = 1;
         setQuery(filter);
+        getListMemberAff(filter)
     };
 
     const handleSubmitFilter = (params) => {
-        let query_params = {
+        let _query = {
             ...query,
             ...params,
             page: 1,
             itemsPerPage: 25,
         };
-        setQuery(query_params);
+        setQuery(_query);
+        getListMemberAff(_query)
     };
+
+    const getListMemberAff = async (query) => {
+        setIsLoading(true)
+        try {
+            query.member_id = member_id;
+            query.type = 'member';
+            let _data = await _affiliateService.getDataOfAffiliate(query);
+            setData(_data)
+        } catch (error) {
+            window._$g.dialogs.alert(
+                window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại")
+            );
+        }
+        finally {
+            setIsLoading(false)
+        }
+    }
 
     return (
         <Row>
