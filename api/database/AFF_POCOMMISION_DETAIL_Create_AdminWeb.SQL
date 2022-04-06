@@ -1,0 +1,47 @@
+CREATE PROCEDURE AFF_POCOMMISION_DETAIL_Create_AdminWeb
+    @POLICYCOMMISIONID  BIGINT = 0,
+    @CONDITIONID BIGINT = 0,
+    @FROMVALUE MONEY = NULL,
+    @TOVALUE MONEY = NULL,
+    @TYPE INT = 1, --1: %
+    @COMISSIONVALUE FLOAT = NULL,
+    @CREATEDUSER VARCHAR(20) = NULL
+AS 
+BEGIN
+    INSERT INTO AFF_POCOMMISION_DETAIL
+    (
+        POLICYCOMMISIONID,
+        CONDITIONID,
+        FROMVALUE,
+        TOVALUE,
+        TYPE,
+        COMISSIONVALUE,
+        ISACTIVE,
+        ISDELETED,
+        CREATEDUSER,
+        CREATEDDATE,
+        UPDATEDUSER,
+        UPDATEDDATE,
+        DELETEDUSER,
+        DELETEDDATE
+    )
+    VALUES
+    (
+        @POLICYCOMMISIONID,
+        @CONDITIONID,
+        @FROMVALUE,
+        @TOVALUE,
+        @TYPE,
+        @COMISSIONVALUE,
+        1,
+        0,
+        @CREATEDUSER,
+        GETDATE(),
+        NULL,
+        NULL,
+        NULL,
+        NULL
+    )
+    SELECT SCOPE_IDENTITY() AS RESULT
+
+END

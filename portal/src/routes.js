@@ -720,6 +720,13 @@ const AffiliateDetail = React.lazy(() => import("./components/Affiliate/Affiliat
 const AffiliateRequest = React.lazy(() => import("./components/Affiliate/AffiliateRequest"));
 //.end#AFFILIATE
 
+// POLICYCOMMISION
+const AffPolicyCommision = React.lazy(() => import("./components/AffPolicyCommision/AffPolicyCommision"));
+const AffPolicyCommisionAdd = React.lazy(() => import("./components/AffPolicyCommision/AffPolicyCommisionAdd"));
+const AffPolicyCommisionEdit = React.lazy(() => import("./components/AffPolicyCommision/AffPolicyCommisionEdit"));
+const AffPolicyCommisionDetail = React.lazy(() => import("./components/AffPolicyCommision/AffPolicyCommisionDetail"));
+//.end#POLICYCOMMISION
+
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -3434,6 +3441,37 @@ const routes = [
         component: AffiliateRequest,
     },
     // end#Affiliate
+
+    //PolicyCommision
+    {
+        path: "/policy-commision",
+        exact: true,
+        name: "Quản lý chính sách",
+        function: "AFF_POLICYCOMMISION_VIEW",
+        component: AffPolicyCommision,
+    },
+    {
+        path: "/policy-commision/add",
+        exact: true,
+        name: "Thêm mới",
+        function: "AFF_POLICYCOMMISION_ADD",
+        component: AffPolicyCommisionAdd,
+    },
+    {
+        path: "/policy-commision/edit/:id",
+        exact: true,
+        name: "Chỉnh sửa",
+        function: "AFF_POLICYCOMMISION_EDIT",
+        component: AffPolicyCommisionEdit,
+    },
+    {
+        path: "/policy-commision/detail/:id",
+        exact: true,
+        name: "Chi tiết",
+        function: "AFF_POLICYCOMMISION_VIEW",
+        component: AffPolicyCommisionDetail,
+    }
+    // end#PolicyCommision
 
 ];
 

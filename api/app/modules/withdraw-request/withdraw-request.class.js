@@ -81,7 +81,8 @@ const detail = (data = {}) => {
         'swift_number',
         'bank_name',
         'bank_code',
-        'bank_account_number'
+        'bank_account_number',
+        'payment_image'
     ]) : null;
 };
 
