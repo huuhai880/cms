@@ -23,8 +23,6 @@ BEGIN
         ISDELETED,
         DELETEDUSER,
         DELETEDDATE,
-        TYPE,
-        COMISSIONVALUE,
         LOGDATE,
         LOGEDUSER
     )
@@ -40,8 +38,6 @@ BEGIN
             ISDELETED,
             DELETEDUSER,
             DELETEDDATE,
-            1, --1: %
-            COMISSIONVALUE,
             GETDATE(),
             CREATEDUSER
     FROM    AFF_POLICYCOMMISION_APPLY

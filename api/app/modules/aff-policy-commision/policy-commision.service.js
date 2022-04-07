@@ -93,7 +93,7 @@ const createOrUpdPolicyCommision = async (bodyParams = {}) => {
     const pool = await mssql.pool;
     const transaction = await new sql.Transaction(pool);
     try {
-        let policy_commision_id = apiHelper.getValueFromObject(bodyParams, 'policy_commsion_id', 0);
+        let policy_commision_id = apiHelper.getValueFromObject(bodyParams, 'policy_commision_id', 0);
         let policy_commision_name = apiHelper.getValueFromObject(bodyParams, 'policy_commision_name', null);
         let affiliate_type_id = apiHelper.getValueFromObject(bodyParams, 'affiliate_type_id', 0);
         let description = apiHelper.getValueFromObject(bodyParams, 'description', null);
