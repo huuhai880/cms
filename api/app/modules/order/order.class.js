@@ -52,7 +52,8 @@ const template = {
     start_date: '{{#? STARTDATE}}',
     end_date: '{{#? ENDDATE}}',
     customer_type_id: '{{#? CUSTOMERTYPEID}}',
-    discount_money: '{{#? DISCOUNTMONEY}}'
+    discount_money: '{{#? DISCOUNTMONEY}}',
+    referral_code: '{{#? REFERRALCODE}}'
 };
 let transform = new Transform(template);
 
@@ -70,7 +71,8 @@ const list = (data = []) => {
         'order_type',
         'customer_name',
         'is_grow_revenue',
-        'discount_code'
+        'discount_code',
+        'referral_code'
     ]);
 };
 

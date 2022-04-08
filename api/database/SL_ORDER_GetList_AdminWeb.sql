@@ -38,6 +38,7 @@ BEGIN
                     SL_ORDER.ISGROWREVENUE,
                     CONCAT(CRM_ACCOUNT.CUSTOMERCODE,' - ', CRM_ACCOUNT.FULLNAME) AS CUSTOMERNAME,
                     SL_ORDER_DISCOUNT.DISCOUNTCODE,
+                    REFERRAL.CUSTOMERCODE REFERRALCODE,
                     COUNT(1) OVER() AS TOTALITEMS
 
         FROM        SL_ORDER
@@ -51,6 +52,8 @@ BEGIN
         AND         SL_ORDER_DISCOUNT.ISACTIVE = 1
         AND         SL_ORDER_DISCOUNT.ISDELETED = 0
 
+        LEFT JOIN   CRM_ACCOUNT REFERRAL
+        ON          REFERRAL.MEMBERID = SL_ORDER.REFERRALCODE
 
         WHERE       (
                         @KEYWORD IS NULL

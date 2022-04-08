@@ -78,6 +78,7 @@ const template = {
   twitter: '{{#? TWITTERURL}}',
   customer_type_id: '{{#? CUSTOMERTYPEID}}',
   customer_type_name: '{{#? CUSTOMERTYPENAME}}',
+  referral_member: '{{#? REFERRALMEMBER}}'
 };
 
 let transform = new Transform(template);
@@ -128,6 +129,7 @@ const list = (users = []) => {
     'address_full',
     'type_register',
     'is_active',
+    'referral_member'
   ]);
 };
 const listCustomerType = (users = []) => {

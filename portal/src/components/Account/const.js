@@ -188,6 +188,26 @@ export const getColumTable = (data, total, query, handleDelete, handleReply, han
       },
     },
     {
+        name: "referral_member",
+        label: "Mã giới thiệu",
+        options: {
+          filter: false,
+          sort: false,
+          customHeadRender: (columnMeta, handleToggleColumn) => {
+            return (
+              <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+                <div className="text-center">{columnMeta.label}</div>
+              </th>
+            );
+          },
+          customBodyRender: (value, tableMeta, updateValue) => {
+            return (
+              <div className="text-center">{value}</div>
+            );
+          },
+        },
+      },
+    {
       name: "is_active",
       label: "Kích hoạt",
       options: {
