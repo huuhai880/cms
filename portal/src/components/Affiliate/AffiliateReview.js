@@ -88,7 +88,8 @@ function AffiliateReview(props) {
                 })
             }
             window._$g.toastr.show("Duyệt thành công!", "success");
-            initData();
+            //initData();
+            return window._$g.rdr("/affiliate-request");
         } catch (error) {
             let { errors, statusText, message } = error;
             let msg = [`<b>${statusText || message}</b>`].concat(errors || []).join("<br/>");
@@ -107,7 +108,6 @@ function AffiliateReview(props) {
     }
 
     const handleChangePolicyCommisionApply = (e) => {
-        console.log(e)
         let _affiliateRequest = { ...affiliateRequest };
         _affiliateRequest.policy_commision_apply = e;
         setAffiliateRequest(_affiliateRequest)
@@ -115,7 +115,6 @@ function AffiliateReview(props) {
             setMsgError(null)
         }
     }
-    console.log(affiliateRequest)
 
     return loading ? (
         <Loading />

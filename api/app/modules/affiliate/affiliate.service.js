@@ -459,6 +459,13 @@ const approveAffRequest = async (bodyParams = {}) => {
             .input('UPDATEDUSER', review_user)
             .execute('CRM_ACCOUNT_Update_FromAff_AdminWeb')
 
+        //TAO VI CHO AFF
+        const reqWalet = new sql.Request(transaction);
+        await reqWalet
+            .input('MEMBERID', member_id)
+            .input('CREATEDUSER', review_user)
+            .execute('WA_WALET_Create_AdminWeb')
+
         //await transaction.commit();
         await new Promise(resolve => transaction.commit(resolve));
         return new ServiceResponse(true, '', true)
