@@ -401,7 +401,7 @@ export const columnsOrder = (query) => {
             },
         },
         {
-            name: "referral_value",
+            name: "comission_value",
             label: "Hoa hồng",
             options: {
                 filter: false,
@@ -443,7 +443,7 @@ export const columnsOrder = (query) => {
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
-                        <div className="text-right">
+                        <div className="text-center">
                             {value}
                         </div>
                     );
@@ -524,7 +524,7 @@ export const columnsCustomer = (query) => {
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
-                        <div className="text-right">
+                        <div className="text-left">
                            {value}
                         </div>
                     );
@@ -549,7 +549,7 @@ export const columnsCustomer = (query) => {
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
-                        <div className="text-right">
+                        <div className="text-left">
                             {value}
                         </div>
                     );
@@ -613,8 +613,8 @@ export const columnsMember = (query) => {
             },
         },
         {
-            name: "total_order_value",
-            label: "Tổng giá trị đơn hàng",
+            name: "total_revenue",
+            label: "Tổng doanh số",
             options: {
                 filter: false,
                 sort: false,
@@ -638,7 +638,7 @@ export const columnsMember = (query) => {
             },
         },
         {
-            name: "total_referral_value",
+            name: "comission_value",
             label: "Hoa hồng",
             options: {
                 filter: false,

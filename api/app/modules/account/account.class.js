@@ -78,7 +78,9 @@ const template = {
   twitter: '{{#? TWITTERURL}}',
   customer_type_id: '{{#? CUSTOMERTYPEID}}',
   customer_type_name: '{{#? CUSTOMERTYPENAME}}',
-  referral_member: '{{#? REFERRALMEMBER}}'
+  referral_member: '{{#? REFERRALMEMBER}}',
+  referral_code: '{{#? REFERRALCODE}}',
+  affiliate_id: '{{#? AFFILIATEID}}'
 };
 
 let transform = new Transform(template);
@@ -112,7 +114,8 @@ const detail = (user) => {
     'facebook',
     'twitter',
     'customer_type_id',
-    
+    'referral_member',
+    'referral_code'
   ]);
 };
 const genCode = (user) => {
@@ -129,7 +132,9 @@ const list = (users = []) => {
     'address_full',
     'type_register',
     'is_active',
-    'referral_member'
+    'referral_member',
+    'referral_code',
+    'affiliate_id'
   ]);
 };
 const listCustomerType = (users = []) => {

@@ -85,7 +85,9 @@ const template = {
     total_money: '{{#? TOTALMONEY}}',
     referral_value: '{{#? REFERRALVALUE}}',
     total_order_value: '{{#? TOTALORDERVALUE}}',
-    total_referral_value: '{{#? TOTALREFERRALVALUE}}'
+    total_referral_value: '{{#? TOTALREFERRALVALUE}}',
+    comission_value: '{{#? COMISSIONVALUE}}',
+    total_revenue: '{{#? TOTALREVENUE}}'
 }
 
 let transform = new Transform(template);
@@ -160,7 +162,7 @@ const listOrderAff = (list = []) => {
         'order_date',
         'order_no',
         'total_money',
-        'referral_value',
+        'comission_value',
         'status',
         'full_name'
     ]);
@@ -181,8 +183,8 @@ const listMemberAff = (list = []) => {
         'member_id',
         'full_name',
         'approved_date',
-        'total_order_value',
-        'total_referral_value'
+        'comission_value',
+        'total_revenue'
     ]);
 };
 

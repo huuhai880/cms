@@ -7,69 +7,63 @@ import {
     Label
 } from "reactstrap";
 import { useState } from "react";
-import DatePicker from "../Common/DatePicker";
-
+// import DatePicker from "../Common/DatePicker";
+import { DatePicker, Space } from 'antd';
+import moment from 'moment'
 
 function FilterTab({ handleSubmitFilter, label = "Thời gian tạo" }) {
     const [filter, setFilter] = useState({
-        startDate: null,
-        endDate: null,
+        month: moment()
     });
-
-    const handleChangeDate = ({ startDate, endDate }) => {
-        setFilter((preState) => ({
-            ...preState,
-            startDate,
-            endDate,
-        }));
-    };
 
     const handleClear = () => {
         setFilter({
-            startDate: null,
-            endDate: null,
+            month: null
         });
 
         handleSubmitFilter({
-            start_date: null,
-            end_date: null,
+            month: null,
             page: 1,
         });
     }
 
     const handleSubmit = () => {
         let {
-            startDate,
-            endDate,
+            month
         } = filter;
 
         handleSubmitFilter({
-            start_date: startDate ? startDate.format("DD/MM/YYYY") : null,
-            end_date: endDate ? endDate.format("DD/MM/YYYY") : null,
-            page: 1,
+            month: month ? moment(month).format('DD/MM/YYYY') : null,
+            page: 1
         });
     };
 
+    const onChange = (date, dateString) => {
+        setFilter((preState) => ({
+            ...preState,
+            month: date
+        }));
+    }
+
     return (
         <Row>
-            <Col xs={6}>
+            <Col xs={5}>
                 <FormGroup row className="align-items-center">
-                    <Label sm={3}>
+                    <Label sm={4}>
                         {label}
                     </Label>
-                    <Col sm={9}>
-                        <DatePicker
-                            startDate={filter.startDate}
-                            startDateId="start_date_id"
-                            endDate={filter.endDate}
-                            endDateId="end_date_id"
-                            onDatesChange={handleChangeDate}
-                            isMultiple
+                    <Col sm={8}>
+                        <DatePicker onChange={onChange}
+                            picker="month"
+                            placeholder={"Chọn Tháng"}
+                            className="form-control"
+                            value={filter.month}
+                            allowClear={false}
                         />
                     </Col>
                 </FormGroup>
             </Col>
-            <Col xs={6} className={`d-flex align-items-end`}>
+            <Col xs={5} className={`d-flex align-items-end`}>
                 <FormGroup>
                     <Button
                         className="col-12 pt-2 pb-2 MuiPaper-filter__custom--button"

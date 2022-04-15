@@ -9,17 +9,18 @@ import { useState } from "react";
 import { useEffect } from "react";
 import "./style.scss";
 import AffiliateService from "./Service/index";
-import {numberFormat } from "utils/index";
-import DatePicker from "../Common/DatePicker";
+import { numberFormat } from "utils/index";
+// import DatePicker from "../Common/DatePicker";
 import moment from 'moment'
+import { DatePicker, Space } from 'antd';
 
 const _affiliateService = new AffiliateService();
 function AffiliateReport({ member_id }) {
-    const [searchValue, setSearchValue] = useState({
-        startDate: moment().startOf("month"),
-        endDate: moment(),
-        nameTag: "Tháng này",
-    });
+    // const [searchValue, setSearchValue] = useState({
+    //     startDate: moment().startOf("month"),
+    //     endDate: moment(),
+    //     nameTag: "Tháng này",
+    // });
 
     const [report, setReport] = useState({
         total_revenue: 0,
@@ -27,17 +28,26 @@ function AffiliateReport({ member_id }) {
         total_commision: 0
     })
 
+    const [filter, setFilter] = useState({
+        month: moment()
+    });
+
+
+    // useEffect(() => {
+    //     getReport();
+    // }, [searchValue])
+
+
     useEffect(() => {
         getReport();
-    }, [searchValue])
+    }, [filter])
 
 
     const getReport = async () => {
         try {
             let values = {
                 member_id,
-                start_date: searchValue.startDate ? searchValue.startDate.format("DD/MM/YYYY") : null,
-                end_date: searchValue.endDate ? searchValue.endDate.format("DD/MM/YYYY") : null
+                month: filter.month ? moment(filter.month).format('DD/MM/YYYY') : null,
             }
             let _data = await _affiliateService.reportOfAff(values);
             setReport(_data)
@@ -48,122 +58,130 @@ function AffiliateReport({ member_id }) {
         }
     }
 
-    const renderCalendarInfo = () => {
-        let data = [
-            "Hôm nay",
-            "Hôm qua",
-            "Tuần này",
-            "Tuần trước",
-            "Tháng này",
-            "Tháng trước",
-            "Chọn ngày",
-        ];
-        return (
-            <Col style={{ width: "150px" }} sm={12} className="pl-0 pr-0 bl">
-                {data.map((item) => {
-                    return (
-                        <Col
-                            sm={12}
-                            onClick={() => {
-                                calendar(item);
-                            }}
-                            className={`pt-3 pb-1 hover cursor-pointer ${searchValue.nameTag == item ? "focus" : ""
-                                }`}
-                        >
-                            <Label className="cursor-pointer">{item}</Label>
-                        </Col>
-                    );
-                })}
-            </Col>
-        );
-    };
+    // const renderCalendarInfo = () => {
+    //     let data = [
+    //         "Hôm nay",
+    //         "Hôm qua",
+    //         "Tuần này",
+    //         "Tuần trước",
+    //         "Tháng này",
+    //         "Tháng trước",
+    //         "Chọn ngày",
+    //     ];
+    //     return (
+    //         <Col style={{ width: "150px" }} sm={12} className="pl-0 pr-0 bl">
+    //             {data.map((item) => {
+    //                 return (
+    //                     <Col
+    //                         sm={12}
+    //                         onClick={() => {
+    //                             calendar(item);
+    //                         }}
+    //                         className={`pt-3 pb-1 hover cursor-pointer ${searchValue.nameTag == item ? "focus" : ""
+    //                             }`}
+    //                     >
+    //                         <Label className="cursor-pointer">{item}</Label>
+    //                     </Col>
+    //                 );
+    //             })}
+    //         </Col>
+    //     );
+    // };
 
-    const calendar = (key) => {
-        switch (key) {
-            case "Hôm nay": {
-                setSearchValue((pre) => ({
-                    ...searchValue,
-                    startDate: moment(),
-                    endDate: moment(),
-                    nameTag: "Hôm nay",
-                }));
-                break;
-            }
+    // const calendar = (key) => {
+    //     switch (key) {
+    //         case "Hôm nay": {
+    //             setSearchValue((pre) => ({
+    //                 ...searchValue,
+    //                 startDate: moment(),
+    //                 endDate: moment(),
+    //                 nameTag: "Hôm nay",
+    //             }));
+    //             break;
+    //         }
 
-            case "Hôm qua": {
-                setSearchValue((pre) => ({
-                    ...searchValue,
-                    startDate: moment().subtract(1, "days"),
-                    endDate: moment().subtract(1, "days"),
-                    nameTag: "Hôm qua",
-                }));
-                break;
-            }
+    //         case "Hôm qua": {
+    //             setSearchValue((pre) => ({
+    //                 ...searchValue,
+    //                 startDate: moment().subtract(1, "days"),
+    //                 endDate: moment().subtract(1, "days"),
+    //                 nameTag: "Hôm qua",
+    //             }));
+    //             break;
+    //         }
 
-            case "Tuần này": {
-                setSearchValue((pre) => ({
-                    ...searchValue,
-                    startDate: moment().startOf("week").add(1, "days"),
-                    endDate: moment(),
-                    nameTag: "Tuần này",
-                }));
-                break;
-            }
+    //         case "Tuần này": {
+    //             setSearchValue((pre) => ({
+    //                 ...searchValue,
+    //                 startDate: moment().startOf("week").add(1, "days"),
+    //                 endDate: moment(),
+    //                 nameTag: "Tuần này",
+    //             }));
+    //             break;
+    //         }
 
-            case "Tuần trước": {
-                setSearchValue((pre) => ({
-                    ...searchValue,
-                    startDate: moment()
-                        .subtract(1, "week")
-                        .startOf("week")
-                        .add(1, "days"),
-                    endDate: moment().subtract(1, "week").endOf("week").add(1, "days"),
-                    nameTag: "Tuần trước",
-                }));
+    //         case "Tuần trước": {
+    //             setSearchValue((pre) => ({
+    //                 ...searchValue,
+    //                 startDate: moment()
+    //                     .subtract(1, "week")
+    //                     .startOf("week")
+    //                     .add(1, "days"),
+    //                 endDate: moment().subtract(1, "week").endOf("week").add(1, "days"),
+    //                 nameTag: "Tuần trước",
+    //             }));
 
-                break;
-            }
+    //             break;
+    //         }
 
-            case "Tháng này": {
-                setSearchValue((pre) => ({
-                    ...searchValue,
-                    startDate: moment().startOf("month"),
-                    endDate: moment(),
-                    nameTag: "Tháng này",
-                }));
-                break;
-            }
+    //         case "Tháng này": {
+    //             setSearchValue((pre) => ({
+    //                 ...searchValue,
+    //                 startDate: moment().startOf("month"),
+    //                 endDate: moment(),
+    //                 nameTag: "Tháng này",
+    //             }));
+    //             break;
+    //         }
 
-            case "Tháng trước": {
-                setSearchValue((pre) => ({
-                    ...searchValue,
-                    startDate: moment().subtract(1, "month").startOf("month"),
-                    endDate: moment().subtract(1, "month").endOf("month"),
-                    nameTag: "Tháng trước",
-                }));
-                break;
-            }
+    //         case "Tháng trước": {
+    //             setSearchValue((pre) => ({
+    //                 ...searchValue,
+    //                 startDate: moment().subtract(1, "month").startOf("month"),
+    //                 endDate: moment().subtract(1, "month").endOf("month"),
+    //                 nameTag: "Tháng trước",
+    //             }));
+    //             break;
+    //         }
 
-            case "Chọn ngày": {
-                setSearchValue((pre) => ({
-                    ...searchValue,
-                    startDate: moment(),
-                    endDate: moment(),
-                    nameTag: "Chọn ngày",
-                }));
-                break;
-            }
-        }
-    };
+    //         case "Chọn ngày": {
+    //             setSearchValue((pre) => ({
+    //                 ...searchValue,
+    //                 startDate: moment(),
+    //                 endDate: moment(),
+    //                 nameTag: "Chọn ngày",
+    //             }));
+    //             break;
+    //         }
+    //     }
+    // };
 
 
-    const handleChangeDate = ({ startDate, endDate }) => {
-        setSearchValue((preState) => ({
+    // const handleChangeDate = ({ startDate, endDate }) => {
+    //     setSearchValue((preState) => ({
+    //         ...preState,
+    //         startDate,
+    //         endDate,
+    //     }));
+    // };
+
+    const onChange = (date, dateString) => {
+        setFilter((preState) => ({
             ...preState,
-            startDate,
-            endDate,
+            month: date
         }));
-    };
+    }
+
 
     return (
         <>
@@ -173,7 +191,7 @@ function AffiliateReport({ member_id }) {
                         <Label for="" className="mr-sm-2">
                             Chọn thời gian
                         </Label>
-                        <DatePicker
+                        {/* <DatePicker
                             styles={{
                                 menuPortal: (base) => ({ ...base, zIndex: 9999 }),
                             }}
@@ -185,6 +203,13 @@ function AffiliateReport({ member_id }) {
                             isMultiple
                             calendarInfoPosition="before"
                             renderCalendarInfo={renderCalendarInfo}
+                        /> */}
+                        <DatePicker onChange={onChange}
+                            picker="month"
+                            placeholder={"Chọn Tháng"}
+                            className="form-control"
+                            value={filter.month}
+                            allowClear={false}
                         />
                     </FormGroup>
                 </Col>

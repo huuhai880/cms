@@ -21,8 +21,7 @@ function TabOrder({ member_id }) {
     const [query, setQuery] = useState({
         itemsPerPage: 25,
         page: 1,
-        start_date: null,
-        end_date: null,
+        month: null
     });
 
     useEffect(() => {
@@ -45,14 +44,14 @@ function TabOrder({ member_id }) {
     };
 
     const handleSubmitFilter = (params) => {
-        let query_params = {
+        let filter = {
             ...query,
             ...params,
             page: 1,
             itemsPerPage: 25,
         };
-        setQuery(query_params);
-        getListOrderAff(query_params);
+        setQuery(filter);
+        getListOrderAff(filter);
     };
 
     const getListOrderAff = async (query) => {
@@ -76,7 +75,7 @@ function TabOrder({ member_id }) {
         <Row>
             <Col xs={12}>
                 <FilterTab handleSubmitFilter={handleSubmitFilter}
-                    label="Ngày ghi nhận"
+                    label="Tháng ghi nhận"
                 />
             </Col>
             <Col xs={12}>

@@ -62,11 +62,11 @@ function AffiliateDetail(props) {
             case 'INFO':
                 return <TabInfoAffiliate affiliate={affiliate} policyCommisions={policyCommisions}/>
             case 'ORDER':
-                return <TabOrder />
+                return <TabOrder member_id={affiliate.member_id}/>
             case 'CUSTOMER':
-                return <TabCustomer />
+                return <TabCustomer member_id={affiliate.member_id}/>
             case 'MEMBER':
-                return <TabMember />
+                return <TabMember member_id={affiliate.member_id}/>
             default:
                 break;
         }
@@ -89,7 +89,7 @@ function AffiliateDetail(props) {
                                 </Col>
 
                                 <Col xs={12} sm={8} style={{ padding: 15 }}>
-                                    <CardAffReport />
+                                    <CardAffReport member_id={affiliate.member_id} />
                                 </Col>
                             </Row>
                             <Row style={{ margin: '10px 5px' }}>

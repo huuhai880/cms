@@ -271,14 +271,12 @@ const upLevelAffiliate = async (bodyParams = {}) => {
 const reportOfAffiliate = async (queryParams = {}) => {
     try {
         let member_id = apiHelper.getValueFromObject(queryParams, 'member_id', 0);
-        let start_date = apiHelper.getValueFromObject(queryParams, 'start_date', null);
-        let end_date = apiHelper.getValueFromObject(queryParams, 'end_date', null);
+        let month = apiHelper.getValueFromObject(queryParams, 'month', null);
 
         const pool = await mssql.pool;
         const res = await pool.request()
             .input('MEMBERID', member_id)
-            .input('STARTDATE', start_date)
-            .input('ENDDATE', end_date)
+            .input('MONTH', month)
             .execute('AFF_AFFILIATE_Report_AdminWeb');
 
         return new ServiceResponse(true, '', affiliateClass.reportAffiliate(res.recordset[0]))
@@ -295,16 +293,14 @@ const getDataOfAffiliate = async (queryParams = {}) => {
 
         const currentPage = apiHelper.getCurrentPage(queryParams);
         const itemsPerPage = apiHelper.getItemsPerPage(queryParams);
-        const start_date = apiHelper.getValueFromObject(queryParams, 'start_date', null);
-        const end_date = apiHelper.getValueFromObject(queryParams, 'end_date', null);
+        const month = apiHelper.getValueFromObject(queryParams, 'month', null);
         const member_id = apiHelper.getValueFromObject(queryParams, 'member_id', null);
         const type = apiHelper.getValueFromObject(queryParams, 'type', 'order');
 
         const pool = await mssql.pool;
         const res = await pool.request()
             .input('MEMBERID', member_id)
-            .input('STARTDATE', start_date)
-            .input('ENDDATE', end_date)
+            .input('MONTH', month)
             .input('TYPE', type)
             .input('PAGEINDEX', currentPage)
             .input('PAGESIZE', itemsPerPage)
@@ -318,7 +314,7 @@ const getDataOfAffiliate = async (queryParams = {}) => {
             list = affiliateClass.listCustomerAff(res.recordset);
         }
         else if (type == 'member') {
-            list = affiliateClass.listMember(res.recordset);
+            list = affiliateClass.listMemberAff(res.recordset);
         }
         let total = apiHelper.getTotalData(res.recordset[0]);
 

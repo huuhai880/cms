@@ -122,6 +122,22 @@ function OrderDetail() {
                                                     </Col>
                                                 </FormGroup>
                                             </Col>
+                                            <Col xs={6}>
+                                                <FormGroup row>
+                                                    <Label for="attribute_id" sm={3}>
+                                                        Người giới thiệu
+                                                    </Label>
+                                                    <Col sm={9}>
+                                                        <Input
+                                                            name="referral_member"
+                                                            id="referral_member"
+                                                            type="text"
+                                                            disabled={true}
+                                                            value={order.referral_member}
+                                                        />
+                                                    </Col>
+                                                </FormGroup>
+                                            </Col>
                                         </Row>
                                     </Col>
 

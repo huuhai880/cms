@@ -11,7 +11,7 @@ import TableTab from "./TableTab";
 import AffiliateService from "./Service/index";
 
 const _affiliateService = new AffiliateService();
-function TabCustomer({member_id}) {
+function TabCustomer({ member_id }) {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState({
         list: [],
@@ -21,13 +21,12 @@ function TabCustomer({member_id}) {
     const [query, setQuery] = useState({
         itemsPerPage: 25,
         page: 1,
-        start_date: null,
-        end_date: null,
+        month: null
     });
 
     useEffect(() => {
         getListCustomerAff(query)
-    },[])
+    }, [])
 
     const handleChangePage = (event, newPage) => {
         let filter = { ...query };
@@ -76,7 +75,7 @@ function TabCustomer({member_id}) {
         <Row>
             <Col xs={12}>
                 <FilterTab handleSubmitFilter={handleSubmitFilter}
-                 label="Ngày đăng ký"
+                    label="Tháng giới thiệu"
                 />
             </Col>
             <Col xs={12}>

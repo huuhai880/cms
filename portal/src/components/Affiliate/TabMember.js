@@ -22,8 +22,7 @@ function TabMember({member_id}) {
     const [query, setQuery] = useState({
         itemsPerPage: 25,
         page: 1,
-        start_date: null,
-        end_date: null,
+        month: null,
     });
 
     const handleChangePage = (event, newPage) => {
@@ -73,7 +72,7 @@ function TabMember({member_id}) {
         <Row>
             <Col xs={12}>
                 <FilterTab handleSubmitFilter={handleSubmitFilter}
-                    label="Ngày đăng ký" />
+                    label="Tháng đăng ký" />
             </Col>
             <Col xs={12}>
                 <TableTab

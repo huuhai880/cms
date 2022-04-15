@@ -57,6 +57,8 @@ function AccountAdd({ noEdit }) {
   const [password_confirm, setPasswordconfirm] = useState("");
   const [alerPassword, setAlerPassword] = useState("");
   const [dataType, setDataType] = useState("");
+  const [affiliateOption, setAffiliateOption] = useState([])
+
   const validationSchema = yup.object().shape({
     user_name: yup
       .string()
@@ -92,6 +94,7 @@ function AccountAdd({ noEdit }) {
     //   .matches(/^[0-9]{7,10}$/, "Số điện thoại không hợp lệ")
     //   .nullable(),
   });
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: dataAccount,
@@ -106,6 +109,7 @@ function AccountAdd({ noEdit }) {
       }
     },
   });
+  
   //// update account
   const handleUpdateAcount = async (values) => {
     values.birth_day=moment(values.birth_day)
@@ -165,6 +169,9 @@ function AccountAdd({ noEdit }) {
             });
           }
         });
+
+        let _optionAff = await _accountModel.getOptionAff();
+        setAffiliateOption(_optionAff);
       } catch (error) {
         // console.log(error);
         window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
@@ -589,6 +596,26 @@ function AccountAdd({ noEdit }) {
                                       true
                                     )}
                                     onChange={(value) => handleChangeAttribute(value)}
+                                  />
+                                </Col>
+                              </FormGroup>
+                            </Col>
+                            <Col xs={12} sm={6}>
+                              <FormGroup row>
+                                <Label for="user_name" sm={4}>
+                                 Người giới thiệu
+                                </Label>
+                                <Col sm={8}>
+                                  <Select
+                                    styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                                    isDisabled={noEdit}
+                                    placeholder={"-- Chọn --"}
+                                    value={convertValue(formik.values.referral_code, affiliateOption)}
+                                    options={affiliateOption}
+                                    onChange={(value) => {
+                                        formik.setFieldValue('referral_code', value ? value.value : null)
+                                    }}
+                                    isClearable={true}
                                   />
                                 </Col>
                               </FormGroup>

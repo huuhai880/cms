@@ -42,7 +42,7 @@ function CardAffInfo({ affiliate = {} }) {
             <Row className="align-items-center">
                 <Col xs={12} className="d-flex align-items-center">
                     <Label className="font-weight-bold mr-4"
-                        style={{ fontSize: 18, textDecoration: 'underline' }}>
+                        style={{textDecoration: 'underline' }}>
                         <Link to={`/account/detail/${affiliate.member_id}`}>
                             {label}
                         </Link>

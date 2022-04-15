@@ -38,6 +38,7 @@ export default class AccountModel extends Model {
   /** @var {String} */
   static API_ACCOUNT_CHANGE_PASSWORD = "account/:id/change-password"; // PUT
   static API_ACCOUNT_TYPE_LIST = "account/customer-type";
+  static API_AFFILIATE_OPTION = "account/aff/option";
   /**
    * @var {String} Primary Key
    */
@@ -379,6 +380,12 @@ export default class AccountModel extends Model {
     let data = Object.assign({}, _data);
     return this._api.get(_static.API_ACCOUNT_TYPE_LIST, data);
   }
+
+  getOptionAff(_data = {}) {
+    let data = Object.assign({}, _data);
+    return this._api.get(_static.API_AFFILIATE_OPTION, data);
+  }
+
 }
 // Make alias
 const _static = AccountModel;

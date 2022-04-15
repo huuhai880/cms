@@ -15,7 +15,8 @@ ALTER PROCEDURE [dbo].[SL_ORDER_CreateOrUpdate_AdminWeb]
     @SUBTOTAL MONEY = NULL,
     @TOTALSHIPFEE MONEY = NULL,
     @ISGROWREVENUE BIT = 0,
-    @CREATEDUSER NVARCHAR(100) = NULL
+    @CREATEDUSER NVARCHAR(100) = NULL,
+    @REFERRALCODE BIGINT = NULL
 AS
 BEGIN
 
@@ -31,7 +32,8 @@ BEGIN
                 TOTALDISCOUNT = @TOTALDISCOUNT,
                 TOTALSHIPFEE = @TOTALSHIPFEE,
                 ISGROWREVENUE = @ISGROWREVENUE,
-                [STATUS] = @STATUS
+                [STATUS] = @STATUS,
+                REFERRALCODE = @REFERRALCODE
         WHERE   ORDERID = @ORDERID
         SELECT @ORDERID order_id,
                NULL order_no;
@@ -82,7 +84,8 @@ BEGIN
             BANKID,
             BANKCODE,
             ORDERTYPE,
-            ISGROWREVENUE
+            ISGROWREVENUE,
+            REFERRALCODE
         )
         VALUES
         (
@@ -108,7 +111,8 @@ BEGIN
             NULL,
             NULL,
             2, --1. WEB, 2. PORTAL
-            @ISGROWREVENUE
+            @ISGROWREVENUE,
+            @REFERRALCODE
         )
         SELECT SCOPE_IDENTITY() AS order_id,
                @ORDERNO order_no;
