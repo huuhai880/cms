@@ -225,7 +225,7 @@ function AffPolicyCommisionAdd({ policyCommisionId, noEdit = false }) {
                                 decimalScale={0}
                                 placeholder={`${condition_type == 1 ? 'đ' : 'Số lượng User'} Từ`}
                                 isNumericString
-                                value={p.from_value ? p.from_value : ''}
+                                value={p.from_value}
                                 onValueChange={({ value }) => handleChangeConditionDetail(value, 'from_value', _index, index)}
                                 isAllowed={values => isAllowed(values)}
                             />
@@ -364,7 +364,6 @@ function AffPolicyCommisionAdd({ policyCommisionId, noEdit = false }) {
         const { floatValue = 0 } = values;
         return floatValue >= 0 && floatValue <= (!isPercent ? 999999999 : 100);
     }
-
 
     return loading ? (
         <Loading />
@@ -613,7 +612,7 @@ function AffPolicyCommisionAdd({ policyCommisionId, noEdit = false }) {
                                                 {
                                                     title: "Chỉnh sửa",
                                                     color: "primary",
-                                                    isShow: noEdit,
+                                                    isShow: noEdit && !formik.values.is_deleted,
                                                     icon: "edit",
                                                     permission: "AFF_POLICYCOMMISION_EDIT",
                                                     notSubmit: true,

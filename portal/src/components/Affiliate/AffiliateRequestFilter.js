@@ -19,7 +19,7 @@ function AffiliateRequestFilter({ handleSubmitFilter }) {
         { label: "Tất cả", value: 0 },
         { label: "Yêu cầu đăng ký mới", value: 1 },
         { label: "Thành công", value: 2 },
-        { label: "KH Huỷ yêu cầu", value: 3 },
+        // { label: "KH Huỷ yêu cầu", value: 3 },
         { label: "Huỷ yêu cầu", value: 4 }
     ])
 

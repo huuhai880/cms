@@ -29,7 +29,8 @@ const template = {
     note: '{{#? NOTE}}',
     is_combo: "{{ISCOMBO ? 1 : 0}}",
     temp_id: '{{#? TEMPID}}',
-    combo_id: '{{#? COMBOID}}'
+    combo_id: '{{#? COMBOID}}',
+    discount_status_name: '{{#? DISCOUNTSTATUSNAME}}',
 };
 
 let transform = new Transform(template);
@@ -53,6 +54,7 @@ const list = (data = []) => {
         'end_date',
         'create_date',
         'is_active',
+        'discount_status_name'
     ]);
 };
 

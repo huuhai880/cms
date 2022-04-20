@@ -36,7 +36,8 @@ const template = {
     swift_number: '{{#? SWIFTNUMBER}}',
     bank_name: '{{#? BANKNAME}}',
     bank_code: '{{#? BANKCODE}}',
-    bank_account_number: '{{#? BANKACCOUNTNUMBER}}'
+    bank_account_number: '{{#? BANKACCOUNTNUMBER}}',
+    affiliate_id: '{{#? AFFILIATEID}}'
 }
 
 let transform = new Transform(template);
@@ -53,7 +54,8 @@ const list = (list = []) => {
         'wd_date_confirm',
         'confirm_user_full_name',
         'full_name',
-        'customer_code'
+        'customer_code',
+        'affiliate_id'
     ]);
 };
 

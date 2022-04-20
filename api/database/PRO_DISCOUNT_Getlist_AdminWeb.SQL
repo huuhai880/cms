@@ -28,6 +28,8 @@ BEGIN
 		IF ISNULL(@CREATEDDATETO,'')='' SET @dENDDATE = NULL
 		ELSE SET @dENDDATE = DATEADD(DAY,1,try_CONVERT(datetime,@CREATEDDATETO,103))
 
+        DECLARE @DATE_CURRENT AS DATETIME = CAST(CAST(GETDATE() AS DATE) AS DATETIME);
+
 		SELECT
                     PDS.DISCOUNTID,
                     PDS.DISCOUNTCODE,
@@ -49,6 +51,20 @@ BEGIN
                     FORMAT(PDS.ENDDATE, 'dd/MM/yyyy') AS ENDDATE,
                     FORMAT(PDS.CREATEDDATE, 'dd/MM/yyyy hh:mm') AS CREATEDDATEVIEW,
                     PDS.ISACTIVE,
+
+                    CASE 
+                        WHEN @DATE_CURRENT < PDS.STARTDATE THEN N'Chưa áp dụng' --CHUA AP DUNG
+                        WHEN @DATE_CURRENT > PDS.ENDDATE  THEN N'Hết thời gian áp dụng' --DA HET HAN
+                        WHEN (
+                                @DATE_CURRENT >= PDS.STARTDATE
+                                AND (
+                                        @DATE_CURRENT <= PDS.ENDDATE
+                                        OR PDS.ENDDATE IS NULL
+                                    )
+                            ) THEN N'Đang áp dụng' --DANG AP DUNG
+                        ELSE ''
+                    END DISCOUNTSTATUSNAME,
+
                     COUNT(1) OVER() AS TOTALITEMS
 				
         FROM        PRO_DISCOUNT PDS
@@ -59,16 +75,16 @@ BEGIN
         AND         (@KEYWORD IS NULL OR PDS.DISCOUNTCODE LIKE '%'+LTRIM(RTRIM(@KEYWORD))+'%')
         AND         (
                         @DISCOUNTSTATUS IS NULL 
-                        OR (@DISCOUNTSTATUS = 1 AND CAST(PDS.STARTDATE AS DATE) > CAST(GETDATE() AS DATE))
+                        OR (@DISCOUNTSTATUS = 1 AND PDS.STARTDATE > @DATE_CURRENT)
                         OR (
                             @DISCOUNTSTATUS = 2 
                             AND 
                             (
-                              CAST(GETDATE() AS DATE) >= CAST(PDS.STARTDATE AS DATE)
-                              AND (CAST(GETDATE() AS DATE) <= CAST(PDS.ENDDATE AS DATE) OR PDS.ENDDATE IS NULL)
+                              @DATE_CURRENT >= PDS.STARTDATE
+                              AND @DATE_CURRENT <= PDS.ENDDATE OR PDS.ENDDATE IS NULL
                             )
                         )
-                        OR (@DISCOUNTSTATUS = 3 AND CAST(GETDATE() AS DATE) > CAST(PDS.ENDDATE AS DATE))
+                        OR (@DISCOUNTSTATUS = 3 AND @DATE_CURRENT > PDS.ENDDATE)
                     )
         ORDER BY    PDS.CREATEDDATE  DESC
         OFFSET (@PAGEINDEX -1)* @PAGESIZE ROWS

@@ -56,7 +56,7 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return <div className="text-left">
-                        <Link to={`/affiliate/detail/${data[tableMeta["rowIndex"]].member_id}`}>
+                        <Link to={`/affiliate/detail/${data[tableMeta["rowIndex"]].affiliate_id}`}>
                             {value}
                         </Link>
                     </div>;

@@ -47,7 +47,7 @@ BEGIN
         FROM        SL_ORDER
         JOIN        CRM_ACCOUNT
         ON          CRM_ACCOUNT.MEMBERID = SL_ORDER.MEMBERID
-        AND         CRM_ACCOUNT.ISACTIVE = 1
+        --AND         CRM_ACCOUNT.ISACTIVE = 1
         AND         CRM_ACCOUNT.ISDELETED = 0
 
         LEFT JOIN   SL_ORDER_DISCOUNT
@@ -117,7 +117,7 @@ BEGIN
 
             JOIN        CRM_ACCOUNT
             ON          CRM_ACCOUNT.MEMBERID = SL_ORDER.MEMBERID
-            AND         CRM_ACCOUNT.ISACTIVE = 1
+            --AND         CRM_ACCOUNT.ISACTIVE = 1
             AND         CRM_ACCOUNT.ISDELETED = 0
 
             JOIN        SL_ORDERDETAIL

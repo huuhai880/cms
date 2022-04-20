@@ -29,7 +29,7 @@ BEGIN
             AFF_AFFILIATE.REGISTRATIONSOURCE,
             AFF_AFFILIATETYPE.AFFILIATETYPENAME,
             SL_ORDER.TOTALORDER,
-            AFF_REFERRALINCOME.TOTALREFERRALVALUE AS TOTALCOMMISION,
+            AFF_COMISSION.COMISSIONVALUE AS TOTALCOMMISION,
             CRM_ACCOUNT.CUSTOMERCODE,
             CONCAT(CRM_ACCOUNT.CUSTOMERCODE,' - ', CRM_ACCOUNT.FULLNAME) FULLNAME,
             AFF_AFFILIATE.ISACTIVE,
@@ -57,12 +57,19 @@ BEGIN
                     AND     SL_ORDER.[STATUS] = 1
                 ) AS SL_ORDER
     OUTER APPLY (
-                    SELECT 
-                            SUM(AFF_REFERRALINCOME.TOTALREFERRALVALUE) AS TOTALREFERRALVALUE
-                    FROM    AFF_REFERRALINCOME
-                    WHERE   AFF_REFERRALINCOME.MEMBERID = AFF_AFFILIATE.MEMBERID
-                    AND     AFF_REFERRALINCOME.ISACTIVE = 1
-                ) AS AFF_REFERRALINCOME
+                    SELECT  SUM(COMISSIONVALUE) COMISSIONVALUE
+                    FROM    AFF_COMISSION
+                    WHERE   AFF_COMISSION.MEMBERID = AFF_AFFILIATE.MEMBERID
+                    AND     (
+                                --CHUA CHOT HOA HONG
+                                (
+                                    AFF_COMISSION.ISAPPLY = 0
+                                    AND AFF_COMISSION.ISACTIVE = 1
+                                    AND AFF_COMISSION.ISCURRENT = 1
+                                )
+                                OR AFF_COMISSION.ISAPPLY = 1 --DA CHOT HOA HONG
+                            )
+                ) AS AFF_COMISSION
 
     WHERE   AFF_AFFILIATE.ISDELETED = 0
     AND     (

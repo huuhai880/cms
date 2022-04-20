@@ -12,7 +12,7 @@ const ruleCreateOrUpdate = {
   // marital_status: Joi.number().allow('', null),
   // phone_number: Joi.string().required(),
   email: Joi.string().allow('', null),
-  id_card: Joi.string().allow('', null),
+  // id_card: Joi.string().allow('', null),
   // id_card_date: Joi.string().allow('', null),
   // id_card_place: Joi.string().allow('', null),
   address: Joi.string().allow('', null),

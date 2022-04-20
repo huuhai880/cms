@@ -22,10 +22,11 @@ const template = {
     is_group_sales: '{{ISGROUPSALES ? 1 : 0}}', //Nhom
     is_user_introduction: '{{ISUSERINTRODUCTION ? 1 : 0}}', //La gioi thieu so nguoi
     po_commision_detail_id: '{{#? POCOMMISIONDETAILID}}',
-    from_value: '{{#? FROMVALUE}}',
+    from_value: '{{FROMVALUE ? FROMVALUE : 0}}',
     to_value: '{{#? TOVALUE}}',
     comission_value: '{{#? COMISSIONVALUE}}',
-    type: '{{#? TYPE}}'
+    type: '{{#? TYPE}}',
+    is_deleted: '{{ISDELETED ? 1 : 0}}'
 }
 
 let transform = new Transform(template);
@@ -41,7 +42,8 @@ const list = (list = []) => {
         'is_active',
         'is_limited_time',
         'start_date_register',
-        'end_date_register'
+        'end_date_register',
+        'is_deleted'
     ]);
 };
 
@@ -76,7 +78,8 @@ const detail = (data = []) => {
         'is_active',
         'is_limited_time',
         'start_date_register',
-        'end_date_register'
+        'end_date_register',
+        'is_deleted'
     ]) : null;
 };
 

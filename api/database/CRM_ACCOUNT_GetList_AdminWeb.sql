@@ -46,6 +46,7 @@ SET NOCOUNT ON;
 							 OR ( ac.PHONENUMBER like '%'+ RTRIM(LTRIM(@KEYWORD))+'%' collate Latin1_General_CI_AI_WS)
 							 OR ( ac.EMAIL like '%'+ RTRIM(LTRIM(@KEYWORD))+'%'  collate Latin1_General_CI_AI_WS)
 							 OR ( ac.IDCARD like '%'+ RTRIM(LTRIM(@KEYWORD))+'%'  collate Latin1_General_CI_AI_WS)
+                             OR ( ac.CUSTOMERCODE like '%'+ RTRIM(LTRIM(@KEYWORD))+'%'  collate Latin1_General_CI_AI_WS)
 			)
 		AND (@COUNTRYID IS NULL OR ac.COUNTRYID = @COUNTRYID)
 		AND (@PROVINCEID IS NULL OR ac.PROVINCEID=@PROVINCEID)

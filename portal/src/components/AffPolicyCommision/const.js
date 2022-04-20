@@ -137,21 +137,24 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
                         <div className="text-center">
-                            <CheckAccess permission="AFF_POLICYCOMMISION_EDIT">
-                                <Button
-                                    color="primary"
-                                    title="Chỉnh sửa"
-                                    className="mr-1"
-                                    onClick={(evt) =>
-                                        handleActionItemClick(
-                                            "edit",
-                                            data[tableMeta["rowIndex"]].policy_commision_id,
-                                            tableMeta["rowIndex"]
-                                        )
-                                    }>
-                                    <i className="fa fa-edit" />
-                                </Button>
-                            </CheckAccess>
+                            {
+                                !data[tableMeta["rowIndex"]].is_deleted &&
+                                <CheckAccess permission="AFF_POLICYCOMMISION_EDIT">
+                                    <Button
+                                        color="primary"
+                                        title="Chỉnh sửa"
+                                        className="mr-1"
+                                        onClick={(evt) =>
+                                            handleActionItemClick(
+                                                "edit",
+                                                data[tableMeta["rowIndex"]].policy_commision_id,
+                                                tableMeta["rowIndex"]
+                                            )
+                                        }>
+                                        <i className="fa fa-edit" />
+                                    </Button>
+                                </CheckAccess>
+                            }
 
                             <Button
                                 color="warning"
@@ -167,21 +170,23 @@ export const getColumnTable = (data, query, handleActionItemClick) => {
                                 <i className="fa fa-info" />
                             </Button>
 
-                            <CheckAccess permission="AFF_POLICYCOMMISION_DEL">
-                                <Button
-                                    color="danger"
-                                    title="Xóa"
-                                    className=""
-                                    onClick={(evt) =>
-                                        handleActionItemClick(
-                                            "delete",
-                                            data[tableMeta["rowIndex"]].policy_commision_id,
-                                            tableMeta["rowIndex"]
-                                        )
-                                    }>
-                                    <i className="fa fa-trash" />
-                                </Button>
-                            </CheckAccess>
+                            {!data[tableMeta["rowIndex"]].is_deleted ?
+                                <CheckAccess permission="AFF_POLICYCOMMISION_DEL">
+                                    <Button
+                                        color="danger"
+                                        title="Xóa"
+                                        className=""
+                                        onClick={(evt) =>
+                                            handleActionItemClick(
+                                                "delete",
+                                                data[tableMeta["rowIndex"]].policy_commision_id,
+                                                tableMeta["rowIndex"]
+                                            )
+                                        }>
+                                        <i className="fa fa-trash" />
+                                    </Button>
+                                </CheckAccess> : null
+                            }
                         </div>
                     );
                 },
@@ -200,7 +205,8 @@ export const initialValues = {
     end_date_register: null,
     is_active: true,
     is_default: false,
-    policy_commision_detail: []
+    policy_commision_detail: [],
+    is_deleted: false
 };
 
 export const validationSchema = yup.object().shape({

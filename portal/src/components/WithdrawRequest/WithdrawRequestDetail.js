@@ -16,22 +16,12 @@ import {
     Badge
 } from "reactstrap";
 import { ActionButton } from "@widget";
-import { mapDataOptions4Select } from "../../utils/html";
 import { useState } from "react";
 import { useEffect } from "react";
 import Loading from "../Common/Loading";
-import { convertValueSelect, formatPrice, numberFormat } from 'utils/index';
-
-import {
-    CloseOutlined
-} from '@ant-design/icons';
-import {
-    FormInput,
-    UploadImage
-} from "@widget";
+import { numberFormat } from 'utils/index';
 import Upload from "../Common/Antd/Upload";
 import './style.scss'
-import { DropzoneArea } from "material-ui-dropzone";
 import { getStatus } from './const';
 import { useParams } from "react-router";
 import WithdrawRequestService from './Service/index';
@@ -95,11 +85,12 @@ function WithdrawRequestDetail(props) {
                 wd_request_no: withdrawRequest.wd_request_no
             })
             window._$g.toastr.show('Duyệt yêu cầu thành công!', 'success');
-            initData();
+            //initData();
+            return window._$g.rdr("/withdraw-request");
         } catch (error) {
             window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
         }
-        finally{
+        finally {
             setIsShowModalAccept(false);
         }
     }
@@ -118,7 +109,8 @@ function WithdrawRequestDetail(props) {
                 wd_request_no: withdrawRequest.wd_request_no
             })
             window._$g.toastr.show('Huỷ yêu cầu thành công!', 'success');
-            initData();
+            //initData();
+            return window._$g.rdr("/withdraw-request");
         } catch (error) {
             window._$g.dialogs.alert(window._$g._("Đã có lỗi xảy ra. Vui lòng F5 thử lại"));
         }
@@ -215,7 +207,7 @@ function WithdrawRequestDetail(props) {
                                                     <Label className="text-left font-weight-bold" sm={7}>{withdrawRequest.description}</Label>
                                                 </Row>
                                             </Col>
-                                           
+
                                             <Col sm={6}>
                                                 <Row>
                                                     <Label className="text-left" sm={5}>Nội dung:</Label>
@@ -267,7 +259,7 @@ function WithdrawRequestDetail(props) {
                                                     color: "primary",
                                                     isShow: wd_request_status == 1,
                                                     notSubmit: true,
-                                                    permission: ["WA_WITHDRAWREQUEST_EDIT"],
+                                                    permission: ["WA_WITHDRAWREQUEST_REVIEW"],
                                                     icon: "check",
                                                     onClick: handleAccpetRequest,
                                                 },
@@ -275,7 +267,7 @@ function WithdrawRequestDetail(props) {
                                                     title: "Huỷ yêu cầu",
                                                     color: "danger",
                                                     isShow: wd_request_status == 1,
-                                                    permission: ["WA_WITHDRAWREQUEST_EDIT"],
+                                                    permission: ["WA_WITHDRAWREQUEST_REVIEW"],
                                                     notSubmit: true,
                                                     icon: "close",
                                                     onClick: handleRejectRequest,

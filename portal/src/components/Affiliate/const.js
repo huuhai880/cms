@@ -150,7 +150,7 @@ export const getColumnTable = (data, query, handleActionItemClick, setMemberUpLe
                     );
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
-                    return <div className="text-center">{value == 1 ? 'Poral' : 'Website'}</div>;
+                    return <div className="text-center">{value == 1 ? 'Portal' : 'Website'}</div>;
                 },
             },
         },

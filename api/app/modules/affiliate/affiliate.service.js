@@ -17,7 +17,7 @@ const getListAffiliate = async (queryParams = {}) => {
         const is_active = apiHelper.getValueFromObject(queryParams, 'is_active', 2);
         const start_date = apiHelper.getValueFromObject(queryParams, 'start_date', null);
         const end_date = apiHelper.getValueFromObject(queryParams, 'end_date', null);
-        const affiliate_type_id = apiHelper.getValueFromObject(queryParams, 'affiliate_type_id', null);
+        const affiliate_type_id = apiHelper.getValueFromObject(queryParams, 'affiliate_type', null);
 
         const pool = await mssql.pool;
         const res = await pool.request()

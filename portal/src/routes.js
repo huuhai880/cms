@@ -3390,7 +3390,7 @@ const routes = [
         path: "/withdraw-request/detail/:id",
         exact: true,
         name: "Chi tiết",
-        function: "WA_WITHDRAWREQUEST_EDIT",
+        function: "WA_WITHDRAWREQUEST_REVIEW",
         component: WithdrawRequestDetail,
     },
     // end#WithdrawMoney

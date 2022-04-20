@@ -74,6 +74,7 @@ const rejectWithdrawRequest = async (bodyParams = {}) => {
             .input('NOTE', note)
             .execute('WA_WITHDRAWREQUEST_Reject_AdminWeb');
 
+        console.log({email})
         //Send email không duyệt
         if (email) {
             events.emit('send-email', {
