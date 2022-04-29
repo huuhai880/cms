@@ -6,6 +6,7 @@ import React from "react";
 import { Button } from "reactstrap";
 import * as yup from "yup";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 export const initialValues = {
     order_id: "",
@@ -22,7 +23,8 @@ export const initialValues = {
     sub_total: 0,
     total: 0,
     total_discount: 0,
-    discount: null
+    discount: null,
+    referral_code: null
 };
 
 export const getColumTable = (data, total, query, handleDelete, isCenter) => {
@@ -157,7 +159,7 @@ export const getColumTable = (data, total, query, handleDelete, isCenter) => {
                 },
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
-                        <div>
+                        <div className="text-center">
                             {value == 1 ? "Đã thanh toán" : value == 0 ? "Chưa thanh toán" : "Chưa thanh toán"}
                         </div>
                     );
@@ -181,6 +183,31 @@ export const getColumTable = (data, total, query, handleDelete, isCenter) => {
                     return (
                         <div className="text-center">
                             {value ? "Có" : "Không"}
+                        </div>
+                    );
+                },
+            },
+        },
+        {
+            name: "referral_member",
+            label: "Người giới thiệu",
+            options: {
+                filter: false,
+                sort: true,
+                customHeadRender: (columnMeta, handleToggleColumn) => {
+                    return (
+                        <th key={`head-th-${columnMeta.label}`} className="MuiTableCell-root MuiTableCell-head">
+                            <div className="text-center">{columnMeta.label}</div>
+                        </th>
+                    );
+                },
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <div className="text-left">
+                            <Link
+                                to={`/affiliate/detail/${data[tableMeta["rowIndex"]].affiliate_id}`}>
+                                {value}
+                            </Link>
                         </div>
                     );
                 },

@@ -1,0 +1,84 @@
+.cmnd-upload {
+    width: 100%;
+    .ant-upload-list-picture-card-container {
+        height: 150px;
+        .ant-upload-list-item-list-type-picture-card {
+            width: 100% !important;
+        }
+    }
+    .ant-upload-select-picture-card {
+        height: 150px !important;
+        width: 100% !important;
+    }
+    .ant-upload-list-item-image {
+        // object-fit: contain !important;
+    }
+
+    // .ant-upload-list-picture-card{
+    //     .ant-upload-list-item{
+    //         :hover{
+    //             z-index: 0 !important;
+    //         }
+    //     }
+    // }
+}
+
+.SingleDatePicker_picker.SingleDatePicker_picker_1.SingleDatePicker_picker__directionLeft.SingleDatePicker_picker__directionLeft_2 {
+    z-index: 100 !important;
+}
+
+.bw-statistic-item {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+}
+.bw-statistic-item i {
+    font-size: 20px;
+}
+
+.DateRangePicker_picker,
+.css-26l3qy-menu {
+    z-index: 9999;
+}
+.se-container {
+    z-index: 0 !important;
+}
+
+.hove-color:hover hove-color {
+    color: #f6d049 !important;
+    background-color: #f6d049 !important;
+}
+
+.hover:hover {
+    background: #e4e7e7;
+    color: black;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.bl {
+    border-left: 1px solid #e4e7e7;
+}
+
+.focus {
+    background-color: #00a699;
+    color: white;
+}
+
+.bw_ct_discount_tags .ant-tag-close-icon {
+    padding-left: 10px;
+}
+
+.discount-code {
+    background: #c8ced2;
+    padding: 5px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}

@@ -22,7 +22,7 @@ export const DEFAULT_COUNTRY_ID = CountryModel.ID_VN;
  * @return {Array}
  */
 function mapData(data) {
-  return data.map(({ name, id, ...props }) => ({ label: name, value: id, ...props }));
+    return data.map(({ name, id, ...props }) => ({ label: name, value: id, ...props }));
 }
 
 /**
@@ -31,7 +31,7 @@ function mapData(data) {
  * @return {Number}
  */
 function parentId(parent_id) {
-  return parent_id || -1;
+    return parent_id || -1;
 }
 
 /**
@@ -41,12 +41,12 @@ function parentId(parent_id) {
  * @return {Array}
  */
 function convertValue(value, options) {
-  if (!(typeof value === "object") && options && options.length) {
-    value = ((_val) => {
-      return options.find((item) => "" + item.value === "" + _val);
-    })(value);
-  }
-  return value;
+    if (!(typeof value === "object") && options && options.length) {
+        value = ((_val) => {
+            return options.find((item) => "" + item.value === "" + _val);
+        })(value);
+    }
+    return value;
 }
 
 /**
@@ -56,17 +56,17 @@ function convertValue(value, options) {
  * @return {Object}
  */
 function convertSelectProps(selectProps, selectOpts) {
-  let { value, defaultValue, ...props } = selectProps;
-  let _props = {
-    isSearchable: true,
-    placeholder: (selectOpts[0] && selectOpts[0].label) || "",
-    value: undefined !== value ? convertValue(value, selectOpts) : undefined,
-    defaultValue: undefined !== defaultValue ? convertValue(defaultValue, selectOpts) : undefined,
-    options: selectOpts,
-    // menuPortalTarget: document.querySelector('body'),
-    ...props,
-  };
-  return _props;
+    let { value, defaultValue, ...props } = selectProps;
+    let _props = {
+        isSearchable: true,
+        placeholder: (selectOpts[0] && selectOpts[0].label) || "",
+        value: undefined !== value ? convertValue(value, selectOpts) : undefined,
+        defaultValue: undefined !== defaultValue ? convertValue(defaultValue, selectOpts) : undefined,
+        options: selectOpts,
+        // menuPortalTarget: document.querySelector('body'),
+        ...props,
+    };
+    return _props;
 }
 
 /**
@@ -74,7 +74,7 @@ function convertSelectProps(selectProps, selectOpts) {
  * @return Promise<Array>
  */
 export function getCountryData() {
-  return countryModel.getOptions().then(mapData);
+    return countryModel.getOptions().then(mapData);
 }
 /**
  * Get remote province data
@@ -82,13 +82,13 @@ export function getCountryData() {
  * @return Promise<Array>
  */
 export function getProvinceData(parent_id) {
-  let data = getProvinceData.cache[(parent_id = parentId(parent_id))];
-  if (data) {
-    return Promise.resolve(data);
-  }
-  return provinceModel
-    .getOptions(parent_id)
-    .then((data) => (getProvinceData.cache[parent_id] = mapData(data)));
+    let data = getProvinceData.cache[(parent_id = parentId(parent_id))];
+    if (data) {
+        return Promise.resolve(data);
+    }
+    return provinceModel
+        .getOptions(parent_id)
+        .then((data) => (getProvinceData.cache[parent_id] = mapData(data)));
 }
 getProvinceData.cache = {};
 /**
@@ -97,13 +97,13 @@ getProvinceData.cache = {};
  * @return Promise
  */
 export function getDistrictData(parent_id) {
-  let data = getDistrictData.cache[(parent_id = parentId(parent_id))];
-  if (data) {
-    return Promise.resolve(data);
-  }
-  return districtModel
-    .getOptions(parent_id)
-    .then((data) => (getDistrictData.cache[parent_id] = mapData(data)));
+    let data = getDistrictData.cache[(parent_id = parentId(parent_id))];
+    if (data) {
+        return Promise.resolve(data);
+    }
+    return districtModel
+        .getOptions(parent_id)
+        .then((data) => (getDistrictData.cache[parent_id] = mapData(data)));
 }
 getDistrictData.cache = {};
 /**
@@ -112,13 +112,13 @@ getDistrictData.cache = {};
  * @return Promise
  */
 export function getWardData(parent_id) {
-  let data = getWardData.cache[(parent_id = parentId(parent_id))];
-  if (data) {
-    return Promise.resolve(data);
-  }
-  return wardModel
-    .getOptions(parent_id)
-    .then((data) => (getWardData.cache[parent_id] = mapData(data)));
+    let data = getWardData.cache[(parent_id = parentId(parent_id))];
+    if (data) {
+        return Promise.resolve(data);
+    }
+    return wardModel
+        .getOptions(parent_id)
+        .then((data) => (getWardData.cache[parent_id] = mapData(data)));
 }
 getWardData.cache = {};
 
@@ -126,130 +126,150 @@ getWardData.cache = {};
  * @class CountryComponent
  */
 export class CountryComponent extends PureComponent {
-  constructor(props) {
-    super(props);
-    // Init state
-    this.state = {
-      /** @var {Array} */
-      options: [{ label: "-- Quốc gia --", value: "" }],
-    };
-  }
+    constructor(props) {
+        super(props);
+        // Init state
+        this.state = {
+            /** @var {Array} */
+            options: [{ label: "-- Quốc gia --", value: "" }],
+        };
+    }
 
-  componentDidMount() {
-    (async () => {
-      let { options } = this.state;
-      let data = await getCountryData();
-      options = [options[0]].concat(data);
-      this.setState({ options });
-    })();
-  }
+    componentDidMount() {
+        (async () => {
+            let { options } = this.state;
+            let data = await getCountryData();
+            options = [options[0]].concat(data);
+            this.setState({ options });
+        })();
+    }
 
-  render() {
-    let props = convertSelectProps(this.props, this.state.options);
-    return <Select {...props} />;
-  }
+    render() {
+        let props = convertSelectProps(this.props, this.state.options);
+        return <Select {...props} />;
+    }
 }
 
 /**
  * @class ProvinceComponent
  */
 export class ProvinceComponent extends PureComponent {
-  constructor(props) {
-    super(props);
-    // Init state
-    this.state = {
-      /** @var {Array} */
-      options: [{ label: "-- Tỉnh/Thành phố --", value: "" }],
-    };
-  }
+    constructor(props) {
+        super(props);
+        // Init state
+        this.state = {
+            /** @var {Array} */
+            options: [{ label: "-- Tỉnh/Thành phố --", value: "" }],
+        };
+    }
 
-  componentDidMount() {
-    (async () => {
-      let { options } = this.state;
-      let data = await getProvinceData(this.props.mainValue);
-      options = [options[0]].concat(data);
-      this.setState({ options });
-    })();
-  }
+    componentDidMount() {
+        (async () => {
+            let { options } = this.state;
+            let data = await getProvinceData(this.props.mainValue);
+            options = [options[0]].concat(data);
+            this.setState({ options });
+        })();
+    }
 
-  render() {
-    let props = convertSelectProps(this.props, this.state.options);
-    return <Select {...props} />;
-  }
+    render() {
+        let props = convertSelectProps(this.props, this.state.options);
+        return <Select {...props} />;
+    }
 }
 
 /**
  * @class DistrictComponent
  */
 export class DistrictComponent extends PureComponent {
-  constructor(props) {
-    super(props);
-    // Init state
-    this.state = {
-      /** @var {Array} */
-      options: [{ label: "-- Quận/Huyện --", value: "" }],
-    };
-  }
-  componentDidMount() {
-    (async () => {
-      // console.log(this.props)
+    constructor(props) {
+        super(props);
+        // Init state
+        this.state = {
+            /** @var {Array} */
+            options: [{ label: "-- Quận/Huyện --", value: "" }],
+        };
+    }
+    componentDidMount() {
+        (async () => {
+            // console.log(this.props)
 
-      let { options } = this.state;
-      let data = await getDistrictData(this.props.mainValue);
-      options = [options[0]].concat(data);
-      this.setState({ options });
-    })();
-  }
+            let { options } = this.state;
+            let data = await getDistrictData(this.props.mainValue);
+            options = [options[0]].concat(data);
+            this.setState({ options });
+        })();
+    }
 
-  render() {
-    let props = convertSelectProps(this.props, this.state.options);
-    return <Select {...props} />;
-  }
+    async UNSAFE_componentWillReceiveProps(nextProps) {
+        let { mainValue } = nextProps;
+        if (mainValue != this.props.mainValue) {
+            let { options } = this.state;
+            let data = await getDistrictData(parentId(mainValue));
+            options = [options[0]].concat(data);
+            this.setState({ options });
+        }
+    }
+
+    render() {
+        let props = convertSelectProps(this.props, this.state.options);
+        return <Select {...props} />;
+    }
 }
 
 /**
  * @class WardComponent
  */
 export class WardComponent extends PureComponent {
-  constructor(props) {
-    super(props);
-    // Init state
-    this.state = {
-      /** @var {Array} */
-      options: [{ label: "-- Phường/Xã --", value: "" }],
-    };
-  }
+    constructor(props) {
+        super(props);
+        // Init state
+        this.state = {
+            /** @var {Array} */
+            options: [{ label: "-- Phường/Xã --", value: "" }],
+        };
+    }
 
-  componentDidMount() {
-    (async () => {
-      let { options } = this.state;
-      let data = await getWardData(this.props.mainValue);
-      options = [options[0]].concat(data);
-      this.setState({ options });
-    })();
-  }
+    componentDidMount() {
+        (async () => {
+            let { options } = this.state;
+            let data = await getWardData(this.props.mainValue);
+            options = [options[0]].concat(data);
+            this.setState({ options });
+        })();
+    }
 
-  render() {
-    let props = convertSelectProps(this.props, this.state.options);
-    return <Select {...props} />;
-  }
+    async UNSAFE_componentWillReceiveProps(nextProps) {
+        let { mainValue } = nextProps;
+        if (mainValue != this.props.mainValue) {
+            let { options } = this.state;
+            let data = await getWardData(parentId(mainValue));
+            options = [options[0]].concat(data);
+            this.setState({ options });
+        }
+    }
+
+    render() {
+        let props = convertSelectProps(this.props, this.state.options);
+        return <Select {...props} />;
+    }
 }
 
 /**
  * @class Address
  */
 export default class Address extends Component {
-  render() {
-    let { children, ...props } = this.props;
-    return (
-      <div {...props}>
-        {children({
-          CountryComponent: CountryComponent,
-          ProvinceComponent: ProvinceComponent,
-          DistrictComponent: DistrictComponent,
-          WardComponent: WardComponent,
-        })}
-      </div>
-    );
-  }
+    render() {
+        let { children, ...props } = this.props;
+        return (
+            <div {...props}>
+                {children({
+                    CountryComponent: CountryComponent,
+                    ProvinceComponent: ProvinceComponent,
+                    DistrictComponent: DistrictComponent,
+                    WardComponent: WardComponent,
+                })}
+            </div>
+        );
+    }
 }

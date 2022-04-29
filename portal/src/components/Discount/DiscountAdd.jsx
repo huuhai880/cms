@@ -42,7 +42,7 @@ function DiscountAdd({noEdit}) {
     const [dataStatus] = useState([
         {label: 'Chưa áp dụng', value: '1'},
         {label: 'Đang áp dụng', value: '2'},
-        {label: 'Đã kết thúc', value: '3'},
+        {label: 'Hết thời gian áp dụng', value: '3'},
     ]);
 
     const formik = useFormik({
@@ -90,7 +90,6 @@ function DiscountAdd({noEdit}) {
             let discount_status = 1;
             var _start_date = moment(formik.values.start_date, 'DD/MM/YYYY');
             var _end_date = formik.values.end_date ?  moment(formik.values.end_date, 'DD/MM/YYYY') : null;
-
             if(_now >= _start_date && (_now <= _end_date || !_end_date)){
                 discount_status = 2;
             }
@@ -98,7 +97,7 @@ function DiscountAdd({noEdit}) {
                 discount_status = 1;
             }
             else if(_now > _end_date && _end_date){
-                discount_status = 1;
+                discount_status = 3;
             }
 
             formik.setFieldValue('discount_status', discount_status);
@@ -476,7 +475,7 @@ function DiscountAdd({noEdit}) {
                                                                     type="text"
                                                                     name="value_min_total_money"
                                                                     placeholder="Giá trị đơn hàng tối thiểu"
-                                                                    disabled={false}
+                                                                    // disabled={false}
                                                                     allowNegative={false}
                                                                     thousandSeparator=","
                                                                     decimalSeparator="."
@@ -522,7 +521,7 @@ function DiscountAdd({noEdit}) {
                                                             <NumberFormat
                                                                 type="text"
                                                                 name="value_min_num_product"
-                                                                disabled={false}
+                                                                // disabled={false}
                                                                 allowNegative={false}
                                                                 thousandSeparator=","
                                                                 decimalSeparator="."
@@ -607,7 +606,7 @@ function DiscountAdd({noEdit}) {
                                                             <NumberFormat
                                                                 type="text"
                                                                 name="discount_value"
-                                                                disabled={false}
+                                                                // disabled={false}
                                                                 allowNegative={false}
                                                                 thousandSeparator=","
                                                                 decimalSeparator="."

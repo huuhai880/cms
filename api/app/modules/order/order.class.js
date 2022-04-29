@@ -52,7 +52,10 @@ const template = {
     start_date: '{{#? STARTDATE}}',
     end_date: '{{#? ENDDATE}}',
     customer_type_id: '{{#? CUSTOMERTYPEID}}',
-    discount_money: '{{#? DISCOUNTMONEY}}'
+    discount_money: '{{#? DISCOUNTMONEY}}',
+    referral_code: '{{#? REFERRALCODE}}',
+    affiliate_id: '{{#? AFFILIATEID}}',
+    referral_member: '{{#? REFERRALMEMBER}}'
 };
 let transform = new Transform(template);
 
@@ -70,7 +73,9 @@ const list = (data = []) => {
         'order_type',
         'customer_name',
         'is_grow_revenue',
-        'discount_code'
+        'discount_code',
+        'affiliate_id',
+        'referral_member'
     ]);
 };
 
@@ -90,7 +95,9 @@ const detailOrder = (order = []) => {
         'member_id',
         'order_type',
         'is_grow_revenue',
-        'customer_name'
+        'customer_name',
+        'referral_member',
+        'referral_code'
     ]);
 };
 

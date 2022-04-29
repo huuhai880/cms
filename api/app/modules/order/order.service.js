@@ -163,6 +163,7 @@ const createOrUpdateOrder = async (bodyParams = {}) => {
         let order_no = apiHelper.getValueFromObject(bodyParams, 'order_no');
         let is_grow_revenue = apiHelper.getValueFromObject(bodyParams, 'is_grow_revenue', false);
         let discount = apiHelper.getValueFromObject(bodyParams, 'discount', null);
+        let referral_code = apiHelper.getValueFromObject(bodyParams, 'referral_code', null);
 
         await transaction.begin();
 
@@ -199,6 +200,7 @@ const createOrUpdateOrder = async (bodyParams = {}) => {
                 .input('TOTALSHIPFEE', null)
                 .input('ISGROWREVENUE', is_grow_revenue)
                 .input('CREATEDUSER', auth_name)
+                .input('REFERRALCODE', referral_code)
                 .execute('SL_ORDER_CreateOrUpdate_AdminWeb')
 
             let { order_id: order_id_result, order_no: order_no_result } = resOrder.recordset[0];

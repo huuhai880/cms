@@ -706,6 +706,27 @@ const PageDetail = React.lazy(() => import("./components/Page/PageDetail"));
 const PageEdit = React.lazy(() => import("./components/Page/PageEdit"));
 //.end#PAGE
 
+// WITHDRAW REQUEST
+const WithdrawRequest = React.lazy(() => import("./components/WithdrawRequest/WithdrawRequest"));
+const WithdrawRequestDetail = React.lazy(() => import("./components/WithdrawRequest/WithdrawRequestDetail"));
+//.end#WITHDRAW REQUEST
+
+// AFFILIATE
+const Affiliate = React.lazy(() => import("./components/Affiliate/Affiliate"));
+const AffiliateAdd = React.lazy(() => import("./components/Affiliate/AffiliateAdd"));
+const AffiliateEdit = React.lazy(() => import("./components/Affiliate/AffiliateEdit"));
+const AffiliateReview = React.lazy(() => import("./components/Affiliate/AffiliateReview"));
+const AffiliateDetail = React.lazy(() => import("./components/Affiliate/AffiliateDetail"));
+const AffiliateRequest = React.lazy(() => import("./components/Affiliate/AffiliateRequest"));
+//.end#AFFILIATE
+
+// POLICYCOMMISION
+const AffPolicyCommision = React.lazy(() => import("./components/AffPolicyCommision/AffPolicyCommision"));
+const AffPolicyCommisionAdd = React.lazy(() => import("./components/AffPolicyCommision/AffPolicyCommisionAdd"));
+const AffPolicyCommisionEdit = React.lazy(() => import("./components/AffPolicyCommision/AffPolicyCommisionEdit"));
+const AffPolicyCommisionDetail = React.lazy(() => import("./components/AffPolicyCommision/AffPolicyCommisionDetail"));
+//.end#POLICYCOMMISION
+
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -3357,6 +3378,100 @@ const routes = [
 
     // end#Page
 
+    //WithdrawMoney
+    {
+        path: "/withdraw-request",
+        exact: true,
+        name: "Danh sách yêu cầu rút tiền",
+        function: "WA_WITHDRAWREQUEST_VIEW",
+        component: WithdrawRequest,
+    },
+    {
+        path: "/withdraw-request/detail/:id",
+        exact: true,
+        name: "Chi tiết",
+        function: "WA_WITHDRAWREQUEST_REVIEW",
+        component: WithdrawRequestDetail,
+    },
+    // end#WithdrawMoney
+
+    //Affiliate
+    {
+        path: "/affiliate",
+        exact: true,
+        name: "Quản lý đối tác Affiliate",
+        function: "AFF_AFFILIATE_VIEW",
+        component: Affiliate,
+    },
+    {
+        path: "/affiliate/add",
+        exact: true,
+        name: "Thêm mới",
+        function: "AFF_AFFILIATE_ADD",
+        component: AffiliateAdd,
+    },
+    {
+        path: "/affiliate/edit/:id",
+        exact: true,
+        name: "Chỉnh sửa",
+        function: "AFF_AFFILIATE_EDIT",
+        component: AffiliateEdit,
+    },
+    {
+        path: "/affiliate-request/review/:id",
+        exact: true,
+        name: "Duyệt",
+        function: "AFF_AFFILIATE_REVIEW",
+        component: AffiliateReview,
+    },
+
+    {
+        path: "/affiliate/detail/:id",
+        exact: true,
+        name: "Chi tiết",
+        function: "AFF_AFFILIATE_VIEW",
+        component: AffiliateDetail,
+    },
+
+    {
+        path: "/affiliate-request",
+        exact: true,
+        name: "Danh sách đăng ký Affiliate",
+        function: "AFF_AFFILIATE_REVIEW",
+        component: AffiliateRequest,
+    },
+    // end#Affiliate
+
+    //PolicyCommision
+    {
+        path: "/policy-commision",
+        exact: true,
+        name: "Quản lý chính sách",
+        function: "AFF_POLICYCOMMISION_VIEW",
+        component: AffPolicyCommision,
+    },
+    {
+        path: "/policy-commision/add",
+        exact: true,
+        name: "Thêm mới",
+        function: "AFF_POLICYCOMMISION_ADD",
+        component: AffPolicyCommisionAdd,
+    },
+    {
+        path: "/policy-commision/edit/:id",
+        exact: true,
+        name: "Chỉnh sửa",
+        function: "AFF_POLICYCOMMISION_EDIT",
+        component: AffPolicyCommisionEdit,
+    },
+    {
+        path: "/policy-commision/detail/:id",
+        exact: true,
+        name: "Chi tiết",
+        function: "AFF_POLICYCOMMISION_VIEW",
+        component: AffPolicyCommisionDetail,
+    }
+    // end#PolicyCommision
 
 ];
 

@@ -138,7 +138,6 @@ function PageAdd({ pageId = null, noEdit = false }) {
         });
     };
 
-    console.log(formik.errors)
 
     return loading ? (
         <Loading />

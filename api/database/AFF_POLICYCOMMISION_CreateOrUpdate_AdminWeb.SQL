@@ -1,0 +1,124 @@
+CREATE PROCEDURE AFF_POLICYCOMMISION_CreateOrUpdate_AdminWeb
+    @POLICYCOMMISIONID BIGINT = 0,
+    @POLICYCOMMISIONNAME NVARCHAR(500) = NULL,
+    @DESCRIPTION NVARCHAR(2000) = NULL,
+    @AFFILIATETYPEID BIGINT = 0,
+    @ISACTIVE BIT = 1,
+    @ISDEFAULT BIT = 0,
+    @ISLIMITEDTIME BIT = 0,
+    @STARTDATEREGISTER VARCHAR(20) = NULL,
+    @ENDDATEREGISTER VARCHAR(20) = NULL,
+    @CREATEDUSER VARCHAR(20) = NULL
+AS 
+BEGIN
+
+    DECLARE @STARTDATE AS DATETIME = NULL,
+            @ENDDATE AS DATETIME = NULL;
+
+    IF(ISNULL(@STARTDATEREGISTER, '') <> '') SET @STARTDATE = TRY_CONVERT(DATETIME, @STARTDATEREGISTER, 103);
+    IF(ISNULL(@ENDDATEREGISTER, '') <> '') SET @ENDDATE = TRY_CONVERT(DATETIME, @ENDDATEREGISTER, 103);
+
+    IF(EXISTS (SELECT 1 FROM AFF_POLICYCOMMISION WHERE POLICYCOMMISIONID = @POLICYCOMMISIONID))
+    BEGIN
+
+        --INSET LOG
+        INSERT INTO AFF_POLICYCOMMISION_LOG
+        (
+                POLICYCOMMISIONID,
+                POLICYCOMMISIONNAME,
+                DESCRIPTION,
+                AFFILIATETYPEID,
+                STARTDATEREGISTER,
+                ENDDATEREGISTER,
+                ISACTIVE,
+                CREATEDUSER,
+                CREATEDDATE,
+                UPDATEDUSER,
+                UPDATEDDATE,
+                ISDELETED,
+                DELETEDUSER,
+                DELETEDDATE,
+                ISLIMITEDTIME,
+                ISDEFAULT,
+                LOGDATE,
+                LOGEDUSER
+        )
+        SELECT 
+                POLICYCOMMISIONID,
+                POLICYCOMMISIONNAME,
+                DESCRIPTION,
+                AFFILIATETYPEID,
+                STARTDATEREGISTER,
+                ENDDATEREGISTER,
+                ISACTIVE,
+                CREATEDUSER,
+                CREATEDDATE,
+                UPDATEDUSER,
+                UPDATEDDATE,
+                ISDELETED,
+                DELETEDUSER,
+                DELETEDDATE,
+                ISLIMITEDTIME,
+                ISDEFAULT,
+                GETDATE(),
+                @CREATEDUSER
+        FROM    AFF_POLICYCOMMISION
+        WHERE   POLICYCOMMISIONID = @POLICYCOMMISIONID
+
+        UPDATE  AFF_POLICYCOMMISION
+        SET     UPDATEDDATE = GETDATE(),
+                UPDATEDUSER = @CREATEDUSER,
+                POLICYCOMMISIONNAME = @POLICYCOMMISIONNAME,
+                AFFILIATETYPEID = @AFFILIATETYPEID,
+                [DESCRIPTION] = @DESCRIPTION,
+                ISACTIVE = @ISACTIVE,
+                ISDEFAULT = @ISDEFAULT,
+                ISLIMITEDTIME = @ISLIMITEDTIME,
+                STARTDATEREGISTER = @STARTDATE,
+                ENDDATEREGISTER = @ENDDATE
+        WHERE   POLICYCOMMISIONID = @POLICYCOMMISIONID
+
+        SELECT @POLICYCOMMISIONID AS RESULT
+    END
+    ELSE
+    BEGIN
+        INSERT INTO AFF_POLICYCOMMISION
+        (
+            POLICYCOMMISIONNAME,
+            DESCRIPTION,
+            AFFILIATETYPEID,
+            STARTDATEREGISTER,
+            ENDDATEREGISTER,
+            ISACTIVE,
+            CREATEDUSER,
+            CREATEDDATE,
+            UPDATEDUSER,
+            UPDATEDDATE,
+            ISDELETED,
+            DELETEDUSER,
+            DELETEDDATE,
+            ISLIMITEDTIME,
+            ISDEFAULT
+        )
+        VALUES
+        (
+            @POLICYCOMMISIONNAME,
+            @DESCRIPTION,
+            @AFFILIATETYPEID,
+            @STARTDATE,
+            @ENDDATE,
+            @ISACTIVE,
+            @CREATEDUSER,
+            GETDATE(),
+            NULL,
+            NULL,
+            0,
+            NULL,
+            NULL,
+            @ISLIMITEDTIME,
+            @ISDEFAULT
+        )
+        SELECT SCOPE_IDENTITY() AS RESULT
+    END
+
+END

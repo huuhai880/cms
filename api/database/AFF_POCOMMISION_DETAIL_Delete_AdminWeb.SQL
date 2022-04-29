@@ -1,0 +1,53 @@
+ALTER PROCEDURE AFF_POCOMMISION_DETAIL_Delete_AdminWeb
+    @POLICYCOMMISIONID BIGINT = 0,
+    @DELETEDUSER VARCHAR(20) = NULL
+AS 
+BEGIN
+
+    --GHI LOG
+    INSERT INTO AFF_POCOMMISION_DETAIL_LOG
+    (
+            POCOMMISIONDETAILID,
+            POLICYCOMMISIONID,
+            CONDITIONID,
+            FROMVALUE,
+            TOVALUE,
+            TYPE,
+            COMISSIONVALUE,
+            ISACTIVE,
+            ISDELETED,
+            CREATEDUSER,
+            CREATEDDATE,
+            UPDATEDUSER,
+            UPDATEDDATE,
+            DELETEDUSER,
+            DELETEDDATE,
+            LOGUSER,
+            LOGDATE
+    )
+    SELECT 
+            POCOMMISIONDETAILID,
+            POLICYCOMMISIONID,
+            CONDITIONID,
+            FROMVALUE,
+            TOVALUE,
+            TYPE,
+            COMISSIONVALUE,
+            ISACTIVE,
+            ISDELETED,
+            CREATEDUSER,
+            CREATEDDATE,
+            UPDATEDUSER,
+            UPDATEDDATE,
+            DELETEDUSER,
+            DELETEDDATE,
+            @DELETEDUSER,
+            GETDATE()
+    FROM    AFF_POCOMMISION_DETAIL
+    WHERE   POLICYCOMMISIONID = @POLICYCOMMISIONID;
+
+    --XOA DETAIL
+    DELETE  AFF_POCOMMISION_DETAIL
+    WHERE   POLICYCOMMISIONID = @POLICYCOMMISIONID
+
+END

@@ -210,7 +210,7 @@ class AccountFilter extends PureComponent {
                   autoComplete="nope"
                   type="text"
                   name="inputValue"
-                  placeholder="Nhập tên khách hàng, số điên thoại, email, số CMND"
+                  placeholder="Nhập tên KH, mã KH, số điên thoại, email, số CMND"
                   value={this.state.inputValue}
                   onChange={this.handleChange}
                   onKeyDown={this.handleKeyDown}
