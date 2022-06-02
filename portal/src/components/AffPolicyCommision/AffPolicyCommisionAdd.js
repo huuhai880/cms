@@ -362,7 +362,7 @@ function AffPolicyCommisionAdd({ policyCommisionId, noEdit = false }) {
 
     const isAllowed = (values, isPercent = false) => {
         const { floatValue = 0 } = values;
-        return floatValue >= 0 && floatValue <= (!isPercent ? 999999999 : 100);
+        return floatValue >= 0 && floatValue <= (!isPercent ? 99999999999 : 100);
     }
 
     return loading ? (
